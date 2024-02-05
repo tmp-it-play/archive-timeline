@@ -135,6 +135,10 @@
     <ClCompile Include="34.10포인터와 주소 연산자 사용하기.c" />
     <ClCompile Include="35.2메모리에 값 할당하기.c" />
     <ClCompile Include="35.6두 정수의 합 구하기.c" />
+    <ClCompile Include="36.13가장 작은 수 출력하기.c" />
+    <ClCompile Include="37.9전치행렬 구하기.c" />
+    <ClCompile Include="38.7단위 행렬 만들기.c" />
+    <ClCompile Include="38.8지뢰찾기.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

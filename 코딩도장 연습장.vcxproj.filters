@@ -39,5 +39,17 @@
     <ClCompile Include="35.6두 정수의 합 구하기.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="36.13가장 작은 수 출력하기.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="37.9전치행렬 구하기.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="38.7단위 행렬 만들기.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="38.8지뢰찾기.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
