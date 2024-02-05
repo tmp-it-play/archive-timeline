@@ -21,8 +21,8 @@ int main()
     for (i = 0; i < m; i++)
     {
         for (j = 0; j < n; j++)
-        {
-            if (matrix[i][j] == '*')
+        {//ぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞぞ
+            if (matrix[i][j] == '*')//訊 走軽達奄研 馬室推ぞぞぞぞぞぞ
             {
                 printf("%c", matrix[i][j]);
                 continue;
@@ -30,9 +30,9 @@ int main()
             else
             {
                 matrix[i][j] = 0;
-                for (int x = i - 1; x <= i + 1; x++)
+                for (int x = i - 1; x <= i + 1; x++) //x逐
                 {
-                    for (int y = j - 1; y <= j + 1; y++)
+                    for (int y = j - 1; y <= j + 1; y++) //y逐
                     {
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
