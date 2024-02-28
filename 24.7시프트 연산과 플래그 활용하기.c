@@ -14,7 +14,7 @@ int main()
     flag &= ~(num2 >> 2);
     flag ^= 1 << 7;
 
-        printf("%u\n", flag);
+    printf("%u\n", flag);
 
     return 0;
 }
