@@ -4,36 +4,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-int main()
-{
+int main(){
     int m, n, i, j;
     scanf("%d %d", &m, &n);
     char** matrix = malloc(sizeof(char*) * m);
-    for (i = 0; i < m; i++)
-    {
+    for (i = 0; i < m; i++) {
         matrix[i] = malloc(sizeof(char) * (n + 1));
         memset(matrix[i], 0, sizeof(char) * (n + 1));
     }
-    for (i = 0; i < m; i++)
-    {
-        scanf("%s", matrix[i]);
+    for (i = 0; i < m; i++) {
+      scanf("%s", matrix[i]);
     }
-    for (i = 0; i < m; i++)
-    {
+    for (i = 0; i < m; i++){
         for (j = 0; j < n; j++)
-        {//¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾¤¾
-            if (matrix[i][j] == '*')//¿Ö Áö·ÚÃ£±â¸¦ ÇÏ¼¼¿ä¤¾¤¾¤¾¤¾¤¾¤¾
-            {
+        {//ã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Žã…Ž
+            if (matrix[i][j] == '*')//ì™œ ì§€ë¢°ì°¾ê¸°ë¥¼ í•˜ì„¸ìš”ã…Žã…Žã…Žã…Žã…Žã…Ž{
                 printf("%c", matrix[i][j]);
                 continue;
             }
-            else
-            {
+            else{
                 matrix[i][j] = 0;
-                for (int x = i - 1; x <= i + 1; x++) //xÃà
-                {
-                    for (int y = j - 1; y <= j + 1; y++) //yÃà
-                    {
+                for (int x = i - 1; x <= i + 1; x++) //xì¶• {
+                    for (int y = j - 1; y <= j + 1; y++) //yì¶• {
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
                         else if (matrix[x][y] == '*')
@@ -50,6 +42,5 @@ int main()
         free(matrix[i]);
     free(matrix);
     return 0;
-
 }
 */
