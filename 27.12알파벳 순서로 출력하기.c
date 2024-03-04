@@ -6,7 +6,7 @@ int main()
 	char c;
 	scanf("%c", &c);
 	for (; c <= 'z'; c++)
-		printf("%c", c);
+	printf("%c", c);
 	return 0;
 }
 */
