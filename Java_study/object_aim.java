@@ -42,12 +42,12 @@ class Object_Phone_ex_ {
 }
 
 public class object_aim {
-    public static void main(String[] args) {
+    public static void not_main(String[] args) {
         Scanner in = new Scanner(System.in);
-        short CHECKER = 0,WHILE_CHECKING=1;
+        short CHECKER = 0, WHILE_CHECKING = 1;
         wear_list new_wear = new wear_list();
         do {
-            CHECKER=wear_list.initialization(CHECKER);
+            CHECKER = wear_list.initialization(CHECKER);
             System.out.print("추가하실 기기의 정보를 입력해주세요\n이름: ");
             new_wear.model = in.next();
             System.out.print("가격: ");
@@ -72,14 +72,35 @@ class wear_list {
     String model;
     int price, launch_year;
 
+    static short initialization(short Var) {
+        Var = 0;
+        return Var;
+    }
+
     void Print() {
         System.out.println("\n------------------------");
         System.out.printf("이름:%s\n가격:%d\n출시연도:%d\n", model, price, launch_year);
         System.out.println("------------------------");
     }
+}
 
-    static short initialization(short Var){
-        Var=0;
-        return Var;
+class Circle {
+    final double PI = 3.14159;
+    double radius;
+
+    double findArea() {
+        return radius * radius * PI;
+    }
+
+    void show(double x, double y) {
+        System.out.printf("반지름 = %.0f,넓이 = %.1f\n", x, y);
+    }
+}
+
+class CircleDemo {
+    public static void Circle_main(String[] args) {
+        Circle myCircle = new Circle();
+        myCircle.radius = 10.0;
+        myCircle.show(myCircle.radius, myCircle.findArea());
     }
 }
