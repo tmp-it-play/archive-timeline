@@ -1,7 +1,7 @@
 package Java_study;
 
 public class programmers_java_school_1 {   //String Class 강의
-    public static void main(String[] args) {
+    public static void ex1() {
         String str1 = "Hello World";
         String str2 = "Hello World";
         int[] age = {15, 19, 66, 7};
