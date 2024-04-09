@@ -27,8 +27,8 @@ class Phone {
     }
 }
 
-public class object_aim {
-    public static void main(String[] args) {
+class Object_Phone_ex_ {
+    public static void Phone_ex(String[] args) {
         Phone myPhone = new Phone();
         myPhone.model = "갤럭시 S8";
         myPhone.value = 100;
@@ -38,5 +38,48 @@ public class object_aim {
         yourPhone.model = "G6";
         yourPhone.value = 85;
         yourPhone.print();
+    }
+}
+
+public class object_aim {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        short CHECKER = 0,WHILE_CHECKING=1;
+        wear_list new_wear = new wear_list();
+        do {
+            CHECKER=wear_list.initialization(CHECKER);
+            System.out.print("추가하실 기기의 정보를 입력해주세요\n이름: ");
+            new_wear.model = in.next();
+            System.out.print("가격: ");
+            new_wear.price = in.nextInt();
+            System.out.print("출시연도: ");
+            new_wear.launch_year = in.nextInt();
+            System.out.println("입력이 완료되었습니다");
+            new_wear.Print();
+            System.out.println("계속입력하시겠습니까?[Y=0/N=1]");
+            CHECKER = in.nextShort();
+            switch (CHECKER) {
+                case 0:
+                    WHILE_CHECKING++;
+                case 1:
+                    break;
+            }
+        } while (WHILE_CHECKING > 1);
+    }
+}
+
+class wear_list {
+    String model;
+    int price, launch_year;
+
+    void Print() {
+        System.out.println("\n------------------------");
+        System.out.printf("이름:%s\n가격:%d\n출시연도:%d\n", model, price, launch_year);
+        System.out.println("------------------------");
+    }
+
+    static short initialization(short Var){
+        Var=0;
+        return Var;
     }
 }
