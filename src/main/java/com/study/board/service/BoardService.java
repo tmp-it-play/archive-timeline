@@ -12,12 +12,24 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
+    //Write
     public void write(Board board) {
 
         boardRepository.save(board);
     }
 
-    public List<Board> boardList(){
+    //List
+    public List<Board> boardList() {
         return boardRepository.findAll();
+    }
+
+    //Load
+    public Board boardView(Integer id) {
+        return boardRepository.findById(id).get();
+    }
+
+    //Delete
+    public void boardDelete(Integer id) {
+        boardRepository.deleteById(id);
     }
 }
