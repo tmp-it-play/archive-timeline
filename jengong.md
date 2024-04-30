@@ -27,3 +27,36 @@
     <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/OpenAI.png" aling='left'width="100" height="100"></a>
     <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/PaLM.png" width="110" height="110"></a>
 </figure>
+
+## DevOps
+- 서비스를 빠르게 제공할 수 있도록 조직의 역량을 개선시키고 IT인프라를 설계해 자동화하여 효율적으로 만드는 직군
+- 다른 전공 역시 마찬가지이지만 특히 타 전공에 대한 이해가 중요
+- 예를 들어 Github에 파일을 커밋 및 푸시하는 것도 IT인프라를 설계하고 이를 자동화 한 예시
+
+<img src="https://github.com/snowykte0426/TIL/blob/main/img/DevOps.png" width="140" height="70">
+
+## iOS
+- iOS,즉 애플의 아이폰(iPhone)에서 구동되는 애플리케이션을 개발하는 직군
+- Xcode,AppCode 등의 IDE를 이용하고 Swift를 사용해 코딩함
+- Mac OS 컴퓨터,즉 애플의 컴퓨터가 필수적
+
+<figure class="half">
+    <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/Xcode.png" aling='left'width="100" height="100"></a>
+    <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/AppCode.png" width="100" height="100"></a>
+</figure>
+
+## Android(AOS)
+- Android 운영체제에서 구동되는 애플리케이션을 개발하는 직군
+- Java,Kotlin 등의 언어를 주로 사용
+- Android Studio 라는 편집기를 사용
+- 스마트폰,스마트워치 심지어 TV와 같은 기기에서도 구동되는 Android이기 때문에 더 다양한 개발을 하고 싶다면 관련 지식을 습득하면 좋음
+
+<img src="https://github.com/snowykte0426/TIL/blob/main/img/Android.svg" width="170" height="100">
+
+## Design
+- 주로 웹 개발 분야에선 Design 한다면 UX/UI 디자인을 뜻함
+- UX는 **U**ser **E**xperience,UI는 **U**ser **I**nterface를 뜻함
+- 사용자에게 직관적이고 깔끔해보이는 인터페이스와 편리한 경험을 제공해야 하기 때문에 UX/UI 이론뿐 아니라 약간의 미적감각이 있어야 함
+- Figma,Adobe Illustrator,Adobe XD 등의 도구를 이용할 수 있음
+
+<img src="https://github.com/snowykte0426/TIL/blob/main/img/UI_and_UX.jpg" width="180" height="100">
