@@ -1,4 +1,4 @@
-/*package sec06;
+package sec06;
 import java.util.Scanner;
 public class scanner_in.next {
 	public static void main(String[] args) {
@@ -7,4 +7,3 @@ public class scanner_in.next {
 		System.out.printf("%d", x);
 	}	
 }
-*/
