@@ -25,5 +25,5 @@
 - GPT,PaLM-2 등 언어모델을 이용한 프로그램,서비스를 개발
 <figure class="half">
     <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/OpenAI.png" aling='left'width="100" height="100"></a>
-    <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/PaLM.png" width="80" height="110"></a>
+    <a href="link"><img src="https://github.com/snowykte0426/TIL/blob/main/img/PaLM.png" width="95" height="110"></a>
 </figure>
