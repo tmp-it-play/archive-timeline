@@ -3,7 +3,7 @@
 ### 객체지향이란?
 - 프로그램을 수많은 객체(Object)로 나누고 이들의 상호작용을 기반으로 하여 서술하는 프로그래밍 방식
 - 객체는 인간이 정의한 추상적인 개념
-- 최초의 객체지향을 지원하는 언어는 'Smalltalk'
+- 최초로 객체지향을 지원하는 언어는 'Smalltalk'
 
 <img src="https://github.com/snowykte0426/TIL/blob/main/img/SmallTalk.png" width="100" height="100">
 
