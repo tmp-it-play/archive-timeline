@@ -1,6 +1,7 @@
 #include "superclass.h"
 
 void new_game_reconfirm(void) {
+    system("cls");
     MYSQL db;
     mysql_init(&db);
     if (!mysql_real_connect(&db, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
