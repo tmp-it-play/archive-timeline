@@ -17,6 +17,7 @@
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
 
+int main(void);
 void gotoxy(int x, int y);
 void ASCII_Art_print(void);
 void Program_config(void);
@@ -25,7 +26,10 @@ void CursorView(char show);
 int KeyControl(void);
 void sign_up(void);
 void sign_in(void);
-void Gamemenu(void);
-void prologue(void);
-void gender_select(void);
-void new_game_reconfirm(void);
+void Gamemenu(char id[]);
+void prologue(short gender, char id[]);
+void gender_select(char id[]);
+void new_game_reconfirm(char id[]);
+void program_off(void);
+void save_check(char id[]);
+void outline(char id[]);

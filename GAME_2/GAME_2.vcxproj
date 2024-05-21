@@ -135,6 +135,7 @@
     <ClCompile Include="game_menu.c" />
     <ClCompile Include="game_start.c" />
     <ClCompile Include="prologue.c" />
+    <ClCompile Include="screen.c" />
     <ClCompile Include="sign_up.c" />
     <ClCompile Include="main_code.c" />
     <ClCompile Include="sign_in.c" />

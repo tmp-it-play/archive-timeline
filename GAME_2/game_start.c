@@ -3,9 +3,6 @@
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
 
-int KeyControl(void);
-void program_off(void);
-
 void gotoxy(int x, int y) {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD pos = { 0 };
@@ -46,14 +43,12 @@ void ASCII_Art_print(void) {
     printf("                    ##          `##`         `##   \n");
 }
 
-
-
-
 void Program_config(void) {
     CursorView(0);
     system("COLOR 0F");
     system("mode con cols=120 lines=30");
-    SetConsoleTitle(TEXT("±â»ç"));
+    system("cls");
+    SetConsoleTitle(TEXT("È¸±Í"));
 }
 
 int loginmenuDraw(void) {

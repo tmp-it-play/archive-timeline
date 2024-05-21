@@ -29,8 +29,7 @@ void sign_up(void) {
 		char query[255];
 		sprintf(query, "SELECT id FROM gwangju_sword_master.account WHERE password = '%s'", password);
 		if (mysql_query(&db_key, query)) {
-			fprintf(stderr, "Query execution failed: %s\n", mysql_error(&db_key));
-			Sleep(3000);
+			db_query_error(&db_key);
 			exit(0);
 		}
 		MYSQL_RES* result = mysql_store_result(&db_key);
@@ -38,7 +37,7 @@ void sign_up(void) {
 		if (row != NULL || row != 0){
 			if (strcmp(row, id)) {
 				system("cls");
-				Gamemenu();
+				Gamemenu(id);
 			}
 		}
 		else {
