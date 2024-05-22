@@ -89,10 +89,10 @@ int loginmenuDraw(void) {
         case SUBMIT:
             system("cls");
             if (y - 16 == 1) {
-                sign_in();
+                sign_up();
             }
             else if (y - 16 == 0) {
-                sign_up();
+                sign_in();
             }
             else if (y - 16 == 2) {
                 program_off();

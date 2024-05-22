@@ -1,4 +1,5 @@
 #include "superclass.h"
+#include "player_state.h"
 
 int main() {
     int sync = 0;
@@ -12,4 +13,10 @@ int main() {
         loginmenuDraw();
     }
     exit(1);
+}
+
+int game_core_code(char id[]) {
+    initial_hp(id);
+    initial_mp(id);
+    Sleep(40000);
 }

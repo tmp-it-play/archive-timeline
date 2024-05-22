@@ -134,14 +134,16 @@
     <ClCompile Include="db_event_process.c" />
     <ClCompile Include="game_menu.c" />
     <ClCompile Include="game_start.c" />
+    <ClCompile Include="player_state.c" />
     <ClCompile Include="prologue.c" />
     <ClCompile Include="screen.c" />
-    <ClCompile Include="sign_up.c" />
-    <ClCompile Include="main_code.c" />
     <ClCompile Include="sign_in.c" />
+    <ClCompile Include="main_code.c" />
+    <ClCompile Include="sign_up.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db_event.h" />
+    <ClInclude Include="player_state.h" />
     <ClInclude Include="superclass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

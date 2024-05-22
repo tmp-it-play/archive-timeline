@@ -18,6 +18,7 @@
 #pragma comment(lib, "user32.lib")
 
 int main(void);
+int game_core_code(char id[]);
 void gotoxy(int x, int y);
 void ASCII_Art_print(void);
 void Program_config(void);

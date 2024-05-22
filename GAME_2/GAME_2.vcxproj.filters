@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sign_up.c">
+    <ClCompile Include="sign_in.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game_start.c">
@@ -24,7 +24,7 @@
     <ClCompile Include="main_code.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="sign_in.c">
+    <ClCompile Include="sign_up.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="game_menu.c">
@@ -39,12 +39,18 @@
     <ClCompile Include="screen.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="player_state.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="superclass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="db_event.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="player_state.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

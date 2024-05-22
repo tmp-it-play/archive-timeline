@@ -83,7 +83,7 @@ void gender_select(char id[]) {
     int x = 45, y = 15;
     gotoxy(45, 15);
     printf("> ³²");
-    gotoxy(65, 15);
+    gotoxy(66, 15);
     printf("¿©");
     char query[255];
     while (true) {
@@ -93,7 +93,7 @@ void gender_select(char id[]) {
             gotoxy(x, y);
             printf(" ");
             if (x >= 45 && x < 63) {
-                x = 63;
+                x = 64;
             }
             else {
                 x = 45;
@@ -105,11 +105,11 @@ void gender_select(char id[]) {
         case LEFT: {
             gotoxy(x, y);
             printf(" ");
-            if (x == 63) {
+            if (x == 64) {
                 x = 45;
             }
             else {
-                x = 63;
+                x = 64;
             }
             gotoxy(x, y);
             printf(">");
@@ -126,7 +126,7 @@ void gender_select(char id[]) {
                 prologue(1, id);
                 return;
             }
-            else if (x == 63) {
+            else if (x == 64) {
                 sprintf(query, "UPDATE gwangju_sword_master.account SET gender = 'female' WHERE id = '%s'", id);
                 if (mysql_query(&db, query)) {
                     db_query_error(&db);
@@ -142,7 +142,6 @@ void gender_select(char id[]) {
     }
     mysql_close(&db);
     exit(1);
-
 }
 
 void save_check(char id[]) {
