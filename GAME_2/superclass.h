@@ -20,6 +20,9 @@
 int main(void);
 int game_core_code(char id[]);
 void gotoxy(int x, int y);
+void clearLine(int x, int y);
+void printAt(int x, int y, const char* str);
+void scrollUp(int x, int y_start, int y_end);
 void ASCII_Art_print(void);
 void Program_config(void);
 int loginmenuDraw(void);
@@ -34,3 +37,5 @@ void new_game_reconfirm(char id[]);
 void program_off(void);
 void save_check(char id[]);
 void outline(char id[]);
+void ingame_select(void);
+void stage_1(char id[]);

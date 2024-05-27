@@ -134,12 +134,15 @@
     <ClCompile Include="db_event_process.c" />
     <ClCompile Include="game_menu.c" />
     <ClCompile Include="game_start.c" />
+    <ClCompile Include="monster_dictionary.c" />
+    <ClCompile Include="mop_dictionary.h" />
     <ClCompile Include="player_state.c" />
     <ClCompile Include="prologue.c" />
     <ClCompile Include="screen.c" />
     <ClCompile Include="sign_in.c" />
     <ClCompile Include="main_code.c" />
     <ClCompile Include="sign_up.c" />
+    <ClCompile Include="stage_1.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db_event.h" />

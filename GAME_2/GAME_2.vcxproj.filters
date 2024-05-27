@@ -42,6 +42,15 @@
     <ClCompile Include="player_state.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="stage_1.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="monster_dictionary.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="mop_dictionary.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="superclass.h">

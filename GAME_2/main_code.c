@@ -18,5 +18,9 @@ int main() {
 int game_core_code(char id[]) {
     initial_hp(id);
     initial_mp(id);
-    Sleep(40000);
+    now_level(id);
+    now_state(id);
+    ingame_select();
+    stage_1(id);
+    Sleep(10000);
 }

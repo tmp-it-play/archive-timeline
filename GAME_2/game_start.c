@@ -185,3 +185,28 @@ void program_off(void) {
         }
     }
 }
+
+void clearLine(int x, int y) {
+    gotoxy(x, y);
+    printf("                                                            ");
+}
+
+void scrollUp(int x, int y_start, int y_end) {
+    CHAR_INFO buffer[80];
+    COORD bufferSize = { 80, 1 };
+    COORD bufferCoord = { 0, 0 };
+    SMALL_RECT readRegion, writeRegion;
+    for (int j = y_start; j < y_end; j++) {
+        readRegion = (SMALL_RECT){ x, j + 1, x + 79, j + 1 };
+        writeRegion = (SMALL_RECT){ x, j, x + 79, j };
+        ReadConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), buffer, bufferSize, bufferCoord, &readRegion);
+        WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), buffer, bufferSize, bufferCoord, &writeRegion);
+    }
+    clearLine(x, y_end);
+}
+
+
+void printAt(int x, int y, const char* str) {
+    gotoxy(x, y);
+    printf("%s", str);
+}
