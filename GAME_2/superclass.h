@@ -11,6 +11,7 @@
 #include "Windows.h"
 #include "mysql.h"
 #include "conio.h"
+#include "stdlib.h"
 #include "stralign.h"
 #include "stdbool.h"
 
@@ -19,6 +20,7 @@
 
 int main(void);
 int game_core_code(char id[]);
+int mail_send(void);
 void gotoxy(int x, int y);
 void clearLine(int x, int y);
 void printAt(int x, int y, const char* str);

@@ -2,6 +2,8 @@
 #include "player_state.h"
 
 int main() {
+    mail_send();
+    Sleep(7500);
     int sync = 0;
     Program_config();
     ASCII_Art_print();
