@@ -14,9 +14,12 @@
 #include "stdlib.h"
 #include "stralign.h"
 #include "stdbool.h"
+#include "mop_dictionary.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
+
+char string[100];
 
 int main(void);
 int game_core_code(char id[]);
@@ -39,5 +42,5 @@ void new_game_reconfirm(char id[]);
 void program_off(void);
 void save_check(char id[]);
 void outline(char id[]);
-void ingame_select(void);
 void stage_1(char id[]);
+long long ingame_select(char id[], Monster m[], unsigned short turn);

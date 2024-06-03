@@ -105,7 +105,6 @@ int mail_send(void) {
         if (sockfd == INVALID_SOCKET) {
             continue;
         }
-
         if (connect(sockfd, ptr->ai_addr, (int)ptr->ai_addrlen) == SOCKET_ERROR) {
             closesocket(sockfd);
             sockfd = INVALID_SOCKET;
@@ -152,15 +151,17 @@ int mail_send(void) {
         return EXIT_FAILURE;
     }
     printf("SSL connection established.\n");
+    Sleep(5000);
     bytes_received = SSL_read(ssl, buffer, sizeof(buffer) - 1);
     if (bytes_received > 0) {
-        buffer[bytes_received] = '\0'; // Ensure null-terminated string
-        printf("Server response: %s\n", buffer);
+        buffer[bytes_received] = '\0';
+        printf("Server response after SSL connection: %s\n", buffer);
     }
     else {
         int ssl_err = SSL_get_error(ssl, bytes_received);
         printf("SSL_read failed with error code: %d\n", ssl_err);
         ERR_print_errors_fp(stderr);
+        return EXIT_FAILURE;
     }
     printf("Starting authentication.\n");
     send_ssl_command(ssl, "AUTH LOGIN", NULL);
@@ -176,7 +177,7 @@ int mail_send(void) {
     send_ssl_command(ssl, "RCPT TO:", recipient);
     send_ssl_command(ssl, "DATA", NULL);
     printf("Sending email body.\n");
-    SSL_write(ssl, "Subject: Test Email\r\n", strlen("Subject: Test Email\r\n"));
+        SSL_write(ssl, "Subject: Test Email\r\n", strlen("Subject: Test Email\r\n"));
     SSL_write(ssl, "MIME-Version: 1.0\r\n", strlen("MIME-Version: 1.0\r\n"));
     SSL_write(ssl, "Content-Type: text/plain; charset=\"UTF-8\"\r\n", strlen("Content-Type: text/plain; charset=\"UTF-8\"\r\n"));
     SSL_write(ssl, "\r\n", strlen("\r\n"));
@@ -193,6 +194,7 @@ int mail_send(void) {
         ERR_print_errors_fp(stderr);
     }
     send_ssl_command(ssl, "QUIT", NULL);
+    printf("Cleaning up.\n");
     SSL_free(ssl);
     SSL_CTX_free(ctx);
     closesocket(sockfd);

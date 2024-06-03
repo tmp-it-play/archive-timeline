@@ -205,8 +205,8 @@ void scrollUp(int x, int y_start, int y_end) {
     clearLine(x, y_end);
 }
 
-
 void printAt(int x, int y, const char* str) {
     gotoxy(x, y);
+    strcat(str, string);
     printf("%s", str);
 }

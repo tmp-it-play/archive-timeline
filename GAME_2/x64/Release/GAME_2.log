@@ -1,18 +1,14 @@
-﻿  password_find.c
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(49,24): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(65,28): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(164,21): warning C4244: '함수': 'SOCKET'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(198,75): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(199,75): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(215,47): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(216,45): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(217,71): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(218,28): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(219,69): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(220,29): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  game_start.c
+Y:\Coding_Studing\GAME_2\GAME_2\game_start.c(211,12): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+  stage_1.c
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(17,24): warning C4047: '함수': 'int'의 간접 참조 수준이 'void *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(17,24): warning C4024: 'memset': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(20,49): warning C4020: 'printAt': 실제 매개 변수가 너무 많습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(21,26): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(27,24): warning C4244: '-=': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  2 of 49 functions ( 4.1%) were compiled, the rest were copied from previous compilation.
+  3 of 45 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    23 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   GAME_2.vcxproj -> Y:\Coding_Studing\GAME_2\x64\Release\GAME_2.exe
