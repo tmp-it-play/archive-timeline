@@ -15,7 +15,7 @@ void stage_1(char id[]) {
     Monster m[2] = { goblin(), slime() };
     for (int i = 0; i < n; i++) {
         memset(string, NULL, sizeof(string));
-        strcpy(string, "ÀÌ Æ¢¾î³ª¿Ô´Ù!");
+        strcpy(string, "ì´ íŠ€ì–´ë‚˜ì™”ë‹¤!");
         scrollup_motion(initial_x, initial_y);
         printAt(initial_x, initial_y, m[i].name,string);
         gotoxy(initial_x + strlen(m[i].name), initial_y);
