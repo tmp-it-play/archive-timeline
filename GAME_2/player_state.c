@@ -202,4 +202,152 @@ void now_state(char id[]) {
     printf("속도:%s", row[2]);
     gotoxy(2, 20);
     printf("치명타 확률:%s%%", row[5]);
+    memset(q, 0, sizeof(q));
+    sprintf(q, "SELECT levelup_requirement,levelup_point,level FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+		db_query_error(&db);
+		exit(0);
+	}
+    result = mysql_store_result(&db);
+    if (result == NULL) {
+        db_query_error(&db);
+        exit(0);
+    }
+    row = mysql_fetch_row(result);
+    if (row == NULL) {
+		id_find_error(&db, result, row);
+		return;
+	}
+    long long levelup_requirement = atoll(row[0]);
+    long long levelup_point = atoll(row[1]);
+    long long player_level = atoll(row[2]);
+    mysql_free_result(result);
+    gotoxy(2, 14);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+    printf("Lv.%lld[%lld/%lld]", player_level, levelup_point, levelup_requirement);
+    mysql_close(&db);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+    return;
+}
+
+void hp_mp_bar(char id[]) {
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
+        gotoxy(42, 12);
+        db_connect_error(&db);
+        exit(0);
+    }
+    char q[255];
+    sprintf(q, "SELECT hp,max_hp,mp,max_mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        exit(0);
+    }
+    MYSQL_RES* result = mysql_store_result(&db);
+    if (result == NULL) {
+        db_query_error(&db);
+        exit(0);
+    }
+    MYSQL_ROW row = mysql_fetch_row(result);
+    if (row == NULL) {
+        id_find_error(&db, result, row);
+        return;
+    }
+    long long hp = atoll(row[0]);
+    long long max_hp = atoll(row[1]);
+    long long mp = atoll(row[2]);
+    long long max_mp = atoll(row[3]);
+    mysql_free_result(result);
+    mysql_close(&db);
+    gotoxy(17, 24);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+    printf("[%lld/%lld]", hp, max_hp);
+    gotoxy(2, 24);
+    printf("HP[");
+    unsigned int hp_temp = hp / 10;
+    while (hp_temp > 10) {
+        hp_temp /= 10;
+    }
+    printf("■");
+    if (hp_temp > 0) {
+        printf("■");
+        if (hp_temp > 1) {
+            printf("■");
+            if (hp_temp > 2) {
+                printf("■");
+                if (hp_temp > 3) {
+                    printf("■");
+                    if (hp_temp > 4) {
+                        printf("■");
+                        if (hp_temp > 5) {
+                            printf("■");
+                            if (hp_temp > 6) {
+                                printf("■");
+                                if (hp_temp > 7) {
+                                    printf("■");
+                                    if (hp_temp > 8) {
+                                        printf("■");
+                                        if (hp_temp > 9) {
+                                            printf("■");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+    gotoxy(16, 24);
+    printf("]");
+    gotoxy(17, 25);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
+    printf("[%lld/%lld]", mp, max_mp);
+    gotoxy(2, 25);
+    printf("MP[");
+    unsigned int mp_temp = mp / 10;
+    while (mp_temp > 10) {
+        mp_temp /= 10;
+    }
+    printf("■");
+    if (mp_temp > 0) {
+        printf("■");
+        if (mp_temp > 1) {
+            printf("■");
+            if (mp_temp > 2) {
+                printf("■");
+                if (mp_temp > 3) {
+                    printf("■");
+                    if (mp_temp > 4) {
+                        printf("■");
+                        if (mp_temp > 5) {
+                            printf("■");
+                            if (mp_temp > 6) {
+                                printf("■");
+                                if (mp_temp > 7) {
+                                    printf("■");
+                                    if (mp_temp > 8) {
+                                        printf("■");
+                                        if (mp_temp > 9) {
+                                            printf("■");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+    gotoxy(16, 25);
+    printf("]");
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+    return;
 }

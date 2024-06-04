@@ -13,33 +13,33 @@ void gotoxy(int x, int y) {
 
 void ASCII_Art_print(void) {
     puts("\n\n\n");
-    gotoxy(30, 1);
+    gotoxy(32, 1);
     printf("    `       `       ```                      ``    \n");
-    gotoxy(30, 2);
+    gotoxy(32, 2);
     printf("            `       ##`                      `##   \n");
-    gotoxy(30, 3);
+    gotoxy(32, 3);
     printf("    `########       ##      ############ `   `##   \n");
-    gotoxy(30, 4);
+    gotoxy(32, 4);
     printf("    ``    `         ##      ``````````##     `##   \n");
-    gotoxy(30, 5);
+    gotoxy(32, 5);
     printf("``##############    ##              ``##     `##   \n");
-    gotoxy(30, 6);
+    gotoxy(32, 6);
     printf("    ` `      ```    ##              ` ##     `##   \n");
-    gotoxy(30, 7);
+    gotoxy(32, 7);
     printf("    #########`      ##               `##`    `##   \n");
-    gotoxy(30, 8);
+    gotoxy(32, 8);
     printf("   ##`  ` ``##`     ##    `################# `##   \n");
-    gotoxy(30, 9);
+    gotoxy(32, 9);
     printf("` ``##`    `##`     ##           ##`         `##   \n");
-    gotoxy(30, 10);
+    gotoxy(32, 10);
     printf("` `` `######``      ##           ##`         `##   \n");
-    gotoxy(30, 11);
+    gotoxy(32, 11);
     printf("  ``   `## ```    ``##           ##`         `##   \n");
-    gotoxy(30, 12);
+    gotoxy(32, 12);
     printf(" ################`  ##           ##`         `##   \n");
-    gotoxy(30, 13);
+    gotoxy(32, 13);
     printf(" ``         ``    ``##           ##`         `##   \n");
-    gotoxy(30, 14);
+    gotoxy(32, 14);
     printf("                    ##          `##`         `##   \n");
 }
 

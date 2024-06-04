@@ -9,8 +9,9 @@ Monster goblin(void) {
 }
 
 long long goblin_skill_1(void) {
+	long long damage;
     memset(string, 0, sizeof(string));
-	long long damage = 3;
+	damage = 3;
     sprintf(string, "고블린의 일격! 피해를 %lld 받았다", damage);
     scrollUpImproved(32, 3, 17);
     printAt(32, 17, string);
@@ -35,6 +36,26 @@ void slime_skill_1(void) {
 Monster bat(void) {
     Monster bat = { "박쥐",25,8,0,30 };
     return bat;
+}
+
+long long bat_skill_1(void) {
+	memset(string, 0, sizeof(string));
+	long long damage = 5;
+	strcat(string, "박쥐가 흡혈을 했다! HP를 5 뺐겼다");
+	scrollUpImproved(32, 3, 17);
+	printAt(32, 17, string);
+	gotoxy(32 + strlen(string), 17);
+	return damage;
+}
+
+long long bat_skill_2(void) {
+    memset(string, 0, sizeof(string));
+	long long damage = 8;
+	strcat(string, "박쥐의 할퀴기! 피해를 8 받았다");
+	scrollUpImproved(32, 3, 17);
+	printAt(32, 17, string);
+	gotoxy(32 + strlen(string), 17);
+	return damage;
 }
 
 Monster oak(void) {

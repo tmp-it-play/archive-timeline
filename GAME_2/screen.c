@@ -56,4 +56,7 @@ void ClearViewState(void) {
     for (int i = 14; i <= 20; i++) {
         clearLine(2, i);
     }
+    for (int i = 24; i <= 26; i++) {
+        clearLine(2, i);
+    }
 }

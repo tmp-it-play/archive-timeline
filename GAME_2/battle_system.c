@@ -164,17 +164,28 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
 	}
     int hp = atoi(row[0]);
     if (!strcmp("고블린", m[stage_turn].name)) {
-        long long damage = goblin_skill_1();
+        damage = goblin_skill_1();
         hp-=damage;
 	}
 	else if(!strcmp("슬라임",m[stage_turn].name)) {
 		slime_skill_1();
         return 0;
 	}
-	/*else if(strcmp("박쥐",m[stage_turn].name) == 0) {
-		bat_skill_1();
+	else if(strcmp("박쥐",m[stage_turn].name) == 0) {
+        srand(time(NULL));
+        int random1 = rand() % 3;
+        int random2 = rand() % 10;
+        if(random1>=random2){
+            damage = bat_skill_1();
+            if (damage == 5) {
+                return 1;
+			}
+        }
+		else{
+            damage = bat_skill_2();
+		}
 	}
-	else if(strcmp("오크",m[stage_turn].name) == 0) {
+	/*else if(strcmp("오크",m[stage_turn].name) == 0) {
 		oak_skill_1();
 	}
 	else if(strcmp("늑대인간",m[stage_turn].name) == 0) {
@@ -200,4 +211,111 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
 		//회귀코드 작성
 	}
 	return 0;
+}
+
+void mop_hp_bar(int mop_hp, int mop_max_hp, int x, int y, char name[]) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+    int bar_width = 35;
+    int filled_length = (mop_hp * bar_width) / mop_max_hp;
+    gotoxy(x, y);
+    printf("%s[", name);
+    for (int i = 0; i < bar_width; i++) {
+        if (i < filled_length) {
+            printf("■");
+        }
+        else {
+            printf(" ");
+        }
+    }
+    printf("]");
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+}
+
+void drop_booty(char id[], char name[]) {
+    int drop_exp;
+    srand(time(NULL));
+    if (!strcmp("고블린", name)) {
+        drop_exp = rand() % 20 + 1;
+        while (drop_exp <= 5) {
+            drop_exp = rand() % 20 + 1;
+        }
+    }
+    else if (!strcmp("슬라임", name)) {
+        drop_exp = rand() % 10 + 1;
+        while (drop_exp <= 3) {
+            drop_exp = rand() % 10 + 1;
+        }
+    }
+    else if (!strcmp("박쥐", name)) {
+        drop_exp = rand() % 30 + 1;
+        while (drop_exp <= 10) {
+            drop_exp = rand() % 30 + 1;
+        }
+    }
+    else if (!strcmp("오크", name)) {
+        drop_exp = rand() % 50 + 1;
+        while (drop_exp <= 20) {
+            drop_exp = rand() % 50 + 1;
+        }
+    }
+    else if (!strcmp("늑대인간", name)) {
+        drop_exp = rand() % 60 + 1;
+        while (drop_exp <= 30) {
+            drop_exp = rand() % 60 + 1;
+        }
+    }
+    else if (!strcmp("흑마술사", name)) {
+        drop_exp = rand() % 70 + 1;
+        while (drop_exp <= 40) {
+            drop_exp = rand() % 70 + 1;
+        }
+    }
+    else if (!strcmp("드래곤", name)) {
+        drop_exp = rand() % 100 + 1;
+        while (drop_exp <= 50) {
+            drop_exp = rand() % 100 + 1;
+        }
+    }
+    else {
+        drop_exp = 0;
+    }
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return;
+    }
+    char q[255];
+    sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point + %d WHERE id = '%s'", drop_exp, id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        mysql_close(&db);
+        return;
+    }
+    sprintf(q, "SELECT levelup_point, levelup_requirement FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        mysql_close(&db);
+        return;
+    }
+    MYSQL_RES* res = mysql_store_result(&db);
+    MYSQL_ROW row = mysql_fetch_row(res);
+    if (row == NULL) {
+        db_result_value_error();
+        mysql_free_result(res);
+        mysql_close(&db);
+        return;
+    }
+    int levelup_point = atoi(row[0]);
+    int levelup_requirement = atoi(row[1]);
+    mysql_free_result(res);
+    if (levelup_point >= levelup_requirement) {
+        sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = 0, levelup_requirement = levelup_requirement + 150, level = level + 1 WHERE id = '%s'", id);
+        if (mysql_query(&db, q)) {
+            db_query_error(&db);
+            mysql_close(&db);
+            return;
+        }
+    }
+    mysql_close(&db);
 }

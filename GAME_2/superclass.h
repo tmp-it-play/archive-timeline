@@ -43,6 +43,8 @@ void gender_select(char id[]);
 void new_game_reconfirm(char id[]);
 void program_off(void);
 void save_check(char id[]);
+void hp_mp_bar(char id[]);
+void mop_hp_bar(int mop_hp, int mop_max_hp, int x, int y, char name[]);
 void outline(char id[]);
 void setRGBColor(int r, int g, int b);
 void resetColor(void);
