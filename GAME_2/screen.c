@@ -51,3 +51,9 @@ void info_area(char id[]) {
     }
     game_core_code(id);
 }
+
+void ClearViewState(void) {
+    for (int i = 14; i <= 20; i++) {
+        clearLine(2, i);
+    }
+}

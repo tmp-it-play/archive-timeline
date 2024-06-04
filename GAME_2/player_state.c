@@ -128,7 +128,6 @@ void now_level(char id[]) {
         db_query_error(&db);
         exit(0);
     }
-
     result = mysql_store_result(&db);
     if (result == NULL) {
         db_query_error(&db);

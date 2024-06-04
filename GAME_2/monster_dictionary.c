@@ -8,9 +8,28 @@ Monster goblin(void) {
     return goblin;
 }
 
+long long goblin_skill_1(void) {
+    memset(string, 0, sizeof(string));
+	long long damage = 3;
+    sprintf(string, "고블린의 일격! 피해를 %lld 받았다", damage);
+    scrollUpImproved(32, 3, 17);
+    printAt(32, 17, string);
+    gotoxy(32 + strlen(string), 17);
+	return damage;
+}
+
 Monster slime(void) {
     Monster slime = { "슬라임",30,0,5,3 };
     return slime;
+}
+
+void slime_skill_1(void) {
+	memset(string, 0, sizeof(string));
+	strcat(string, "슬라임의 필살 흐물거리기! 하지만 아무일도 일어나지 않았다!");
+	scrollUpImproved(32, 3, 17);
+	printAt(32, 17, string);
+	gotoxy(32 + strlen(string), 17);
+	return;
 }
 
 Monster bat(void) {

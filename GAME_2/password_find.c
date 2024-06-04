@@ -65,7 +65,7 @@ void send_ssl_command(SSL* ssl, const char* cmd, const char* arg) {
     SSL_write(ssl, buffer, strlen(buffer));
     int bytes_received = SSL_read(ssl, buffer, sizeof(buffer) - 1);
     if (bytes_received > 0) {
-        buffer[bytes_received] = '\0';
+        buffer[bytes_received] = NULL;
         printf("Server response: %s\n", buffer);
     }
     else {

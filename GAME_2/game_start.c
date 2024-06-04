@@ -188,25 +188,57 @@ void program_off(void) {
 
 void clearLine(int x, int y) {
     gotoxy(x, y);
-    printf("                                                            ");
+    printf("                ");
 }
 
-void scrollUp(int x, int y_start, int y_end) {
+void clearFinLine(int x, int y) {
+    gotoxy(x, y);
+    printf("                                                    ");
+}
+
+void scrollUp(int x, int y_end, int y_start) {
     CHAR_INFO buffer[80];
     COORD bufferSize = { 80, 1 };
     COORD bufferCoord = { 0, 0 };
     SMALL_RECT readRegion, writeRegion;
-    for (int j = y_start; j < y_end; j++) {
-        readRegion = (SMALL_RECT){ x, j + 1, x + 79, j + 1 };
-        writeRegion = (SMALL_RECT){ x, j, x + 79, j };
+    for (int j = y_end - 1; j >= y_start; j--) {
+        readRegion = (SMALL_RECT){ x, j, x + 79, j };
+        writeRegion = (SMALL_RECT){ x, j + 1, x + 79, j + 1 };
         ReadConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), buffer, bufferSize, bufferCoord, &readRegion);
         WriteConsoleOutput(GetStdHandle(STD_OUTPUT_HANDLE), buffer, bufferSize, bufferCoord, &writeRegion);
     }
-    clearLine(x, y_end);
+    clearLine(x, y_start);
+}
+
+void scrollUpImproved(int x, int y_start, int y_end) {
+    SMALL_RECT scrollRegion;
+    COORD destCoord;
+    CHAR_INFO fill;
+    fill.Char.AsciiChar = ' ';
+    fill.Attributes = 0;
+    scrollRegion.Left = x;
+    scrollRegion.Top = y_start;
+    scrollRegion.Right = x + 79;
+    scrollRegion.Bottom = y_end;
+    destCoord.X = x;
+    destCoord.Y = y_start - 1;
+    if (!ScrollConsoleScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE), &scrollRegion, NULL, destCoord, &fill)) {
+        DWORD error = GetLastError();
+        printf("ScrollConsoleScreenBuffer error: %ld\n", error);
+        return;
+    }
+    clearFinLine(x, y_end);
 }
 
 void printAt(int x, int y, const char* str) {
     gotoxy(x, y);
-    strcat(str, string);
     printf("%s", str);
+}
+
+void setRGBColor(int r, int g, int b) {
+    printf("\x1b[38;2;%d;%d;%dm", r, g, b);
+}
+
+void resetColor(void) {
+    printf("\x1b[0m");
 }

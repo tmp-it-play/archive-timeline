@@ -12,7 +12,9 @@ typedef struct {
 } Monster;
 
 Monster goblin(void);
+long long goblin_skill_1(void);
 Monster slime(void);
+void slime_skill_1(void);
 Monster bat(void);
 Monster oak(void);
 Monster wolfman(void);

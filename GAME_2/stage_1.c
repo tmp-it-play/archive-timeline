@@ -1,36 +1,49 @@
 #include "superclass.h"
-#include "db_event.h"
 #include "player_state.h"
 #include "mop_dictionary.h"
 
-static unsigned short turn = 1;
+static unsigned short turn = 0;
 
 void scrollup_motion(int initial_x, int initial_y) {
-    scrollUp(initial_x, 16, initial_y);
+    scrollUpImproved(initial_x, 2, initial_y);
 }
 
 void stage_1(char id[]) {
-    static int initial_x = 32, initial_y = 17;
+    static int initial_x = 32, initial_y = 17, mop_hp;
     int n = 2;
+    char string[256];
     Monster m[2] = { goblin(), slime() };
     for (int i = 0; i < n; i++) {
-        memset(string, NULL, sizeof(string));
-        strcpy(string, "ì´ íŠ€ì–´ë‚˜ì™”ë‹¤!");
-        scrollup_motion(initial_x, initial_y);
-        printAt(initial_x, initial_y, m[i].name,string);
-        gotoxy(initial_x + strlen(m[i].name), initial_y);
+        unsigned char match_turn = false;
+        if (i > 0) {
+            scrollup_motion(initial_x, initial_y);
+        }
+        memset(string, 0, sizeof(string));
+        sprintf(string, "%sÀÌ Æ¢¾î³ª¿Ô´Ù!", m[i].name);
+        printAt(initial_x, initial_y, string);
+        mop_hp = m[i].hp;
         while (true) {
-            Sleep(1000);
-            long long b = ingame_select(id, m, turn);
-            m[i].hp -= b;
+            ClearViewState();
+            now_level(id);
+            now_state(id);
+            long long b = ingame_select(id, m, turn, initial_x, initial_y);
+            mop_hp -= b;
             turn++;
-            if (m[i].hp > 0) {
+            match_turn = true;
+            if (mop_hp > 0) {
+                if (match_turn == true) {
+                    mop_turn(id, m, i, initial_x, initial_y);
+                }
                 continue;
             }
-            else if (m[i].hp <= 0) {
-                scrollup_motion(initial_x, initial_y);
-                //printAt
+            else if (mop_hp <= 0) {
+                memset(string, 0, sizeof(string));
+                sprintf(string, "%s¸¦ Ã³Ä¡Çß´Ù!", m[i].name);
+                scrollup_motion(initial_x, 17);
+                printAt(initial_x, initial_y, string);
+                gotoxy(initial_x + strlen(string), initial_y);
             }
+            break;
         }
     }
 }
