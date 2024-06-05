@@ -8,15 +8,20 @@ Monster goblin(void) {
     return goblin;
 }
 
-long long goblin_skill_1(void) {
+long long goblin_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
 	long long damage;
     memset(string, 0, sizeof(string));
-	damage = 3;
-    sprintf(string, "고블린의 일격! 피해를 %lld 받았다", damage);
-    scrollUpImproved(32, 3, 17);
-    printAt(32, 17, string);
-    gotoxy(32 + strlen(string), 17);
-	return damage;
+	if (!avoidance(id, m, stage_turn, x, y)) {
+		return 0;
+	}
+	else {
+		damage = 3;
+		sprintf(string, "고블린의 일격! 피해를 %lld 받았다", damage);
+		scrollUpImproved(32, 3, 17);
+		printAt(32, 17, string);
+		gotoxy(32 + strlen(string), 17);
+		return damage;
+	}
 }
 
 Monster slime(void) {
@@ -38,24 +43,34 @@ Monster bat(void) {
     return bat;
 }
 
-long long bat_skill_1(void) {
-	memset(string, 0, sizeof(string));
-	long long damage = 5;
-	strcat(string, "박쥐가 흡혈을 했다! HP를 5 뺐겼다");
-	scrollUpImproved(32, 3, 17);
-	printAt(32, 17, string);
-	gotoxy(32 + strlen(string), 17);
-	return damage;
+long long bat_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
+	if (!avoidance(id, m, stage_turn, x, y)) {
+		return 0;
+	}
+	else {
+		memset(string, 0, sizeof(string));
+		long long damage = 5;
+		strcat(string, "박쥐가 흡혈을 했다! HP를 5 뺐겼다");
+		scrollUpImproved(32, 3, 17);
+		printAt(32, 17, string);
+		gotoxy(32 + strlen(string), 17);
+		return damage;
+	}
 }
 
-long long bat_skill_2(void) {
-    memset(string, 0, sizeof(string));
-	long long damage = 8;
-	strcat(string, "박쥐의 할퀴기! 피해를 8 받았다");
-	scrollUpImproved(32, 3, 17);
-	printAt(32, 17, string);
-	gotoxy(32 + strlen(string), 17);
-	return damage;
+long long bat_skill_2(char id[], Monster m[], int stage_turn, int x, int y) {
+	if (!avoidance(id, m, stage_turn, x, y)) {
+		return 0;
+	}
+	else {
+		memset(string, 0, sizeof(string));
+		long long damage = 8;
+		strcat(string, "박쥐의 할퀴기! 피해를 8 받았다");
+		scrollUpImproved(32, 3, 17);
+		printAt(32, 17, string);
+		gotoxy(32 + strlen(string), 17);
+		return damage;
+	}
 }
 
 Monster oak(void) {

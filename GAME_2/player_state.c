@@ -199,7 +199,7 @@ void now_state(char id[]) {
     gotoxy(2, 18);
     printf("방어력:%s", row[4]);
     gotoxy(2, 19);
-    printf("속도:%s", row[2]);
+    printf("회피률:%s%%", row[2]);
     gotoxy(2, 20);
     printf("치명타 확률:%s%%", row[5]);
     memset(q, 0, sizeof(q));
@@ -232,6 +232,7 @@ void now_state(char id[]) {
 
 void hp_mp_bar(char id[]) {
     MYSQL db;
+    unsigned int bar_length = 10;
     mysql_init(&db);
     if (!mysql_real_connect(&db, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
         gotoxy(42, 12);
@@ -265,87 +266,38 @@ void hp_mp_bar(char id[]) {
     printf("[%lld/%lld]", hp, max_hp);
     gotoxy(2, 24);
     printf("HP[");
-    unsigned int hp_temp = hp / 10;
-    while (hp_temp > 10) {
-        hp_temp /= 10;
-    }
-    printf("■");
-    if (hp_temp > 0) {
-        printf("■");
-        if (hp_temp > 1) {
+    double hp_percentage = (double)hp / max_hp;
+    unsigned int filled_length = (unsigned int)(hp_percentage * bar_length);
+    gotoxy(2, 24);
+    printf("HP[");
+    for (unsigned int i = 0; i < bar_length; i++) {
+        if (i < filled_length) {
             printf("■");
-            if (hp_temp > 2) {
-                printf("■");
-                if (hp_temp > 3) {
-                    printf("■");
-                    if (hp_temp > 4) {
-                        printf("■");
-                        if (hp_temp > 5) {
-                            printf("■");
-                            if (hp_temp > 6) {
-                                printf("■");
-                                if (hp_temp > 7) {
-                                    printf("■");
-                                    if (hp_temp > 8) {
-                                        printf("■");
-                                        if (hp_temp > 9) {
-                                            printf("■");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-
+        }
+        else {
+            printf(" ");
         }
     }
-    gotoxy(16, 24);
     printf("]");
     gotoxy(17, 25);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
     printf("[%lld/%lld]", mp, max_mp);
     gotoxy(2, 25);
     printf("MP[");
-    unsigned int mp_temp = mp / 10;
-    while (mp_temp > 10) {
-        mp_temp /= 10;
-    }
-    printf("■");
-    if (mp_temp > 0) {
-        printf("■");
-        if (mp_temp > 1) {
+    double mp_percentage = (double)mp / max_mp;
+    unsigned int filled_mp_length = (unsigned int)(mp_percentage * bar_length);
+	gotoxy(2, 25);
+    gotoxy(2, 25);
+    printf("MP[");
+    for (unsigned int i = 0; i < bar_length; i++) {
+        if (i < filled_mp_length) {
             printf("■");
-            if (mp_temp > 2) {
-                printf("■");
-                if (mp_temp > 3) {
-                    printf("■");
-                    if (mp_temp > 4) {
-                        printf("■");
-                        if (mp_temp > 5) {
-                            printf("■");
-                            if (mp_temp > 6) {
-                                printf("■");
-                                if (mp_temp > 7) {
-                                    printf("■");
-                                    if (mp_temp > 8) {
-                                        printf("■");
-                                        if (mp_temp > 9) {
-                                            printf("■");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-
+        }
+        else {
+            printf(" ");
         }
     }
+    printf("]");
     gotoxy(16, 25);
     printf("]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);

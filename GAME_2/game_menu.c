@@ -50,7 +50,8 @@ void Gamemenu(char id[]) {
                 }
                 else if (y == 17) {
                     save_check(id);
-                    return;
+                    system("cls");
+                    goto recall;
                 }
                 else if (y == 18) {
                     main();

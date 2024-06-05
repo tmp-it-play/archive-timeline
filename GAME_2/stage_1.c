@@ -10,9 +10,21 @@ void scrollup_motion(int initial_x, int initial_y) {
 
 void stage_1(char id[]) {
     static int initial_x = 32, initial_y = 17, mop_hp, mop_max_hp;
-    int n = 7;
+    int n = 6;
     char string[256];
-    Monster m[7] = { goblin(), slime(), slime(), bat()};
+    Monster m[6] = { goblin(), slime(), slime(), bat(), goblin(), goblin() };
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        exit(0);
+    }
+    char query[255];
+    sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 1,mop_num = 0 WHERE id = '%s'", id);
+    if (mysql_query(&db, query)) {
+        db_query_error(&db);
+        exit(0);
+    }
     for (int i = 0; i < n; i++) {
         unsigned char match_turn = false;
         if (i > 0) {
@@ -39,17 +51,31 @@ void stage_1(char id[]) {
                 }
                 if (sync) {
                     mop_hp += 5;
+                    memset(query, 0, sizeof(query));
+                    sprintf(query, "UPDATE gwangju_sword_master.account SET hp = hp - 5 WHERE id = '%s'", id);
+                    if (mysql_query(&db, query)) {
+						db_query_error(&db);
+						exit(0);
+					}
                 }
                 continue;
             }
             else if (mop_hp <= 0) {
                 memset(string, 0, sizeof(string));
                 sprintf(string, "%s를 처치했다!", m[i].name);
+                drop_booty(id, m[i].name);
                 scrollup_motion(initial_x, 17);
                 printAt(initial_x, initial_y, string);
                 gotoxy(initial_x + strlen(string), initial_y);
+                memset(query, 0, sizeof(query));
+                sprintf(query, "UPDATE gwangju_sword_master.account SET mop_num = mop_num + 1 WHERE id = '%s'", id);
+                if (mysql_query(&db, query)) {
+                    db_query_error(&db);
+                    exit(0);
+                }
             }
             break;
         }
     }
+    mysql_close(&db);
 }

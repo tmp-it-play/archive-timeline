@@ -2,68 +2,172 @@
 #include "player_state.h"
 #include "db_event.h"
 #include "mop_dictionary.h"
+#include "color.h"
 
 long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy) {
-    int x = 37, y = 23;
-    gotoxy(37, 23);
-    printf("> 공격하기");
-    gotoxy(54, 23);
-    printf("랜덤 물약 던지기");
-    gotoxy(77, 23);
-    printf("랜덤 물약 마시기");
-    gotoxy(102, 23);
-    printf("도망가기");
+    int x, y;
     while (true) {
-        int n = KeyControl();
-        switch (n) {
-        case RIGHT: {
-            gotoxy(x, y);
-            printf(" ");
-            if (x >= 100) {
-                x = 37;
-            } else if (x == 37) {
-                x = 52;
-            } else if (x == 52) {
-                x = 75;
-            } else {
-                x = 100;
+        x = 37, y = 23;
+        gotoxy(37, 23);
+        printf("> 공격하기");
+        gotoxy(54, 23);
+        printf("랜덤 물약 던지기");
+        gotoxy(77, 23);
+        printf("랜덤 물약 마시기");
+        gotoxy(102, 23);
+        printf("도망가기");
+        while (true) {
+            int n = KeyControl();
+            switch (n) {
+            case RIGHT: {
+                gotoxy(x, y);
+                printf(" ");
+                if (x >= 100) {
+                    x = 37;
+                }
+                else if (x == 37) {
+                    x = 52;
+                }
+                else if (x == 52) {
+                    x = 75;
+                }
+                else {
+                    x = 100;
+                }
+                gotoxy(x, y);
+                printf(">");
+                break;
             }
-            gotoxy(x, y);
-            printf(">");
-            break;
-        }
-        case LEFT: {
-            gotoxy(x, y);
-            printf(" ");
-            if (x == 37) {
-                x = 100;
-            } else if (x == 100) {
-                x = 75;
-            } else if (x == 75) {
-                x = 52;
-            } else {
-                x = 37;
+            case LEFT: {
+                gotoxy(x, y);
+                printf(" ");
+                if (x == 37) {
+                    x = 100;
+                }
+                else if (x == 100) {
+                    x = 75;
+                }
+                else if (x == 75) {
+                    x = 52;
+                }
+                else {
+                    x = 37;
+                }
+                gotoxy(x, y);
+                printf(">");
+                break;
             }
-            gotoxy(x, y);
-            printf(">");
-            break;
-        }
-        case SUBMIT: {
-            if (x == 37) {
-                long long d = into_battle(id, m, turn, ix, iy);
-                return d;
+            case SUBMIT: {
+                if (x == 37) {
+                    long long d = into_battle(id, m, turn, ix, iy);
+                    return d;
+                }
+                else if (x == 52) {
+                    // 랜덤 물약 던지기
+                }
+                else if (x == 75) {
+                    // 랜덤 물약 마시기
+                }
+                else if (x == 100) {
+                    // 도망가기
+                }
+                return 0; // 행동이 구현되지 않은 경우 기본 반환값
             }
-            exit(1);
-        }
-        default: {
-            break;
-        }
+            case ESC: {
+                gotoxy(x, y);
+                printf(" ");
+                for (int i = 11; i <= 18; i++) {
+                    gotoxy(93, i);
+                    printf("■");
+                }
+                for (int i = 93; i < 119; i++) {
+                    gotoxy(i, 11);
+                    printf("■");
+                }
+                gotoxy(95, 13);
+                printf("> 게임 저장하기");
+                gotoxy(97, 15);
+                printf("메인화면으로 돌아가기");
+                gotoxy(97, 17);
+                printf("게임 종료하기");
+                int sub_x = 95, sub_y = 13;
+                while (true) {
+                    n = KeyControl();
+                    switch (n) {
+                    case UP: {
+                        gotoxy(sub_x, sub_y);
+                        printf(" ");
+                        if (sub_y == 13) {
+                            sub_y = 17;
+                        }
+                        else if (sub_y == 15) {
+                            sub_y = 13;
+                        }
+                        else {
+                            sub_y = 15;
+                        }
+                        gotoxy(sub_x, sub_y);
+                        printf(">");
+                        break;
+                    }
+                    case DOWN: {
+                        gotoxy(sub_x, sub_y);
+                        printf(" ");
+                        if (sub_y == 13) {
+                            sub_y = 15;
+                        }
+                        else if (sub_y == 15) {
+                            sub_y = 17;
+                        }
+                        else {
+                            sub_y = 13;
+                        }
+                        gotoxy(sub_x, sub_y);
+                        printf(">");
+                        break;
+                    }
+                    case ESC: {
+                        for (int i = 11; i <= 18; i++) {
+                            gotoxy(93, i);
+                            for (int j = 93; j < 119; j++) {
+                                printf(" ");
+                            }
+                        }
+                        x = 37;
+                        y = 23;
+                        gotoxy(x, y);
+                        printf(">");
+                        goto exit_submenu;
+                    }
+                    case SUBMIT: {
+						if (sub_y == 13) {
+							// 게임 저장하기
+						}
+						else if (sub_y == 15) {
+							// 메인화면으로 돌아가기
+						}
+						else if (sub_y == 17) {
+                            exit(1);    
+						}
+						break;
+					}
+                    default: {
+                        break;
+                    }
+                    }
+                }
+            exit_submenu:
+                break;
+            }
+            default: {
+                break;
+            }
+            }
         }
     }
 }
-
 long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
@@ -136,10 +240,15 @@ long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, 
 
 int cri_chance(int crit) {
     int compare_num = rand() % 100;
+    while (compare_num <= 0) {
+        compare_num = rand() % 100;
+    }
     if(compare_num < crit) {
 		return 1;
 	}
-    return 0;
+    else {
+        return 0;
+    }
 }
 
 long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
@@ -151,7 +260,7 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
         return 1;
     }
     char q[255];
-    sprintf(q, "SELECT hp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+    sprintf(q, "SELECT hp,defense FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
         db_query_error(&db);
 		return 1;
@@ -163,9 +272,9 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
 		return 1;
 	}
     int hp = atoi(row[0]);
+    int defense = atoi(row[1]);
     if (!strcmp("고블린", m[stage_turn].name)) {
-        damage = goblin_skill_1();
-        hp-=damage;
+        damage = goblin_skill_1(id, m, stage_turn, x, y);
 	}
 	else if(!strcmp("슬라임",m[stage_turn].name)) {
 		slime_skill_1();
@@ -173,16 +282,16 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
 	}
 	else if(strcmp("박쥐",m[stage_turn].name) == 0) {
         srand(time(NULL));
-        int random1 = rand() % 3;
+        int random1 = rand() % 4;
         int random2 = rand() % 10;
-        if(random1>=random2){
-            damage = bat_skill_1();
+        if (random1 >= random2) {
+            damage = bat_skill_1(id, m, stage_turn, x, y);
             if (damage == 5) {
                 return 1;
 			}
         }
 		else{
-            damage = bat_skill_2();
+            damage = bat_skill_2(id, m, stage_turn, x, y);
 		}
 	}
 	/*else if(strcmp("오크",m[stage_turn].name) == 0) {
@@ -197,6 +306,11 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
 	else if(strcmp("드래곤",m[stage_turn].name) == 0) {
 		dragon_skill_1();
 	}*/
+    int damage_temp = m[stage_turn].attack - defense + damage;
+    if (damage_temp <= 0) {
+		damage_temp = 1;
+	}
+    hp -= damage_temp;
     if (hp > 0) {
         memset(q, 0, sizeof(q));
         sprintf(q, "UPDATE gwangju_sword_master.user_state SET hp = %d WHERE id = '%s'", hp, id);
@@ -286,12 +400,13 @@ void drop_booty(char id[], char name[]) {
         return;
     }
     char q[255];
-    sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point + %d WHERE id = '%s'", drop_exp, id);
+    sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point + '%d' WHERE id = '%s'", drop_exp, id);
     if (mysql_query(&db, q)) {
         db_query_error(&db);
         mysql_close(&db);
         return;
     }
+    memset(q, 0, sizeof(q));
     sprintf(q, "SELECT levelup_point, levelup_requirement FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
         db_query_error(&db);
@@ -308,9 +423,10 @@ void drop_booty(char id[], char name[]) {
     }
     int levelup_point = atoi(row[0]);
     int levelup_requirement = atoi(row[1]);
+    memset(q, 0, sizeof(q));
     mysql_free_result(res);
     if (levelup_point >= levelup_requirement) {
-        sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = 0, levelup_requirement = levelup_requirement + 150, level = level + 1 WHERE id = '%s'", id);
+        sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point - levelup_requirement, levelup_requirement = levelup_requirement + 150, level = level + 1 WHERE id = '%s'", id);
         if (mysql_query(&db, q)) {
             db_query_error(&db);
             mysql_close(&db);
@@ -318,4 +434,41 @@ void drop_booty(char id[], char name[]) {
         }
     }
     mysql_close(&db);
+}
+
+int avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return;
+    }
+    char q[255];
+    sprintf(q, "SELECT speed FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+		db_query_error(&db);
+		return;
+	}
+    MYSQL_RES* res = mysql_store_result(&db);
+	MYSQL_ROW row = mysql_fetch_row(res);
+	if (row == NULL) {
+		db_result_value_error();
+		return;
+	}
+	int speed = atoi(row[0]);
+	memset(q, 0, sizeof(q));
+    int compare_num = rand() % 100;
+    if (speed > compare_num) {
+        memset(string, 0, sizeof(string));
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
+		strcpy(string, "적의 공격을 회피했다!");
+		scrollUpImproved(x, 2, y);
+		printAt(x, y, string);
+		gotoxy(x + strlen(string), y);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+        return 0;
+	}
+    mysql_free_result(res);
+	mysql_close(&db);
+    return 1;
 }

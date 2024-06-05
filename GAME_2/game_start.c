@@ -125,6 +125,9 @@ int KeyControl(void) {
     else if (temp == 13) {
         return SUBMIT;
     }
+    else if(temp == 27) {
+		return ESC;
+	}
     return 0;
 }
 

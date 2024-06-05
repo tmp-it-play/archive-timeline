@@ -12,12 +12,12 @@ typedef struct {
 } Monster;
 
 Monster goblin(void);
-long long goblin_skill_1(void);
+long long goblin_skill_1(char id[], Monster m[], int stage_turn, int x, int y);
 Monster slime(void);
 void slime_skill_1(void);
 Monster bat(void);
-long long bat_skill_1(void);
-long long bat_skill_2(void);
+long long bat_skill_1(char id[], Monster m[], int stage_turn, int x, int y);
+long long bat_skill_2(char id[], Monster m[], int stage_turn, int x, int y);
 Monster oak(void);
 Monster wolfman(void);
 Monster magician(void);

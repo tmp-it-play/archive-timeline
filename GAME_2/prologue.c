@@ -122,8 +122,8 @@ void gender_select(char id[]) {
                 if (mysql_query(&db, query)) {
                     db_query_error(&db);
                 }
+                prologue(1, id, &db);
                 mysql_close(&db);
-                prologue(1, id);
                 return;
             }
             else if (x == 64) {
@@ -131,8 +131,8 @@ void gender_select(char id[]) {
                 if (mysql_query(&db, query)) {
                     db_query_error(&db);
                 }
+                prologue(2, id, &db);
                 mysql_close(&db);
-                prologue(2, id);
                 return;
             }
         }
@@ -159,18 +159,17 @@ void save_check(char id[]) {
     }
     MYSQL_RES* result = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(result);
-    if (row == 0 || row == '0' || row == "false") {
+    if (row == 0 || row == '0' || strcmp(row, "false")) {
         gotoxy(45, 15);
         printf("현재 계정에 세이브파일이 없습니다!");
         Sleep(3000);
         system("cls");
         Program_config();
-        Gamemenu(id);
     }
     else if (row == 1 || row == '1' || row == "true") {
-
+        //게임 이어하기 기능 구현
     }
-    exit(0);
+    return;
 }
 
 int get_console_width(void) {
@@ -182,10 +181,22 @@ int get_console_width(void) {
     return width;
 }
 
-void prologue(short gender, char id[]) {
+void prologue(short gender, char id[], MYSQL* conn) {
+    char query[255];
+    memset(query, 0, sizeof(query));
+    sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 0 WHERE id = '%s'", id);
+    if (mysql_ping(conn) != 0) {
+        if (!mysql_real_connect(conn, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
+            db_connect_error(conn);
+            exit(0);
+        }
+    }
+    if (mysql_query(conn, query)) {
+        db_query_error(conn);
+        exit(0);
+    }
     char* prologue_text = NULL;
     unsigned int line = 0, final_y = 10;
-
     if (gender == 1) {
         const char* text = "당신은 헤네시스왕국의 기사입니다.\n"
             "평화롭던 왕국에 그란디스라는 악마가 찾아와 공주를\n"
@@ -208,6 +219,7 @@ void prologue(short gender, char id[]) {
         prologue_text = (char*)malloc(strlen(text) + 1);
         if (prologue_text == NULL) {
             fprintf(stderr, "Memory allocation failed\n");
+            Sleep(3000);
             exit(1);
         }
         strcpy(prologue_text, text);
@@ -240,7 +252,7 @@ void prologue(short gender, char id[]) {
         free(prologue_text);
     }
     gotoxy(45, final_y + 2);
-    Sleep(2975);
+    Sleep(1975);
     printf("계속하려면 Enter를 누르세요");
     CursorView(0);
     while (true) {
@@ -248,6 +260,7 @@ void prologue(short gender, char id[]) {
         if (n == SUBMIT) {
             system("cls");
             outline(id);
+            break;
         }
         else {
             continue;

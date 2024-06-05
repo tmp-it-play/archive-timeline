@@ -151,6 +151,7 @@
     <ClCompile Include="stage_1.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="color.h" />
     <ClInclude Include="db_event.h" />
     <ClInclude Include="player_state.h" />
     <ClInclude Include="superclass.h" />
