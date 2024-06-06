@@ -128,6 +128,9 @@ int KeyControl(void) {
     else if(temp == 27) {
 		return ESC;
 	}
+    else if (temp == 96) {
+        return CONSOLE;
+    }
     return 0;
 }
 

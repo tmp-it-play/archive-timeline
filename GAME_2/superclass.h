@@ -7,6 +7,7 @@
 #define RIGHT 3
 #define SUBMIT 4
 #define ESC 5
+#define CONSOLE 6
 
 #include "stdio.h"
 #include "Windows.h"
@@ -22,12 +23,14 @@
 
 char string[100];
 
+char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 int main(void);
 int game_core_code(char id[]);
 int mail_send(void);
 int loginmenuDraw(void);
 int KeyControl(void);
-int avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+void Input_Cheat(Monster m[], char id[]);
 void gotoxy(int x, int y);
 void clearLine(int x, int y);
 void ClearViewState(void);

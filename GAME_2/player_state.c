@@ -297,8 +297,7 @@ void hp_mp_bar(char id[]) {
             printf(" ");
         }
     }
-    printf("]");
-    gotoxy(16, 25);
+    gotoxy(15, 25);
     printf("]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     return;

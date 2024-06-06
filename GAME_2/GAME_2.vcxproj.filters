@@ -57,6 +57,9 @@
     <ClCompile Include="battle_system.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="console.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="superclass.h">

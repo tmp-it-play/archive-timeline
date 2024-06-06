@@ -52,7 +52,7 @@ void stage_1(char id[]) {
                 if (sync) {
                     mop_hp += 5;
                     memset(query, 0, sizeof(query));
-                    sprintf(query, "UPDATE gwangju_sword_master.account SET hp = hp - 5 WHERE id = '%s'", id);
+                    sprintf(query, "UPDATE gwangju_sword_master.user_state SET hp = hp - 5 WHERE id = '%s'", id);
                     if (mysql_query(&db, query)) {
 						db_query_error(&db);
 						exit(0);
@@ -62,11 +62,13 @@ void stage_1(char id[]) {
             }
             else if (mop_hp <= 0) {
                 memset(string, 0, sizeof(string));
+                setRGBColor(255, 255, 51);
                 sprintf(string, "%s를 처치했다!", m[i].name);
                 drop_booty(id, m[i].name);
                 scrollup_motion(initial_x, 17);
                 printAt(initial_x, initial_y, string);
                 gotoxy(initial_x + strlen(string), initial_y);
+                resetColor();
                 memset(query, 0, sizeof(query));
                 sprintf(query, "UPDATE gwangju_sword_master.account SET mop_num = mop_num + 1 WHERE id = '%s'", id);
                 if (mysql_query(&db, query)) {
