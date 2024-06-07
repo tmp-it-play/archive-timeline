@@ -30,6 +30,7 @@ int mail_send(void);
 int loginmenuDraw(void);
 int KeyControl(void);
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+void Reline(void);
 void Input_Cheat(Monster m[], char id[]);
 void gotoxy(int x, int y);
 void clearLine(int x, int y);

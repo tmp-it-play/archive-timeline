@@ -213,6 +213,11 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
             }
             case CONSOLE: {
                 Input_Cheat(m, id);
+                ClearViewState();
+                CursorView(0);
+                now_level(id);
+                now_state(id);
+                hp_mp_bar(id);
 			}
             default: {
                 break;
