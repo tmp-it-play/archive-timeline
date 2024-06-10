@@ -13,33 +13,33 @@ void gotoxy(int x, int y) {
 
 void ASCII_Art_print(void) {
     puts("\n\n\n");
-    gotoxy(32, 1);
+    gotoxy(35, 1);
     printf("    `       `       ```                      ``    \n");
-    gotoxy(32, 2);
+    gotoxy(35, 2);
     printf("            `       ##`                      `##   \n");
-    gotoxy(32, 3);
+    gotoxy(35, 3);
     printf("    `########       ##      ############ `   `##   \n");
-    gotoxy(32, 4);
+    gotoxy(35, 4);
     printf("    ``    `         ##      ``````````##     `##   \n");
-    gotoxy(32, 5);
+    gotoxy(35, 5);
     printf("``##############    ##              ``##     `##   \n");
-    gotoxy(32, 6);
+    gotoxy(35, 6);
     printf("    ` `      ```    ##              ` ##     `##   \n");
-    gotoxy(32, 7);
+    gotoxy(35, 7);
     printf("    #########`      ##               `##`    `##   \n");
-    gotoxy(32, 8);
+    gotoxy(35, 8);
     printf("   ##`  ` ``##`     ##    `################# `##   \n");
-    gotoxy(32, 9);
+    gotoxy(35, 9);
     printf("` ``##`    `##`     ##           ##`         `##   \n");
-    gotoxy(32, 10);
+    gotoxy(35, 10);
     printf("` `` `######``      ##           ##`         `##   \n");
-    gotoxy(32, 11);
+    gotoxy(35, 11);
     printf("  ``   `## ```    ``##           ##`         `##   \n");
-    gotoxy(32, 12);
+    gotoxy(35, 12);
     printf(" ################`  ##           ##`         `##   \n");
-    gotoxy(32, 13);
+    gotoxy(35, 13);
     printf(" ``         ``    ``##           ##`         `##   \n");
-    gotoxy(32, 14);
+    gotoxy(35, 14);
     printf("                    ##          `##`         `##   \n");
 }
 
@@ -52,7 +52,7 @@ void Program_config(void) {
 }
 
 int loginmenuDraw(void) {
-    int x = 53, y = 16;
+    int x = 56, y = 16;
     gotoxy(x, y);
     printf("> ·Î±×ÀÎ");
     gotoxy(x + 2, y + 1);

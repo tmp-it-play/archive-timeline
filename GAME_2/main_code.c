@@ -22,6 +22,6 @@ int game_core_code(char id[]) {
     initial_mp(id);
     now_level(id);
     now_state(id);
-    stage_1(id);
+    stage_1(id, 1);
     Sleep(10000);
 }

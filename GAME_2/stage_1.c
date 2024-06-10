@@ -8,7 +8,7 @@ void scrollup_motion(int initial_x, int initial_y) {
     scrollUpImproved(initial_x, 2, initial_y);
 }
 
-void stage_1(char id[]) {
+void stage_1(char id[], int mop_num) {
     static int initial_x = 32, initial_y = 17, mop_hp, mop_max_hp;
     int n = 6;
     char string[256];
@@ -75,6 +75,7 @@ void stage_1(char id[]) {
                     db_query_error(&db);
                     exit(0);
                 }
+                mop_num++;
             }
             break;
         }

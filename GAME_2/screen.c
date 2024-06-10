@@ -105,4 +105,5 @@ void Reline(void) {
         gotoxy(i, 19);
         printf("бс");
     }
+    return;
 }

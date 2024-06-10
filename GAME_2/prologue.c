@@ -144,6 +144,18 @@ void gender_select(char id[]) {
     exit(1);
 }
 
+void BufferingEffect(int x, int y) {
+    const char* symbols[] = { "|", "/", "-", "\\", "|" };
+    int symbol_count = sizeof(symbols) / sizeof(symbols[0]);
+    short random = rand() % 5;
+    int total_steps = 5 + random;
+    for (int i = 0; i < total_steps; i++) {
+        gotoxy(x, y);
+        printf("%s", symbols[i % symbol_count]);
+        Sleep(200);
+    }
+}
+
 void save_check(char id[]) {
     MYSQL db;
     mysql_init(&db);
@@ -159,17 +171,80 @@ void save_check(char id[]) {
     }
     MYSQL_RES* result = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(result);
-    if (row == 0 || row == '0' || strcmp(row, "false")) {
-        gotoxy(45, 15);
+    if (row && row[0] && (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
+        gotoxy(45, 13);
         printf("현재 계정에 세이브파일이 없습니다!");
         Sleep(3000);
         system("cls");
         Program_config();
     }
-    else if (row == 1 || row == '1' || row == "true") {
-        //게임 이어하기 기능 구현
+    else if (row && row[0] && (strcmp(row[0], "1") == 0 || strcmp(row[0], "true") == 0)) {
+        unsigned int line = 0;
+        const char* text = "세이브파일이 조회되었습니다\n불러오는 중... |";
+        int console_width = get_console_width();
+        gotoxy(0, 10);
+        int buffer_x = -1, buffer_y = -1;
+        for (unsigned int i = 0; i < strlen(text); i++) {
+            if (text[i] == '\n') {
+                line++;
+                gotoxy(0, 10 + line);
+            }
+            else {
+                if (i == 0 || text[i - 1] == '\n') {
+                    int line_length = 0;
+                    unsigned int j = i;
+                    while (j < strlen(text) && text[j] != '\n') {
+                        line_length++;
+                        j++;
+                    }
+                    int current_x = (console_width - line_length) / 2;
+                    gotoxy(current_x, 10 + line);
+                }
+                printf("%c", text[i]);
+                if (text[i] == '|') {
+                    int line_length = 0;
+                    for (int k = i - 1; k >= 0 && text[k] != '\n'; k--) {
+                        line_length++;
+                    }
+                    buffer_x = (console_width - line_length) / 2 + line_length;
+                    buffer_y = 10 + line;
+                }
+            }
+        }
+        if (buffer_x != -1 && buffer_y != -1) {
+            BufferingEffect(buffer_x, buffer_y);
+        }
+        memset(q, 0, sizeof(q));
+        sprintf(q, "SELECT stage, mop_num FROM gwangju_sword_master.account WHERE id = '%s'", id);
+        if (mysql_query(&db, q)) {
+            db_query_error(&db);
+            exit(0);
+        }
+        result = mysql_store_result(&db);
+        row = mysql_fetch_row(result);
+        if (row && row[0] && row[1]) {
+            int stage = atoi(row[0]);
+            int mop_num = atoi(row[1]);
+            if (stage < 22) {
+                system("cls");
+                Reline();
+                if (stage == 1) {
+                    stage_1(id, mop_num);
+                }
+            }
+        }
+        else {
+            gotoxy(45, 13);
+            printf("세이브파일을 불러오는 중 오류가 발생했습니다!");
+            Sleep(3000);
+            system("cls");
+            Program_config();
+        }
+        mysql_free_result(result);
+        mysql_close(&db);
+        Sleep(3000);
+        return;
     }
-    return;
 }
 
 int get_console_width(void) {

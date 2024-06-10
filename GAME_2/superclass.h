@@ -55,6 +55,6 @@ void outline(char id[]);
 void setRGBColor(int r, int g, int b);
 void resetColor(void);
 void drop_booty(char id[], char name[]);
-void stage_1(char id[]);
+void stage_1(char id[], int mop_num);
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy);
 long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int y);
