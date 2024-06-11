@@ -236,6 +236,25 @@ void scrollUpImproved(int x, int y_start, int y_end) {
     clearFinLine(x, y_end);
 }
 
+void scrollDownImproved(int x, int y_start, int y_end) {
+    SMALL_RECT scrollRegion;
+    COORD destCoord;
+    CHAR_INFO fill;
+    fill.Char.AsciiChar = ' ';
+    fill.Attributes = 0;
+    scrollRegion.Left = x;
+    scrollRegion.Top = y_start;
+    scrollRegion.Right = x + 79;
+    scrollRegion.Bottom = y_end;
+    destCoord.X = x;
+    destCoord.Y = y_start + 1;
+    if (!ScrollConsoleScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE), &scrollRegion, NULL, destCoord, &fill)) {
+        DWORD error = GetLastError();
+        printf("ScrollConsoleScreenBuffer error: %ld\n", error);
+        return;
+    }
+}
+
 void printAt(int x, int y, const char* str) {
     gotoxy(x, y);
     printf("%s", str);

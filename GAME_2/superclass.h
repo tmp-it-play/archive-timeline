@@ -17,6 +17,9 @@
 #include "stralign.h"
 #include "stdbool.h"
 #include "mop_dictionary.h"
+#include "db_event.h"
+#include "color.h"
+#include "errno.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
@@ -38,12 +41,14 @@ void ClearViewState(void);
 void printAt(int x, int y, const char* str);
 void scrollUp(int x, int y_start, int y_end);
 void scrollUpImproved(int x, int y_end, int y_start);
+void scrollDownImproved(int x, int y_start, int y_end);
 void ASCII_Art_print(void);
 void Program_config(void);
 void CursorView(char show);
 void sign_up(void);
 void sign_in(void);
 void Gamemenu(char id[]);
+void ClearTextInRange(int x, int y, int width, int height);
 void prologue(short gender, char id[], MYSQL* conn);
 void gender_select(char id[]);
 void new_game_reconfirm(char id[]);
@@ -55,6 +60,9 @@ void outline(char id[]);
 void setRGBColor(int r, int g, int b);
 void resetColor(void);
 void drop_booty(char id[], char name[]);
+void Effect_Counter(char id[]);
+void check_and_delete_expired_effects(const char* id, MYSQL* db);
 void stage_1(char id[], int mop_num);
+void Fugitive(char id[]);
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy);
 long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int y);

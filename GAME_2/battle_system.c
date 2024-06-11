@@ -5,6 +5,7 @@
 #include "color.h"
 
 long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+void Runaway(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy) {
     static int x = 37, y = 23;
@@ -121,9 +122,30 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     // 랜덤 물약 마시기
                 }
                 else if (x == 100) {
-                    // 도망가기
+                    int compare_num = rand() % 100;
+                    Runaway(id, m, turn, ix, iy);
+                    if (compare_num < 30) {
+                        Fugitive(id);
+                        memset(string, 0, sizeof(string));
+                        strcpy(string, "도망치는 것은 겁쟁이라는 것을 증명하는 것이다...[도망자(2턴):공격력 -10%]");
+                        scrollUpImproved(ix, 2, iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                        printAt(ix, iy, string);
+                        gotoxy(ix + strlen(string), iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        Fugitive(id);
+                    }
+                    else {
+                        memset(string, 0, sizeof(string));
+                        strcpy(string, "도망치는데 성공했다!");
+                        scrollUpImproved(ix, 2, iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
+                        printAt(ix, iy, string);
+                        gotoxy(ix + strlen(string), iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        return 1831;
+                    }
                 }
-                return 0;
             }
             case ESC: {
                 gotoxy(x, y);
@@ -639,4 +661,126 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
 		return 'A';
 	}
     return 'E';
+}
+
+void Runaway(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return;
+    }
+    char q[255];
+    sprintf(q, "UPDATE gwangju_sword_master.account SET mop_num = mop_num+1 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+		db_query_error(&db);
+		return;
+	}
+    return;
+}
+
+void Effect_Counter(char id[]) {
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return;
+    }
+    char query[255];
+    sprintf(query, "SELECT number FROM gwangju_sword_master.effect WHERE id = '%s'", id);
+    if (mysql_query(&db, query)) {
+        db_query_error(&db);
+        return;
+    }
+    MYSQL_RES* res = mysql_store_result(&db);
+    if (res == NULL) {
+        db_query_error(&db);
+        return;
+    }
+    MYSQL_ROW row;
+    int effect_num[255] = { 0, };
+    int index = 0;
+    while ((row = mysql_fetch_row(res))) {
+        effect_num[index++] = atoi(row[0]);
+    }
+    mysql_free_result(res);
+    for (int i = 0; i < index; i++) {
+        if (effect_num[i] != 0) {
+            memset(query, 0, sizeof(query));
+            sprintf(query, "UPDATE gwangju_sword_master.effect SET remanet = remanet - 1 WHERE id = '%s' AND number = %d", id, effect_num[i]);
+            if (mysql_query(&db, query)) {
+                db_query_error(&db);
+            }
+        }
+    }
+    mysql_close(&db);
+    return;
+}
+
+#ifdef _WIN32
+#else
+#include <unistd.h>
+#define Sleep(x) usleep((x) * 1000)
+#endif
+
+void check_and_delete_expired_effects(const char* id, MYSQL* db) {
+    char query[512];
+    sprintf(query, "SELECT effect FROM gwangju_sword_master.effect WHERE id = '%s' AND remanet <= 0", id);
+    if (mysql_query(db, query)) {
+        fprintf(stderr, "Query Error: %s\n", mysql_error(db));
+        mysql_close(db);
+        return;
+    }
+    MYSQL_RES* res = mysql_store_result(db);
+    if (res == NULL) {
+        fprintf(stderr, "Store Result Error: %s\n", mysql_error(db));
+        mysql_close(db);
+        return;
+    }
+    if (mysql_num_rows(res) == 0) {
+        mysql_free_result(res);
+        return;
+    }
+    MYSQL_ROW row;
+    while ((row = mysql_fetch_row(res))) {
+        FILE* fp = fopen("origin_state.txt", "r+");
+        if (fp == NULL) {
+            fprintf(stderr, "File Open Error: %s\n", strerror(errno));
+            Sleep(1256);
+            exit(1);
+        }
+        if (fseek(fp, 0, SEEK_SET) != 0) {
+            fprintf(stderr, "File Seek Error: %s\n", strerror(errno));
+            fclose(fp);
+            Sleep(1256);
+            exit(1);
+        }
+        char buffer[256];
+        int attack = 0;
+        if (fgets(buffer, sizeof(buffer), fp) != NULL) {
+            attack = atoi(buffer);
+        }
+        else {
+            fprintf(stderr, "File Read Error: %s\n", strerror(errno));
+            fclose(fp);
+            Sleep(1256);
+            exit(1);
+        }
+        fclose(fp);
+        if (remove("origin_state.txt") != 0) {
+            fprintf(stderr, "File Remove Error: %s\n", strerror(errno));
+            Sleep(1256);
+            exit(1);
+        }
+        sprintf(query, "UPDATE gwangju_sword_master.user_state SET attack = %d WHERE id = '%s' AND effect = '%s'", attack, id, row[0]);
+        if (mysql_query(db, query)) {
+            fprintf(stderr, "Update Query Error: %s\n", mysql_error(db));
+        }
+        sprintf(query, "DELETE FROM gwangju_sword_master.effect WHERE id = '%s' AND effect = '%s'", id, row[0]);
+        if (mysql_query(db, query)) {
+            fprintf(stderr, "Delete Query Error: %s\n", mysql_error(db));
+        }
+    }
+    mysql_free_result(res);
+    return;
 }
