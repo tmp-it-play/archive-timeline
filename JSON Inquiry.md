@@ -11,9 +11,36 @@
 + 주석을 지원하지 않음
 + 날짜,시간 데이터를 지원하지 않음
 ## 기본적인 문법
-```json
-{ key : value }
-```
++ 기본적으로 <b>Key(키)</b>와 <b>Value(값)</b>의 쌍으로 이뤄져 있으며 <b>그 사이에는 :(콜론)</b>이 들어감
+  ``` 
+  { key : value }
+  ```
++ 여러 데이터를 나열할 경우 <b>,(쉼표)</b>를 사용함
+  ```
+  { key1 : value1, key2 : value2 }
+  ```
++ <b>Object(객체)</b>는 <b>{}(중괄호)</b>,<b> Array(배열)</b>은 <b>[[](대괄호)]</b><b>(대괄호)</b>로 묶어 표현함
+  ```
+  { key1 : { inKey : inValue }, key2 : [arr1, arr2 arr3] }
+  { "판매자정보" : { "이름" : "남도일", "지역" : "서울" } , "판매품목" : ['사과','배','딸기'] }
+  ```
++ **데이터의 값으로 다양한 Type(타입)을 사용할 수 있음**
+  ```
+  [   1,    "str",    true,    {inKey : "value"},    ["일", "이"],    null    ]
+  // 숫자 (number)
+  {  k  :  1  }
+  //문자열 (string)
+  {  k  :  "str"  }
+  //불(boolean)
+  {  k  :  true  }
+  //객체(object)
+  {  k  :  {inKey : "value" }  }
+  //배열(array)
+  {  k  :  ["일", "이"]  }
+  //널(NULL)
+  {  k  :  null  }
+  ```
+  ---
 ## 참고자료
 + [JSON으로 작업하기](https://developer.mozilla.org/ko/docs/Learn/JavaScript/Objects/JSON)
 + [JSON - 나무위키](https://namu.wiki/w/JSON)
