@@ -151,6 +151,7 @@
     <ClCompile Include="main_code.c" />
     <ClCompile Include="sign_up.c" />
     <ClCompile Include="stage_1.c" />
+    <ClCompile Include="stage_2.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="color.h" />

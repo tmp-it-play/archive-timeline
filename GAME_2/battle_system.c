@@ -723,7 +723,7 @@ void Effect_Counter(char id[]) {
 #define Sleep(x) usleep((x) * 1000)
 #endif
 
-void check_and_delete_expired_effects(const char* id, MYSQL* db) {
+void check_and_delete_expired_effects_fug(const char* id, MYSQL* db) {
     char query[512];
     sprintf(query, "SELECT effect FROM gwangju_sword_master.effect WHERE id = '%s' AND remanet <= 0", id);
     if (mysql_query(db, query)) {
@@ -772,7 +772,7 @@ void check_and_delete_expired_effects(const char* id, MYSQL* db) {
             Sleep(1256);
             exit(1);
         }
-        sprintf(query, "UPDATE gwangju_sword_master.user_state SET attack = %d WHERE id = '%s' AND effect = '%s'", attack, id, row[0]);
+        sprintf(query, "UPDATE gwangju_sword_master.user_state SET attack = %d WHERE id = '%s'", attack, id);
         if (mysql_query(db, query)) {
             fprintf(stderr, "Update Query Error: %s\n", mysql_error(db));
         }

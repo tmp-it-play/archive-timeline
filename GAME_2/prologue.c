@@ -334,6 +334,7 @@ void prologue(short gender, char id[], MYSQL* conn) {
         int n = KeyControl();
         if (n == SUBMIT) {
             system("cls");
+            memset(query, 0, sizeof(query));
             outline(id);
             break;
         }

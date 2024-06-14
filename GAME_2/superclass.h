@@ -20,6 +20,20 @@
 #include "db_event.h"
 #include "color.h"
 #include "errno.h"
+#include "time.h"
+#include "string.h"
+#include "math.h"
+#include "ctype.h"
+#include "process.h"
+#include "winuser.h"
+#include "wincon.h"
+#include "io.h"
+#include "fcntl.h"
+#include "direct.h"
+#include "tchar.h"
+#include "wchar.h"
+#include "locale.h"
+#include "errmsg.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
@@ -32,6 +46,7 @@ int game_core_code(char id[]);
 int mail_send(void);
 int loginmenuDraw(void);
 int KeyControl(void);
+
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 void Reline(void);
 void Input_Cheat(Monster m[], char id[]);
@@ -42,14 +57,15 @@ void printAt(int x, int y, const char* str);
 void scrollUp(int x, int y_start, int y_end);
 void scrollUpImproved(int x, int y_end, int y_start);
 void scrollDownImproved(int x, int y_start, int y_end);
+void scrollup_motion(int initial_x, int initial_y);
 void ASCII_Art_print(void);
 void Program_config(void);
 void CursorView(char show);
 void sign_up(void);
 void sign_in(void);
 void Gamemenu(char id[]);
-void ClearTextInRange(int x, int y, int width, int height);
 void prologue(short gender, char id[], MYSQL* conn);
+void Clear_Gamelog(void);
 void gender_select(char id[]);
 void new_game_reconfirm(char id[]);
 void program_off(void);
@@ -61,8 +77,9 @@ void setRGBColor(int r, int g, int b);
 void resetColor(void);
 void drop_booty(char id[], char name[]);
 void Effect_Counter(char id[]);
-void check_and_delete_expired_effects(const char* id, MYSQL* db);
+void check_and_delete_expired_effects_fug(const char* id, MYSQL* db);
 void stage_1(char id[], int mop_num);
+void stage_2(char id[], int mop_num);
 void Fugitive(char id[]);
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy);
 long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int y);

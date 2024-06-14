@@ -107,3 +107,12 @@ void Reline(void) {
     }
     return;
 }
+
+void Clear_Gamelog(void) {
+    for (int i = 0; i < 17; i++) {
+        for (int j = 0; j < 86; j++) {
+            gotoxy(32 + j, 1 + i);
+            printf(" ");
+        }
+	}
+}
