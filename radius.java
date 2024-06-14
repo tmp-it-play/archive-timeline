@@ -5,11 +5,9 @@ import java.util.Scanner;
 class Circle {
 	final double PI = 3.14159;
 	double radius;
-
 	double findArea() {
 		return radius * radius * PI;
 	}
-
 	void show(double x, double y) {
 		System.out.printf("반지름 = %.0f,넓이 = %.1f\n", x, y);
 	}
