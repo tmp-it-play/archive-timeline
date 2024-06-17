@@ -59,6 +59,11 @@ void stage_1(char id[], int mop_num) {
                 mop_num++;
                 break;
             }
+            else if (b == 1023914) {
+                i = -1;
+                mop_num = 1;
+                continue;
+            }
             else {
                 short sync = 0;
                 mop_hp -= b;
@@ -106,7 +111,7 @@ void stage_1(char id[], int mop_num) {
     }
     mysql_close(&db);
     stage1_clear(id);
-    return;
+    stage_2(id, 1);
 }
 
 void stage1_clear(char id[]) {

@@ -267,3 +267,12 @@ void setRGBColor(int r, int g, int b) {
 void resetColor(void) {
     printf("\x1b[0m");
 }
+
+void Remover_File(void) {
+    if (remove("speed_state.txt") != 0) {
+        Sleep(1);
+    }
+    if(remove("ack_state.txt") != 0) {
+		Sleep(1);
+	}
+}

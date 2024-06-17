@@ -6,16 +6,16 @@
 
 void new_game_reconfirm(char id[]) {
     system("cls");
-    gotoxy(42, 12);
+    gotoxy(46, 12);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
     printf("정말 게임을 새로 시작하시겠습니까?");
-    gotoxy(39, 13);
+    gotoxy(43, 13);
     printf("[기존의 세이브파일이 있다면 삭제됩니다]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-    int x = 45, y = 15;
-    gotoxy(45, 15);
+    int x = 49, y = 15;
+    gotoxy(49, 15);
     printf("> 예");
-    gotoxy(64, 15);
+    gotoxy(68, 15);
     printf("아니요");
     while (true) {
         int n = KeyControl();
@@ -23,11 +23,11 @@ void new_game_reconfirm(char id[]) {
         case RIGHT: {
             gotoxy(x, y);
             printf(" ");
-            if (x >= 45 && x < 62) {
-                x = 62;
+            if (x >= 49 && x < 66) {
+                x = 66;
             }
             else {
-                x = 45;
+                x = 49;
             }
             gotoxy(x, y);
             printf(">");
@@ -36,11 +36,11 @@ void new_game_reconfirm(char id[]) {
         case LEFT: {
             gotoxy(x, y);
             printf(" ");
-            if (x == 62) {
-                x = 45;
+            if (x == 66) {
+                x = 49;
             }
             else {
-                x = 62;
+                x = 66;
             }
             gotoxy(x, y);
             printf(">");
@@ -48,11 +48,11 @@ void new_game_reconfirm(char id[]) {
         }
         case SUBMIT: {
             system("cls");
-            if (x == 45) {
+            if (x == 49) {
                 gender_select(id);
                 return;
             }
-            else if (x == 62) {
+            else if (x == 66) {
                 Gamemenu(id);
                 return;
             }
@@ -74,16 +74,16 @@ void gender_select(char id[]) {
         exit(0);
     }
     system("cls");
-    gotoxy(45, 12);
+    gotoxy(49, 12);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
     printf("주인공의 성별을 정해주세요");
-    gotoxy(39, 13);
+    gotoxy(43, 13);
     printf("[성별에 따라 스토리가 바뀔 수 있습니다]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-    int x = 45, y = 15;
-    gotoxy(45, 15);
+    int x = 49, y = 15;
+    gotoxy(49, 15);
     printf("> 남");
-    gotoxy(66, 15);
+    gotoxy(70, 15);
     printf("여");
     char query[255];
     while (true) {
@@ -92,11 +92,11 @@ void gender_select(char id[]) {
         case RIGHT: {
             gotoxy(x, y);
             printf(" ");
-            if (x >= 45 && x < 63) {
-                x = 64;
+            if (x == 49) {
+                x = 68;
             }
             else {
-                x = 45;
+                x = 49;
             }
             gotoxy(x, y);
             printf(">");
@@ -105,11 +105,11 @@ void gender_select(char id[]) {
         case LEFT: {
             gotoxy(x, y);
             printf(" ");
-            if (x == 64) {
-                x = 45;
+            if (x == 68) {
+                x = 49;
             }
             else {
-                x = 64;
+                x = 68;
             }
             gotoxy(x, y);
             printf(">");
@@ -117,24 +117,36 @@ void gender_select(char id[]) {
         }
         case SUBMIT: {
             system("cls");
-            if (x == 45) {
+            if (x == 49) {
                 sprintf(query, "UPDATE gwangju_sword_master.account SET gender = 'male' WHERE id = '%s'", id);
                 if (mysql_query(&db, query)) {
                     db_query_error(&db);
                 }
-                prologue(1, id, &db);
+                else {
+                    prologue(1, id, &db);
+                }
                 mysql_close(&db);
                 return;
             }
-            else if (x == 64) {
+            else if (x == 68) {
                 sprintf(query, "UPDATE gwangju_sword_master.account SET gender = 'female' WHERE id = '%s'", id);
                 if (mysql_query(&db, query)) {
                     db_query_error(&db);
                 }
-                prologue(2, id, &db);
+                else {
+                    prologue(2, id, &db);
+                }
                 mysql_close(&db);
                 return;
             }
+            else {
+                setRGBColor(255, 0, 0);
+                printf("Gender Select Error\n");
+                resetColor();
+                mysql_close(&db);
+                exit(1);
+            }
+            break;
         }
         default:
             break;
@@ -171,7 +183,7 @@ void save_check(char id[]) {
     }
     MYSQL_RES* result = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(result);
-    if (row && row[0] && (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
+    if (!row && !row[0] && (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
         gotoxy(45, 13);
         printf("현재 계정에 세이브파일이 없습니다!");
         Sleep(3000);
@@ -225,11 +237,15 @@ void save_check(char id[]) {
         if (row && row[0] && row[1]) {
             int stage = atoi(row[0]);
             int mop_num = atoi(row[1]);
+            mop_num--;
             if (stage < 22) {
                 system("cls");
                 Reline();
                 if (stage == 1) {
                     stage_1(id, mop_num);
+                }
+                else if (stage == 2) {
+                    stage_2(id, mop_num);
                 }
             }
         }
@@ -335,6 +351,26 @@ void prologue(short gender, char id[], MYSQL* conn) {
         if (n == SUBMIT) {
             system("cls");
             memset(query, 0, sizeof(query));
+            Remover_File();
+            MYSQL db;
+            mysql_init(&db);
+            if (!mysql_real_connect(&db, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
+                gotoxy(42, 12);
+                db_connect_error(&db);
+                exit(0);
+            }
+            sprintf(query, "UPDATE gwangju_sword_master.account SET save_file = 1 WHERE id = '%s'", id);
+            if (mysql_query(&db, query)) {
+				db_query_error(&db);
+				exit(0);
+			}
+            memset(query, 0, sizeof(query));
+            sprintf(query, "UPDATE gwangju_sword_master.user_state SET level=1,hp=100,max_hp=100,mp=100,max_mp=100,speed=10,attack=5,defense=5,cri_chance=5,good_and_evil=0,levelup_requirement=150,levelup_point=0 WHERE id = '%s'", id);
+            if (mysql_query(&db, query)) {
+                db_query_error(&db);
+                exit(0);
+            }
+            mysql_close(&db);
             outline(id);
             break;
         }

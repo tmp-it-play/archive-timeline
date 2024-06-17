@@ -119,12 +119,106 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     return damage;
                 }
                 else if (x == 75) {
-                    char effect = RandomPotionDrink(id, m, turn, x, y);
+                    char effect = RandomPotionDrink(id, m, turn, ix, iy);
                     gotoxy(x, y);
                     printf(" ");
                     srand(time(NULL));
-                    int damage;
+                    long long damage = -124;
                     if (effect == 'D') {
+                        Slow(id);
+                    }
+                    else if (effect == 'A') {
+                        Powerup(id);
+                    }
+                    else if (effect == 'B') {
+                        unsigned char hehe = 0;
+                        MYSQL db;
+                        mysql_init(&db);
+                        if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                            db_connect_error(&db);
+                            return;
+                        }
+                        char q[255];
+                        sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point+1 WHERE id = '%s'", id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        mysql_close(&db);
+                    }
+                    else if (effect == 'S') {
+                        MYSQL db;
+                        mysql_init(&db);
+                        if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                            db_connect_error(&db);
+                            return;
+                        }
+                        char q[255];
+                        sprintf(q, "UPDATE gwangju_sword_master.user_state SET max_hp = max_hp+10 WHERE id = '%s'", id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        memset(q, 0, sizeof(q));
+                        srand(time(NULL));
+                        int hp_recovery = rand() % 5 + 1;
+                        sprintf(q, "UPDATE gwangju_sword_master.user_state SET hp = hp+%d WHERE id = '%s'", hp_recovery, id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        mysql_close(&db);
+                    }
+                    else if (effect == 'E') {
+                        MYSQL db;
+                        mysql_init(&db);
+                        if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                            db_connect_error(&db);
+                            return;
+                        }
+                        char q[255];
+                        sprintf(q, "UPDATE gwangju_sword_master.account SET mop_num=1 WHERE id = '%s'", id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        mysql_close(&db);
+                        damage = 1023914;
+                    }
+                    else if (effect == 'Z') {
+                        MYSQL db;
+                        if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                            db_connect_error(&db);
+                            return;
+                        }
+                        char q[255];
+                        sprintf(q, "UPDATE gwangju_sword_master.user_state SET hp=1 WHERE id = '%s'", id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        mysql_close(&db);
+                        damage = 2;
+                    }
+                    else if (effect == 'G') {
+                        damage = abs(damage);
+                        damage = -124;
+                        
+                    }
+                    else {
+                        setRGBColor(255, 0, 0);
+                        printf("Potion Select Error");
+                        resetColor;
+                        exit(1);
+                    }
+                    if (damage == -124) {
+                        return 0;
+                    }
+                    else if (damage == 1023914) {
+                        return 1023914;
+                    }
+                    else {
+                        return damage;
                     }
                 }
                 else if (x == 100) {
@@ -561,15 +655,11 @@ int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     mysql_close(&db);
     return 1;
 }
+
 char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     srand(time(NULL));
-    MYSQL db;
-    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
-        db_connect_error(&db);
-        return;
-    }
     memset(string, 0, sizeof(string));
-    strcpy(string, "가방에서 던질 포션을 찾고 있다... /");
+    strcpy(string, "가방에서 마실 포션을 찾고 있다... /");
     scrollUpImproved(x, 2, y);
     printAt(x, y, string);
     gotoxy(x + strlen(string), y);
@@ -690,7 +780,9 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                         gotoxy(x + strlen(string), y);
                         return 'E';
                     }
-                    else {
+                    int die_potion = 2;
+                    compare_num == rand() % 100;
+                    if (compare_num < bed_potion) {
                         memset(string, 0, sizeof(string));
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
                         strcpy(string, "포션을 마셨더니 앞이 흐려진다...");
@@ -700,11 +792,67 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                         gotoxy(x + strlen(string), y);
                         return 'Z';
                     }
+                    else {
+                        MYSQL db;
+                        mysql_init(&db);
+                        if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                            db_connect_error(&db);
+                            return;
+                        }
+                        char q[255];
+                        sprintf(q, "SELECT gender FROM gwangju_sword_master.account WHERE id = '%s'", id);
+                        if (mysql_query(&db, q)) {
+                            db_query_error(&db);
+                            return;
+                        }
+                        MYSQL_RES* res = mysql_store_result(&db);
+                        if (res == NULL) {
+                            db_query_error(&db);
+                            exit(1);
+                        }
+                        MYSQL_ROW row = mysql_fetch_row(res);
+                        if (row == NULL) {
+                            db_result_value_error();
+                            exit(1);
+                        }
+                        if (strcmp(row[0], "female") == 0) {
+                            memset(string, 0, sizeof(string));
+                            setRGBColor(255, 20, 147);
+                            strcpy(string, "묵직한 사람이 되었다!:[캐릭터의 현재 성별이 변경되었다!]");
+                            scrollUpImproved(x, 2, y);
+                            printAt(x, y, string);
+                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                            gotoxy(x + strlen(string), y);
+                            memset(q, 0, sizeof(q));
+                            resetColor();
+                            sprintf(q, "UPDATE gwangju_sword_master.account SET gender = 'male' WHERE id = '%s'", id);
+                            if (mysql_query(&db, q)) {
+                                fprintf(stderr, "Update Query Error: %s\n", mysql_error(&db));
+                            }
+                        }
+                        else if (strcmp(row[0], "male") == 0) {
+                            memset(string, 0, sizeof(string));
+                            setRGBColor(255, 20, 147);
+                            strcpy(string, "무언가 공허한 느낌이다...:[캐릭터의 현재 성별이 변경되었다!]");
+                            scrollUpImproved(x, 2, y);
+                            printAt(x, y, string);
+                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                            gotoxy(x + strlen(string), y);
+                            memset(q, 0, sizeof(q));
+                            resetColor();
+                            sprintf(q, "UPDATE gwangju_sword_master.account SET gender = 'female' WHERE id = '%s'", id);
+                            if (mysql_query(&db, q)) {
+                                fprintf(stderr, "Update Query Error: %s\n", mysql_error(&db));
+                            }
+                        }
+                        mysql_close(&db);
+                        return 'G';
+                    }
                 }
             }
         }
     }
-    int nice_potion = rand() % 35;
+    return 'O';
 }
 
 char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
@@ -868,11 +1016,45 @@ void Effect_Counter(char id[]) {
     return;
 }
 
-#ifdef _WIN32
-#else
-#include <unistd.h>
-#define Sleep(x) usleep((x) * 1000)
-#endif
+void handle_effect(MYSQL* db, const char* id, const char* effect, const char* filename, const char* column) {
+    char query[512];
+    FILE* fp = fopen(filename, "r+");
+    if (fp == NULL) {
+        fprintf(stderr, "File Open Error: %s\n", strerror(errno));
+        return;
+    }
+    if (fseek(fp, 0, SEEK_SET) != 0) {
+        fprintf(stderr, "File Seek Error: %s\n", strerror(errno));
+        fclose(fp);
+        return;
+    }
+    char buffer[256];
+    int value = 0;
+    if (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        value = atoi(buffer);
+    }
+    else {
+        fprintf(stderr, "File Read Error: %s\n", strerror(errno));
+        fclose(fp);
+        return;
+    }
+    fclose(fp);
+
+    if (remove(filename) != 0) {
+        fprintf(stderr, "File Remove Error: %s\n", strerror(errno));
+        return;
+    }
+    sprintf(query, "UPDATE gwangju_sword_master.user_state SET %s = %d WHERE id = '%s'", column, value, id);
+    if (mysql_query(db, query)) {
+        fprintf(stderr, "Update Query Error: %s\n", mysql_error(db));
+        return;
+    }
+    sprintf(query, "DELETE FROM gwangju_sword_master.effect WHERE id = '%s' AND effect = '%s'", id, effect);
+    if (mysql_query(db, query)) {
+        fprintf(stderr, "Delete Query Error: %s\n", mysql_error(db));
+    }
+    return;
+}
 
 void check_and_delete_expired_effects_fug(const char* id, MYSQL* db) {
     char query[512];
@@ -894,46 +1076,21 @@ void check_and_delete_expired_effects_fug(const char* id, MYSQL* db) {
     }
     MYSQL_ROW row;
     while ((row = mysql_fetch_row(res))) {
-        FILE* fp = fopen("origin_state.txt", "r+");
-        if (fp == NULL) {
-            fprintf(stderr, "File Open Error: %s\n", strerror(errno));
-            Sleep(1256);
-            exit(1);
+        if (row == NULL) {
+            fprintf(stderr, "Fetch Row Error: %s\n", mysql_error(db));
+            continue;
         }
-        if (fseek(fp, 0, SEEK_SET) != 0) {
-            fprintf(stderr, "File Seek Error: %s\n", strerror(errno));
-            fclose(fp);
-            Sleep(1256);
-            exit(1);
+        if (strcmp(row[0], "fugitive") == 0) {
+            handle_effect(db, id, "fugitive", "ack_state.txt", "attack");
         }
-        char buffer[256];
-        int attack = 0;
-        if (fgets(buffer, sizeof(buffer), fp) != NULL) {
-            attack = atoi(buffer);
+        else if (strcmp(row[0], "slow") == 0) {
+            handle_effect(db, id, "slow", "speed_state.txt", "speed");
         }
-        else {
-            fprintf(stderr, "File Read Error: %s\n", strerror(errno));
-            fclose(fp);
-            Sleep(1256);
-            exit(1);
-        }
-        fclose(fp);
-        if (remove("origin_state.txt") != 0) {
-            fprintf(stderr, "File Remove Error: %s\n", strerror(errno));
-            Sleep(1256);
-            exit(1);
-        }
-        sprintf(query, "UPDATE gwangju_sword_master.user_state SET attack = %d WHERE id = '%s'", attack, id);
-        if (mysql_query(db, query)) {
-            fprintf(stderr, "Update Query Error: %s\n", mysql_error(db));
-        }
-        sprintf(query, "DELETE FROM gwangju_sword_master.effect WHERE id = '%s' AND effect = '%s'", id, row[0]);
-        if (mysql_query(db, query)) {
-            fprintf(stderr, "Delete Query Error: %s\n", mysql_error(db));
+        else if (strcmp(row[0], "powerup") == 0) {
+            handle_effect(db, id, "powerup", "ackplus_state.txt", "attack");
         }
     }
     mysql_free_result(res);
-    return;
 }
 
 void Resetcount_Print(char id[]) {
@@ -982,14 +1139,14 @@ void Resetcount_Print(char id[]) {
     const char* numbers[16][9] = {
         {
             "   \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "   \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   "
+        "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+        " \xE2\x96\x93\x20\x20\x20\x20\x20\x20\xE2\x96\x93 ",
+        " \xE2\x96\x93\x20\x20\x20\x20\x20\x20\xE2\x96\x93 ",
+        " \xE2\x96\x93\x20\x20\x20\x20\x20\x20\xE2\x96\x93 ",
+        " \xE2\x96\x93\x20\x20\x20\x20\x20\x20\xE2\x96\x93 ",
+        " \xE2\x96\x93\x20\x20\x20\x20\x20\x20\xE2\x96\x93 ",
+        "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+        "   \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   "
         },
         {
             "     \xE2\x96\x93     ",
@@ -1003,101 +1160,102 @@ void Resetcount_Print(char id[]) {
             "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
         },
         {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
-            "   \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            " \xE2\x96\x93 ",
+            " \xE2\x96\x93  ",
+            " \xE2\x96\x93  ",
+            "   \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93    ",
+            "  \xE2\x96\x93  ",
+            " \xE2\x96\x93  ",
+            " \xE2\x96\x93  ",
+            " \x20\x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            " \xE2\x96\x93 ",
+            " \xE2\x96\x93 ",
+            " \xE2\x96\x93   ",
+            " \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
+            " \xE2\x96\x93 ",
+            " \xE2\x96\x93 ",
+            " \xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93  ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\xE2\x96\x93  ",
+            " \xE2\x96\x93\x20\x20\xE2\x96\x93 ",
+            "  \xE2\x96\x93\x20\x20\x20\xE2\x96\x93  ",
+            "     \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "     \xE2\x96\x93  ",
+            "     \xE2\x96\x93  ",
+            "     \xE2\x96\x93  "
         },
         {
             "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+            "  \xE2\x96\x93   ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93   ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
         },
         {
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  "
+            "  \20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93    ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93 "
         },
         {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+            "  \20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \x20\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93  ",
+            "  \xE2\x96\x93  ",
+            "  \xE2\x96\x93  ",
+            "  \x20 "
         },
         {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+            "  \20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93 "
         },
         {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
-        },
-        {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
-            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93    ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
-        },
-        {
-            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
-            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
-            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
-            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93    ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
-            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    "
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93 ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93  ",
+            "  \x20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93   ",
+            "  \xE2\x96\x93    ",
+            "  \xE2\x96\x93\x20\x20\x20\x20\xE2\x96\x93    ",
+            "  \20\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
         }
     };
     if (num < 0 || num > 15) {
         printf("Reset Counter Printing Error");
         exit(1);
     }
-    for (int i = 0; i < 9; i++) {
+    int i;
+    for (i = 0; i < 9; i++) {
         if (num == 0) {
-            gotoxy(9, i + 1);
+            gotoxy(3, i + 1);
         }
         else if (num == 1 && i < 8) {
             gotoxy(8, i + 1);
@@ -1108,24 +1266,205 @@ void Resetcount_Print(char id[]) {
         else if (num == 2) {
             switch (i) {
             case 0:
+                gotoxy(8, i + 1);
+                break;
+            case 1:
+                gotoxy(14, i + 1);
+                break;
+            case 2:
+                gotoxy(14, i + 1);
+                break;
+            case 3:
+                gotoxy(14, i + 1);
+                break;
+            case 4:
+                gotoxy(7, i + 1);
+                break;
+            case 5:
+                gotoxy(8, i + 1);
+                break;
+            case 6:
                 gotoxy(9, i + 1);
+                break;
+            case 7:
+                gotoxy(9, i + 1);
+                break;
+            case 8:
+                gotoxy(8, i + 1);
+                break;
+            }
+        }
+        else if (num == 3) {
+            switch (i) {
+            case 0:
+                gotoxy(8, i + 1);
                 break;
             case 1:
             case 2:
-                gotoxy(10, i + 1);
-                break;
             case 3:
-                gotoxy(9, i + 1);
+                gotoxy(13, i + 1);
                 break;
             case 4:
                 gotoxy(9, i + 1);
                 break;
             case 5:
-                gotoxy(9, i + 1);
-                break;
             case 6:
             case 7:
+                gotoxy(13, i + 1);
+                break;
+            case 8:
+                gotoxy(8, i + 1);
+                break;
+            }
+        }
+        else if (num == 4) {
+            switch (i) {
+            case 0:
+                gotoxy(12, i + 1);
+                break;
+            case 1:
+                gotoxy(10, i + 1);
+                break;
+            case 2:
+                gotoxy(10, i + 1);
+                break;
+            case 3:
+                gotoxy(10, i + 1);
+                break;
+            case 4:
+                gotoxy(8, i + 1);
+                break;
+            case 5:
+                gotoxy(4, i + 1);
+                break;
+            case 6:
                 gotoxy(9, i + 1);
+                break;
+            case 7:
+                gotoxy(9, i + 1);
+                break;
+            case 8:
+                gotoxy(9, i + 1);
+                break;
+            }
+        }
+        else if (num == 5) {
+            switch (i) {
+            case 0:
+                gotoxy(8, i + 1);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                gotoxy(7, i + 1);
+                break;
+            case 4:
+                gotoxy(8, i + 1);
+                break;
+            case 5:
+            case 6:
+            case 7:
+                gotoxy(12, i + 1);
+                break;
+            case 8:
+                gotoxy(8, i + 1);
+                break;
+            }
+        }
+        else if (num == 6) {
+            switch (i) {
+            case 0:
+                gotoxy(9, i + 1);
+                break;
+            case 1:
+                gotoxy(8, i + 1);
+                break;
+            case 2:
+            case 3:
+                gotoxy(13, i + 1);
+                break;
+            case 4:
+                gotoxy(8, i + 1);
+                break;
+            case 5:
+            case 6:
+            case 7:
+                gotoxy(8, i + 1);
+                break;
+            case 8:
+                gotoxy(8, i + 1);
+                break;
+            }
+        }
+
+        else if (num == 7) {
+            switch (i) {
+            case 0:
+                gotoxy(9, i + 1);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                gotoxy(8, i + 1);
+                break;
+            case 4:
+                gotoxy(12, i + 1);
+                break;
+            case 5:
+            case 6:
+                gotoxy(13, i + 1);
+                break;
+            case 7:
+            case 8:
+                gotoxy(13, i + 1);
+                break;
+
+            }
+        }
+        else if (num == 8) {
+            switch (i) {
+            case 0:
+                gotoxy(9, i + 1);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                gotoxy(8, i + 1);
+                break;
+            case 4:
+                gotoxy(8, i + 1);
+                break;
+            case 5:
+            case 6:
+            case 7:
+                gotoxy(8, i + 1);
+                break;
+            case 8:
+                gotoxy(8, i + 1);
+                break;
+            }
+        }
+        else if (num == 9) {
+            switch (i) {
+            case 0:
+                gotoxy(8, i + 1);
+                break;
+            case 1:
+                gotoxy(8, i + 1);
+                break;
+            case 2:
+            case 3:
+                gotoxy(8, i + 1);
+                break;
+            case 4:
+                gotoxy(8, i + 1);
+                break;
+            case 5:
+            case 6:
+                gotoxy(13, i + 1);
+                break;
+            case 7:
+                gotoxy(8, i + 1);
                 break;
             case 8:
                 gotoxy(9, i + 1);

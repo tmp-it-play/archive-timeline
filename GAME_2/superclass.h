@@ -41,12 +41,12 @@
 char string[100];
 
 char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 int main(void);
 int game_core_code(char id[]);
 int mail_send(void);
 int loginmenuDraw(void);
 int KeyControl(void);
-
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 void Reline(void);
 void tutorial(char id[]);
@@ -83,5 +83,8 @@ void check_and_delete_expired_effects_fug(const char* id, MYSQL* db);
 void stage_1(char id[], int mop_num);
 void stage_2(char id[], int mop_num);
 void Fugitive(char id[]);
+void Slow(char id[]);
+void Powerup(char id[]);
+void Remover_File(void);
 long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int iy);
 long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int y);
