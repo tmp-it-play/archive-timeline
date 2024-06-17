@@ -1,19 +1,19 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 
 void info_area(char id[]);
 
 void outline(char id[]) {
     Program_config();
     for (int i = 0; i < 120; i++) {
-        printf("¡á");
+        printf("â– ");
     }
     printf("\n");
     for (int i = 1; i <= 28; i++) {
-        printf("¡á");
+        printf("â– ");
         for (int j = 0; j < 118; j++) {
             printf(" ");
         }
-        printf("¡á\n");
+        printf("â– \n");
     }
     gotoxy(0, 29);
     printf("\n");
@@ -25,30 +25,31 @@ void info_area(char id[]) {
     int y = 0;
     for (int i = 0; i < 28; i++) {
         gotoxy(27, y + i);
-        printf("¡á");
+        printf("â– ");
     }
     puts(" ");
     gotoxy(1, 22);
     for (int i = 0; i < 27; i++) {
         gotoxy(i, 22);
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 0; i < 27; i++) {
         gotoxy(i, 12);
-        printf("¡á");
+        printf("â– ");
     }
     gotoxy(0, 27);
     for (int i = 0; i < 120; i++) {
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 0; i < 27; i++) {
         gotoxy(27, i);
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 27; i < 119; i++) {
         gotoxy(i, 19);
-        printf("¡á");
+        printf("â– ");
     }
+    Resetcount_Print(id);
     Reline();
     game_core_code(id);
 }
@@ -66,44 +67,44 @@ void Reline(void) {
     CursorView(0);
     Program_config();
     for (int i = 0; i < 120; i++) {
-        printf("¡á");
+        printf("â– ");
     }
     printf("\n");
     for (int i = 1; i <= 28; i++) {
-        printf("¡á");
+        printf("â– ");
         for (int j = 0; j < 118; j++) {
             printf(" ");
         }
-        printf("¡á\n");
+        printf("â– \n");
     }
     gotoxy(0, 29);
     printf("\n");
     int y = 0;
     for (int i = 0; i < 28; i++) {
         gotoxy(27, y + i);
-        printf("¡á");
+        printf("â– ");
     }
     puts(" ");
     gotoxy(1, 22);
     for (int i = 0; i < 27; i++) {
         gotoxy(i, 22);
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 0; i < 27; i++) {
         gotoxy(i, 12);
-        printf("¡á");
+        printf("â– ");
     }
     gotoxy(0, 27);
     for (int i = 0; i < 120; i++) {
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 0; i < 27; i++) {
         gotoxy(27, i);
-        printf("¡á");
+        printf("â– ");
     }
     for (int i = 27; i < 119; i++) {
         gotoxy(i, 19);
-        printf("¡á");
+        printf("â– ");
     }
     return;
 }

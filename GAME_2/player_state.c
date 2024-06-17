@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "db_event.h"
 #include "player_state.h"
 
@@ -46,7 +46,7 @@ void initial_hp(char id[]) {
     mysql_free_result(result);
     mysql_close(&db);
     gotoxy(2, 24);
-    printf("HP[¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á]");
+    printf("HP[â– â– â– â– â– â– â– â– â– â– ]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     return;
 }
@@ -92,7 +92,7 @@ void initial_mp(char id[]) {
     mysql_free_result(result);
     mysql_close(&db);
     gotoxy(2, 25);
-    printf("MP[¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á]");
+    printf("MP[â– â– â– â– â– â– â– â– â– â– ]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     return;
 }
@@ -158,11 +158,6 @@ void now_level(char id[]) {
     }
     long long levelup_point = atoll(row[0]);
     mysql_free_result(result);
-    gotoxy(2, 14);
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-    printf("Lv.%lld[%lld/%lld]", player_level, levelup_point, levelup_requirement);
-    mysql_close(&db);
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     return;
 }
 
@@ -195,13 +190,13 @@ void now_state(char id[]) {
     gotoxy(2, 16);
     printf("MP:%s", row[1]);
     gotoxy(2, 17);
-    printf("°ø°Ý·Â:%s", row[3]);
+    printf("ê³µê²©ë ¥:%s", row[3]);
     gotoxy(2, 18);
-    printf("¹æ¾î·Â:%s", row[4]);
+    printf("ë°©ì–´ë ¥:%s", row[4]);
     gotoxy(2, 19);
-    printf("È¸ÇÇ·ü:%s%%", row[2]);
+    printf("íšŒí”¼ë¥ :%s%%", row[2]);
     gotoxy(2, 20);
-    printf("Ä¡¸íÅ¸ È®·ü:%s%%", row[5]);
+    printf("ì¹˜ëª…íƒ€ í™•ë¥ :%s%%", row[5]);
     memset(q, 0, sizeof(q));
     sprintf(q, "SELECT levelup_requirement,levelup_point,level FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
@@ -272,7 +267,7 @@ void hp_mp_bar(char id[]) {
     printf("HP[");
     for (unsigned int i = 0; i < bar_length; i++) {
         if (i < filled_length) {
-            printf("¡á");
+            printf("â– ");
         }
         else {
             printf(" ");
@@ -291,7 +286,7 @@ void hp_mp_bar(char id[]) {
     printf("MP[");
     for (unsigned int i = 0; i < bar_length; i++) {
         if (i < filled_mp_length) {
-            printf("¡á");
+            printf("â– ");
         }
         else {
             printf(" ");

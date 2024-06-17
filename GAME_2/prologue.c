@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "superclass.h"
 #include "db_event.h"
 
@@ -8,15 +8,15 @@ void new_game_reconfirm(char id[]) {
     system("cls");
     gotoxy(42, 12);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-    printf("Á¤¸» °ÔÀÓÀ» »õ·Î ½ÃÀÛÇÏ½Ã°Ú½À´Ï±î?");
+    printf("ì •ë§ ê²Œì„ì„ ìƒˆë¡œ ì‹œì‘í•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
     gotoxy(39, 13);
-    printf("[±âÁ¸ÀÇ ¼¼ÀÌºêÆÄÀÏÀÌ ÀÖ´Ù¸é »èÁ¦µË´Ï´Ù]");
+    printf("[ê¸°ì¡´ì˜ ì„¸ì´ë¸ŒíŒŒì¼ì´ ìˆë‹¤ë©´ ì‚­ì œë©ë‹ˆë‹¤]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     int x = 45, y = 15;
     gotoxy(45, 15);
-    printf("> ¿¹");
+    printf("> ì˜ˆ");
     gotoxy(64, 15);
-    printf("¾Æ´Ï¿ä");
+    printf("ì•„ë‹ˆìš”");
     while (true) {
         int n = KeyControl();
         switch (n) {
@@ -76,15 +76,15 @@ void gender_select(char id[]) {
     system("cls");
     gotoxy(45, 12);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-    printf("ÁÖÀÎ°øÀÇ ¼ºº°À» Á¤ÇØÁÖ¼¼¿ä");
+    printf("ì£¼ì¸ê³µì˜ ì„±ë³„ì„ ì •í•´ì£¼ì„¸ìš”");
     gotoxy(39, 13);
-    printf("[¼ºº°¿¡ µû¶ó ½ºÅä¸®°¡ ¹Ù²ğ ¼ö ÀÖ½À´Ï´Ù]");
+    printf("[ì„±ë³„ì— ë”°ë¼ ìŠ¤í† ë¦¬ê°€ ë°”ë€” ìˆ˜ ìˆìŠµë‹ˆë‹¤]");
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     int x = 45, y = 15;
     gotoxy(45, 15);
-    printf("> ³²");
+    printf("> ë‚¨");
     gotoxy(66, 15);
-    printf("¿©");
+    printf("ì—¬");
     char query[255];
     while (true) {
         int n = KeyControl();
@@ -173,14 +173,14 @@ void save_check(char id[]) {
     MYSQL_ROW row = mysql_fetch_row(result);
     if (row && row[0] && (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
         gotoxy(45, 13);
-        printf("ÇöÀç °èÁ¤¿¡ ¼¼ÀÌºêÆÄÀÏÀÌ ¾ø½À´Ï´Ù!");
+        printf("í˜„ì¬ ê³„ì •ì— ì„¸ì´ë¸ŒíŒŒì¼ì´ ì—†ìŠµë‹ˆë‹¤!");
         Sleep(3000);
         system("cls");
         Program_config();
     }
     else if (row && row[0] && (strcmp(row[0], "1") == 0 || strcmp(row[0], "true") == 0)) {
         unsigned int line = 0;
-        const char* text = "¼¼ÀÌºêÆÄÀÏÀÌ Á¶È¸µÇ¾ú½À´Ï´Ù\nºÒ·¯¿À´Â Áß... |";
+        const char* text = "ì„¸ì´ë¸ŒíŒŒì¼ì´ ì¡°íšŒë˜ì—ˆìŠµë‹ˆë‹¤\në¶ˆëŸ¬ì˜¤ëŠ” ì¤‘... |";
         int console_width = get_console_width();
         gotoxy(0, 10);
         int buffer_x = -1, buffer_y = -1;
@@ -235,7 +235,7 @@ void save_check(char id[]) {
         }
         else {
             gotoxy(45, 13);
-            printf("¼¼ÀÌºêÆÄÀÏÀ» ºÒ·¯¿À´Â Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù!");
+            printf("ì„¸ì´ë¸ŒíŒŒì¼ì„ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤!");
             Sleep(3000);
             system("cls");
             Program_config();
@@ -273,10 +273,10 @@ void prologue(short gender, char id[], MYSQL* conn) {
     char* prologue_text = NULL;
     unsigned int line = 0, final_y = 10;
     if (gender == 1) {
-        const char* text = "´ç½ÅÀº Çì³×½Ã½º¿Õ±¹ÀÇ ±â»çÀÔ´Ï´Ù.\n"
-            "ÆòÈ­·Ó´ø ¿Õ±¹¿¡ ±×¶õµğ½º¶ó´Â ¾Ç¸¶°¡ Ã£¾Æ¿Í °øÁÖ¸¦\n"
-            "³³Ä¡ÇØ °¬½À´Ï´Ù. ´ç½ÅÀº ³ª¶óÀÇ ºÎ¸§À» ¹Ş¾Æ °øÁÖ¸¦ Ã£À¸·¯ ´øÀü¿¡ Ã£¾Æ¿Ô½À´Ï´Ù.\n"
-            "±× ¼ø°£ ´ç½Å¿¡°Ô ¾öÃ»³­ ´É·ÂÀÌ »ı±â´Âµ¥.....";
+        const char* text = "ë‹¹ì‹ ì€ í—¤ë„¤ì‹œìŠ¤ì™•êµ­ì˜ ê¸°ì‚¬ì…ë‹ˆë‹¤.\n"
+            "í‰í™”ë¡­ë˜ ì™•êµ­ì— ê·¸ë€ë””ìŠ¤ë¼ëŠ” ì•…ë§ˆê°€ ì°¾ì•„ì™€ ê³µì£¼ë¥¼\n"
+            "ë‚©ì¹˜í•´ ê°”ìŠµë‹ˆë‹¤. ë‹¹ì‹ ì€ ë‚˜ë¼ì˜ ë¶€ë¦„ì„ ë°›ì•„ ê³µì£¼ë¥¼ ì°¾ìœ¼ëŸ¬ ë˜ì „ì— ì°¾ì•„ì™”ìŠµë‹ˆë‹¤.\n"
+            "ê·¸ ìˆœê°„ ë‹¹ì‹ ì—ê²Œ ì—„ì²­ë‚œ ëŠ¥ë ¥ì´ ìƒê¸°ëŠ”ë°.....";
 
         prologue_text = (char*)malloc(strlen(text) + 1);
         if (prologue_text == NULL) {
@@ -286,10 +286,10 @@ void prologue(short gender, char id[], MYSQL* conn) {
         strcpy(prologue_text, text);
     }
     else if (gender == 2) {
-        const char* text = "´ç½ÅÀº Çì³×½Ã½º¿Õ±¹ÀÇ ±â»çÀÔ´Ï´Ù.\n"
-            "ÆòÈ­·Ó´ø ¿Õ±¹¿¡ ±×¶õµğ½º¶ó´Â ¾Ç¸¶°¡ Ã£¾Æ¿Í ¿ÕÀÚ¸¦\n"
-            "³³Ä¡ÇØ °¬½À´Ï´Ù. ´ç½ÅÀº ³ª¶óÀÇ ºÎ¸§À» ¹Ş¾Æ ¿ÕÀÚ¸¦ Ã£À¸·¯ ´øÀü¿¡ Ã£¾Æ¿Ô½À´Ï´Ù.\n"
-            "±× ¼ø°£ ´ç½Å¿¡°Ô ¾öÃ»³­ ´É·ÂÀÌ »ı±â´Âµ¥.....";
+        const char* text = "ë‹¹ì‹ ì€ í—¤ë„¤ì‹œìŠ¤ì™•êµ­ì˜ ê¸°ì‚¬ì…ë‹ˆë‹¤.\n"
+            "í‰í™”ë¡­ë˜ ì™•êµ­ì— ê·¸ë€ë””ìŠ¤ë¼ëŠ” ì•…ë§ˆê°€ ì°¾ì•„ì™€ ì™•ìë¥¼\n"
+            "ë‚©ì¹˜í•´ ê°”ìŠµë‹ˆë‹¤. ë‹¹ì‹ ì€ ë‚˜ë¼ì˜ ë¶€ë¦„ì„ ë°›ì•„ ì™•ìë¥¼ ì°¾ìœ¼ëŸ¬ ë˜ì „ì— ì°¾ì•„ì™”ìŠµë‹ˆë‹¤.\n"
+            "ê·¸ ìˆœê°„ ë‹¹ì‹ ì—ê²Œ ì—„ì²­ë‚œ ëŠ¥ë ¥ì´ ìƒê¸°ëŠ”ë°.....";
 
         prologue_text = (char*)malloc(strlen(text) + 1);
         if (prologue_text == NULL) {
@@ -328,7 +328,7 @@ void prologue(short gender, char id[], MYSQL* conn) {
     }
     gotoxy(45, final_y + 2);
     Sleep(1975);
-    printf("°è¼ÓÇÏ·Á¸é Enter¸¦ ´©¸£¼¼¿ä");
+    printf("ê³„ì†í•˜ë ¤ë©´ Enterë¥¼ ëˆ„ë¥´ì„¸ìš”");
     CursorView(0);
     while (true) {
         int n = KeyControl();

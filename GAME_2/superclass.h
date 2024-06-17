@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
 #define	UP 0
@@ -49,11 +49,13 @@ int KeyControl(void);
 
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 void Reline(void);
+void tutorial(char id[]);
 void Input_Cheat(Monster m[], char id[]);
 void gotoxy(int x, int y);
 void clearLine(int x, int y);
 void ClearViewState(void);
 void printAt(int x, int y, const char* str);
+void Resetcount_Print(char id[]);
 void scrollUp(int x, int y_start, int y_end);
 void scrollUpImproved(int x, int y_end, int y_start);
 void scrollDownImproved(int x, int y_start, int y_end);

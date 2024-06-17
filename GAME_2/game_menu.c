@@ -1,20 +1,21 @@
-#include "superclass.h"
-#include "db_event.h"
+ï»¿#include "superclass.h"
 
 void Gamemenu(char id[]) {
-    recall:
-    while (true) {
+    int x = 53, y = 16;
+    bool menu_active = true;
+    while (menu_active) {
         ASCII_Art_print();
         CursorView(0);
-        int x = 48, y = 16;
         gotoxy(x, y);
-        printf("> °ÔÀÓ »õ·ÎÇÏ±â");
-        gotoxy(x + 2, y + 1);
-        printf("°ÔÀÓ ÀÌ¾îÇÏ±â");
-        gotoxy(x + 4, y + 2);
-        printf("·Î±×¾Æ¿ô");
-        gotoxy(x + 6, y + 3);
-        printf("Á¾·á");
+        printf("> ê²Œìž„ ìƒˆë¡œí•˜ê¸°");
+        gotoxy(x+2, y + 1);
+        printf("ê²Œìž„ ì´ì–´í•˜ê¸°");
+        gotoxy(x + 4.5, y + 2);
+        printf("íŠœí† ë¦¬ì–¼");
+        gotoxy(x + 4.5, y + 3);
+        printf("ë¡œê·¸ì•„ì›ƒ");
+        gotoxy(x + 6, y + 4);
+        printf("ì¢…ë£Œ");
         while (true) {
             int n = KeyControl();
             switch (n) {
@@ -25,7 +26,7 @@ void Gamemenu(char id[]) {
                     y--;
                 }
                 else {
-                    y = 19;
+                    y = 20;
                 }
                 gotoxy(x, y);
                 printf(">");
@@ -33,7 +34,7 @@ void Gamemenu(char id[]) {
             case DOWN:
                 gotoxy(x, y);
                 printf(" ");
-                if (y < 19) {
+                if (y < 20) {
                     y++;
                 }
                 else {
@@ -46,23 +47,27 @@ void Gamemenu(char id[]) {
                 system("cls");
                 if (y == 16) {
                     new_game_reconfirm(id);
-                    return;
+                    menu_active = false;
                 }
                 else if (y == 17) {
                     save_check(id);
-                    system("cls");
-                    goto recall;
                 }
                 else if (y == 18) {
-                    main();
-                    return;
+                    tutorial(id);
                 }
                 else if (y == 19) {
-                    program_off();
-                    system("cls");
-                    goto recall;
+                    main();
+                    menu_active = false;
                 }
+                else if (y == 20) {
+                    program_off();
+                    menu_active = false;
+                }
+                break;
             default:
+                break;
+            }
+            if (!menu_active) {
                 break;
             }
         }

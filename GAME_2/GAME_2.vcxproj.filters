@@ -66,6 +66,9 @@
     <ClCompile Include="stage_2.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="tutorial.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="superclass.h">

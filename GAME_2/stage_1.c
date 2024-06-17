@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "player_state.h"
 #include "mop_dictionary.h"
 #include "db_event.h"
@@ -41,7 +41,7 @@ void stage_1(char id[], int mop_num) {
             scrollup_motion(initial_x, initial_y);
         }
         memset(string, 0, sizeof(string));
-        sprintf(string, "%sÀÌ Æ¢¾î³ª¿Ô´Ù!", m[i].name);
+        sprintf(string, "%sì´ íŠ€ì–´ë‚˜ì™”ë‹¤!", m[i].name);
         scrollup_motion(initial_x, 17);
         printAt(initial_x, initial_y, string);
         mop_max_hp = mop_hp = m[i].hp;
@@ -83,7 +83,7 @@ void stage_1(char id[], int mop_num) {
                 else if (mop_hp <= 0) {
                     memset(string, 0, sizeof(string));
                     setRGBColor(255, 255, 51);
-                    sprintf(string, "%s¸¦ Ã³Ä¡Çß´Ù!", m[i].name);
+                    sprintf(string, "%së¥¼ ì²˜ì¹˜í–ˆë‹¤!", m[i].name);
                     drop_booty(id, m[i].name);
                     scrollup_motion(initial_x, 17);
                     printAt(initial_x, initial_y, string);
@@ -117,12 +117,12 @@ void stage1_clear(char id[]) {
     unsigned int line = 0;
     unsigned int final_y = 2;
     memset(query, 0, sizeof(query));
-    const char* text = "´ç½ÅÀº ¿©Á¤À» ½ÃÀÛÇÏ°í Áöµµ¿¡ Ç¥½ÃµÈ ¸ó½ºÅÍµéÀÌ µµ»ç¸°´Ù´Â ½£ÀÇ ÀÔ±¸¸¦ Áö³ªÀÚ¸¶ÀÚ\n"
-        "¸ó½ºÅÍµéÀÇ ½À°İÀ» ¹Ş¾Ò½À´Ï´Ù\n"
-        "´ç½ÅÀº ¸ó½ºÅÍµéÀ» ¸ğµÎ Ã³Ä¡ÇÏ°í ¾ÕÀ¸·Î ³ª¾Æ°¬½À´Ï´Ù.\n"
-        "¾ó¸¶ Áö³ªÁö ¾Ê¾Æ ¾àÃÊ¸¦ ¹ß°ßÇÏ°Ô µÇ¾ú°í\n"
-        "ÀÌ¸¦ ÀÌ¿ëÇØ ÀüÅõ¿¡¼­ ´ÙÄ£ °÷À» Ä¡·áÇÏ°í ´Ù½Ã ±æÀ» ¶°³µ½À´Ï´Ù.\n"
-        "¾ÕÀ¸·ÎÀÇ ¿©Á¤Àº Çè³­ÇÒ °ÍÀÔ´Ï´Ù...";
+    const char* text = "ë‹¹ì‹ ì€ ì—¬ì •ì„ ì‹œì‘í•˜ê³  ì§€ë„ì— í‘œì‹œëœ ëª¬ìŠ¤í„°ë“¤ì´ ë„ì‚¬ë¦°ë‹¤ëŠ” ìˆ²ì˜ ì…êµ¬ë¥¼ ì§€ë‚˜ìë§ˆì\n"
+        "ëª¬ìŠ¤í„°ë“¤ì˜ ìŠµê²©ì„ ë°›ì•˜ìŠµë‹ˆë‹¤\n"
+        "ë‹¹ì‹ ì€ ëª¬ìŠ¤í„°ë“¤ì„ ëª¨ë‘ ì²˜ì¹˜í•˜ê³  ì•ìœ¼ë¡œ ë‚˜ì•„ê°”ìŠµë‹ˆë‹¤.\n"
+        "ì–¼ë§ˆ ì§€ë‚˜ì§€ ì•Šì•„ ì•½ì´ˆë¥¼ ë°œê²¬í•˜ê²Œ ë˜ì—ˆê³ \n"
+        "ì´ë¥¼ ì´ìš©í•´ ì „íˆ¬ì—ì„œ ë‹¤ì¹œ ê³³ì„ ì¹˜ë£Œí•˜ê³  ë‹¤ì‹œ ê¸¸ì„ ë– ë‚¬ìŠµë‹ˆë‹¤.\n"
+        "ì•ìœ¼ë¡œì˜ ì—¬ì •ì€ í—˜ë‚œí•  ê²ƒì…ë‹ˆë‹¤...";
     int console_width = 120 - 32 + 1;
     int console_height = 17 - 2 + 1;
     int start_x = 32;
@@ -153,7 +153,7 @@ void stage1_clear(char id[]) {
         }
     }
     final_y = start_y + line;
-    const char* hp_recovered_text = "[HP°¡ ÃÖ´ëÄ¡±îÁö È¸º¹µÇ¾ú½À´Ï´Ù]";
+    const char* hp_recovered_text = "[HPê°€ ìµœëŒ€ì¹˜ê¹Œì§€ íšŒë³µë˜ì—ˆìŠµë‹ˆë‹¤]";
     int hp_recovered_x = start_x + (console_width - strlen(hp_recovered_text)) / 2;
     gotoxy(hp_recovered_x, final_y + 1);
     setRGBColor(0, 255, 0);
@@ -162,7 +162,7 @@ void stage1_clear(char id[]) {
     int message_x = start_x + (console_width - 27) / 2;
     gotoxy(message_x, final_y + 4);
     Sleep(1975);
-    printf("°è¼ÓÇÏ·Á¸é Enter¸¦ ´©¸£¼¼¿ä");
+    printf("ê³„ì†í•˜ë ¤ë©´ Enterë¥¼ ëˆ„ë¥´ì„¸ìš”");
     CursorView(0);
     while (true) {
         int n = KeyControl();

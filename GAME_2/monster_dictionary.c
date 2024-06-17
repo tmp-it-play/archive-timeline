@@ -1,10 +1,10 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "mop_dictionary.h"
 
 //index [0] == name / [1] == hp / [2] == attack / [3] == defense / [4] == speed
 
 Monster goblin(void) {
-    Monster goblin = { "°íºí¸°",50,5,3,15 };
+    Monster goblin = { "ê³ ë¸”ë¦°",50,5,3,15 };
     return goblin;
 }
 
@@ -16,7 +16,7 @@ long long goblin_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
 	}
 	else {
 		damage = 3;
-		sprintf(string, "°íºí¸°ÀÇ ÀÏ°İ! ÇÇÇØ¸¦ %lld ¹Ş¾Ò´Ù", damage);
+		sprintf(string, "ê³ ë¸”ë¦°ì˜ ì¼ê²©! í”¼í•´ë¥¼ %lld ë°›ì•˜ë‹¤", damage);
 		scrollUpImproved(32, 3, 17);
 		setRGBColor(255, 0, 0);
 		printAt(32, 17, string);
@@ -27,13 +27,13 @@ long long goblin_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
 }
 
 Monster slime(void) {
-    Monster slime = { "½½¶óÀÓ",30,0,5,3 };
+    Monster slime = { "ìŠ¬ë¼ì„",30,0,5,3 };
     return slime;
 }
 
 void slime_skill_1(void) {
 	memset(string, 0, sizeof(string));
-	strcat(string, "½½¶óÀÓÀÇ ÇÊ»ì Èå¹°°Å¸®±â! ÇÏÁö¸¸ ¾Æ¹«ÀÏµµ ÀÏ¾î³ªÁö ¾Ê¾Ò´Ù!");
+	strcat(string, "ìŠ¬ë¼ì„ì˜ í•„ì‚´ íë¬¼ê±°ë¦¬ê¸°! í•˜ì§€ë§Œ ì•„ë¬´ì¼ë„ ì¼ì–´ë‚˜ì§€ ì•Šì•˜ë‹¤!");
 	scrollUpImproved(32, 3, 17);
 	setRGBColor(0, 255, 0);
 	printAt(32, 17, string);
@@ -43,7 +43,7 @@ void slime_skill_1(void) {
 }
 
 Monster bat(void) {
-    Monster bat = { "¹ÚÁã",25,8,0,30 };
+    Monster bat = { "ë°•ì¥",25,8,0,30 };
     return bat;
 }
 
@@ -54,7 +54,7 @@ long long bat_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
 	else {
 		memset(string, 0, sizeof(string));
 		long long damage = 5;
-		strcat(string, "¹ÚÁã°¡ ÈíÇ÷À» Çß´Ù! HP¸¦ 5 »°°å´Ù");
+		strcat(string, "ë°•ì¥ê°€ í¡í˜ˆì„ í–ˆë‹¤! HPë¥¼ 5 ëºê²¼ë‹¤");
 		scrollUpImproved(32, 3, 17);
 		setRGBColor(255, 0, 0);
 		printAt(32, 17, string);
@@ -71,7 +71,7 @@ long long bat_skill_2(char id[], Monster m[], int stage_turn, int x, int y) {
 	else {
 		memset(string, 0, sizeof(string));
 		long long damage = 8;
-		strcat(string, "¹ÚÁãÀÇ ÇÒÄû±â! ÇÇÇØ¸¦ 8 ¹Ş¾Ò´Ù");
+		strcat(string, "ë°•ì¥ì˜ í• í€´ê¸°! í”¼í•´ë¥¼ 8 ë°›ì•˜ë‹¤");
 		scrollUpImproved(32, 3, 17);
 		setRGBColor(255, 0, 0);
 		printAt(32, 17, string);
@@ -81,20 +81,20 @@ long long bat_skill_2(char id[], Monster m[], int stage_turn, int x, int y) {
 }
 
 Monster oak(void) {
-    Monster oak = { "¿ÀÅ©",175,10,15,5 };
+    Monster oak = { "ì˜¤í¬",175,10,15,5 };
     return oak;
 }
 
 Monster wolfman(void) {
-    Monster wolfman = { "´Á´ëÀÎ°£",150,10,13,20 };
+    Monster wolfman = { "ëŠ‘ëŒ€ì¸ê°„",150,10,13,20 };
     return wolfman;
 }
 
 Monster magician(void) {
-    Monster magician = { "Èæ¸¶¼ú»ç",90,0,3,1 };
+    Monster magician = { "í‘ë§ˆìˆ ì‚¬",90,0,3,1 };
     return magician;
 }
 
 Monster dragon(void) {
-    Monster dragon = { "µå·¡°ï",300,15,30,30 };
+    Monster dragon = { "ë“œë˜ê³¤",300,15,30,30 };
 }

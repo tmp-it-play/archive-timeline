@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef MOP_DICTIONARY_H
 #define MOP_DICTIONARY_H

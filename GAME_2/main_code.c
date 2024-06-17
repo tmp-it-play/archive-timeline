@@ -1,9 +1,10 @@
-#include "superclass.h"
+﻿#include "superclass.h"
 #include "player_state.h"
 
 int main() {
    /* mail_send();
     Sleep(7500);*/
+    SetConsoleOutputCP(949);
     int sync = 0;
     Program_config();
     ASCII_Art_print();
@@ -22,6 +23,7 @@ int game_core_code(char id[]) {
     initial_mp(id);
     now_level(id);
     now_state(id);
+    Resetcount_Print(id);
     stage_1(id, 1);
     stage_2(id, 1);
     Sleep(10000);

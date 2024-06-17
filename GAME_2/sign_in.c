@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "db_event.h"
 
 #pragma comment (lib,"libmariadb.lib")
@@ -56,7 +56,7 @@ void sign_in(void) {
 				CursorView(0);
 				printf("Sing in\n");
 				gotoxy(43, 17);
-				printf("¾ÆÀÌµğ(ID) ¶Ç´Â ºñ¹Ğ¹øÈ£(Password)¸¦ ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä");
+				printf("ì•„ì´ë””(ID) ë˜ëŠ” ë¹„ë°€ë²ˆí˜¸(Password)ë¥¼ ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				Sleep(3000);
 				mysql_close(&db_key);
@@ -71,7 +71,7 @@ void sign_in(void) {
 			CursorView(0);
 			printf("Sing in\n");
 			gotoxy(43, 17);
-			printf("¾ÆÀÌµğ(ID) ¶Ç´Â ºñ¹Ğ¹øÈ£(Password)¸¦ ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä");
+			printf("ì•„ì´ë””(ID) ë˜ëŠ” ë¹„ë°€ë²ˆí˜¸(Password)ë¥¼ ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 			Sleep(3000);
 			mysql_close(&db_key);

@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
@@ -48,17 +48,17 @@ void Program_config(void) {
     system("COLOR 0F");
     system("mode con cols=120 lines=30");
     system("cls");
-    SetConsoleTitle(TEXT("È¸±Í"));
+    SetConsoleTitle(TEXT("íšŒê·€"));
 }
 
 int loginmenuDraw(void) {
     int x = 56, y = 16;
     gotoxy(x, y);
-    printf("> ·Î±×ÀÎ");
+    printf("> ë¡œê·¸ì¸");
     gotoxy(x + 2, y + 1);
-    printf("È¸¿ø°¡ÀÔ");
+    printf("íšŒì›ê°€ìž…");
     gotoxy(x + 2, y + 2);
-    printf("Á¾·á");
+    printf("ì¢…ë£Œ");
     while (true) {
         int n = KeyControl();
         switch (n) {
@@ -146,11 +146,11 @@ void CursorView(char show) {
 void program_off(void) {
     int x = 54, y = 11;
     gotoxy(x - 5, y - 2);
-    printf("Á¤¸» Á¾·áÇÏ½Ã°Ú½À´Ï±î?");
+    printf("ì •ë§ ì¢…ë£Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
     gotoxy(x, y);
-    printf("> ¿¹");
+    printf("> ì˜ˆ");
     gotoxy(x + 2, y + 2);
-    printf("¾Æ´Ï¿ä");
+    printf("ì•„ë‹ˆìš”");
     while (true) {
         int n = KeyControl();
         switch (n) {

@@ -1,4 +1,4 @@
-#include "superclass.h"
+﻿#include "superclass.h"
 
 #pragma comment (lib,"libmariadb.lib")
 

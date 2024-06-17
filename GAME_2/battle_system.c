@@ -1,4 +1,4 @@
-#include "superclass.h"
+ï»¿#include "superclass.h"
 #include "player_state.h"
 #include "db_event.h"
 #include "mop_dictionary.h"
@@ -13,13 +13,13 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
         gotoxy(x, y);
         printf(">");
         gotoxy(39, 23);
-        printf("°ø°İÇÏ±â");
+        printf("ê³µê²©í•˜ê¸°");
         gotoxy(54, 23);
-        printf("·£´ı ¹°¾à ´øÁö±â");
+        printf("ëœë¤ ë¬¼ì•½ ë˜ì§€ê¸°");
         gotoxy(77, 23);
-        printf("·£´ı ¹°¾à ¸¶½Ã±â");
+        printf("ëœë¤ ë¬¼ì•½ ë§ˆì‹œê¸°");
         gotoxy(102, 23);
-        printf("µµ¸Á°¡±â");
+        printf("ë„ë§ê°€ê¸°");
         while (true) {
             int n = KeyControl();
             switch (n) {
@@ -80,7 +80,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                             damage = rand() % 20 + 1;
                         }
                         memset(string, 0, sizeof(string));
-                        sprintf(string, "%dÀÇ ÇÇÇØ¸¦ ÀÔÇû´Ù!", damage);
+                        sprintf(string, "%dì˜ í”¼í•´ë¥¼ ì…í˜”ë‹¤!", damage);
                         scrollUpImproved(ix, 2, iy);
                         printAt(ix, iy, string);
                         gotoxy(ix + strlen(string), iy);
@@ -91,7 +91,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                             damage = rand() % 15 + 1;
                         }
                         memset(string, 0, sizeof(string));
-                        sprintf(string, "%dÀÇ ÇÇÇØ¸¦ ÀÔÇû´Ù!", damage);
+                        sprintf(string, "%dì˜ í”¼í•´ë¥¼ ì…í˜”ë‹¤!", damage);
                         scrollUpImproved(ix, 2, iy);
                         printAt(ix, iy, string);
                         gotoxy(ix + strlen(string), iy);
@@ -107,7 +107,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
 						memset(string, 0, sizeof(string));
                         setRGBColor(255, 0, 0);
                         int damage_for_print = abs(damage);
-                        sprintf(string, "ÀûÀÌ %dÀÇ Ã¼·ÂÀ» È¸º¹Çß´Ù...", damage_for_print);
+                        sprintf(string, "ì ì´ %dì˜ ì²´ë ¥ì„ íšŒë³µí–ˆë‹¤...", damage_for_print);
 						scrollUpImproved(ix, 2, iy);
 						printAt(ix, iy, string);
 						gotoxy(ix + strlen(string), iy);
@@ -119,7 +119,13 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     return damage;
                 }
                 else if (x == 75) {
-                    // ·£´ı ¹°¾à ¸¶½Ã±â
+                    char effect = RandomPotionDrink(id, m, turn, x, y);
+                    gotoxy(x, y);
+                    printf(" ");
+                    srand(time(NULL));
+                    int damage;
+                    if (effect == 'D') {
+                    }
                 }
                 else if (x == 100) {
                     int compare_num = rand() % 100;
@@ -127,7 +133,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     if (compare_num < 30) {
                         Fugitive(id);
                         memset(string, 0, sizeof(string));
-                        strcpy(string, "µµ¸ÁÄ¡´Â °ÍÀº °ÌÀïÀÌ¶ó´Â °ÍÀ» Áõ¸íÇÏ´Â °ÍÀÌ´Ù...[µµ¸ÁÀÚ(2ÅÏ):°ø°İ·Â -10%]");
+                        strcpy(string, "ë„ë§ì¹˜ëŠ” ê²ƒì€ ê²ìŸì´ë¼ëŠ” ê²ƒì„ ì¦ëª…í•˜ëŠ” ê²ƒì´ë‹¤...[ë„ë§ì(2í„´):ê³µê²©ë ¥ -10%]");
                         scrollUpImproved(ix, 2, iy);
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
                         printAt(ix, iy, string);
@@ -137,7 +143,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     }
                     else {
                         memset(string, 0, sizeof(string));
-                        strcpy(string, "µµ¸ÁÄ¡´Âµ¥ ¼º°øÇß´Ù!");
+                        strcpy(string, "ë„ë§ì¹˜ëŠ”ë° ì„±ê³µí–ˆë‹¤!");
                         scrollUpImproved(ix, 2, iy);
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
                         printAt(ix, iy, string);
@@ -152,18 +158,18 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                 printf(" ");
                 for (int i = 11; i <= 18; i++) {
                     gotoxy(93, i);
-                    printf("¡á");
+                    printf("â– ");
                 }
                 for (int i = 93; i < 119; i++) {
                     gotoxy(i, 11);
-                    printf("¡á");
+                    printf("â– ");
                 }
                 gotoxy(95, 13);
-                printf("> °ÔÀÓ ÀúÀåÇÏ±â");
+                printf("> ê²Œì„ ì €ì¥í•˜ê¸°");
                 gotoxy(97, 15);
-                printf("¸ŞÀÎÈ­¸éÀ¸·Î µ¹¾Æ°¡±â");
+                printf("ë©”ì¸í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê¸°");
                 gotoxy(97, 17);
-                printf("°ÔÀÓ Á¾·áÇÏ±â");
+                printf("ê²Œì„ ì¢…ë£Œí•˜ê¸°");
                 int sub_x = 95, sub_y = 13;
                 while (true) {
                     n = KeyControl();
@@ -215,10 +221,10 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     }
                     case SUBMIT: {
                         if (sub_y == 13) {
-                            // °ÔÀÓ ÀúÀåÇÏ±â
+                            // ê²Œì„ ì €ì¥í•˜ê¸°
                         }
                         else if (sub_y == 15) {
-                            // ¸ŞÀÎÈ­¸éÀ¸·Î µ¹¾Æ°¡±â
+                            // ë©”ì¸í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê¸°
                         }
                         else if (sub_y == 17) {
                             exit(1);    
@@ -294,7 +300,7 @@ long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, 
         damage = attack * 2;
         memset(string, 0, sizeof(string));
         setRGBColor(255, 255, 153);
-        strcpy(string, "Ä¡¸íÅ¸!!!");
+        strcpy(string, "ì¹˜ëª…íƒ€!!!");
         scrollUpImproved(x, 2, y);
         printAt(x, y, string);
         gotoxy(x + strlen(string), y);
@@ -309,7 +315,7 @@ long long into_battle(char id[], Monster m[], unsigned short stage_turn, int x, 
         damage = 1;
     }
     memset(string, 0, sizeof(string));
-    sprintf(string, "%lldÀÇ ´ë¹ÌÁö¸¦ °¡Çß´Ù!", damage);
+    sprintf(string, "%lldì˜ ëŒ€ë¯¸ì§€ë¥¼ ê°€í–ˆë‹¤!", damage);
     resetColor();
     scrollUpImproved(x, 2, y);
     printAt(x, y, string);
@@ -354,14 +360,14 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
     }
     int hp = atoi(row[0]);
     int defense = atoi(row[1]);
-    if (!strcmp("°íºí¸°", m[stage_turn].name)) {
+    if (!strcmp("ê³ ë¸”ë¦°", m[stage_turn].name)) {
         damage = goblin_skill_1(id, m, stage_turn, x, y);
     }
-    else if(!strcmp("½½¶óÀÓ",m[stage_turn].name)) {
+    else if(!strcmp("ìŠ¬ë¼ì„",m[stage_turn].name)) {
         slime_skill_1();
         return 0;
     }
-    else if(strcmp("¹ÚÁã",m[stage_turn].name) == 0) {
+    else if(strcmp("ë°•ì¥",m[stage_turn].name) == 0) {
         srand(time(NULL));
         int random1 = rand() % 4;
         int random2 = rand() % 10;
@@ -375,16 +381,16 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
             damage = bat_skill_2(id, m, stage_turn, x, y);
         }
     }
-    /*else if(strcmp("¿ÀÅ©",m[stage_turn].name) == 0) {
+    /*else if(strcmp("ì˜¤í¬",m[stage_turn].name) == 0) {
         oak_skill_1();
     }
-    else if(strcmp("´Á´ëÀÎ°£",m[stage_turn].name) == 0) {
+    else if(strcmp("ëŠ‘ëŒ€ì¸ê°„",m[stage_turn].name) == 0) {
         wolfman_skill_1();
     }
-    else if(strcmp("Èæ¸¶¼ú»ç",m[stage_turn].name) == 0) {
+    else if(strcmp("í‘ë§ˆìˆ ì‚¬",m[stage_turn].name) == 0) {
         magician_skill_1();
     }
-    else if(strcmp("µå·¡°ï",m[stage_turn].name) == 0) {
+    else if(strcmp("ë“œë˜ê³¤",m[stage_turn].name) == 0) {
         dragon_skill_1();
     }*/
     if (!(damage == -9999)) {
@@ -405,7 +411,7 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
         mysql_close(&db);
     }
     else if (hp <= 0) {
-        //È¸±ÍÄÚµå ÀÛ¼º
+        //íšŒê·€ì½”ë“œ ì‘ì„±
     }
     return 0;
 }
@@ -418,7 +424,7 @@ void mop_hp_bar(int mop_hp, int mop_max_hp, int x, int y, char name[]) {
     printf("%s[", name);
     for (int i = 0; i < bar_width; i++) {
         if (i < filled_length) {
-            printf("¡á");
+            printf("â– ");
         }
         else {
             printf(" ");
@@ -431,43 +437,43 @@ void mop_hp_bar(int mop_hp, int mop_max_hp, int x, int y, char name[]) {
 void drop_booty(char id[], char name[]) {
     int drop_exp;
     srand(time(NULL));
-    if (!strcmp("°íºí¸°", name)) {
+    if (!strcmp("ê³ ë¸”ë¦°", name)) {
         drop_exp = rand() % 20 + 1;
         while (drop_exp <= 5) {
             drop_exp = rand() % 20 + 1;
         }
     }
-    else if (!strcmp("½½¶óÀÓ", name)) {
+    else if (!strcmp("ìŠ¬ë¼ì„", name)) {
         drop_exp = rand() % 10 + 1;
         while (drop_exp <= 3) {
             drop_exp = rand() % 10 + 1;
         }
     }
-    else if (!strcmp("¹ÚÁã", name)) {
+    else if (!strcmp("ë°•ì¥", name)) {
         drop_exp = rand() % 30 + 1;
         while (drop_exp <= 10) {
             drop_exp = rand() % 30 + 1;
         }
     }
-    else if (!strcmp("¿ÀÅ©", name)) {
+    else if (!strcmp("ì˜¤í¬", name)) {
         drop_exp = rand() % 50 + 1;
         while (drop_exp <= 20) {
             drop_exp = rand() % 50 + 1;
         }
     }
-    else if (!strcmp("´Á´ëÀÎ°£", name)) {
+    else if (!strcmp("ëŠ‘ëŒ€ì¸ê°„", name)) {
         drop_exp = rand() % 60 + 1;
         while (drop_exp <= 30) {
             drop_exp = rand() % 60 + 1;
         }
     }
-    else if (!strcmp("Èæ¸¶¼ú»ç", name)) {
+    else if (!strcmp("í‘ë§ˆìˆ ì‚¬", name)) {
         drop_exp = rand() % 70 + 1;
         while (drop_exp <= 40) {
             drop_exp = rand() % 70 + 1;
         }
     }
-    else if (!strcmp("µå·¡°ï", name)) {
+    else if (!strcmp("ë“œë˜ê³¤", name)) {
         drop_exp = rand() % 100 + 1;
         while (drop_exp <= 50) {
             drop_exp = rand() % 100 + 1;
@@ -544,7 +550,7 @@ int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     if (speed > compare_num) {
         memset(string, 0, sizeof(string));
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
-        strcpy(string, "ÀûÀÇ °ø°İÀ» È¸ÇÇÇß´Ù!");
+        strcpy(string, "ì ì˜ ê³µê²©ì„ íšŒí”¼í–ˆë‹¤!");
         scrollUpImproved(x, 2, y);
         printAt(x, y, string);
         gotoxy(x + strlen(string), y);
@@ -555,17 +561,15 @@ int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     mysql_close(&db);
     return 1;
 }
-
-char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
+char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
     srand(time(NULL));
     MYSQL db;
-    mysql_init(&db);
     if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
         db_connect_error(&db);
         return;
     }
     memset(string, 0, sizeof(string));
-    strcpy(string, "°¡¹æ¿¡¼­ ´øÁú Æ÷¼ÇÀ» Ã£°í ÀÖ´Ù... /");
+    strcpy(string, "ê°€ë°©ì—ì„œ ë˜ì§ˆ í¬ì…˜ì„ ì°¾ê³  ìˆë‹¤... /");
     scrollUpImproved(x, 2, y);
     printAt(x, y, string);
     gotoxy(x + strlen(string), y);
@@ -573,7 +577,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
     for (int i = 0; i < 5 + random; i++) {
         if (i == 0 || i == 6) {
             gotoxy(66, 17);
-            printf("¡ª");
+            printf("â€•");
         }
         else if (i == 1 || i == 7) {
             gotoxy(66, 17);
@@ -589,7 +593,154 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
         }
         else if (i == 4) {
             gotoxy(66, 17);
-            printf("¡ª");
+            printf("â€•");
+        }
+        else {
+            gotoxy(66, 17);
+            printf("/");
+        }
+        unsigned char* check = (unsigned char*)malloc(sizeof(unsigned char));
+        if (check == NULL) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+            fprintf(stderr, "Memory allocation failed\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+            exit(1);
+        }
+        *check = (unsigned char)false;
+        if (i == 5 + random - 1) {
+            *check = (unsigned char)true;
+        }
+        if (!(*check)) {
+            Sleep(150);
+        }
+        else {
+            free(check);
+        }
+    }
+    gotoxy(66, 17);
+    printf(" ");
+    srand(time(NULL));
+    int compare_num = rand() % 100;
+    int slow_potion = rand() % 40;
+    if (compare_num < slow_potion) {
+        memset(string, 0, sizeof(string));
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+        strcpy(string, "í¬ì…˜ì„ ë§ˆì‹œê³  ëª¸ì´ ëŠë ¤ì§„ê²ƒ ê°™ë‹¤...[êµ¬ì†ì˜ í¬ì…˜(2í„´):íšŒí”¼ë¥ ì´ 1%ë¡œ ê³ ì •ëœë‹¤]");
+        scrollUpImproved(x, 2, y);
+        printAt(x, y, string);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+        gotoxy(x + strlen(string), y);
+        return 'D';
+    }
+    else {
+        compare_num = rand() % 100;
+        int nice_potion = rand() % 35;
+        if (compare_num < nice_potion) {
+            memset(string, 0, sizeof(string));
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
+            strcpy(string, "ëª¸ì† ê·¼ìœ¡ì´ íŒí•‘ë˜ëŠ”ê²Œ ëŠê»´ì§„ë‹¤![í˜ì˜ í¬ì…˜(2í„´):ê³µê²©ë ¥ +10%]");
+            scrollUpImproved(x, 2, y);
+            printAt(x, y, string);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+            gotoxy(x + strlen(string), y);
+            return 'A';
+        }
+        else {
+            compare_num = rand() % 100;
+            int notbed_potion = rand() % 20;
+            short compare_num2 = rand() % 2 + 1;
+            if (compare_num < notbed_potion) {
+                memset(string, 0, sizeof(string));
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
+                if (compare_num2 == 1) {
+                    strcpy(string, "í¬ì…˜ì´ H2Oë¡œ ì´ë¤„ì¡Œë‹¤!");
+                }
+                else {
+                    strcpy(string, "ì‚¬ê³¼ë§› í¬ì…˜ì´ì˜€ë‹¤!ê¸°ë¶„ì´ ì¢‹ì•„ì¡Œë‹¤");
+                }
+                scrollUpImproved(x, 2, y);
+                printAt(x, y, string);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                gotoxy(x + strlen(string), y);
+                return 'B';
+            }
+            else {
+                compare_num = rand() % 100;
+                int ultar_potion = rand() % 3;
+                if (compare_num < ultar_potion) {
+                    memset(string, 0, sizeof(string));
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), GREEN);
+                    strcpy(string, "í¬ì…˜ì„ ë§ˆì‹¬ê³¼ ë™ì‹œì— ëª¸ì— í™œë ¥ì´ ëˆë‹¤!:[HPìµœëŒ€ì¹˜ê°€ ì˜êµ¬ì ìœ¼ë¡œ 10ì¦ê°€í•œë‹¤]");
+                    scrollUpImproved(x, 2, y);
+                    printAt(x, y, string);
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                    gotoxy(x + strlen(string), y);
+                    return 'S';
+                }
+                else {
+                    compare_num = rand() % 100;
+                    int bed_potion = rand() % 50;
+                    if (compare_num < bed_potion) {
+                        memset(string, 0, sizeof(string));
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                        strcpy(string, "í¬ì…˜ì„ ë§ˆì‹œê³  ì–´ì§€ëŸ¼ì¦ì´ ìƒê²¨ ê¸¸ì„ ìƒì—ˆë‹¤...:[í˜„ì¬ ìŠ¤í…Œì´ì§€ì˜ ì²˜ìŒìœ¼ë¡œ ëŒì•„ì™”ìŠµë‹ˆë‹¤]");
+                        scrollUpImproved(x, 2, y);
+                        printAt(x, y, string);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        gotoxy(x + strlen(string), y);
+                        return 'E';
+                    }
+                    else {
+                        memset(string, 0, sizeof(string));
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                        strcpy(string, "í¬ì…˜ì„ ë§ˆì…¨ë”ë‹ˆ ì•ì´ íë ¤ì§„ë‹¤...");
+                        scrollUpImproved(x, 2, y);
+                        printAt(x, y, string);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        gotoxy(x + strlen(string), y);
+                        return 'Z';
+                    }
+                }
+            }
+        }
+    }
+    int nice_potion = rand() % 35;
+}
+
+char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y) {
+    srand(time(NULL));
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return;
+    }
+    memset(string, 0, sizeof(string));
+    strcpy(string, "ê°€ë°©ì—ì„œ ë˜ì§ˆ í¬ì…˜ì„ ì°¾ê³  ìˆë‹¤... /");
+    scrollUpImproved(x, 2, y);
+    printAt(x, y, string);
+    gotoxy(x + strlen(string), y);
+    short random = rand() % 5;
+    for (int i = 0; i < 5 + random; i++) {
+        if (i == 0 || i == 6) {
+            gotoxy(66, 17);
+            printf("â€•");
+        }
+        else if (i == 1 || i == 7) {
+            gotoxy(66, 17);
+            printf("\\");
+        }
+        else if (i == 2 || i == 8) {
+            gotoxy(66, 17);
+            printf("|");
+        }
+        else if (i == 3 || i == 9) {
+            gotoxy(66, 17);
+            printf("/");
+        }
+        else if (i == 4) {
+            gotoxy(66, 17);
+            printf("â€•");
         }
         else {
             gotoxy(66, 17);
@@ -627,7 +778,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
             if (bed_potion > compare_num) {
                 memset(string, 0, sizeof(string));
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
-                strcpy(string, "Æ÷¼ÇÀ» ¸ÂÀº ÀûÀÌ Ã¼·ÂÀ» È¸º¹ÇÏ¿´´Ù!!!");
+                strcpy(string, "í¬ì…˜ì„ ë§ì€ ì ì´ ì²´ë ¥ì„ íšŒë³µí•˜ì˜€ë‹¤!!!");
                 scrollUpImproved(x, 2, y);
                 printAt(x, y, string);
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
@@ -636,7 +787,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
             }
             else {
                 memset(string, 0, sizeof(string));
-                strcpy(string, "Æ÷¼ÇÀ» ¸ÂÀº ¸ÂÃèÁö¸¸ ¾Æ¹«·± È¿°ú°¡ ¾ø´Ù...");
+                strcpy(string, "í¬ì…˜ì„ ë§ì€ ë§ì·„ì§€ë§Œ ì•„ë¬´ëŸ° íš¨ê³¼ê°€ ì—†ë‹¤...");
                 scrollUpImproved(x, 2, y);
                 printAt(x, y, string);
                 gotoxy(x + strlen(string), y);
@@ -645,7 +796,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
         }
         else {
             memset(string, 0, sizeof(string));
-			strcpy(string, "Æ÷¼ÇÀ» ¸ÂÀº ÀûÀÌ °æ¹ÌÇÑ ÇÇÇØ¸¦ ÀÔ¾ú´Ù!");
+			strcpy(string, "í¬ì…˜ì„ ë§ì€ ì ì´ ê²½ë¯¸í•œ í”¼í•´ë¥¼ ì…ì—ˆë‹¤!");
 			scrollUpImproved(x, 2, y);
 			printAt(x, y, string);
 			gotoxy(x + strlen(string), y);
@@ -654,7 +805,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
     }
 	else {
 		memset(string, 0, sizeof(string));
-		strcpy(string, "Æ÷¼ÇÀ» ¸ÂÀº ÀûÀÌ Å« ÇÇÇØ¸¦ ÀÔ¾ú´Ù!");
+		strcpy(string, "í¬ì…˜ì„ ë§ì€ ì ì´ í° í”¼í•´ë¥¼ ì…ì—ˆë‹¤!");
 		scrollUpImproved(x, 2, y);
 		printAt(x, y, string);
 		gotoxy(x + strlen(string), y);
@@ -782,5 +933,214 @@ void check_and_delete_expired_effects_fug(const char* id, MYSQL* db) {
         }
     }
     mysql_free_result(res);
+    return;
+}
+
+void Resetcount_Print(char id[]) {
+    char* consoleBuffer = NULL;
+    COORD consoleSize;
+    char** buffer = &consoleBuffer;
+    COORD* size = &consoleSize;
+    const char* buffers = consoleBuffer;
+    COORD sizes = consoleSize;
+    HANDLE hConsoles = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hConsoles, &csbi);
+    *size = csbi.dwSize;
+    DWORD bufferSize = csbi.dwSize.X * csbi.dwSize.Y;
+    *buffer = (char*)malloc(bufferSize * sizeof(CHAR_INFO));
+    CHAR_INFO* chiBuffers = (CHAR_INFO*)(*buffer);
+    COORD bufferCoords = { 0, 0 };
+    SMALL_RECT readRegion = { 0, 0, csbi.dwSize.X - 1, csbi.dwSize.Y - 1 };
+    ReadConsoleOutput(hConsoles, chiBuffers, csbi.dwSize, bufferCoords, &readRegion);
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        exit(1);
+    }
+    char query[255];
+    memset(query, 0, sizeof(query));
+    sprintf(query, "SELECT reset_count FROM gwangju_sword_master.account WHERE id = '%s'", id);
+    if (mysql_query(&db, query)) {
+        db_query_error(&db);
+        exit(1);
+    }
+    MYSQL_RES* res = mysql_store_result(&db);
+    if (res == NULL) {
+        db_query_error(&db);
+        exit(1);
+    }
+    MYSQL_ROW row = mysql_fetch_row(res);
+    if (row == NULL) {
+        db_result_value_error();
+        exit(1);
+    }
+    int num = atoi(row[0]);
+    const char* numbers[16][9] = {
+        {
+            "   \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "   \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   "
+        },
+        {
+            "     \xE2\x96\x93     ",
+            "    \xE2\x96\x93\xE2\x96\x93    ",
+            "     \xE2\x96\x93     ",
+            "     \xE2\x96\x93     ",
+            "     \xE2\x96\x93     ",
+            "     \xE2\x96\x93     ",
+            "     \xE2\x96\x93     ",
+            "     \xE2\x96\x93     ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
+            "   \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93   ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93   ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            " \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93 ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            " \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "     \xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
+            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93    ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  "
+        },
+        {
+            "  \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93  ",
+            "  \xE2\x96\x93\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x93  ",
+            "  \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91\xE2\x96\x91  ",
+            "    \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93    ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    ",
+            "    \xE2\x96\x91\xE2\x96\x91\xE2\x96\x91    "
+        }
+    };
+    if (num < 0 || num > 15) {
+        printf("Reset Counter Printing Error");
+        exit(1);
+    }
+    for (int i = 0; i < 9; i++) {
+        if (num == 0) {
+            gotoxy(9, i + 1);
+        }
+        else if (num == 1 && i < 8) {
+            gotoxy(8, i + 1);
+        }
+        else if (num == 1 && i == 8) {
+            gotoxy(10, 8);
+        }
+        else if (num == 2) {
+            switch (i) {
+            case 0:
+                gotoxy(9, i + 1);
+                break;
+            case 1:
+            case 2:
+                gotoxy(10, i + 1);
+                break;
+            case 3:
+                gotoxy(9, i + 1);
+                break;
+            case 4:
+                gotoxy(9, i + 1);
+                break;
+            case 5:
+                gotoxy(9, i + 1);
+                break;
+            case 6:
+            case 7:
+                gotoxy(9, i + 1);
+                break;
+            case 8:
+                gotoxy(9, i + 1);
+                break;
+            }
+        }
+        printf("%s", numbers[num][i]);
+    }
+    SetConsoleCP(949);
+    SetConsoleOutputCP(949);
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CHAR_INFO* chiBuffer = (CHAR_INFO*)buffers;
+    COORD bufferCoord = { 0, 0 };
+    SMALL_RECT writeRegion = { 0, 0, sizes.X - 1, sizes.Y - 1 };
+    WriteConsoleOutput(hConsole, chiBuffer, sizes, bufferCoord, &writeRegion);
+    free(consoleBuffer);
     return;
 }

@@ -1,4 +1,4 @@
-#include "superclass.h"
+﻿#include "superclass.h"
 #include "player_state.h"
 #include "mop_dictionary.h"
 #include "db_event.h"
