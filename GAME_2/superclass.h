@@ -39,6 +39,7 @@
 #pragma comment(lib, "user32.lib")
 
 char string[100];
+static unsigned short turn = 0;
 
 char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x, int y);

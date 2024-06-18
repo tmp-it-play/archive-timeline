@@ -1,16 +1,156 @@
-﻿  prologue.c
+﻿  battle_system.c
+  console.c
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(76,27): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(87,35): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(98,35): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(114,17): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(126,27): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(140,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(146,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(155,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(161,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(164,31): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(169,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(178,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(184,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(193,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(199,29): warning C4033: 'ingame_select'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(210,38): warning C4244: '함수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(217,25): warning C4550: 식이 인수 목록이 없는 함수로 계산됩니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(240,35): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(250,35): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(67,27): warning C4101: 'db' :참조되지 않은 지역 변수입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(397,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(399,9): warning C4013: 'cri_chance'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(406,18): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(422,14): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(471,15): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(497,58): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(539,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(633,9): warning C4033: 'Avoidance'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(639,9): warning C4033: 'Avoidance'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(645,9): warning C4033: 'Avoidance'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(656,18): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(666,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(671,14): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(718,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(728,18): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(741,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(760,26): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(773,30): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(786,34): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(788,34): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(792,33): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(800,34): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(808,29): warning C4033: 'RandomPotionDrink'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(814,29): warning C4033: 'RandomPotionDrink'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(833,38): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(848,38): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(867,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(872,9): warning C4033: 'RandomPotionThrow'은(는) 값을 반환해야 합니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(878,14): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(925,11): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(941,26): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(949,26): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(958,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(967,12): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(19,15): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(29,19): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(40,23): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(49,19): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(75,23): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(85,23): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(94,19): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(119,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(142,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\console.c(153,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  db_event_process.c
+Y:\Coding_Studing\GAME_2\GAME_2\db_event_process.c(31,21): warning C4047: '함수': 'MYSQL_RES *'의 간접 참조 수준이 'MYSQL_RES **'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\db_event_process.c(31,21): warning C4024: 'mysql_free_result': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
+  effect.c
+Y:\Coding_Studing\GAME_2\GAME_2\effect.c(49,63): warning C4267: '함수': 'size_t'에서 'unsigned long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\effect.c(140,63): warning C4267: '함수': 'size_t'에서 'unsigned long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\effect.c(215,63): warning C4267: '함수': 'size_t'에서 'unsigned long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  game_menu.c
+Y:\Coding_Studing\GAME_2\GAME_2\game_menu.c(15,22): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\game_menu.c(17,22): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  game_start.c
+  monster_dictionary.c
+Y:\Coding_Studing\GAME_2\GAME_2\monster_dictionary.c(23,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\monster_dictionary.c(40,12): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\monster_dictionary.c(61,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\monster_dictionary.c(78,13): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  password_find.c
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(49,24): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(65,28): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(68,32): warning C4047: '=': 'char'의 간접 참조 수준이 'void *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(141,21): warning C4244: '함수': 'SOCKET'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(168,75): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(169,75): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(180,51): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(181,45): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(182,71): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(183,28): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(184,69): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(185,29): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  player_state.c
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(121,28): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(121,28): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(138,28): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(138,28): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(155,28): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(155,28): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(184,28): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(184,28): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(212,22): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(212,22): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(249,28): warning C4047: '함수': 'MYSQL_RES **'의 간접 참조 수준이 'MYSQL_RES *'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\player_state.c(249,28): warning C4024: 'id_find_error': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+  prologue.c
 Y:\Coding_Studing\GAME_2\GAME_2\prologue.c(196,29): warning C4013: 'get_console_width'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  screen.c
+  sign_in.c
+Y:\Coding_Studing\GAME_2\GAME_2\sign_in.c(26,11): warning C4477: 'scanf_s' : 서식 문자열 '%[^\n]'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\sign_in.c(28,11): warning C4477: 'scanf_s' : 서식 문자열 '%[^\n]'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\sign_in.c(47,16): warning C4047: '함수': 'const char *'의 간접 참조 수준이 'MYSQL_ROW'과(와) 다릅니다.
+Y:\Coding_Studing\GAME_2\GAME_2\sign_in.c(47,16): warning C4024: 'strcmp': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
+  main_code.c
+  sign_up.c
   stage_1.c
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(30,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(29,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(69,27): warning C4244: '-=': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(74,32): warning C4244: '=': '__int64'에서 'short'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(95,38): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(156,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(135,32): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(162,34): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  stage_2.c
+Y:\Coding_Studing\GAME_2\GAME_2\stage_2.c(7,2): warning C4102: 'label': 참조되지 않은 레이블입니다.
+  tutorial.c
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(12,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(12,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(30,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(30,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(64,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(64,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(64,12): warning C4477: 'printf' : 서식 문자열 '%lld'에 '__int64' 형식의 인수가 필요하지만 variadic 인수 3의 형식이 'int'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(131,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(167,19): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(189,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(256,19): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(278,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(337,19): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(357,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(111,32): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c(71,11): warning C4101: 'sizes' :참조되지 않은 지역 변수입니다.
+  mop_dictionary.h
   코드를 생성하고 있습니다.
-  6 of 86 functions ( 7.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB not found, fall back to full compilation.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(971): warning C4715: 'RandomPotionThrow': 모든 제어 경로에서 값을 반환하지는 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(663): warning C4715: 'Avoidance': 모든 제어 경로에서 값을 반환하지는 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(864): warning C4715: 'RandomPotionDrink': 모든 제어 경로에서 값을 반환하지는 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\battle_system.c(356): warning C4715: 'ingame_select': 모든 제어 경로에서 값을 반환하지는 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\main_code.c(30): warning C4716: 'game_core_code': 값을 반환해야 합니다.
+  All 86 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   코드를 생성했습니다.
   GAME_2.vcxproj -> Y:\Coding_Studing\GAME_2\x64\Release\GAME_2.exe

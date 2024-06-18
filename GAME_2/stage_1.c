@@ -3,8 +3,6 @@
 #include "mop_dictionary.h"
 #include "db_event.h"
 
-static unsigned short turn = 0;
-
 void stage1_clear(char id[]);
 
 void scrollup_motion(int initial_x, int initial_y) {
@@ -14,6 +12,7 @@ void scrollup_motion(int initial_x, int initial_y) {
 void stage_1(char id[], int mop_num) {
     static int initial_x = 32, initial_y = 17, mop_hp, mop_max_hp;
     int n = 6;
+    label:;
     char string[256];
     Monster m[6] = { goblin(), slime(), slime(), bat(), goblin(), goblin() };
     MYSQL db;
@@ -62,6 +61,7 @@ void stage_1(char id[], int mop_num) {
             else if (b == 1023914) {
                 i = -1;
                 mop_num = 1;
+                goto label;
                 continue;
             }
             else {

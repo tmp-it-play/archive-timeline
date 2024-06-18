@@ -64,6 +64,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
             case SUBMIT: {
                 if (x == 37) {
                     long long d = into_battle(id, m, turn, ix, iy);
+                    MYSQL db;
                     gotoxy(x, y);
                     printf(" ");
                     return d;
@@ -198,6 +199,11 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                             return;
                         }
                         mysql_close(&db);
+                        clearLine(50, 21);
+                        gotoxy(50, 21);
+                        for (int i = 0; i < 40; i++) {
+                            printf(" ");
+                        }
                         damage = 2;
                     }
                     else if (effect == 'G') {
@@ -773,10 +779,12 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                     if (compare_num < bed_potion) {
                         memset(string, 0, sizeof(string));
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
-                        strcpy(string, "포션을 마시고 어지럼증이 생겨 길을 잃었다...:[현재 스테이지의 처음으로 돌아왔습니다]");
+                        strcpy(string, "어지럼증이 생겨 길을 잃었다...:[스테이지의 처음으로 돌아갑니다]");
                         scrollUpImproved(x, 2, y);
                         printAt(x, y, string);
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        gotoxy(x + strlen(string), y);
+                        scrollUpImproved(x, 2, y);
                         gotoxy(x + strlen(string), y);
                         return 'E';
                     }
