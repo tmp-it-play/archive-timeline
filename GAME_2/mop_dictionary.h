@@ -19,6 +19,7 @@ Monster bat(void);
 long long bat_skill_1(char id[], Monster m[], int stage_turn, int x, int y);
 long long bat_skill_2(char id[], Monster m[], int stage_turn, int x, int y);
 Monster oak(void);
+long long oak_skill_1(char id[], Monster m[], int stage_turn, int x, int y);
 Monster wolfman(void);
 Monster magician(void);
 Monster dragon(void);

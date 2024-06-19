@@ -46,6 +46,7 @@ void sign_in(void) {
 			if (row != NULL || row != 0) {
 				if (strcmp(row, id)) {
 					system("cls");
+					mysql_close(&db_key);
 					Gamemenu(id);
 				}
 			}

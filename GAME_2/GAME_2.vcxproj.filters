@@ -42,9 +42,6 @@
     <ClCompile Include="player_state.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="stage_1.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="monster_dictionary.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -67,6 +64,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="tutorial.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_1.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="event.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

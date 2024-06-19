@@ -10,6 +10,7 @@ void scrollup_motion(int initial_x, int initial_y) {
 }
 
 void stage_1(char id[], int mop_num) {
+    bool mana_recovery = false;
     static int initial_x = 32, initial_y = 17, mop_hp, mop_max_hp;
     int n = 6;
     label:;
@@ -40,11 +41,55 @@ void stage_1(char id[], int mop_num) {
             scrollup_motion(initial_x, initial_y);
         }
         memset(string, 0, sizeof(string));
-        sprintf(string, "%s이 튀어나왔다!", m[i].name);
+        srand(time(NULL));
+        if (strcmp(m[i].name, "고블린") == 0 || strcmp(m[i].name, "슬라임") == 0) {
+            short sync = rand() % 2 + 1;
+            if (sync == 1) {
+                sprintf(string, "%s이 튀어나왔다!", m[i].name);
+            }
+            else {
+                sprintf(string, "%s이 나타났다!", m[i].name);
+
+            }
+        }
+        else {
+            srand(time(NULL));
+            short sync = rand() % 2 + 1;
+            if (sync == 1) {
+                sprintf(string, "%s가 튀어나왔다!", m[i].name);
+            }
+            else {
+                sprintf(string, "%s가 나타났다!", m[i].name);
+            }
+        }
         scrollup_motion(initial_x, 17);
         printAt(initial_x, initial_y, string);
         mop_max_hp = mop_hp = m[i].hp;
         while (true) {
+            sprintf(query, "SELECT max_mp,mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+            if (mysql_query(&db, query)) {
+                db_query_error(&db);
+                mysql_close(&db);
+                exit(1);
+            }
+
+            MYSQL_RES* res = mysql_store_result(&db);
+            MYSQL_ROW row = mysql_fetch_row(res);
+            int mp_max = atoi(row[0]);
+            int mp = atoi(row[1]);
+            mysql_free_result(res);
+            memset(query, 0, sizeof(query));
+            int mp_reco = mp + 10 > mp_max ? mp_max - mp : 10;
+            if (mana_recovery) {
+                memset(query, 0, sizeof(query));
+                sprintf(query, "UPDATE gwangju_sword_master.user_state SET mp = mp+%d WHERE id = '%s'", mp_reco, id);
+                if (mysql_query(&db, query)) {
+                    db_query_error(&db);
+                    mysql_close(&db);
+                    exit(0);
+                }
+            }
+            mana_recovery = true;
             if (!mysql_ping(&db)) {
                 connect_to_db(&db);
             }

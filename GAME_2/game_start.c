@@ -275,4 +275,13 @@ void Remover_File(void) {
     if(remove("ack_state.txt") != 0) {
 		Sleep(1);
 	}
+    if (remove("ackplus_state.txt") != 0) {
+        Sleep(1);
+        return;
+    }
+    exit(1);
 }
+
+void sleep(int Micro_Secend) {
+    Sleep(Micro_Secend);
+};

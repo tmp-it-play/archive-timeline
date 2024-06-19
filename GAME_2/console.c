@@ -63,6 +63,7 @@ void Input_Cheat(Monster m[], char id[]) {
         now_level(id);
         now_state(id);
         hp_mp_bar(id);
+        mysql_close(&db);
         return;
     }
     else if (strcmp(cheat_code, "attack_change") == 0) {
@@ -108,6 +109,7 @@ void Input_Cheat(Monster m[], char id[]) {
         now_level(id);
         now_state(id);
         hp_mp_bar(id);
+        mysql_close(&db);
         return;
     }
 	else if (strcmp(cheat_code, "heal") == 0) {
@@ -131,6 +133,7 @@ void Input_Cheat(Monster m[], char id[]) {
             db_query_error(&db);
             exit(0);
         }
+        mysql_close(&db);
         return;
 	}
 	else if (strcmp(cheat_code, "exit") == 0) {

@@ -34,6 +34,7 @@
 #include "wchar.h"
 #include "locale.h"
 #include "errmsg.h"
+#include "player_state.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
@@ -49,6 +50,9 @@ int mail_send(void);
 int loginmenuDraw(void);
 int KeyControl(void);
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+int has_final_consonant(wchar_t last_char);
+void sleep(int Micro_Secend);
+void add_subject_marker(const wchar_t* word, wchar_t* result);
 void Reline(void);
 void tutorial(char id[]);
 void Input_Cheat(Monster m[], char id[]);
@@ -75,12 +79,14 @@ void program_off(void);
 void save_check(char id[]);
 void hp_mp_bar(char id[]);
 void mop_hp_bar(int mop_hp, int mop_max_hp, int x, int y, char name[]);
+void Gameover(char id[]);
 void outline(char id[]);
 void setRGBColor(int r, int g, int b);
 void resetColor(void);
 void drop_booty(char id[], char name[]);
 void Effect_Counter(char id[]);
 void check_and_delete_expired_effects_fug(const char* id, MYSQL* db);
+void Whisper(char id[]);
 void stage_1(char id[], int mop_num);
 void stage_2(char id[], int mop_num);
 void Fugitive(char id[]);

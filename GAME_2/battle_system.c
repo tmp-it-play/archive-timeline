@@ -63,14 +63,114 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
             }
             case SUBMIT: {
                 if (x == 37) {
-                    long long d = into_battle(id, m, turn, ix, iy);
                     MYSQL db;
+                    mysql_init(&db);
+                    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                        db_connect_error(&db);
+                        return;
+                    }
+                    char q[255];
+                    memset(q, 0, sizeof(q));
+                    sprintf(q, "SELECT mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+                    if (mysql_query(&db, q)) {
+						db_query_error(&db);
+                        mysql_close(&db);
+                        exit(1);
+					}
+                    MYSQL_RES* res = mysql_store_result(&db);
+                    MYSQL_ROW row = mysql_fetch_row(res);
+                    if (row == NULL) {
+                        db_result_value_error();
+                        mysql_free_result(res);
+                        mysql_close(&db);
+                        exit(1);
+                    }
+                    int now_mp = atoi(row[0]);
+                    if (now_mp <= 3) {
+                        memset(string, 0, sizeof(string));
+						strcpy(string, "마나가 부족합니다!");
+						scrollUpImproved(ix, 2, iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+						printAt(ix, iy, string);
+						gotoxy(ix + strlen(string), iy);
+						mysql_free_result(res);
+						mysql_close(&db);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+						return 0;
+                    }
+                    long long d = into_battle(id, m, turn, ix, iy);
+                    srand(time(NULL));
+                    int m_mp = 0;
+                    do {
+                        m_mp = rand() % 4 + 1;
+                    } while (m_mp <= 1);
+                    memset(q, 0, sizeof(q));
+                    sprintf(q,"UPDATE gwangju_sword_master.user_state SET mp = mp - %d WHERE id = '%s'", m_mp, id);
                     gotoxy(x, y);
                     printf(" ");
+                    if (mysql_query(&db, q)) {
+						db_query_error(&db);
+                        exit(1);
+					}
+                    mysql_close(&db);
                     return d;
                 }
                 else if (x == 52) {
+                    MYSQL db;
+                    mysql_init(&db);
+                    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                        db_connect_error(&db);
+                        return;
+                    }
+                    char q[255];
+                    memset(q, 0, sizeof(q));
+                    sprintf(q, "SELECT mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+                    if (mysql_query(&db, q)) {
+                        db_query_error(&db);
+                        mysql_close(&db);
+                        exit(1);
+                    }
+                    MYSQL_RES* res = mysql_store_result(&db);
+                    MYSQL_ROW row = mysql_fetch_row(res);
+                    if (row == NULL) {
+                        db_result_value_error();
+                        mysql_free_result(res);
+                        mysql_close(&db);
+                        exit(1);
+                    }
+                    int now_mp = atoi(row[0]);
+                    if (now_mp <= 10) {
+                        memset(string, 0, sizeof(string));
+                        if (now_mp <= 3) {
+                            strcpy(string, "마나가 부족합니다!");
+                            return 0;
+                        }
+                        else {
+                            strcpy(string, "포션을 던지기엔 마나가 부족합니다!");
+                        }
+                        scrollUpImproved(ix, 2, iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                        printAt(ix, iy, string);
+                        gotoxy(ix + strlen(string), iy);
+                        mysql_free_result(res);
+                        mysql_close(&db);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        continue;
+                    }
                     char effect = RandomPotionThrow(id, m, turn, ix, iy);
+                    unsigned int m_mp = 0;
+                    memset(q, 0, sizeof(q));
+                    do {
+                        m_mp = rand() % 10 + 6;
+                    } while (m_mp < 10);
+                    sprintf(q, "UPDATE gwangju_sword_master.user_state SET mp = mp - %d WHERE id = '%s'", m_mp, id);
+                    if (mysql_query(&db, q)) {
+						db_query_error(&db);
+						mysql_close(&db);
+                        sleep(400);
+						exit(1);
+					}
+                    mysql_close(&db);
                     gotoxy(x, y);
                     printf(" ");
                     srand(time(NULL));
@@ -98,31 +198,86 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                         gotoxy(ix + strlen(string), iy);
                     }
                     else if (effect == 'C') {
-						damage = 0;
-					}
-					else if (effect == 'D') {
+                        damage = 0;
+                    }
+                    else if (effect == 'D') {
                         damage = (rand() % 15) - 16;
-						while (damage >= 0) {
+                        while (damage >= 0) {
                             damage = (rand() % 15) - 16;
-						}
-						memset(string, 0, sizeof(string));
+                        }
+                        memset(string, 0, sizeof(string));
                         setRGBColor(255, 0, 0);
                         int damage_for_print = abs(damage);
                         sprintf(string, "적이 %d의 체력을 회복했다...", damage_for_print);
-						scrollUpImproved(ix, 2, iy);
-						printAt(ix, iy, string);
-						gotoxy(ix + strlen(string), iy);
+                        scrollUpImproved(ix, 2, iy);
+                        printAt(ix, iy, string);
+                        gotoxy(ix + strlen(string), iy);
                         resetColor();
-					}
-					else {
-						damage = 0;
-					}
+                    }
+                    else {
+                        damage = 0;
+                    }
                     return damage;
                 }
                 else if (x == 75) {
-                    char effect = RandomPotionDrink(id, m, turn, ix, iy);
+                    MYSQL db;
+                    mysql_init(&db);
+                    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+                        db_connect_error(&db);
+                        return;
+                    }
+                    char q[255];
+                    memset(q, 0, sizeof(q));
+                    sprintf(q, "SELECT mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
+                    if (mysql_query(&db, q)) {
+                        db_query_error(&db);
+                        mysql_close(&db);
+                        exit(1);
+                    }
+                    MYSQL_RES* res = mysql_store_result(&db);
+                    MYSQL_ROW row = mysql_fetch_row(res);
+                    if (row == NULL) {
+                        db_result_value_error();
+                        mysql_free_result(res);
+                        mysql_close(&db);
+                        exit(1);
+                    }
+                    int now_mp = atoi(row[0]);
+                    if (now_mp <= 10) {
+                        memset(string, 0, sizeof(string));
+                        if (now_mp <= 3) {
+                            strcpy(string, "마나가 부족합니다!");
+                            return 0;
+                        }
+                        else {
+                            strcpy(string, "포션을 마시기엔 마나가 부족합니다!");
+                        }
+                        strcpy(string, "마나가 부족합니다!");
+                        scrollUpImproved(ix, 2, iy);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                        printAt(ix, iy, string);
+                        gotoxy(ix + strlen(string), iy);
+                        mysql_free_result(res);
+                        mysql_close(&db);
+                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
+                        continue;
+                    }
+                    unsigned int m_mp = 0;
+                    memset(q, 0, sizeof(q));
+                    do {
+                        m_mp = rand() % 10 + 6;
+                    } while (m_mp < 10);
+                    sprintf(q, "UPDATE gwangju_sword_master.user_state SET mp = mp - %d WHERE id = '%s'", m_mp, id);
+                    if (mysql_query(&db, q)) {
+                        db_query_error(&db);
+                        mysql_close(&db);
+                        sleep(400);
+                        exit(1);
+                    }
+                    mysql_close(&db);
                     gotoxy(x, y);
                     printf(" ");
+                    char effect = RandomPotionDrink(id, m, turn, ix, iy);
                     srand(time(NULL));
                     long long damage = -124;
                     if (effect == 'D') {
@@ -240,6 +395,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                         gotoxy(ix + strlen(string), iy);
                         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
                         Fugitive(id);
+                        return;
                     }
                     else {
                         memset(string, 0, sizeof(string));
@@ -321,10 +477,26 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     }
                     case SUBMIT: {
                         if (sub_y == 13) {
-                            // 게임 저장하기
+                            char q[255] = { 0, };
+                            setRGBColor(255, 255, 153);
+                            memset(string, 0, sizeof(string));
+                            strcpy(string, "현재 진행상황을 저장했습니다");
+                            for (int i = 11; i <= 18; i++) {
+                                gotoxy(93, i);
+                                for (int j = 93; j < 119; j++) {
+                                    printf(" ");
+                                }
+                            }
+                            scrollUpImproved(ix, 2, iy);
+                            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), RED);
+                            printAt(ix, iy, string);
+                            gotoxy(ix + strlen(string), iy);
+                            resetColor();
+                            goto exit_submenu;
                         }
                         else if (sub_y == 15) {
-                            // 메인화면으로 돌아가기
+                            system("cls");
+                            Gamemenu(id);
                         }
                         else if (sub_y == 17) {
                             exit(1);    
@@ -336,7 +508,7 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     }
                     }
                 }
-            exit_submenu:
+                exit_submenu:
                 break;
             }
             case CONSOLE: {
@@ -481,10 +653,10 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
             damage = bat_skill_2(id, m, stage_turn, x, y);
         }
     }
-    /*else if(strcmp("오크",m[stage_turn].name) == 0) {
-        oak_skill_1();
+    else if(strcmp("오크",m[stage_turn].name) == 0) {
+        oak_skill_1(id, m, stage_turn, x, y);
     }
-    else if(strcmp("늑대인간",m[stage_turn].name) == 0) {
+    /*else if (strcmp("늑대인간", m[stage_turn].name) == 0) {
         wolfman_skill_1();
     }
     else if(strcmp("흑마술사",m[stage_turn].name) == 0) {
@@ -511,7 +683,7 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
         mysql_close(&db);
     }
     else if (hp <= 0) {
-        //회귀코드 작성
+        Gameover(id);
     }
     return 0;
 }
@@ -586,21 +758,21 @@ void drop_booty(char id[], char name[]) {
     mysql_init(&db);
     if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
         db_connect_error(&db);
-        return;
+        exit(1);
     }
     char q[255];
     sprintf(q, "UPDATE gwangju_sword_master.user_state SET levelup_point = levelup_point + '%d' WHERE id = '%s'", drop_exp, id);
     if (mysql_query(&db, q)) {
         db_query_error(&db);
         mysql_close(&db);
-        return;
+        exit(1);
     }
     memset(q, 0, sizeof(q));
     sprintf(q, "SELECT levelup_point, levelup_requirement FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
         db_query_error(&db);
         mysql_close(&db);
-        return;
+        exit(1);
     }
     MYSQL_RES* res = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(res);
@@ -608,7 +780,7 @@ void drop_booty(char id[], char name[]) {
         db_result_value_error();
         mysql_free_result(res);
         mysql_close(&db);
-        return;
+        exit(1);
     }
     int levelup_point = atoi(row[0]);
     int levelup_requirement = atoi(row[1]);
@@ -619,8 +791,15 @@ void drop_booty(char id[], char name[]) {
         if (mysql_query(&db, q)) {
             db_query_error(&db);
             mysql_close(&db);
-            return;
+            exit(1);
         }
+        memset(q, 0, sizeof(q));
+        sprintf(q,"UPDATE gwangju_sword_master.user_state SET max_hp = max_hp + 25, hp = hp + 25, attack = attack + 8, defense = defense + 2, speed = speed + 2, cri_chance = cri_chance + 3, mp = mp + 5 WHERE id = '%s'", id);
+        if (mysql_query(&db, q)) {
+			db_query_error(&db);
+			mysql_close(&db);
+			exit(1);
+		}
     }
     mysql_close(&db);
 }
@@ -943,7 +1122,7 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
             }
             else {
                 memset(string, 0, sizeof(string));
-                strcpy(string, "포션을 맞은 맞췄지만 아무런 효과가 없다...");
+                strcpy(string, "포션을 맞췄지만 아무런 효과가 없다...");
                 scrollUpImproved(x, 2, y);
                 printAt(x, y, string);
                 gotoxy(x + strlen(string), y);
@@ -1263,7 +1442,7 @@ void Resetcount_Print(char id[]) {
     int i;
     for (i = 0; i < 9; i++) {
         if (num == 0) {
-            gotoxy(3, i + 1);
+            gotoxy(10, i + 1);
         }
         else if (num == 1 && i < 8) {
             gotoxy(8, i + 1);
@@ -1490,4 +1669,86 @@ void Resetcount_Print(char id[]) {
     WriteConsoleOutput(hConsole, chiBuffer, sizes, bufferCoord, &writeRegion);
     free(consoleBuffer);
     return;
+}
+
+void Gameover(char id[]) {
+    system("cls");
+    MYSQL db;
+    mysql_init(&db);
+    if (!mysql_real_connect(&db, "localhost", "root", "123456", "board", 0, NULL, 0)) {
+        db_connect_error(&db);
+        return 1;
+    }
+    char q[255];
+    memset(q, 0, sizeof(q));
+    sprintf(q, "UPDATE gwangju_sword_master.account SET stage = 1,mop_num = 1 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        Sleep(2000);
+        exit(1);
+    }
+    setRGBColor(204, 0, 51);
+    char* over_text = NULL;
+    unsigned int line = 0, final_y = 10;
+    const char* text =
+        " ######      ###    ##     ## ########  #######  ##     ## ######## ########  \n"
+        "##    ##    ## ##   ###   ### ##       ##     ## ##     ## ##       ##     ## \n"
+        "##         ##   ##  #### #### ##       ##     ## ##     ## ##       ##     ## \n"
+        "##   #### ##     ## ## ### ## ######   ##     ## ##     ## ######   ########  \n"
+        "##    ##  ######### ##     ## ##       ##     ##  ##   ##  ##       ##   ##   \n"
+        "##    ##  ##     ## ##     ## ##       ##     ##   ## ##   ##       ##    ##  \n"
+        " ######   ##     ## ##     ## ########  #######     ###    ######## ##     ## \n";
+
+    over_text = (char*)malloc(strlen(text) + 1);
+    if (over_text == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+    strcpy(over_text, text);
+    if (over_text) {
+        int console_width = get_console_width();
+        int current_x;
+        gotoxy(0, 10);
+        for (unsigned int i = 0; i < strlen(over_text); i++) {
+            if (over_text[i] == '\n') {
+                line++;
+                gotoxy(0, 10 + line);
+            }
+            else {
+                if (i == 0 || over_text[i - 1] == '\n') {
+                    int line_length = 0;
+                    unsigned int j = i;
+                    while (j < strlen(over_text) && over_text[j] != '\n') {
+                        line_length++;
+                        j++;
+                    }
+                    current_x = (console_width - line_length) / 2;
+                    gotoxy(current_x, 10 + line);
+                }
+                printf("%c", over_text[i]);
+            }
+            Sleep(1);
+        }
+        final_y += line;
+        free(over_text);
+    }
+    resetColor();
+    gotoxy(45, final_y + 2);
+    Sleep(1975);
+    system("cls");
+    Resetcount_Print(id);
+    Sleep(900);
+    memset(q, 0, sizeof(q));
+    sprintf(q, "UPDATE gwangju_sword_master.account SET reset_count = reset_count+1 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        Sleep(2000);
+        exit(1);
+    }
+    system("cls");
+    Resetcount_Print(id);
+    Reline();
+    stage_1(id, 1);
+    mysql_close(&db);
+    exit(0);
 }

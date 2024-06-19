@@ -255,6 +255,14 @@ void hp_mp_bar(char id[]) {
     long long max_mp = atoll(row[3]);
     mysql_free_result(result);
     mysql_close(&db);
+    if (hp < 100) {
+        gotoxy(25, 24);
+        printf(" ");
+    }
+    if (hp < 10) {
+        gotoxy(24, 24);
+        printf(" ");
+    }
     gotoxy(17, 24);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
     printf("[%lld/%lld]", hp, max_hp);
@@ -276,6 +284,14 @@ void hp_mp_bar(char id[]) {
     gotoxy(17, 25);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
     printf("[%lld/%lld]", mp, max_mp);
+    if (mp < 100) {
+        gotoxy(25, 25);
+        printf(" ");
+    }
+    if (mp < 10) {
+        gotoxy(24, 25);
+        printf(" ");
+    }
     gotoxy(2, 25);
     printf("MP[");
     double mp_percentage = (double)mp / max_mp;

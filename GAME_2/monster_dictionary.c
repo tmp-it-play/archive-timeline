@@ -85,6 +85,23 @@ Monster oak(void) {
     return oak;
 }
 
+long long oak_skill_1(char id[], Monster m[], int stage_turn, int x, int y) {
+	if (!Avoidance(id, m, stage_turn, x, y)) {
+		return -9999;
+	}
+	else {
+		memset(string, 0, sizeof(string));
+		long long damage = 10;
+		strcat(string, "오크의 찍어누르기! 피해를 10 받았다");
+		scrollUpImproved(32, 3, 17);
+		setRGBColor(255, 0, 0);
+		printAt(32, 17, string);
+		gotoxy(32 + strlen(string), 17);
+		resetColor();
+		return damage;
+	}
+}
+
 Monster wolfman(void) {
     Monster wolfman = { "늑대인간",150,10,13,20 };
     return wolfman;

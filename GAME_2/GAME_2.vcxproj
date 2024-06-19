@@ -139,6 +139,7 @@
     <ClCompile Include="console.c" />
     <ClCompile Include="db_event_process.c" />
     <ClCompile Include="effect.c" />
+    <ClCompile Include="event.c" />
     <ClCompile Include="game_menu.c" />
     <ClCompile Include="game_start.c" />
     <ClCompile Include="monster_dictionary.c" />

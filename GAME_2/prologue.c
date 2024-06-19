@@ -183,12 +183,13 @@ void save_check(char id[]) {
     }
     MYSQL_RES* result = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(result);
-    if (!row && !row[0] && (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
+    if (!row || !row[0] || (strcmp(row[0], "0") == 0 || strcmp(row[0], "false") == 0)) {
         gotoxy(45, 13);
         printf("현재 계정에 세이브파일이 없습니다!");
         Sleep(3000);
         system("cls");
         Program_config();
+        return;
     }
     else if (row && row[0] && (strcmp(row[0], "1") == 0 || strcmp(row[0], "true") == 0)) {
         unsigned int line = 0;
@@ -241,6 +242,7 @@ void save_check(char id[]) {
             if (stage < 22) {
                 system("cls");
                 Reline();
+                Resetcount_Print(id);
                 if (stage == 1) {
                     stage_1(id, mop_num);
                 }
@@ -370,6 +372,18 @@ void prologue(short gender, char id[], MYSQL* conn) {
                 db_query_error(&db);
                 exit(0);
             }
+            memset(query, 0, sizeof(query));
+            sprintf(query, "DELETE FROM gwangju_sword_master.effect WHERE id = '%s'", id);
+            if(mysql_query(&db, query)) {
+				db_query_error(&db);
+				exit(0);
+			}
+            memset(query, 0, sizeof(query));
+            sprintf(query, "UPDATE gwangju_sword_master.account SET reset_count = 0 WHERE id = '%s'", id);
+            if (mysql_query(&db, query)) {
+				db_query_error(&db);
+				exit(0);
+			}
             mysql_close(&db);
             outline(id);
             break;

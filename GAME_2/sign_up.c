@@ -85,6 +85,7 @@ void sign_up(void) {
             mysql_close(conn);
         }
         system("cls");
+        mysql_close(&db_key);
         mysql_close(conn);
         sign_in();
     }
