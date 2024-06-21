@@ -35,6 +35,7 @@
 #include "locale.h"
 #include "errmsg.h"
 #include "player_state.h"
+#include "curl/curl.h"
 
 #pragma comment (lib,"libmariadb.lib")
 #pragma comment(lib, "user32.lib")
@@ -46,12 +47,12 @@ char RandomPotionThrow(char id[], Monster m[], unsigned short stage_turn, int x,
 char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x, int y);
 int main(void);
 int game_core_code(char id[]);
-int mail_send(void);
+int mail_send(char id[], char recipient_email[]);
 int loginmenuDraw(void);
 int KeyControl(void);
 int Avoidance(char id[], Monster m[], unsigned short stage_turn, int x, int y);
+void find_password(void);
 void sleep(int Micro_Secend);
-void add_subject_marker(const wchar_t* word, wchar_t* result);
 void Reline(void);
 void tutorial(char id[]);
 void Input_Cheat(Monster m[], char id[]);

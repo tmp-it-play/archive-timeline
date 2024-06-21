@@ -2,8 +2,6 @@
 #include "player_state.h"
 
 int main() {
-   /* mail_send();
-    Sleep(7500);*/
     SetConsoleOutputCP(949);
     int sync = 0;
     Program_config();

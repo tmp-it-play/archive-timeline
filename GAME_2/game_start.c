@@ -52,12 +52,17 @@ void Program_config(void) {
 }
 
 int loginmenuDraw(void) {
+    pf_return:;
+    system("cls");
+    ASCII_Art_print();
     int x = 56, y = 16;
     gotoxy(x, y);
     printf("> 로그인");
     gotoxy(x + 2, y + 1);
     printf("회원가입");
     gotoxy(x + 2, y + 2);
+    printf("비밀번호 찾기");
+    gotoxy(x + 2, y + 3);
     printf("종료");
     while (true) {
         int n = KeyControl();
@@ -69,7 +74,7 @@ int loginmenuDraw(void) {
                 y--;
             }
             else {
-                y = 18;
+                y = 19;
             }
             gotoxy(x, y);
             printf(">");
@@ -77,7 +82,7 @@ int loginmenuDraw(void) {
         case DOWN:
             gotoxy(x, y);
             printf(" ");
-            if (y < 18) {
+            if (y < 19) {
                 y++;
             }
             else {
@@ -95,6 +100,10 @@ int loginmenuDraw(void) {
                 sign_in();
             }
             else if (y - 16 == 2) {
+                find_password();
+                goto pf_return;
+            }
+            else if (y - 16 == 3) {
                 program_off();
                 return 1;
             }
@@ -104,6 +113,7 @@ int loginmenuDraw(void) {
         }
     }
 }
+
 
 int KeyControl(void) {
     int temp = _getch();

@@ -73,10 +73,10 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     memset(q, 0, sizeof(q));
                     sprintf(q, "SELECT mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
                     if (mysql_query(&db, q)) {
-			db_query_error(&db);
+						db_query_error(&db);
                         mysql_close(&db);
                         exit(1);
-		    }
+					}
                     MYSQL_RES* res = mysql_store_result(&db);
                     MYSQL_ROW row = mysql_fetch_row(res);
                     if (row == NULL) {
@@ -1775,10 +1775,10 @@ void Gameover(char id[]) {
     memset(q, 0, sizeof(q));
     sprintf(q, "UPDATE gwangju_sword_master.user_state SET max_hp = max_hp + 25 WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
-		db_query_error(&db);
-		Sleep(2000);
-		exit(1);
-	}
+        db_query_error(&db);
+        Sleep(2000);
+        exit(1);
+    }
     memset(q, 0, sizeof(q));
     sprintf(q, "UPDATE gwangju_sword_master.user_state SET hp = max_hp, attack = attack + 8, defense = defense + 2, speed = speed + 2, cri_chance = cri_chance + 3, mp = mp + 5 WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
@@ -1787,12 +1787,12 @@ void Gameover(char id[]) {
         exit(1);
     }
     memset(q, 0, sizeof(q));
-    sprintf(q,"UPDATE gwangju_sword_master.user_state SET level=level+1,levelup_requirement=levelup_requirement+150,levelup_point=0 WHERE id = '%s'", id);
+    sprintf(q, "UPDATE gwangju_sword_master.user_state SET level=level+1,levelup_requirement=levelup_requirement+150,levelup_point=0 WHERE id = '%s'", id);
     if (mysql_query(&db, q)) {
-		db_query_error(&db);
-		Sleep(2000);
-		exit(1);
-	}
+        db_query_error(&db);
+        Sleep(2000);
+        exit(1);
+    }
     memset(q, 0, sizeof(q));
     system("cls");
     Resetcount_Print(id);
