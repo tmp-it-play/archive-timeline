@@ -140,6 +140,7 @@
     <ClCompile Include="db_event_process.c" />
     <ClCompile Include="effect.c" />
     <ClCompile Include="event.c" />
+    <ClCompile Include="event_dictionary.c" />
     <ClCompile Include="game_menu.c" />
     <ClCompile Include="game_start.c" />
     <ClCompile Include="monster_dictionary.c" />
@@ -153,6 +154,8 @@
     <ClCompile Include="sign_up.c" />
     <ClCompile Include="stage_1.c" />
     <ClCompile Include="stage_2.c" />
+    <ClCompile Include="stage_3.c" />
+    <ClCompile Include="stage_4.c" />
     <ClCompile Include="tutorial.c" />
   </ItemGroup>
   <ItemGroup>

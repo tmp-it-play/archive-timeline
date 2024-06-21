@@ -53,6 +53,7 @@ void Gamemenu(char id[]) {
                     }
                     else if (y == 17) {
                         save_check(id);
+                        goto label;
                     }
                     else if (y == 18) {
                         tutorial(id);

@@ -93,6 +93,8 @@ void stage_1(char id[], int mop_num) {
             if (!mysql_ping(&db)) {
                 connect_to_db(&db);
             }
+            gotoxy(50, 21);
+            printf("                                           ");
             mop_hp_bar(mop_hp, mop_max_hp, 50, 21, m[i].name);
             ClearViewState();
             now_level(id);
@@ -161,6 +163,8 @@ void stage_1(char id[], int mop_num) {
 
 void stage1_clear(char id[]) {
     MYSQL db;
+    gotoxy(50, 21);
+    printf("                                           ");
     connect_to_db(&db);
     Clear_Gamelog();
     char query[255];
@@ -168,7 +172,7 @@ void stage1_clear(char id[]) {
     unsigned int final_y = 2;
     memset(query, 0, sizeof(query));
     const char* text = "당신은 여정을 시작하고 지도에 표시된 몬스터들이 도사린다는 숲의 입구를 지나자마자\n"
-        "몬스터들의 습격을 받았습니다\n"
+        "몬스터들의 습격을 받았습니다.\n"
         "당신은 몬스터들을 모두 처치하고 앞으로 나아갔습니다.\n"
         "얼마 지나지 않아 약초를 발견하게 되었고\n"
         "이를 이용해 전투에서 다친 곳을 치료하고 다시 길을 떠났습니다.\n"

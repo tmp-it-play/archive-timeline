@@ -1,6 +1,7 @@
 y:\coding_studing\game_2\game_2\x64\release\vc143.pdb
-y:\coding_studing\game_2\game_2\x64\release\tutorial.obj
+y:\coding_studing\game_2\game_2\x64\release\stage_3.obj
 y:\coding_studing\game_2\game_2\x64\release\stage_2.obj
+y:\coding_studing\game_2\game_2\x64\release\stage_1.obj
 y:\coding_studing\game_2\game_2\x64\release\sign_up.obj
 y:\coding_studing\game_2\game_2\x64\release\main_code.obj
 y:\coding_studing\game_2\game_2\x64\release\sign_in.obj
@@ -11,13 +12,15 @@ y:\coding_studing\game_2\game_2\x64\release\password_find.obj
 y:\coding_studing\game_2\game_2\x64\release\monster_dictionary.obj
 y:\coding_studing\game_2\game_2\x64\release\game_start.obj
 y:\coding_studing\game_2\game_2\x64\release\game_menu.obj
+y:\coding_studing\game_2\game_2\x64\release\event_dictionary.obj
+y:\coding_studing\game_2\game_2\x64\release\event.obj
 y:\coding_studing\game_2\game_2\x64\release\effect.obj
 y:\coding_studing\game_2\game_2\x64\release\db_event_process.obj
 y:\coding_studing\game_2\game_2\x64\release\console.obj
 y:\coding_studing\game_2\game_2\x64\release\battle_system.obj
+y:\coding_studing\game_2\game_2\x64\release\tutorial.obj
+y:\coding_studing\game_2\game_2\x64\release\stage_4.obj
 y:\coding_studing\game_2\game_2\x64\release\mop_dictionary.obj
-y:\coding_studing\game_2\game_2\x64\release\stage_1.obj
-y:\coding_studing\game_2\game_2\x64\release\event.obj
 y:\coding_studing\game_2\x64\release\game_2.exe
 y:\coding_studing\game_2\x64\release\game_2.pdb
 y:\coding_studing\game_2\game_2\x64\release\game_2.ipdb

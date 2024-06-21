@@ -176,9 +176,9 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     srand(time(NULL));
                     int damage;
                     if (effect == 'A') {
-                        damage = rand() % 20 + 1;
-                        while (damage <= 10) {
-                            damage = rand() % 20 + 1;
+                        damage = rand() % 150 + 1;
+                        while (damage <= 100) {
+                            damage = rand() % 150 + 1;
                         }
                         memset(string, 0, sizeof(string));
                         sprintf(string, "%d의 피해를 입혔다!", damage);
@@ -635,11 +635,11 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
     if (!strcmp("고블린", m[stage_turn].name)) {
         damage = goblin_skill_1(id, m, stage_turn, x, y);
     }
-    else if(!strcmp("슬라임",m[stage_turn].name)) {
+    else if (!strcmp("슬라임", m[stage_turn].name)) {
         slime_skill_1();
         return 0;
     }
-    else if(strcmp("박쥐",m[stage_turn].name) == 0) {
+    else if (strcmp("박쥐", m[stage_turn].name) == 0) {
         srand(time(NULL));
         int random1 = rand() % 4;
         int random2 = rand() % 10;
@@ -649,22 +649,49 @@ long long mop_turn(char id[], Monster m[], unsigned short stage_turn, int x, int
                 return 1;
             }
         }
-        else{
+        else {
             damage = bat_skill_2(id, m, stage_turn, x, y);
         }
     }
-    else if(strcmp("오크",m[stage_turn].name) == 0) {
+    else if (strcmp("오크", m[stage_turn].name) == 0) {
         oak_skill_1(id, m, stage_turn, x, y);
     }
-    /*else if (strcmp("늑대인간", m[stage_turn].name) == 0) {
-        wolfman_skill_1();
+    else if (strcmp("늑대인간", m[stage_turn].name) == 0) {
+        int compare_num = rand() % 10;
+        int compare_num2 = rand() % 3;
+        if (compare_num >= compare_num2) {
+            damage = wolfman_skill_1(id, m, stage_turn, x, y);
+        }
+        else {
+            damage = wolfman_skill_2(id, m, stage_turn, x, y);
+        }
+
     }
-    else if(strcmp("흑마술사",m[stage_turn].name) == 0) {
-        magician_skill_1();
+    else if (strcmp("흑마'술'사", m[stage_turn].name) == 0) {
+        magician_skill_1(id, m, stage_turn, x, y);
+        memset(string, 0, sizeof(string));
+        strcat(string, "정말 신기하다!");
+        scrollUpImproved(32, 3, 17);
+        setRGBColor(255, 20, 147);
+        printAt(32, 17, string);
+        gotoxy(32 + strlen(string), 17);
+        resetColor();
     }
     else if(strcmp("드래곤",m[stage_turn].name) == 0) {
-        dragon_skill_1();
-    }*/
+        dragon_skill_1(id, m, stage_turn, x, y);
+    }
+    else if (strcmp("골렘", m[stage_turn].name) == 0) {
+		damage = Golem_skill_1(id, m, stage_turn, x, y);
+	}
+    else if (strcmp("그란디스", m[stage_turn].name) == 0) {
+        damage = Grandis_skill_1(id, m, stage_turn, x, y);
+        if (damage == 5) {
+            return 1;
+        }
+    }
+	else {
+		damage = 0;
+	}
     if (!(damage == -9999)) {
         int damage_temp = m[stage_turn].attack - defense + damage;
         if (damage_temp <= 0) {
@@ -710,45 +737,45 @@ void drop_booty(char id[], char name[]) {
     int drop_exp;
     srand(time(NULL));
     if (!strcmp("고블린", name)) {
-        drop_exp = rand() % 20 + 1;
-        while (drop_exp <= 5) {
-            drop_exp = rand() % 20 + 1;
+        drop_exp = rand() % 40 + 1;
+        while (drop_exp <= 20) {
+            drop_exp = rand() % 40 + 1;
         }
     }
     else if (!strcmp("슬라임", name)) {
-        drop_exp = rand() % 10 + 1;
-        while (drop_exp <= 3) {
-            drop_exp = rand() % 10 + 1;
+        drop_exp = rand() % 15 + 1;
+        while (drop_exp <= 8) {
+            drop_exp = rand() % 15 + 1;
         }
     }
     else if (!strcmp("박쥐", name)) {
-        drop_exp = rand() % 30 + 1;
-        while (drop_exp <= 10) {
-            drop_exp = rand() % 30 + 1;
+        drop_exp = rand() % 55 + 1;
+        while (drop_exp <= 30) {
+            drop_exp = rand() % 55 + 1;
         }
     }
     else if (!strcmp("오크", name)) {
-        drop_exp = rand() % 50 + 1;
-        while (drop_exp <= 20) {
-            drop_exp = rand() % 50 + 1;
+        drop_exp = rand() % 130 + 1;
+        while (drop_exp <= 70) {
+            drop_exp = rand() % 130 + 1;
         }
     }
     else if (!strcmp("늑대인간", name)) {
-        drop_exp = rand() % 60 + 1;
-        while (drop_exp <= 30) {
-            drop_exp = rand() % 60 + 1;
+        drop_exp = rand() % 160 + 1;
+        while (drop_exp <= 80) {
+            drop_exp = rand() % 160 + 1;
         }
     }
     else if (!strcmp("흑마술사", name)) {
-        drop_exp = rand() % 70 + 1;
-        while (drop_exp <= 40) {
-            drop_exp = rand() % 70 + 1;
+        drop_exp = rand() % 90 + 1;
+        while (drop_exp <= 50) {
+            drop_exp = rand() % 90 + 1;
         }
     }
     else if (!strcmp("드래곤", name)) {
-        drop_exp = rand() % 100 + 1;
-        while (drop_exp <= 50) {
-            drop_exp = rand() % 100 + 1;
+        drop_exp = rand() % 400 + 1;
+        while (drop_exp <= 300) {
+            drop_exp = rand() % 400 + 1;
         }
     }
     else {
@@ -1005,7 +1032,7 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                         if (strcmp(row[0], "female") == 0) {
                             memset(string, 0, sizeof(string));
                             setRGBColor(255, 20, 147);
-                            strcpy(string, "묵직한 사람이 되었다!:[캐릭터의 현재 성별이 변경되었다!]");
+                            strcpy(string, "XY염색체를 가지게 되었다:[캐릭터의 현재 성별이 변경되었다!]");
                             scrollUpImproved(x, 2, y);
                             printAt(x, y, string);
                             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
@@ -1020,7 +1047,7 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                         else if (strcmp(row[0], "male") == 0) {
                             memset(string, 0, sizeof(string));
                             setRGBColor(255, 20, 147);
-                            strcpy(string, "무언가 공허한 느낌이다...:[캐릭터의 현재 성별이 변경되었다!]");
+                            strcpy(string, "XX염색체를 가지게 되었다:[캐릭터의 현재 성별이]");
                             scrollUpImproved(x, 2, y);
                             printAt(x, y, string);
                             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);
@@ -1442,7 +1469,7 @@ void Resetcount_Print(char id[]) {
     int i;
     for (i = 0; i < 9; i++) {
         if (num == 0) {
-            gotoxy(10, i + 1);
+            gotoxy(8, i + 1);
         }
         else if (num == 1 && i < 8) {
             gotoxy(8, i + 1);
@@ -1745,9 +1772,33 @@ void Gameover(char id[]) {
         Sleep(2000);
         exit(1);
     }
+    memset(q, 0, sizeof(q));
+    sprintf(q, "UPDATE gwangju_sword_master.user_state SET max_hp = max_hp + 25 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+		db_query_error(&db);
+		Sleep(2000);
+		exit(1);
+	}
+    memset(q, 0, sizeof(q));
+    sprintf(q, "UPDATE gwangju_sword_master.user_state SET hp = max_hp, attack = attack + 8, defense = defense + 2, speed = speed + 2, cri_chance = cri_chance + 3, mp = mp + 5 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+        db_query_error(&db);
+        Sleep(2000);
+        exit(1);
+    }
+    memset(q, 0, sizeof(q));
+    sprintf(q,"UPDATE gwangju_sword_master.user_state SET level=level+1,levelup_requirement=levelup_requirement+150,levelup_point=0 WHERE id = '%s'", id);
+    if (mysql_query(&db, q)) {
+		db_query_error(&db);
+		Sleep(2000);
+		exit(1);
+	}
+    memset(q, 0, sizeof(q));
     system("cls");
     Resetcount_Print(id);
+    sleep(2600);
     Reline();
+    Resetcount_Print(id);
     stage_1(id, 1);
     mysql_close(&db);
     exit(0);

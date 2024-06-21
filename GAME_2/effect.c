@@ -6,6 +6,7 @@
 
 void Slow_insert(char id[], const char* effect);
 void Powerup_insert(char id[], const char* effect);
+void Burn_insert(char id[], const char* effect);
 
 void connect_to_db(MYSQL* db) {
     mysql_init(db);
@@ -255,5 +256,54 @@ void Powerup_insert(char id[], const char* effect) {
         mysql_close(&db);
         return;
     }
+    mysql_close(&db);
+}
+
+void Burn(char id[]) {
+	Burn_insert(id, "burn");
+	return;
+}
+
+void Burn_insert(char id[], const char* effect) {
+    char query[512];
+    char escaped_effect[255];
+    memset(query, 0, sizeof(query));
+    memset(escaped_effect, 0, sizeof(escaped_effect));
+    MYSQL db;
+    connect_to_db(&db);
+    sprintf(query, "SELECT effect FROM gwangju_sword_master.effect WHERE id = '%s' AND effect = '%s'", id, effect);
+    if (mysql_query(&db, query)) {
+        db_query_error(&db);
+        mysql_close(&db);
+        return;
+    }
+    MYSQL_RES* res = mysql_store_result(&db);
+    if (res == NULL) {
+        db_query_error(&db);
+        mysql_close(&db);
+        return;
+    }
+    MYSQL_ROW row = mysql_fetch_row(res);
+    if (row != NULL) {
+        sprintf(query, "UPDATE gwangju_sword_master.effect SET remanet = '2' WHERE id = '%s' AND effect = '%s'", id, effect);
+        if (mysql_query(&db, query)) {
+            db_query_error(&db);
+            mysql_free_result(res);
+            mysql_close(&db);
+            return;
+        }
+    }
+    else {
+        mysql_real_escape_string(&db, escaped_effect, effect, strlen(effect));
+        sprintf(query, "INSERT INTO gwangju_sword_master.effect(id, effect, remanet) VALUES ('%s', '%s', '2')", id, escaped_effect);
+        if (mysql_query(&db, query)) {
+            db_query_error(&db);
+            mysql_free_result(res);
+            mysql_close(&db);
+            return;
+        }
+    }
+    mysql_free_result(res);
+    memset(query, 0, sizeof(query));
     mysql_close(&db);
 }

@@ -239,6 +239,12 @@ void save_check(char id[]) {
             int stage = atoi(row[0]);
             int mop_num = atoi(row[1]);
             mop_num--;
+            if (mop_num == 0) {
+                mop_num = 1;
+            }
+            if (mop_num > 0) {
+                mop_num = abs(mop_num);
+            }
             if (stage < 22) {
                 system("cls");
                 Reline();
@@ -248,6 +254,21 @@ void save_check(char id[]) {
                 }
                 else if (stage == 2) {
                     stage_2(id, mop_num);
+                }
+                else if (stage == 3) {
+                    stage_3(id, mop_num);
+                }
+                else if (stage == 4) {
+                    stage_4(id, mop_num);
+                }
+                else if (stage == 5) {
+                    final_stage(id, mop_num);
+                }
+                else {
+                    setRGBColor(255, 0, 0);
+                    printf("Stage is NULL\n");
+                    resetColor();
+                    exit(1);
                 }
             }
         }

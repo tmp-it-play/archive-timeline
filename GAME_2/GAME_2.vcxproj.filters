@@ -72,6 +72,15 @@
     <ClCompile Include="event.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="event_dictionary.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_3.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_4.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="superclass.h">

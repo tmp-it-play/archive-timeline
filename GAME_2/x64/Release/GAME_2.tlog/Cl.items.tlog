@@ -3,6 +3,7 @@ Y:\Coding_Studing\GAME_2\GAME_2\console.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Re
 Y:\Coding_Studing\GAME_2\GAME_2\db_event_process.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\db_event_process.obj
 Y:\Coding_Studing\GAME_2\GAME_2\effect.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\effect.obj
 Y:\Coding_Studing\GAME_2\GAME_2\event.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\event.obj
+Y:\Coding_Studing\GAME_2\GAME_2\event_dictionary.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\event_dictionary.obj
 Y:\Coding_Studing\GAME_2\GAME_2\game_menu.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\game_menu.obj
 Y:\Coding_Studing\GAME_2\GAME_2\game_start.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\game_start.obj
 Y:\Coding_Studing\GAME_2\GAME_2\monster_dictionary.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\monster_dictionary.obj
@@ -16,4 +17,6 @@ Y:\Coding_Studing\GAME_2\GAME_2\main_code.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\
 Y:\Coding_Studing\GAME_2\GAME_2\sign_up.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\sign_up.obj
 Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\stage_1.obj
 Y:\Coding_Studing\GAME_2\GAME_2\stage_2.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\stage_2.obj
+Y:\Coding_Studing\GAME_2\GAME_2\stage_3.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\stage_3.obj
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\stage_4.obj
 Y:\Coding_Studing\GAME_2\GAME_2\tutorial.c;Y:\Coding_Studing\GAME_2\GAME_2\x64\Release\tutorial.obj
