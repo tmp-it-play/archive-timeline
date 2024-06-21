@@ -73,10 +73,10 @@ long long ingame_select(char id[], Monster m[], unsigned short turn, int ix, int
                     memset(q, 0, sizeof(q));
                     sprintf(q, "SELECT mp FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
                     if (mysql_query(&db, q)) {
-						db_query_error(&db);
+			db_query_error(&db);
                         mysql_close(&db);
                         exit(1);
-					}
+		    }
                     MYSQL_RES* res = mysql_store_result(&db);
                     MYSQL_ROW row = mysql_fetch_row(res);
                     if (row == NULL) {
