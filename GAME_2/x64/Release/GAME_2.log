@@ -1,7 +1,6 @@
 ﻿  password_find.c
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(38,17): warning C4477: 'scanf_s' : 서식 문자열 '%[^\n]'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(40,17): warning C4477: 'scanf_s' : 서식 문자열 '%[^\n]'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
-Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(87,35): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(36,17): warning C4477: 'scanf_s' : 서식 문자열 '%[^\n]'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\password_find.c(85,35): warning C4267: '+=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
   2 of 124 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation

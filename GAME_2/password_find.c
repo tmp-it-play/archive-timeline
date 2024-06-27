@@ -30,16 +30,12 @@ void find_password(void) {
         }
         gotoxy(40, 16);
         printf("ID:");
-        gotoxy(40, 18);
-        printf("Email:");
         gotoxy(43, 16);
         char id[30], Email[100];
         CursorView(1);
         scanf_s(" %[^\n]", id, sizeof(char) * 30);
-        gotoxy(47, 18);
-        scanf_s(" %[^\n]", Email, sizeof(char) * 100);
         char query[255];
-        sprintf(query, "SELECT password FROM gwangju_sword_master.account WHERE id = '%s'", id);
+        sprintf(query, "SELECT password,email FROM gwangju_sword_master.account WHERE id = '%s'", id);
         if (mysql_query(&db_key, query)) {
             db_query_error(&db_key);
             exit(0);
@@ -47,6 +43,8 @@ void find_password(void) {
         CursorView(0);
         MYSQL_RES* result = mysql_store_result(&db_key);
         MYSQL_ROW row = mysql_fetch_row(result);
+        memset(Email, 0, sizeof(Email));
+        strcpy(Email, row[1]);
         if (row) {
             mail_send(id, Email);
             mysql_free_result(result);
@@ -114,7 +112,7 @@ int mail_send(char id[], char recipient_email[]) {
     MYSQL_RES* result = mysql_store_result(&db);
     MYSQL_ROW row = mysql_fetch_row(result);
     if (row) {
-        sprintf(body_content, "현재 계정의 비밀번호는 '%s' 입니다", row[0]);
+        sprintf(body_content, "현재 계정 <b>%s</b>의 비밀번호는 <span style='color:skyblue;'><b>%s</b></span> 입니다", id, row[0]);
     }
     else {
         mysql_free_result(result);

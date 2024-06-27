@@ -6,7 +6,7 @@
 void sign_up(void) {
     char query[255];
     while (true) {
-        char id[30], password[30], password_confirm[30];
+        char id[30], password[30], password_confirm[30], email_adress[50];
         MYSQL db_key;
         MYSQL* conn = mysql_init(&db_key);
         ASCII_Art_print();
@@ -26,6 +26,8 @@ void sign_up(void) {
             printf("Password:");
             gotoxy(35, 20);
             printf("Confirm:");
+            gotoxy(37, 22);
+            printf("Email:");
             gotoxy(43, 16);
             CursorView(1);
             scanf_s("%s", id, (unsigned)_countof(id));
@@ -33,6 +35,8 @@ void sign_up(void) {
             scanf_s("%s", password, (unsigned)_countof(password));
             gotoxy(43, 20);
             scanf_s("%s", password_confirm, (unsigned)_countof(password_confirm));
+            gotoxy(43, 22);
+            scanf_s("%s", email_adress, (unsigned)_countof(email_adress));
             CursorView(0);
             if (strcmp(password, password_confirm) != 0) {
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
@@ -72,7 +76,7 @@ void sign_up(void) {
             break;
         }
         memset(query, 0, sizeof(query));
-        sprintf(query, "INSERT INTO gwangju_sword_master.account(id, password) VALUES('%s', '%s')", id, password);
+        sprintf(query, "INSERT INTO gwangju_sword_master.account(email ,id, password) VALUES('%s' ,'%s', '%s')", email_adress, id, password);
         if (mysql_query(conn, query)) {
             db_query_error(conn);
             mysql_close(conn);

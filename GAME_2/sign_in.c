@@ -10,7 +10,7 @@ void sign_in(void) {
 		ASCII_Art_print();
 		mysql_init(&db_key);
 		gotoxy(42, 15);
-		printf("Sing in\n");
+		printf("Sign in\n");
 		if (!mysql_real_connect(&db_key, "localhost", "root", "123456", "gwangju_sword_master", 0, NULL, 0)) {
 			gotoxy(42, 12);
 			db_connect_error(&db_key);
