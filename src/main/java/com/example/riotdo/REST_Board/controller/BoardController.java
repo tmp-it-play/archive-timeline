@@ -11,14 +11,17 @@ import java.util.List;
 
 @Controller
 public class BoardController {
+
     @Autowired
     private BoardService boardService;
 
     @RequestMapping("/board/openBoardList.do")
     public ModelAndView openBoardList() throws Exception {
-        ModelAndView mv = new ModelAndView("board/boardList");
+        ModelAndView mv = new ModelAndView("/board/boardList");
+
         List<BoardDto> list = boardService.selectBoardList();
         mv.addObject("list", list);
+
         return mv;
     }
 }
