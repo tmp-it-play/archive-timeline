@@ -13,4 +13,19 @@
         ORDER BY board_idx DESC
         ]]>
     </select>
+    <insert id="insertBoard" parameterType="com.example.riotdo.REST_Board.dto.BoardDto">
+        <![CDATA[
+        INSERT INTO rest_board
+        (title,
+         contents,
+         created_datetime,
+         creator_id)
+            VALUE
+            ( #{title},
+            #{contents},
+            NOW(),
+            'admin'
+            )
+        ]]>
+    </insert>
 </mapper>
