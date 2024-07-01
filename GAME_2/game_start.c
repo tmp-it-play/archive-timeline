@@ -114,7 +114,6 @@ int loginmenuDraw(void) {
     }
 }
 
-
 int KeyControl(void) {
     int temp = _getch();
     if (temp == 224) {
@@ -135,11 +134,14 @@ int KeyControl(void) {
     else if (temp == 13) {
         return SUBMIT;
     }
-    else if(temp == 27) {
-		return ESC;
-	}
+    else if (temp == 27) {
+        return ESC;
+    }
     else if (temp == 96) {
         return CONSOLE;
+    }
+    else if (temp == 115 || temp == 83) {
+        return Key_S;
     }
     return 0;
 }

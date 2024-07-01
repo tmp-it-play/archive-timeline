@@ -133,7 +133,7 @@ int mail_send(char id[], char recipient_email[]) {
         curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
         curl_easy_setopt(curl, CURLOPT_READDATA, &upload_ctx);
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
-        curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Users\\USER\\Downloads\\cacert.pem");
+        curl_easy_setopt(curl, CURLOPT_CAINFO, "Y:\\Coding_Studing\\GAME_2\\Resource\\cacert.pem");
         res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
@@ -144,5 +144,6 @@ int mail_send(char id[], char recipient_email[]) {
     curl_global_cleanup();
     mysql_free_result(result);
     mysql_close(&db);
+    sleep(10000);
     return (int)res;
 }

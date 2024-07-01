@@ -296,6 +296,7 @@ int get_console_width(void) {
 }
 
 void prologue(short gender, char id[], MYSQL* conn) {
+    bool sync = false;
     char query[255];
     memset(query, 0, sizeof(query));
     sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 0 WHERE id = '%s'", id);
@@ -360,11 +361,44 @@ void prologue(short gender, char id[], MYSQL* conn) {
                 }
                 printf("%c", prologue_text[i]);
             }
-            Sleep(50);
+            if (_kbhit()) {
+                int key = KeyControl();
+                if (key == Key_S) {
+                    sync = true;
+                    break;
+                }
+            }
+            if (!sync) {
+                Sleep(50);
+            }
         }
-        final_y += line;
-        free(prologue_text);
+        if (sync) {
+            system("cls");
+            line = 0;
+            gotoxy(0, 10);
+            for (unsigned int i = 0; i < strlen(prologue_text); i++) {
+                if (prologue_text[i] == '\n') {
+                    line++;
+                    gotoxy(0, 10 + line);
+                }
+                else {
+                    if (i == 0 || prologue_text[i - 1] == '\n') {
+                        int line_length = 0;
+                        unsigned int j = i;
+                        while (j < strlen(prologue_text) && prologue_text[j] != '\n') {
+                            line_length++;
+                            j++;
+                        }
+                        current_x = (console_width - line_length) / 2;
+                        gotoxy(current_x, 10 + line);
+                    }
+                    printf("%c", prologue_text[i]);
+                }
+            }
+        }
     }
+    final_y += line;
+    free(prologue_text);
     gotoxy(45, final_y + 2);
     Sleep(1975);
     printf("계속하려면 Enter를 누르세요");
@@ -384,9 +418,9 @@ void prologue(short gender, char id[], MYSQL* conn) {
             }
             sprintf(query, "UPDATE gwangju_sword_master.account SET save_file = 1 WHERE id = '%s'", id);
             if (mysql_query(&db, query)) {
-				db_query_error(&db);
-				exit(0);
-			}
+                db_query_error(&db);
+                exit(0);
+            }
             memset(query, 0, sizeof(query));
             sprintf(query, "UPDATE gwangju_sword_master.user_state SET level=1,hp=100,max_hp=100,mp=100,max_mp=100,speed=10,attack=5,defense=5,cri_chance=5,good_and_evil=0,levelup_requirement=150,levelup_point=0 WHERE id = '%s'", id);
             if (mysql_query(&db, query)) {
@@ -395,16 +429,16 @@ void prologue(short gender, char id[], MYSQL* conn) {
             }
             memset(query, 0, sizeof(query));
             sprintf(query, "DELETE FROM gwangju_sword_master.effect WHERE id = '%s'", id);
-            if(mysql_query(&db, query)) {
-				db_query_error(&db);
-				exit(0);
-			}
+            if (mysql_query(&db, query)) {
+                db_query_error(&db);
+                exit(0);
+            }
             memset(query, 0, sizeof(query));
             sprintf(query, "UPDATE gwangju_sword_master.account SET reset_count = 0 WHERE id = '%s'", id);
             if (mysql_query(&db, query)) {
-				db_query_error(&db);
-				exit(0);
-			}
+                db_query_error(&db);
+                exit(0);
+            }
             mysql_close(&db);
             outline(id);
             break;
@@ -414,4 +448,5 @@ void prologue(short gender, char id[], MYSQL* conn) {
         }
     }
     system("cls");
+    return;
 }

@@ -1047,7 +1047,7 @@ char RandomPotionDrink(char id[], Monster m[], unsigned short stage_turn, int x,
                         else if (strcmp(row[0], "male") == 0) {
                             memset(string, 0, sizeof(string));
                             setRGBColor(255, 20, 147);
-                            strcpy(string, "XX염색체를 가지게 되었다:[캐릭터의 현재 성별이]");
+                            strcpy(string, "XX염색체를 가지게 되었다:[캐릭터의 현재 성별이 변경되었다!]");
                             scrollUpImproved(x, 2, y);
                             printAt(x, y, string);
                             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), WHITE);

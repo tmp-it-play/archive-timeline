@@ -8,6 +8,7 @@
 #define SUBMIT 4
 #define ESC 5
 #define CONSOLE 6
+#define Key_S 7
 
 #include "stdio.h"
 #include "Windows.h"
