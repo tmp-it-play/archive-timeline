@@ -167,13 +167,13 @@ void stage_2(char id[], int mop_num) {
                             Clear_Gamelog();
                         }
                         if (mop_num == 6) {
-							Clear_Gamelog();
-							gotoxy(50, 21);
-							printf("                                              ");
-							Health_Club_conn(id);
-							memset(query, 0, sizeof(query));
-							Clear_Gamelog();
-						}
+                            Clear_Gamelog();
+                            gotoxy(50, 21);
+                            printf("                                              ");
+                            Health_Club_conn(id);
+                            memset(query, 0, sizeof(query));
+                            Clear_Gamelog();
+                        }
                         if (mop_num == 9) {
                             Clear_Gamelog();
                             gotoxy(50, 21);
@@ -207,6 +207,7 @@ void stage2_clear(char id[]) {
     char query[255];
     unsigned int line = 0;
     unsigned int final_y = 2;
+    bool sync = false;
     memset(query, 0, sizeof(query));
     const char* text = "당신은 의문의 할아버지와 마주친 후 늑대인간과의 혈투에서 승리하고\n"
         "숲을 나왔습니다.\n"
@@ -232,7 +233,19 @@ void stage2_clear(char id[]) {
         for (int j = 0; j < line_length; j++) {
             printf("%c", text[i + j]);
             fflush(stdout);
-            Sleep(50);
+            if (_kbhit()) {
+                int key = KeyControl();
+                if (key == Key_S) {
+                    sync = true;
+                    break;
+                }
+            }
+            if (!sync) {
+                Sleep(50);
+            }
+        }
+        if (sync) {
+            break;
         }
         i += line_length;
         if (text[i] == '\n') {
@@ -241,6 +254,38 @@ void stage2_clear(char id[]) {
         line++;
         if (line >= console_height) {
             break;
+        }
+    }
+    if (sync) {
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 87; j++) {
+                gotoxy(32 + j, 0 + i);
+                printf(" ");
+            }
+        }
+        line = 0;
+        i = 0;
+        while (i < text_length) {
+            int current_x = start_x;
+            int current_y = start_y + line;
+            int line_length = 0;
+            while (i + line_length < text_length && text[i + line_length] != '\n' && line_length < console_width) {
+                line_length++;
+            }
+            current_x = start_x + (console_width - line_length) / 2;
+            gotoxy(current_x, current_y);
+            for (int j = 0; j < line_length; j++) {
+                printf("%c", text[i + j]);
+                fflush(stdout);
+            }
+            i += line_length;
+            if (text[i] == '\n') {
+                i++;
+            }
+            line++;
+            if (line >= console_height) {
+                break;
+            }
         }
     }
     final_y = start_y + line;
@@ -258,7 +303,7 @@ void stage2_clear(char id[]) {
     while (true) {
         int n = KeyControl();
         if (n == SUBMIT) {
-            sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 2, mop_num = 1 WHERE id = '%s'", id);
+            sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 3, mop_num = 1 WHERE id = '%s'", id);
             if (mysql_query(&db, query)) {
                 db_query_error(&db);
                 mysql_close(&db);

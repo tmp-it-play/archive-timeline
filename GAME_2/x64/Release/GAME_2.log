@@ -1,17 +1,24 @@
-﻿  stage_1.c
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(30,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(44,15): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(56,19): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(116,27): warning C4244: '-=': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(121,32): warning C4244: '=': '__int64'에서 'short'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(142,38): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(218,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(249,22): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(185,32): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-Y:\Coding_Studing\GAME_2\GAME_2\stage_1.c(256,34): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  stage_4.c
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(21,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(34,21): warning C4087: 'Whisper': 'void' 매개 변수 목록을 사용하여 선언되었습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(53,19): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(147,31): warning C4244: '-=': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(152,36): warning C4244: '=': '__int64'에서 'short'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(173,42): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(182,25): warning C4102: 'event': 참조되지 않은 레이블입니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(297,18): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(329,22): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(264,32): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(336,34): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(389,22): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(402,21): warning C4087: 'Whisper': 'void' 매개 변수 목록을 사용하여 선언되었습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(496,31): warning C4244: '-=': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(501,36): warning C4244: '=': '__int64'에서 'short'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(522,42): warning C4267: '함수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+Y:\Coding_Studing\GAME_2\GAME_2\stage_4.c(719,25): warning C4013: 'get_console_width'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
   코드를 생성하고 있습니다.
-  0 of 124 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 124 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    25 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   GAME_2.vcxproj -> Y:\Coding_Studing\GAME_2\x64\Release\GAME_2.exe

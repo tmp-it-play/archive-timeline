@@ -221,18 +221,20 @@ void stage4_clear(char id[]) {
     char query[255];
     unsigned int line = 0;
     unsigned int final_y = 2;
+    bool sync = false;
+
     sprintf(query, "SELECT gender FROM gwangju_sword_master.account WHERE id = '%s'", id);
     if (mysql_query(&db, query)) {
-		db_query_error(&db);
-		mysql_close(&db);
-		exit(0);
-	}
+        db_query_error(&db);
+        mysql_close(&db);
+        exit(0);
+    }
     MYSQL_RES* res = mysql_store_result(&db);
     if (res == NULL) {
-		db_query_error(&db);
-		mysql_close(&db);
-		exit(0);
-	}
+        db_query_error(&db);
+        mysql_close(&db);
+        exit(0);
+    }
     MYSQL_ROW row = mysql_fetch_row(res);
     if (row == NULL) {
         db_query_error(&db);
@@ -242,7 +244,6 @@ void stage4_clear(char id[]) {
     }
     const char* text;
     if (!strcmp(row[0], "male")) {
-        memset(query, 0, sizeof(query));
         text = "알 수 없는 힘은 결국 그란디스의 앞에 닿을 때까지 함께하였고\n"
             "당신의 검은 피로 물들었습니다.\n"
             "자꾸만 기시감이 들지만\n"
@@ -250,7 +251,6 @@ void stage4_clear(char id[]) {
             "공주를 구하라는 명령아래 여기까지 온 만큼 끝까지 가봅시다!\n";
     }
     else {
-        memset(query, 0, sizeof(query));
         text = "알 수 없는 힘은 결국 그란디스의 앞에 닿을 때까지 함께하였고\n"
             "당신의 검은 피로 물들었습니다.\n"
             "자꾸만 기시감이 들지만\n"
@@ -275,7 +275,19 @@ void stage4_clear(char id[]) {
         for (int j = 0; j < line_length; j++) {
             printf("%c", text[i + j]);
             fflush(stdout);
-            Sleep(50);
+            if (_kbhit()) {
+                int key = KeyControl();
+                if (key == Key_S) {
+                    sync = true;
+                    break;
+                }
+            }
+            if (!sync) {
+                Sleep(50);
+            }
+        }
+        if (sync) {
+            break;
         }
         i += line_length;
         if (text[i] == '\n') {
@@ -284,6 +296,39 @@ void stage4_clear(char id[]) {
         line++;
         if (line >= console_height) {
             break;
+        }
+    }
+
+    if (sync) {
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 87; j++) {
+                gotoxy(32 + j, 0 + i);
+                printf(" ");
+            }
+        }
+        line = 0;
+        i = 0;
+        while (i < text_length) {
+            int current_x = start_x;
+            int current_y = start_y + line;
+            int line_length = 0;
+            while (i + line_length < text_length && text[i + line_length] != '\n' && line_length < console_width) {
+                line_length++;
+            }
+            current_x = start_x + (console_width - line_length) / 2;
+            gotoxy(current_x, current_y);
+            for (int j = 0; j < line_length; j++) {
+                printf("%c", text[i + j]);
+                fflush(stdout);
+            }
+            i += line_length;
+            if (text[i] == '\n') {
+                i++;
+            }
+            line++;
+            if (line >= console_height) {
+                break;
+            }
         }
     }
     final_y = start_y + line;
@@ -301,7 +346,7 @@ void stage4_clear(char id[]) {
     while (true) {
         int n = KeyControl();
         if (n == SUBMIT) {
-            sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 2, mop_num = 1 WHERE id = '%s'", id);
+            sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 5, mop_num = 1 WHERE id = '%s'", id);
             if (mysql_query(&db, query)) {
                 db_query_error(&db);
                 mysql_close(&db);
@@ -509,6 +554,7 @@ void end(char id[]) {
     connect_to_db(&db);
     Clear_Gamelog();
     char query[255];
+    bool sync = false;
     sprintf(query, "SELECT good_and_evil FROM gwangju_sword_master.user_state WHERE id = '%s'", id);
     if (mysql_query(&db, query)) {
         db_query_error(&db);
@@ -530,6 +576,7 @@ void end(char id[]) {
     }
     memset(query, 0, sizeof(query));
     int GE = atoi(row[0]);
+
     sprintf(query, "SELECT reset_count FROM gwangju_sword_master.account WHERE id = '%s'", id);
     if (mysql_query(&db, query)) {
         db_query_error(&db);
@@ -689,8 +736,41 @@ void end(char id[]) {
                 gotoxy(current_x, 10 + line);
             }
             printf("%c", text[i]);
+            if (_kbhit()) {
+                int key = KeyControl();
+                if (key == Key_S) {
+                    sync = true;
+                    break;
+                }
+            }
+            if (!sync) {
+                Sleep(50);
+            }
         }
-        Sleep(50);
+    }
+    if (sync) {
+        system("cls");
+        line = 0;
+        gotoxy(0, 10);
+        for (unsigned int i = 0; i < strlen(text); i++) {
+            if (text[i] == '\n') {
+                line++;
+                gotoxy(0, 10 + line);
+            }
+            else {
+                if (i == 0 || text[i - 1] == '\n') {
+                    int line_length = 0;
+                    unsigned int j = i;
+                    while (j < strlen(text) && text[j] != '\n') {
+                        line_length++;
+                        j++;
+                    }
+                    current_x = (console_width - line_length) / 2;
+                    gotoxy(current_x, 10 + line);
+                }
+                printf("%c", text[i]);
+            }
+        }
     }
     final_y += line;
     gotoxy(45, final_y + 2);

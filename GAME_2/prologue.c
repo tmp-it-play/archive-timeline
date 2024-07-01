@@ -448,5 +448,4 @@ void prologue(short gender, char id[], MYSQL* conn) {
         }
     }
     system("cls");
-    return;
 }
