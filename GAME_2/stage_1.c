@@ -49,7 +49,6 @@ void stage_1(char id[], int mop_num) {
             }
             else {
                 sprintf(string, "%s이 나타났다!", m[i].name);
-
             }
         }
         else {
