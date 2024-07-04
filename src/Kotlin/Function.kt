@@ -1,10 +1,10 @@
 package Kotlin
 
-import kotlin.math.PI
+import kotlin.math.PI as 원주율
 
 class Function {
     fun circleArea(radius: Double): Double {
-        return PI * radius * radius
+        return 원주율 * radius * radius
     }
 
     fun rectangleArea(width: Double, height: Double): Double = width * height
@@ -18,7 +18,14 @@ class Function {
     fun puts(vararg Str: String): Unit {
         println(Str.joinToString(", "))
     }
+
+    fun Max_Min_Value(): Unit {
+        println(Int.MAX_VALUE.toString() + " " + Int.MIN_VALUE.toString())
+        println(Short.MIN_VALUE.toString() + " " + Byte.MAX_VALUE.toString())
+    }
 }
+
+fun readInt(radix: Int = 10) = readln().toInt(radix)
 
 fun main() {
     print("Enter radius: ")
@@ -33,4 +40,16 @@ fun main() {
     Function().printSort(a)
     Array().array_pratice1()
     Calculation().FalseandTrue()
+    val num: Int = readln().toInt()
+    println(num)
+    println(readInt())
+    Function().puts(" ")
+    Function().Max_Min_Value()
+    foo().foo()
+}
+
+class foo{
+    fun foo():Unit{
+        println("This is foo")
+    }
 }
