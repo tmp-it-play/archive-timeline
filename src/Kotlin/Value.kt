@@ -1,3 +1,5 @@
+package Kotlin
+
 fun ValandVar() {
     val num1 = readln().toInt()
     val num2 = readln().toInt()

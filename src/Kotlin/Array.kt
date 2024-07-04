@@ -1,3 +1,5 @@
+package Kotlin
+
 class Array {
     fun array_pratice1() {
         var array_pra = IntArray(11)
