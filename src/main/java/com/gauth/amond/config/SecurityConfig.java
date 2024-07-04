@@ -19,22 +19,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(
-                                "/gauth/authorization",
-                                "/login/gauth/code",
-                                "/swagger-ui/**",      // Swagger UI 경로를 허용
-                                "/v3/api-docs/**"      // OpenAPI 문서 경로를 허용
-                        ).permitAll()
-                        .requestMatchers("/auth/me").authenticated()
-                        .requestMatchers("/role/student").hasAuthority("GAUTH_ROLE_STUDENT")
-                        .requestMatchers("/role/teacher").hasAuthority("GAUTH_ROLE_TEACHER")
-                        .anyRequest().denyAll()
-                )
-                .logout(withDefaults());
+        http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request.requestMatchers("/gauth/authorization", "/login/gauth/code", "/swagger-ui/**",
+                "/v3/api-docs/**"
+        ).permitAll().requestMatchers("/auth/me").authenticated().requestMatchers("/role/student").hasAuthority("GAUTH_ROLE_STUDENT").requestMatchers("/role/teacher").hasAuthority("GAUTH_ROLE_TEACHER").anyRequest().denyAll()).logout(withDefaults());
         gauth.configure(http);
 
         return http.build();

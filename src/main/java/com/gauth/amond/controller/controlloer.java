@@ -11,10 +11,12 @@ public class controlloer {
     public String student() {
         return "hi student!";
     }
+
     @GetMapping("/role/teacher")
     public String teacher() {
         return "hi teacher!";
     }
+
     @GetMapping("/auth/me")
     public Object me() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
