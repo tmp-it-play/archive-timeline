@@ -23,6 +23,14 @@ class Array {
         println(bool)
         println(arr2.indexOf(3))
     }
+
+    fun array_pratice4() {
+        val arr1 = IntArray(5)
+        for(i in 0..4 ){
+            arr1[i]= readln().toInt()
+        }
+        println(arr1.joinToString())
+    }
 }
 
 fun main() {
@@ -31,4 +39,6 @@ fun main() {
     Array().array_pratice2()
     print("\n\n\n")
     Array().array_pratice3()
+    Function().puts()
+    Array().array_pratice4()
 }
