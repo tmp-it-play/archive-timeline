@@ -1,4 +1,4 @@
-package Kotlin
+package Kotlin.Example
 
 fun main() {
     val s = readln()
