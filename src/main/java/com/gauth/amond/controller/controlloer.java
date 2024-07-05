@@ -22,4 +22,9 @@ public class controlloer {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getPrincipal();
     }
+
+    @GetMapping("/page")
+    public String redirect() {
+        return "test";
+    }
 }
