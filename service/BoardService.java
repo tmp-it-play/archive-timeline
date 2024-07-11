@@ -2,6 +2,7 @@ package com.example.riotdo.REST_Board.service;
 
 import com.example.riotdo.REST_Board.Entity.Board;
 import com.example.riotdo.REST_Board.Entity.User;
+import com.example.riotdo.REST_Board.domain.boards.Board;
 import com.example.riotdo.REST_Board.dto.BoardDto;
 import com.example.riotdo.REST_Board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,7 @@ public class BoardService {
 
     @Transactional
     public BoardDto write(BoardDto boardDto, User user) {
-        Board board = new Board();
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
-        board.setUser(user);
+        Board board = Board.builder().title(boardDto.getTitle()).content(boardDto.getContent()).user(user).build();
         boardRepository.save(board);
         return BoardDto.toDto(board);
     }
@@ -46,11 +44,8 @@ public class BoardService {
 
     @Transactional
     public BoardDto update(int id, BoardDto boardDto) {
-        Board board = boardRepository.findById(id).orElseThrow(() -> {
-            return new IllegalArgumentException("Board Id를 찾을 수 없습니다!");
-        });
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
+        Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Board Id를 찾을 수 없습니다!"));
+        Board updatedBoard = board.toBuilder().title(boardDto.getTitle()).content(boardDto.getContent()).user(user).build();
         return BoardDto.toDto(board);
     }
 
