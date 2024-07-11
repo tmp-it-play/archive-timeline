@@ -1,7 +1,9 @@
 package com.example.riotdo.REST_Board.controller;
 
 import com.example.riotdo.REST_Board.Entity.User;
+import com.example.riotdo.REST_Board.domain.boards.BoardDto;
 import com.example.riotdo.REST_Board.dto.BoardDto;
+import com.example.riotdo.REST_Board.global.Response;
 import com.example.riotdo.REST_Board.repository.UserRepository;
 import com.example.riotdo.REST_Board.response.Response;
 import com.example.riotdo.REST_Board.service.BoardService;
@@ -35,16 +37,16 @@ public class BoardController {
     @Operation(summary = "게시글 작성", description = "게시글을 작성한다")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/boards/write")
-    public Response write(@RequestBody BoardDto boardDto) {
-        User user = userRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public Response write(@RequestBody BoardDto boardDto, @RequestParam("userId") int userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return new Response("성공", "글 작성 성공", boardService.write(boardDto, user));
     }
 
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/boards/update/{id}")
-    public Response edit(@RequestBody BoardDto boardDto, @PathVariable("id") Integer id) {
-        User user = userRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public Response edit(@RequestBody BoardDto boardDto, @PathVariable("id") Integer id, @RequestParam("userId") int userId)
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return new Response("성공", "글 수정 성공", boardService.update(id, boardDto));
     }
 
