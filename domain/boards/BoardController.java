@@ -45,7 +45,7 @@ public class BoardController {
     }
 
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}") // PUT /boards/1?userId=1
     public Response edit(@RequestBody BoardDto boardDto, @PathVariable("id") Integer id, @RequestParam("userId") int userId)
         User user = userService.findUser(userId);
