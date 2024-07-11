@@ -20,4 +20,9 @@ public class UserService {
         user.setUsername((registerDto.getUsername()));
         return userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public User findUser(int userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
