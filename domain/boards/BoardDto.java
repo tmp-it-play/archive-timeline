@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDto {
-    private int id;
+    private Long id;
     private String title;
     private String content;
     private String writer;
