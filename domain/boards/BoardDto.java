@@ -2,12 +2,12 @@ package com.example.riotdo.REST_Board.domain.boards;
 
 import com.example.riotdo.REST_Board.Entity.Board;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class BoardDto {
     private Long id;
     private String title;
