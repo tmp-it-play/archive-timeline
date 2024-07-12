@@ -3,9 +3,9 @@ spring:
     name: REST_Board
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:10005/board
-    username: ${DATASOURCE-USERNAME}
-    password: ${DATASOURCE-PASSWORD}
+    url: ${DB-URL}
+    username: ${DB-USERNAME}
+    password: ${DB-PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
