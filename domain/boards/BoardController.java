@@ -24,7 +24,7 @@ public class BoardController {
 
     @Operation(summary = "전체 게시글 조회", description = "전체 게시글을 조회한다")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("")
+    @GetMapping
     public Response getBoards() {
         return new Response("성공", "전체 게시물 반환", boardService.getBoards());
     }
@@ -38,7 +38,7 @@ public class BoardController {
 
     @Operation(summary = "게시글 작성", description = "게시글을 작성한다")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping() // POST /boards?userId=1
+    @PostMapping // POST /boards?userId=1
     public Response write(@RequestBody BoardDto boardDto, @RequestParam("userId") int userId) {
         User user = userService.findUser(userId);
         return new Response("성공", "글 작성 성공", boardService.write(boardDto, user));
