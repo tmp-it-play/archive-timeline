@@ -1,13 +1,26 @@
-from flask import Flask, send_from_directory
-import os
-app = Flask(__name__)
+from flask import Flask, render_template, send_from_directory, jsonify, request
+from test import gpt
 
-@app.route('/',methods=['GET'])
-def welcome():
-    return send_from_directory(app.static_folder,'index.html')
-@app.route('/ai',methods=['GET'])
-def hello_world():
-    return 'Hello World!'
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
+
+@app.route('/')
+def serve():
+    return render_template('index.html')
+
+
+@app.route('/<path:path>')
+def static_proxy(path):
+    return send_from_directory(app.static_folder, path)
+
+
+@app.route('/ai', methods=['POST'])
+def ai():
+    data = request.get_json()
+    result = gpt(data)
+    return jsonify(result)
+
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+
