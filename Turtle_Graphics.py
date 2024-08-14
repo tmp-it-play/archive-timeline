@@ -1,18 +1,15 @@
 import turtle
-import random
 
-colors = ['red', 'blue', 'green', 'purple', 'yellow', 'orange', 'white', 'pink', 'brown', 'cyan']
-# n1= random.randint(50, 100)
 t = turtle.Turtle()
-turtle.bgcolor("black")
-t.speed(0)
-t.width(3)
-length = 10
-while length < 500:
-    t.forward(length)
-    t.pencolor(colors[length % 10])
-    t.right(86)
-    length += 9
+t.shape("turtle")
+t.speed(50)
+radius = 100
+colors = ["red", "blue", "green", "yellow", "purple", "orange", "black", "white", "pink", "brown"]
+for i in range(10):
+    t.color(colors[i])
+    t.circle(radius)
+    t.fd(30)
 turtle.mainloop()
 turtle.bye()
-
+bool = True
+print(type(bool))
