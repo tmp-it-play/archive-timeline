@@ -1,0 +1,7 @@
+print("hello")
+print(2 ** 8)
+print("hi" * 3)
+print("a" + "b" + "c")
+print(1 + 2 + 3)
+print("100" + 200)
+print(100 + 200)
