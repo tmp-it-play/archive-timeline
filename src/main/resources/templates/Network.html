@@ -1,0 +1,1462 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>Network</title>
+    <style>
+        /* cspell:disable-file */
+        /* webkit printing magic: print all background colors */
+        html {
+            -webkit-print-color-adjust: exact;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media only screen {
+            body {
+                margin: 2em auto;
+                max-width: 900px;
+                color: rgb(55, 53, 47);
+            }
+        }
+
+        body {
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        a,
+        a.visited {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        .pdf-relative-link-path {
+            font-size: 80%;
+            color: #444;
+        }
+
+        h1,
+        h2,
+        h3 {
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 0.75em;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            margin-top: 1.875rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        .source {
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 1.5em;
+            word-break: break-all;
+        }
+
+        .callout {
+            border-radius: 3px;
+            padding: 1rem;
+        }
+
+        figure {
+            margin: 1.25em 0;
+            page-break-inside: avoid;
+        }
+
+        figcaption {
+            opacity: 0.5;
+            font-size: 85%;
+            margin-top: 0.5em;
+        }
+
+        mark {
+            background-color: transparent;
+        }
+
+        .indented {
+            padding-left: 1.5em;
+        }
+
+        hr {
+            background: transparent;
+            display: block;
+            width: 100%;
+            height: 1px;
+            visibility: visible;
+            border: none;
+            border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        @media only print {
+            img {
+                max-height: 100vh;
+                object-fit: contain;
+            }
+        }
+
+        @page {
+            margin: 1in;
+        }
+
+        .collection-content {
+            font-size: 0.875rem;
+        }
+
+        .column-list {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            padding: 0 1em;
+        }
+
+        .column:first-child {
+            padding-left: 0;
+        }
+
+        .column:last-child {
+            padding-right: 0;
+        }
+
+        .table_of_contents-item {
+            display: block;
+            font-size: 0.875rem;
+            line-height: 1.3;
+            padding: 0.125rem;
+        }
+
+        .table_of_contents-indent-1 {
+            margin-left: 1.5rem;
+        }
+
+        .table_of_contents-indent-2 {
+            margin-left: 3rem;
+        }
+
+        .table_of_contents-indent-3 {
+            margin-left: 4.5rem;
+        }
+
+        .table_of_contents-link {
+            text-decoration: none;
+            opacity: 0.7;
+            border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid rgba(55, 53, 47, 0.09);
+            border-collapse: collapse;
+        }
+
+        table {
+            border-left: none;
+            border-right: none;
+        }
+
+        th,
+        td {
+            font-weight: normal;
+            padding: 0.25em 0.5em;
+            line-height: 1.5;
+            min-height: 1.5em;
+            text-align: left;
+        }
+
+        th {
+            color: rgba(55, 53, 47, 0.6);
+        }
+
+        ol,
+        ul {
+            margin: 0;
+            margin-block-start: 0.6em;
+            margin-block-end: 0.6em;
+        }
+
+        li > ol:first-child,
+        li > ul:first-child {
+            margin-block-start: 0.6em;
+        }
+
+        ul > li {
+            list-style: disc;
+        }
+
+        ul.to-do-list {
+            padding-inline-start: 0;
+        }
+
+        ul.to-do-list > li {
+            list-style: none;
+        }
+
+        .to-do-children-checked {
+            text-decoration: line-through;
+            opacity: 0.375;
+        }
+
+        ul.toggle > li {
+            list-style: none;
+        }
+
+        ul {
+            padding-inline-start: 1.7em;
+        }
+
+        ul > li {
+            padding-left: 0.1em;
+        }
+
+        ol {
+            padding-inline-start: 1.6em;
+        }
+
+        ol > li {
+            padding-left: 0.2em;
+        }
+
+        .mono ol {
+            padding-inline-start: 2em;
+        }
+
+        .mono ol > li {
+            text-indent: -0.4em;
+        }
+
+        .toggle {
+            padding-inline-start: 0em;
+            list-style-type: none;
+        }
+
+        /* Indent toggle children */
+        .toggle > li > details {
+            padding-left: 1.7em;
+        }
+
+        .toggle > li > details > summary {
+            margin-left: -1.1em;
+        }
+
+        .selected-value {
+            display: inline-block;
+            padding: 0 0.5em;
+            background: rgba(206, 205, 202, 0.5);
+            border-radius: 3px;
+            margin-right: 0.5em;
+            margin-top: 0.3em;
+            margin-bottom: 0.3em;
+            white-space: nowrap;
+        }
+
+        .collection-title {
+            display: inline-block;
+            margin-right: 1em;
+        }
+
+        .page-description {
+            margin-bottom: 2em;
+        }
+
+        .simple-table {
+            margin-top: 1em;
+            font-size: 0.875rem;
+            empty-cells: show;
+        }
+
+        .simple-table td {
+            height: 29px;
+            min-width: 120px;
+        }
+
+        .simple-table th {
+            height: 29px;
+            min-width: 120px;
+        }
+
+        .simple-table-header-color {
+            background: rgb(247, 246, 243);
+            color: black;
+        }
+
+        .simple-table-header {
+            font-weight: 500;
+        }
+
+        time {
+            opacity: 0.5;
+        }
+
+        .icon {
+            display: inline-block;
+            max-width: 1.2em;
+            max-height: 1.2em;
+            text-decoration: none;
+            vertical-align: text-bottom;
+            margin-right: 0.5em;
+        }
+
+        img.icon {
+            border-radius: 3px;
+        }
+
+        .user-icon {
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 100%;
+            margin-right: 0.5rem;
+        }
+
+        .user-icon-inner {
+            font-size: 0.8em;
+        }
+
+        .text-icon {
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        .page-cover-image {
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            max-height: 30vh;
+        }
+
+        .page-header-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-header-icon-with-cover {
+            margin-top: -0.72em;
+            margin-left: 0.07em;
+        }
+
+        .page-header-icon img {
+            border-radius: 3px;
+        }
+
+        .link-to-page {
+            margin: 1em 0;
+            padding: 0;
+            border: none;
+            font-weight: 500;
+        }
+
+        p > .user {
+            opacity: 0.5;
+        }
+
+        td > .user,
+        td > time {
+            white-space: nowrap;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            margin-right: 0.6em;
+            vertical-align: middle;
+        }
+
+        p {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .image {
+            border: none;
+            margin: 1.5em 0;
+            padding: 0;
+            border-radius: 0;
+            text-align: center;
+        }
+
+        .code,
+        code {
+            background: rgba(135, 131, 120, 0.15);
+            border-radius: 3px;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 85%;
+            tab-size: 2;
+        }
+
+        code {
+            color: #eb5757;
+        }
+
+        .code {
+            padding: 1.5em 1em;
+        }
+
+        .code-wrap {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code > code {
+            background: none;
+            padding: 0;
+            font-size: 100%;
+            color: inherit;
+        }
+
+        blockquote {
+            font-size: 1.25em;
+            margin: 1em 0;
+            padding-left: 1em;
+            border-left: 3px solid rgb(55, 53, 47);
+        }
+
+        .bookmark {
+            text-decoration: none;
+            max-height: 8em;
+            padding: 0;
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .bookmark-title {
+            font-size: 0.85em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 1.75em;
+            white-space: nowrap;
+        }
+
+        .bookmark-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bookmark-info {
+            flex: 4 1 180px;
+            padding: 12px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bookmark-image {
+            width: 33%;
+            flex: 1 1 180px;
+            display: block;
+            position: relative;
+            object-fit: cover;
+            border-radius: 1px;
+        }
+
+        .bookmark-description {
+            color: rgba(55, 53, 47, 0.6);
+            font-size: 0.75em;
+            overflow: hidden;
+            max-height: 4.5em;
+            word-break: break-word;
+        }
+
+        .bookmark-href {
+            font-size: 0.75em;
+            margin-top: 0.25em;
+        }
+
+        .sans {
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        .code {
+            font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace;
+        }
+
+        .serif {
+            font-family: Lyon-Text, Georgia, ui-serif, serif;
+        }
+
+        .mono {
+            font-family: iawriter-mono, Nitti, Menlo, Courier, monospace;
+        }
+
+        .pdf .sans {
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP';
+        }
+
+        .pdf:lang(zh-CN) .sans {
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC';
+        }
+
+        .pdf:lang(zh-TW) .sans {
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC';
+        }
+
+        .pdf:lang(ko-KR) .sans {
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR';
+        }
+
+        .pdf .code {
+            font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+        }
+
+        .pdf:lang(zh-CN) .code {
+            font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+        }
+
+        .pdf:lang(zh-TW) .code {
+            font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+        }
+
+        .pdf:lang(ko-KR) .code {
+            font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+        }
+
+        .pdf .serif {
+            font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP';
+        }
+
+        .pdf:lang(zh-CN) .serif {
+            font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC';
+        }
+
+        .pdf:lang(zh-TW) .serif {
+            font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC';
+        }
+
+        .pdf:lang(ko-KR) .serif {
+            font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR';
+        }
+
+        .pdf .mono {
+            font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP';
+        }
+
+        .pdf:lang(zh-CN) .mono {
+            font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC';
+        }
+
+        .pdf:lang(zh-TW) .mono {
+            font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC';
+        }
+
+        .pdf:lang(ko-KR) .mono {
+            font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR';
+        }
+
+        .highlight-default {
+            color: rgba(55, 53, 47, 1);
+        }
+
+        .highlight-gray {
+            color: rgba(120, 119, 116, 1);
+            fill: rgba(120, 119, 116, 1);
+        }
+
+        .highlight-brown {
+            color: rgba(159, 107, 83, 1);
+            fill: rgba(159, 107, 83, 1);
+        }
+
+        .highlight-orange {
+            color: rgba(217, 115, 13, 1);
+            fill: rgba(217, 115, 13, 1);
+        }
+
+        .highlight-yellow {
+            color: rgba(203, 145, 47, 1);
+            fill: rgba(203, 145, 47, 1);
+        }
+
+        .highlight-teal {
+            color: rgba(68, 131, 97, 1);
+            fill: rgba(68, 131, 97, 1);
+        }
+
+        .highlight-blue {
+            color: rgba(51, 126, 169, 1);
+            fill: rgba(51, 126, 169, 1);
+        }
+
+        .highlight-purple {
+            color: rgba(144, 101, 176, 1);
+            fill: rgba(144, 101, 176, 1);
+        }
+
+        .highlight-pink {
+            color: rgba(193, 76, 138, 1);
+            fill: rgba(193, 76, 138, 1);
+        }
+
+        .highlight-red {
+            color: rgba(212, 76, 71, 1);
+            fill: rgba(212, 76, 71, 1);
+        }
+
+        .highlight-default_background {
+            color: rgba(55, 53, 47, 1);
+        }
+
+        .highlight-gray_background {
+            background: rgba(241, 241, 239, 1);
+        }
+
+        .highlight-brown_background {
+            background: rgba(244, 238, 238, 1);
+        }
+
+        .highlight-orange_background {
+            background: rgba(251, 236, 221, 1);
+        }
+
+        .highlight-yellow_background {
+            background: rgba(251, 237, 214, 1);
+        }
+
+        .highlight-teal_background {
+            background: rgba(237, 243, 236, 1);
+        }
+
+        .highlight-blue_background {
+            background: rgba(231, 243, 248, 1);
+        }
+
+        .highlight-purple_background {
+            background: rgba(244, 240, 247, 0.8);
+        }
+
+        .highlight-pink_background {
+            background: rgba(249, 238, 243, 0.8);
+        }
+
+        .highlight-red_background {
+            background: rgba(253, 235, 236, 1);
+        }
+
+        .block-color-default {
+            color: inherit;
+            fill: inherit;
+        }
+
+        .block-color-gray {
+            color: rgba(120, 119, 116, 1);
+            fill: rgba(120, 119, 116, 1);
+        }
+
+        .block-color-brown {
+            color: rgba(159, 107, 83, 1);
+            fill: rgba(159, 107, 83, 1);
+        }
+
+        .block-color-orange {
+            color: rgba(217, 115, 13, 1);
+            fill: rgba(217, 115, 13, 1);
+        }
+
+        .block-color-yellow {
+            color: rgba(203, 145, 47, 1);
+            fill: rgba(203, 145, 47, 1);
+        }
+
+        .block-color-teal {
+            color: rgba(68, 131, 97, 1);
+            fill: rgba(68, 131, 97, 1);
+        }
+
+        .block-color-blue {
+            color: rgba(51, 126, 169, 1);
+            fill: rgba(51, 126, 169, 1);
+        }
+
+        .block-color-purple {
+            color: rgba(144, 101, 176, 1);
+            fill: rgba(144, 101, 176, 1);
+        }
+
+        .block-color-pink {
+            color: rgba(193, 76, 138, 1);
+            fill: rgba(193, 76, 138, 1);
+        }
+
+        .block-color-red {
+            color: rgba(212, 76, 71, 1);
+            fill: rgba(212, 76, 71, 1);
+        }
+
+        .block-color-default_background {
+            color: inherit;
+            fill: inherit;
+        }
+
+        .block-color-gray_background {
+            background: rgba(241, 241, 239, 1);
+        }
+
+        .block-color-brown_background {
+            background: rgba(244, 238, 238, 1);
+        }
+
+        .block-color-orange_background {
+            background: rgba(251, 236, 221, 1);
+        }
+
+        .block-color-yellow_background {
+            background: rgba(251, 237, 214, 1);
+        }
+
+        .block-color-teal_background {
+            background: rgba(237, 243, 236, 1);
+        }
+
+        .block-color-blue_background {
+            background: rgba(231, 243, 248, 1);
+        }
+
+        .block-color-purple_background {
+            background: rgba(244, 240, 247, 0.8);
+        }
+
+        .block-color-pink_background {
+            background: rgba(249, 238, 243, 0.8);
+        }
+
+        .block-color-red_background {
+            background: rgba(253, 235, 236, 1);
+        }
+
+        .select-value-color-uiBlue {
+            background-color: rgba(35, 131, 226, .07);
+        }
+
+        .select-value-color-pink {
+            background-color: rgba(245, 224, 233, 1);
+        }
+
+        .select-value-color-purple {
+            background-color: rgba(232, 222, 238, 1);
+        }
+
+        .select-value-color-green {
+            background-color: rgba(219, 237, 219, 1);
+        }
+
+        .select-value-color-gray {
+            background-color: rgba(227, 226, 224, 1);
+        }
+
+        .select-value-color-transparentGray {
+            background-color: rgba(227, 226, 224, 0);
+        }
+
+        .select-value-color-translucentGray {
+            background-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .select-value-color-orange {
+            background-color: rgba(250, 222, 201, 1);
+        }
+
+        .select-value-color-brown {
+            background-color: rgba(238, 224, 218, 1);
+        }
+
+        .select-value-color-red {
+            background-color: rgba(255, 226, 221, 1);
+        }
+
+        .select-value-color-yellow {
+            background-color: rgba(249, 228, 188, 1);
+        }
+
+        .select-value-color-blue {
+            background-color: rgba(211, 229, 239, 1);
+        }
+
+        .select-value-color-pageGlass {
+            background-color: undefined;
+        }
+
+        .select-value-color-washGlass {
+            background-color: undefined;
+        }
+
+        .checkbox {
+            display: inline-flex;
+            vertical-align: text-bottom;
+            width: 16;
+            height: 16;
+            background-size: 16px;
+            margin-left: 2px;
+            margin-right: 5px;
+        }
+
+        .checkbox-on {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+        }
+
+        .checkbox-off {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+        }
+
+    </style>
+</head>
+<body>
+<article class="page sans" id="f88f2789-51a2-4dd0-9e88-6101b1a1c701">
+    <header>
+        <div class="page-header-icon undefined"><span class="icon">🌍</span></div>
+        <h1 class="page-title">Network</h1>
+        <p class="page-description"></p></header>
+    <div class="page-body">
+        <div class="column-list" id="d00b7a60-6a05-4b3c-acc4-31dbe4bcffa1">
+            <div class="column" id="b59e1cbe-9d33-4961-b43c-91b6e0d0c8ef" style="width:50%">
+                <h3 class="" id="9b4c6b3e-40a9-4f88-982e-a2c0240a1e2e">
+                    <mark class="highlight-red">(유료)</mark>
+                    Inflearn ⌈모든 개발자를 위한 HTTP 웹 기본 지식⌋ 강의
+                </h3>
+                <figure id="88b761dd-68d0-4263-a61f-21ed887120c0"><a class="bookmark source"
+                                                                     href="https://www.inflearn.com/course/http-웹-네트워크">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">모든 개발자를 위한 HTTP 웹 기본 지식 강의 | 김영한 - 인프런</div>
+                            <div class="bookmark-description">김영한 | 실무에 꼭 필요한 HTTP 핵심 기능과 올바른 HTTP API 설계 방법을 학습합니다.,
+                                [사진] 📣 확인해주세요!본 강의는 자바 스프링 완전 정복 시리즈의 세 번째 강의입니다. 우아한형제들 최연소 기술이사 김영한의 스프링 완전 정복 로드맵을 먼저
+                                확인해주세요
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://www.inflearn.com/favicon.ico"/>https://www.inflearn.com/course/http-웹-네트워크
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://cdn.inflearn.com/public/courses/326277/cover/52d4f143-b470-4109-96cb-a0b146fb42ed/http.png"/></a></figure>
+            </div>
+            <div class="column" id="99514b75-ce3f-474a-8d64-d7c9808cdddd" style="width:50%"><p
+                    class="" id="4b2ea48d-7cb2-41f2-8331-b2ad2fd3ba10"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="d5fd0854-714c-480d-bd94-ca2a9af7c44a">
+                    <li style="list-style-type:disc">IP(Internet Protocol) 란 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="414c94b0-d3d6-4d60-9c4a-b7910f1f2179">
+                    <li style="list-style-type:disc">TCP와 UDP의 차이점과 각각의 정의는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="85800590-4434-4f4f-a85e-95938584f52e">
+                    <li style="list-style-type:disc">HTTP는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="0a8ddb49-9d2a-485c-8dd5-5ba6f60ee7cf">
+                    <li style="list-style-type:disc">웹(Web)의 통신은 어떻게 이루어 지는가?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column-list" id="99918338-a3b8-4244-b19e-8f9ccac4e0e9">
+            <div class="column" id="3035298c-8441-4d51-a948-17a2d08eac49" style="width:50%"><h3
+                    class="" id="d1004f66-acd3-41f5-bf61-88d548a8ca99">IP</h3>
+                <figure id="1ce8236f-3183-4b5b-84ee-ae4cd4b99b9e"><a class="bookmark source"
+                                                                     href="https://dreamcoding.tistory.com/33">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">IP(인터넷 프로토콜)이란?</div>
+                            <div class="bookmark-description">인터넷 프로토콜(IP, Internet Protocol)은 송신 호스트와 수신 호스트가 패킷 교환
+                                네트워크에서 정보를 주고받는 데 사용하는 정보의 규약(프로토콜[약속과 같은 것])이며, OSI 네트워크 계층에서 호스트의 주소지정과 패킷 분할 및 조립 기능을
+                                담당합니다. 예시를 들어서 설명해보겠습니다. 한국에 사는 홍길동이 미국에 사는 Merry에게 우편을 보낸다고 가정해보겠습니다. 보통 편지에는 보내는 사람의
+                                이름,주소과 받는사람의 이름,주소 정도의 출발지에대한 정보와 목적지에 대한 정보가 담겨있고 편지안에는 편지에 대한 내용물에 대한 내용물이 있을 수 있습니다.
+                                인터넷 프로토콜의 관점에서 보면 보내는사람의 주소는 출발지의 IP, 받는사람의 주소는 목적지의 IP, 그리고 편지안의 내용은 전송하고자하는 전..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://dreamcoding.tistory.com/33
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FP8NXc%2FbtranazuO16%2FBBe0KX35uTS3i8QZqsQvgk%2Fimg.png"/></a></figure>
+                <figure id="7d17df8a-eb19-481e-84b6-ba05b870ca65"><a class="bookmark source"
+                                                                     href="https://velog.io/@cjy0029/IP인터넷-프로토콜이란">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">IP(인터넷 프로토콜)이란</div>
+                            <div class="bookmark-description">IP그림과 같이 서로 멀리 떨어진 클라이언트와 서버는 통신을 Hello World! 라는 메시지를 주고
+                                받고 싶다. 중간에 수많은 노드중에서 어떤 것이 적절한 서버인지 알 수 있을까?
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://static.velog.io/favicons/apple-icon-152x152.png"/>https://velog.io/@cjy0029/IP인터넷-프로토콜이란
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://velog.velcdn.com/images/cjy0029/post/64f5a53e-27e5-4e67-9599-8181a112b679/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202022-01-05%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%201.38.31.png"/></a></figure>
+                <figure id="d7e169cf-1c59-4046-99f7-994f1c858615"><a class="bookmark source"
+                                                                     href="https://nordvpn.com/ko/blog/ipv6-ipv4/">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">IPv4와 IPv6의 차이점은 무엇입니까? | NordVPN</div>
+                            <div class="bookmark-description">IPv6는 IPv4의 한계를 극복하기 위해, 더 많은 IP 주소를 제공하기 위해 개발되었습니다. 이
+                                글에서 IPv4 IPv6 차이에 관하여 알아보고, 둘 중에 어떤 프로토콜을 사용하는 것이 좋을지 비교 평가해보세요.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://s1.nordcdn.com/nordvpn/media/1.2079.0/images/global/favicon/favicon-196x196.png"/>https://nordvpn.com/ko/blog/ipv6-ipv4/
+                        </div>
+                    </div>
+                </a></figure>
+            </div>
+            <div class="column" id="252ddf4b-e174-40c3-8ade-61dc36fa1f24" style="width:50%"><p
+                    class="" id="4e37f45c-2659-4d67-819a-2980b511ee5c"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="b81650ed-cbf0-4ad1-a6cf-92f67cd6751e">
+                    <li style="list-style-type:disc">IP(Internet Protocol) 란 무엇인가?(정리 끝)</li>
+                </ul>
+                <ul class="bulleted-list" id="b649d748-ab42-4ee0-be6e-eb2ec3b489ef">
+                    <li style="list-style-type:disc">IPv4와 IPv6의 차이점은 무엇인가?(정리 끝)</li>
+                </ul>
+                <p class="" id="09e95eeb-55f1-4413-a6ea-3c61b9627422"><a
+                        href="https://www.notion.so/IP-97006bc3385e4fdd9bfc5c9445f4607a?pvs=21">IP(인터넷 프로토콜)이란?</a></p>
+            </div>
+        </div>
+        <div class="column-list" id="fff8f98f-3310-80a7-898f-ee4a3b01bb9a">
+            <div class="column" id="5e5872a5-a0a9-445c-ba35-036e2882ca52" style="width:50%"><h3
+                    class="" id="34f429eb-2afe-4b1a-b6c6-6bfa17b5b6b3">PORT</h3>
+                <figure id="e6ceec11-a536-4ae2-935d-32a7e968a01a"><a class="bookmark source"
+                                                                     href="https://ittrue.tistory.com/185">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">[Network] 포트(Port) 개념 정리 및 종류</div>
+                            <div class="bookmark-description">포트(Port) 포트는 “논리적인 접속장소”를 뜻하며, 인터넷 프로토콜인 TCP/IP를 사용할 때
+                                클라이언트 프로그램이 네트워크 상의 특정 서버 프로그램을 지정하는 방법으로 사용한다. 네트워크 상에서 통신을 할 때 IP 주소를 바탕으로 해당 서버가 있는
+                                컴퓨터에 접근하게 된다. 하나의 IP에서 여러 애플리케이션을 실행할 경우, 컴퓨터에는 여러 개의 서버가 실행하게 된다. 이때 포트번호를 통해 대상 IP 기기의
+                                특정 애플리케이션의 서버에 접속할 수 있도록 알려주어야 한다. 위 그림은 한 서버 인스턴스에서 웹 서버와 메일 서버 두 개를 동시에 실행 중인 상황을 뜻한다.
+                                이 경우 IP 주소만으로는 어느 서버로 요청을 보내는지 알 수 없다. 따라서 포트 번호를 통해 receiver를 특정하여 어느 서버로 보내는..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://ittrue.tistory.com/185
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbla9yS%2FbtrNvyQx2a0%2FeNDujyu5BYTD1ICp5rQAT0%2Fimg.png"/></a></figure>
+                <figure id="a0fe1b63-56cb-47db-ae5a-4a81e4ad8c23"><a class="bookmark source"
+                                                                     href="https://sangbeomkim.tistory.com/101">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">포트(PORT)란?</div>
+                            <div class="bookmark-description">1. PORT(포트), 넌 누구니? 먼저, 위키 백과에 나온 정의를 한 번 볼까요? 포트는 운영 체제
+                                통신의 종단점이다. 이 용어는 하드웨어 장치에도 사용되지만, 소프트웨어에서는 네트워크 서비스나 특정 프로세스를 식별하는 논리 단위이다. 사용법 : URI
+                                문법에 의해서 사용 및 표기할 수 있으며, IP 주소와 함께 표기하는 예는 다음과 같다. ftp://000.000.000.000:21 여기서
+                                000.000.000.000은 IP 주소를 나타내며 : 다음의 21이 포트 번호를 의미한다. 정의라 그런지, 말이 좀 딱딱하죠? 아래에서 풀어서 이야기를
+                                해보아요^^ 2. PORT(포트), 언제 사용될까? 포트(port)는 보통 항구나 공항(airport)을 나타냅니다. 이러한 항구와 공항은 외부세계와 접속할
+                                수 ..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://sangbeomkim.tistory.com/101
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbfmsv3%2FbtrgbKgxnT7%2FoWiuKcaVtjUuSQIvxyNm21%2Fimg.png"/></a></figure>
+            </div>
+            <div class="column" id="659dbf9c-4e49-46ca-b319-123c972e336c" style="width:50%"><p
+                    class="" id="d1931dd6-94bd-43c5-b3cc-e6a534909aa5"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="cdce17cc-6b98-4a00-b8df-60268ff74094">
+                    <li style="list-style-type:disc">포트(Port)는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="d8ee302e-0d58-4373-8009-b5d2b7484f64">
+                    <li style="list-style-type:disc">이미 할당된 포트에는 어떤 것들이 있는가?</li>
+                </ul>
+                <ul class="bulleted-list" id="f701e12a-7fa6-44ef-9e35-593a5513f2ac">
+                    <li style="list-style-type:disc">IP 주소(IP Adress)와 포트의 연관관계는 어떠한가?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column-list" id="2c781494-b316-4d40-bf3b-a700fd0d95f0">
+            <div class="column" id="1e52879c-7210-4420-977c-68af2fe71b59" style="width:50%"><h3
+                    class="" id="0704dd84-973a-4270-8843-6e223be486bb">TCP/UDP</h3>
+                <figure id="00648b86-7932-485c-b809-20a73ecab7cf"><a
+                        class="bookmark source" href="https://docs.tosspayments.com/resources/glossary/tcp">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">TCP(Transmission Control Protocol) | 토스페이먼츠 개발자센터</div>
+                            <div class="bookmark-description">TCP(Transmission Control Protocol)는 애플리케이션 사이에서 안전하게 데이터를
+                                통신하는 규약이에요.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://static.toss.im/tds/favicon/favicon-196x196.png"/>https://docs.tosspayments.com/resources/glossary/tcp
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://docs.tosspayments.com/api/open-graph/image?pathname=/resources/glossary/tcp"/></a></figure>
+                <figure id="4b7c8035-3417-4445-b6f1-7813a1cf17b2"><a
+                        class="bookmark source"
+                        href="https://www.cloudflare.com/ko-kr/learning/ddos/glossary/user-datagram-protocol-udp/">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">사용자 데이터그램 프로토콜(UDP)이란? | Cloudflare</div>
+                            <div class="bookmark-description">사용자 데이터그램 프로토콜(UDP)은 네트워크를 통해 패킷을 전송하기 위한 무연결 통신 프로토콜입니다.
+                                UDP/IP에 대해 자세히 알아보세요.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://www.cloudflare.com/favicon.ico"/>https://www.cloudflare.com/ko-kr/learning/ddos/glossary/user-datagram-protocol-udp/
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://cf-assets.www.cloudflare.com/slt3lc6tev37/dyoDxOK6E2FMohWlBz5yG/ddfed013002607cae294417c23bcdf74/ddos-lc.png"/></a></figure>
+            </div>
+            <div class="column" id="13349f9b-955f-4ef2-a5b6-989f2a99763c" style="width:50%"><p
+                    class="" id="236c31bf-3a97-4320-afe3-772fe0b33820"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="734f9d38-a1e8-40f4-b251-65feb053ced2">
+                    <li style="list-style-type:disc">TCP(Transmission Control Protocol)는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="a3761d2a-84ad-45db-926e-4b22565f73b1">
+                    <li style="list-style-type:disc">UDP(User Datagram Protocol)는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="c47b7f83-1d6f-4e06-9f3a-21be3a6e4930">
+                    <li style="list-style-type:disc">TCP와 UDP의 차이점은 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="5171c052-4bcd-4e24-8b5b-22923a41206f">
+                    <li style="list-style-type:disc">TCP와 UDP는 가각 어떠한 곳에 사용되는가?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column-list" id="8c60873b-ac43-4d47-9354-8c9586ef234c">
+            <div class="column" id="e11500df-7ebd-4ef0-b43c-c690efaa877d" style="width:50%"><h3
+                    class="" id="e4dec449-514e-4908-b531-5a048eb6ae1d">HTTP</h3>
+                <figure id="1058b0a0-ee4c-4cbc-aed1-c4cda043f131"><a
+                        class="bookmark source" href="https://docs.tosspayments.com/resources/glossary/http-protocol">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">HTTP 프로토콜 | 토스페이먼츠 개발자센터</div>
+                            <div class="bookmark-description">HTTP(Hypertext Transfer Protocol)는 웹에서 데이터를 주고받는 서버-클라이언트
+                                모델의 프로토콜입니다. 쉽게 설명하자면 웹 브라우저가 서버와 통신하는 규칙이에요.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://static.toss.im/tds/favicon/favicon-196x196.png"/>https://docs.tosspayments.com/resources/glossary/http-protocol
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://docs.tosspayments.com/api/open-graph/image?pathname=/resources/glossary/http-protocol"/></a></figure>
+                <figure id="03b08824-f8ce-47d2-8759-f700117b19be"><a class="bookmark source"
+                                                                     href="https://velog.io/@dnjscksdn98/HTTP-프로토콜에-대하여">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">[Network] HTTP 프로토콜에 대하여</div>
+                            <div class="bookmark-description">HTTP 프로토콜 HTTP(Hypertext Transfer Protocol)는 인터넷상에서 데이터를
+                                주고 받기 위한 서버/클라이언트 모델을 따르는 프로토콜 이다. 애플리케이션 레벨의 프로토콜로 TCP/IP위에서 작동한다.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://static.velog.io/favicons/apple-icon-152x152.png"/>https://velog.io/@dnjscksdn98/HTTP-프로토콜에-대하여
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://velog.velcdn.com/images/dnjscksdn98/post/6afcdea9-0fb4-40ad-a27c-35ab1179c89f/http_logo.jpg"/></a></figure>
+                <figure id="3595ae8b-aa0d-4e04-8578-6519ba03f312"><a class="bookmark source"
+                                                                     href="https://shlee0882.tistory.com/107">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">HTTP 프로토콜이란?</div>
+                            <div class="bookmark-description">1. HTTP 프로토콜이란? HTTP(Hypertext Transfer Protocol)는 인터넷상에서
+                                데이터를 주고 받기 위한 서버/클라이언트 모델을 따르는 프로토콜이다. 애플리케이션 레벨의 프로토콜로 TCP/IP위에서 작동한다. HTTP는 어떤 종류의
+                                데이터든지 전송할 수 있도록 설계돼 있다. HTTP로 보낼 수 있는 데이터는 HTML문서, 이미지, 동영상, 오디오, 텍스트 문서 등 여러종류가 있다.
+                                하이퍼텍스트 기반으로(Hypertext) 데이터를 전송하겠다(Transfer) = 링크기반으로 데이터에 접속하겠다는 의미이다. 1.1 작동방식 HTTP는
+                                서버/클라이언트 모델을 따른다. 클라이언트에서 요청(request)를 보내면 서버는 요청을 처리해서 응답(response)한다. 클라이언트 : 서버에 ..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://shlee0882.tistory.com/107
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99E63F4B5B6FCA4A01"/></a></figure>
+            </div>
+            <div class="column" id="ba4ed165-0dab-4b44-b7e4-8d7288b7a808" style="width:50%"><p
+                    class="" id="0cdaa791-de22-454c-8386-fbc276d26cc2"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="0a02c609-5a65-4fca-9d02-638d6dc5ad16">
+                    <li style="list-style-type:disc">HTTP(Hypertext Transfer Protocol)는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="9b416e76-6225-45ab-bb6a-3e5d6b1a06a5">
+                    <li style="list-style-type:disc">HTTP요청과 응답은 어떻게 이루어져 있는가?</li>
+                </ul>
+                <ul class="bulleted-list" id="17ef0e47-3332-4628-9cdd-cac7be80f37d">
+                    <li style="list-style-type:disc">HTTP와 HTTPS의 차이점은 무엇인가?</li>
+                </ul>
+                <p class="" id="3d304e11-9165-4347-b3e4-969588e24a50">
+                </p></div>
+        </div>
+        <div class="column-list" id="380cbd97-8ac6-4e87-a6f7-17e0f6678c33">
+            <div class="column" id="bbfa156e-195b-4697-a357-333c0df6faaf" style="width:50%"><h3
+                    class="" id="36817841-db19-4921-959a-90719e702586">HTTP 메서드(Method)</h3>
+                <figure id="6bf95d62-90d4-4a06-bd47-7126403febc9"><a class="bookmark source"
+                                                                     href="https://youwjune.tistory.com/42">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">[WEB] HTTP Method란?</div>
+                            <div class="bookmark-description">HTTP Method에 대해 HTTP Method란? 클라이언트 - 서버 구조에서 요청(request)와
+                                응답(response)가 이루어지는 방식을 의미합니다. 서버가 수행해야 할 동작을 지정하여 요청(request)을 보내는 방법이라고 정리할 수 있겠네요.
+                                HTTP 메서드는 왜 사용할까요? 결국 리소스와 동작를 분리하기 위함입니다. HTTP METHOD를 통해 서버가 수행해야 할 동작을 지정하면, URI는
+                                리소스만 식별하면 되기 때문이죠. HTTP Method의 종류 HTTP Method는 크게 8가지가 있으며, 다음과 같습니다. GET : 리소스를 조회
+                                POST : 데이터 추가, 등록 PUT : 리소스 대체, 수정 / 해당 리소스가 없으면 새롭게 생성 DELETE : 리소스 삭제 PATCH : 리소스..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://youwjune.tistory.com/42
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fy1T84%2Fbtr9Nnsxnzw%2Fuvo9yPBD4K5ATUO6UXabR0%2Fimg.png"/></a></figure>
+                <figure id="177696d3-7d53-4182-982a-f7cbec3cb1f7"><a
+                        class="bookmark source" href="https://inpa.tistory.com/entry/WEB-🌐-HTTP-메서드-종류-통신-과정-💯-총정리">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">🌐 HTTP 메서드 종류 &amp; 요청 흐름 💯 총정리</div>
+                            <div class="bookmark-description">HTTP Method 종류 HTTP 메서드란 클라이언트와 서버 사이에 이루어지는 요청(Request)과
+                                응답(Response) 데이터를 전송하는 방식을 일컫는다. 쉽게 말하면 서버에 주어진 리소스에 수행하길 원하는 행동, 서버가 수행해야 할 동작을 지정하는
+                                요청을 보내는 방법이다. HTTP 메소드의 종류는 총 9가지가 있다. 이 중 주로 쓰이는 메소드는 5가지로 보면 된다. 주요 메소드 GET : 리소스 조회
+                                POST: 요청 데이터 처리, 주로 등록에 사용 PUT : 리소스를 대체(덮어쓰기), 해당 리소스가 없으면 생성 PATCH : 리소스 부분 변경 (PUT이
+                                전체 변경, PATCH는 일부 변경) DELETE : 리소스 삭제 기타 메소드 HEAD : GET과 동일하지만 메시지 부분(body 부분)을 제..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://tistory2.daumcdn.net/tistory/4939852/5c9a55d8962c4e0fbe6292153897ff69"/>https://inpa.tistory.com/entry/WEB-🌐-HTTP-메서드-종류-통신-과정-💯-총정리
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Feqj0iX%2FbtrRTta3Q7A%2FKWpKZNi5iK1JWbD0hIkfak%2Fimg.webp"/></a></figure>
+            </div>
+            <div class="column" id="28d94b7c-607b-45e0-a35f-f3189d63ced4" style="width:50%"><p
+                    class="" id="f64b074a-f60e-44ec-9448-cea0bc62995f"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="424a1754-44f5-4b1a-bec2-b0ab29e8070d">
+                    <li style="list-style-type:disc">HTTP 메서드란 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="9e2522bf-4581-401f-ac8a-9f765995c8a2">
+                    <li style="list-style-type:disc">HTTP 메서드는 어떤 종류가 있는가?</li>
+                </ul>
+                <ul class="bulleted-list" id="04209be8-bea3-4748-a968-4b1c3b7668a8">
+                    <li style="list-style-type:disc">각 HTTP 메서드는 어떤 역할을 하는가?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column-list" id="690c46e8-dc05-4f28-baaf-292d5f9c1ccd">
+            <div class="column" id="a8614ac6-3a25-444a-b6d3-6af8a82778bc" style="width:50%"><h3
+                    class="" id="a2b1615c-55b6-4a2a-a303-ae0356418bb8">HTTP 상태코드</h3>
+                <figure id="5861d280-7621-4b8e-9741-6df8efab564d"><a
+                        class="bookmark source" href="https://developer.mozilla.org/ko/docs/Web/HTTP/Status">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">HTTP 상태 코드 - HTTP | MDN</div>
+                            <div class="bookmark-description">HTTP 응답 상태 코드는 특정 HTTP 요청이 성공적으로 완료되었는지 알려줍니다. 응답은 5개의
+                                그룹으로 나누어집니다: 정보를 제공하는 응답, 성공적인 응답, 리다이렉트, 클라이언트 에러, 그리고 서버 에러. 상태 코드는 section 10 of RFC
+                                2616에 정의되어 있습니다.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://developer.mozilla.org/favicon-48x48.cbbd161b.png"/>https://developer.mozilla.org/ko/docs/Web/HTTP/Status
+                        </div>
+                    </div>
+                    <img class="bookmark-image" src="https://developer.mozilla.org/mdn-social-share.cd6c4a5a.png"/></a>
+                </figure>
+                <figure id="302a256a-7eb2-4afe-a1c1-79cca7ad301c"><a
+                        class="bookmark source" href="https://hongong.hanbit.co.kr/http-상태-코드-표-1xx-5xx-전체-요약-정리/">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">[웹 프로그래밍] HTTP 상태 코드 표(100 ~ 500) 전체 요약 정리</div>
+                            <div class="bookmark-description">서버에서의 처리 결과는 응답 메시지의 상태 라인에 있는 상태 코드(status code)를 보고 파악할
+                                수 있습니다. 상태 코드는 세 자리 숫자로 되어 있는데 첫 번째 숫자는 HTTP 응답의 종류를 구분하는 데 사용하며 나머지 2개의 숫자는 ...
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://hongong.hanbit.co.kr/wp-content/uploads/2019/05/파비콘.ico"/>https://hongong.hanbit.co.kr/http-상태-코드-표-1xx-5xx-전체-요약-정리/
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://hongong.hanbit.co.kr/wp-content/uploads/2022/11/HTTP-상태-코드.png"/></a></figure>
+                <figure id="17a30969-5f73-4f29-8d99-6606623e0c62"><a
+                        class="bookmark source" href="https://inpa.tistory.com/entry/HTTP-🌐-상태-코드-1XX-5XX-총정리판-📖">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">🌐 HTTP 상태 코드(1XX ~ 5XX) 종류 총정리</div>
+                            <div class="bookmark-description">HTTP Status Code HTTP의 상태 코드는 클라이언트가 보낸 HTTP 요청이 성공했는지
+                                실패했는지를 서버에서 알려주는 숫자 코드다. 개발자 도구의 네트워크 탭을 보면 아래와 같이 Status 숫자 코드로 요청의 결과를 간략하게 나타내주는데,
+                                클라이언트를 다루는 우리들은 이 숫자를 보고 결과를 단번에 유추할수 가 있게 된다. (물론 각 코드가 무엇을 의미하는지 별도의 공부가 필요하다) HTTP 상태
+                                코드는 3자리 숫자로 이루어져 있으며, 총 100번대 ~ 500번대 까지 존재한다. 그리고 각 상태코드의 첫 번째 자리는 최상위 코드가 되어 다음과 같이 5
+                                개의 그룹으로 나뉘어 관리된다. 1XX : 요청이 수신되어 처리중 2XX : 요청 정상 처리 3XX : 요청을 완료하려면 추가 행동이 필요 4X..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://tistory2.daumcdn.net/tistory/4939852/5c9a55d8962c4e0fbe6292153897ff69"/>https://inpa.tistory.com/entry/HTTP-🌐-상태-코드-1XX-5XX-총정리판-📖
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb0LKTD%2FbtrTFfCPW0R%2FRowPXdmMCmIKaLSVBZg1O0%2Fimg.webp"/></a></figure>
+            </div>
+            <div class="column" id="e7dd4151-fd57-4ee9-a28a-88a7a019b56c" style="width:50%"><p
+                    class="" id="abadeebf-368a-4a10-a4e7-1a37a472829b"><strong>중요도: ⭐⭐⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="0af4e8c4-27bd-42c7-a9cd-f382875d7577">
+                    <li style="list-style-type:disc">HTTP 상태코드란 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="59f7f68e-3de2-4f72-a602-ff1abe5db8dd">
+                    <li style="list-style-type:disc">HTTP 에는 어떤 종류가 있는가?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column-list" id="60322fef-c43b-4160-bb82-7109840958ea">
+            <div class="column" id="51b5c42f-41da-4f3d-8f02-ee5b9507fea8" style="width:50%"><h3
+                    class="" id="f7f2d763-b414-42cf-bcc2-9376c90050b3">STP</h3>
+                <figure id="e14f0814-8b17-4d8d-a8d5-23b90b202ef2"><a class="bookmark source"
+                                                                     href="https://kujung.tistory.com/115">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">STP(스패닝 트리 프로토콜)의 기본 개념과 사용 이유</div>
+                            <div class="bookmark-description">STP(Spanning Tree Protocol) : 스위치에서 이더넷 프레임의 루핑을 방지해주는
+                                프로토콜. (IP패킷의 경우 헤더에 TTL(Time To Live) 필드가 있어 패킷의 무한루프를 막아준다.) 프레임 루핑의 영향 3가지 1. 브로드 캐스트
+                                폭풍 발생 위와 같은 구성에서, PC1이 PC2에게 ARP요청 프레임을 보낸다고 하자. SW1은 PC1에게 수신한 포트를 제외한 나머지 포트로 ARP 요청
+                                프레임을 브로드캐스트 시킨다. 만약 STP가 동작하지 않으면, SW2 및 SW3 도 수신 포트를 제외한 나머지 포트로 ARP 요청 프레임을 브로드캐스트
+                                시킨다. SW1는 자신이 보낸 브로드캐스트를 다시 되돌려 받게된다. 이더넷 프레임이 빙빙도는 이더넷 프레임 루핑 현상이라고 할 수 있다. (SW2,S..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://kujung.tistory.com/115
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FWvFAC%2FbtqXY0PUsL2%2FZyYjp86yshjOz5s48U2gok%2Fimg.png"/></a></figure>
+                <figure id="41c9b700-e7ea-4f1a-aa7f-be2283e16e97"><a
+                        class="bookmark source"
+                        href="https://net-study.club/entry/스패닝-트리-프로토콜STP-Spanning-Tree-Protocol">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">스패닝 트리 프로토콜(STP, Spanning Tree Protocol)</div>
+                            <div class="bookmark-description">스패닝 트리 프로토콜(Spanning Tree Protocol) Ethernet Frame이 장비들에서
+                                빙빙 도는 것을 Looping(루핑)이라고 한다. 이 Looping을 방지시켜주는 것이 STP(Spanning Tree Protocol)이다.※ L3 계층에서
+                                사용하는 IP Packet은 Header에 TTL Field가 있어 Packet의 Looping을 막아준다.IEEE 802.1D-2004 Standard에서
+                                STP -&gt; RSTP(Rapid STP)로 대체되었지만 현재도 다수의 스위치들은 STP를 사용하고 있다.참고 Topology Reference Cisco
+                                ROUTER - 라우터 기본 설정, 확인 Reference Cisco SWITCH - 스위치 기본 설정, 확인 R1 ~ R2, SW1 ~ ..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://net-study.club/favicon.ico"/>https://net-study.club/entry/스패닝-트리-프로토콜STP-Spanning-Tree-Protocol
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://tistory3.daumcdn.net/tistory/2954557/attach/2f1d5c2809d14de390386bc2a8acf8c9"/></a></figure>
+            </div>
+            <div class="column" id="c010c889-5b43-4af8-9f13-f75e1951890d" style="width:50%"><p
+                    class="" id="9bb246c9-78c5-40a6-be87-2fbf6665d816"><strong>중요도: ⭐</strong></p>
+                <ul class="bulleted-list" id="57775262-955c-4468-8089-59c93468cc08">
+                    <li style="list-style-type:disc">STP(Spanning Tree Protocol)이란 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="77e72948-3177-49aa-b3af-c64071574cbc">
+                    <li style="list-style-type:disc">브로드캐스트 폭풍(Broadcasting Storm)이란 무엇이고 왜 발생하는가?</li>
+                </ul>
+                <p class="" id="34612632-d502-403c-99c5-3e3ebd137990">
+                </p></div>
+        </div>
+        <div class="column-list" id="778ba6e4-f40a-4226-812d-340563a5a4e9">
+            <div class="column" id="47ba8032-e1dd-4ffb-81d9-6e98e582d377" style="width:50%"><h3
+                    class="" id="85bb74fc-78a9-4105-84f3-9b16d2939b94">FTP</h3>
+                <figure id="9b68fdac-b454-4304-ad0a-3650f0360071"><a class="bookmark source"
+                                                                     href="https://namu.wiki/w/FTP#fn-2">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title"></div>
+                        </div>
+                        <div class="bookmark-href">https://namu.wiki/w/FTP#fn-2</div>
+                    </div>
+                </a></figure>
+                <figure id="a0c17466-f593-4fd5-b029-eb7dee304262"><a
+                        class="bookmark source" href="https://experience.dropbox.com/ko-kr/resources/what-is-ftp">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">FTP란?</div>
+                            <div class="bookmark-description">FTP는 유용한 파일 전송 방식이지만, 그보다 더 간단하게 파일 전송 문제를 해결하는 솔루션도 있습니다.
+                                FTP란 무엇이고, FTP의 대안으로 Dropbox를 사용할 때의 이점은 무엇인지 알아보세요.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://aem.dropbox.com/cms/content/dam/dropbox/aem/favicon32.ico"/>https://experience.dropbox.com/ko-kr/resources/what-is-ftp
+                        </div>
+                    </div>
+                </a></figure>
+            </div>
+            <div class="column" id="e6f1d3d5-6284-4199-9d62-661ff4326dea" style="width:50%"><p
+                    class="" id="ae36f336-255d-4e6f-a2ee-ad34fc131002"><strong>중요도: ⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="14aabc57-b5be-4cdd-a622-dc8101445ae1">
+                    <li style="list-style-type:disc">FTP(File Transfer Protocol)는 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="cadf2d9b-dea7-4c5a-aa1e-c1a9e85c6bb1">
+                    <li style="list-style-type:disc">FTP와 FTPS는 무엇이 다른가?</li>
+                </ul>
+                <ul class="bulleted-list" id="56026807-5b94-4c28-b66c-e13a74233b85">
+                    <li style="list-style-type:disc">SFTP는 무엇인가?</li>
+                </ul>
+                <p class="" id="f7eadd52-33ee-4914-82e5-7efd02f735d3">
+                </p></div>
+        </div>
+        <div class="column-list" id="ec0efec0-40f5-4606-96b2-dc44f0f2b39e">
+            <div class="column" id="570d186f-b657-4f98-a376-53d06e13029b" style="width:50%"><h3
+                    class="" id="5391590c-e5be-4a47-8445-b56cf0e79574">SMTP</h3>
+                <figure id="8514cc90-7cce-4902-b434-b43fc64ec398"><a class="bookmark source"
+                                                                     href="https://namu.wiki/w/SMTP">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title"></div>
+                        </div>
+                        <div class="bookmark-href">https://namu.wiki/w/SMTP</div>
+                    </div>
+                </a></figure>
+                <figure id="c8187ea6-7e1c-47fd-810b-db211023c04b"><a class="bookmark source"
+                                                                     href="https://aws.amazon.com/ko/what-is/smtp/">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">SMTP란? - SMTP 서버 설명 - AWS</div>
+                            <div class="bookmark-description">Simple Mail Transfer Protocol이란 무엇일까요? 기업에서 Simple Mail
+                                Transfer Protocol을 사용하는 방법과 이유, AWS에서 Simple Mail Transfer Protocol을 사용하는 방법을 설명합니다.
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://a0.awsstatic.com/libra-css/images/site/touch-icon-ipad-144-smile.png"/>https://aws.amazon.com/ko/what-is/smtp/
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png"/></a></figure>
+            </div>
+            <div class="column" id="f02c7cbd-a4cd-40c3-9073-0ca20fe562ae" style="width:50%"><p
+                    class="" id="cfdd5e80-9754-471f-a17b-4a4cab4a4841"><strong>중요도: ⭐⭐</strong></p>
+                <ul class="bulleted-list" id="fce36501-4c10-468d-9298-a69fbac868c5">
+                    <li style="list-style-type:disc">SMTP(Simple Mail Transfer Protocol)란 무엇인가?</li>
+                </ul>
+                <p class="" id="be67e5fb-8528-4e49-a849-e6f8c93ba7b4">
+                </p></div>
+        </div>
+        <div class="column-list" id="7e3731f0-ebf6-47b0-bfba-bf7afbb98621">
+            <div class="column" id="5564c597-b7c8-4d78-a7cb-84f14c487547" style="width:50%"><h3
+                    class="" id="177270e1-1e68-4a7a-8dc9-285ad105b9de">네트워크 트러블슈팅(Troubleshooting)</h3>
+                <figure id="c41d64c9-4153-4ffc-85ed-4c6a82b495f4"><a
+                        class="bookmark source" href="https://velog.io/@manner9945/네트워크와-트러블-슈팅Trouble-shooting">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">네트워크와 트러블 슈팅(Trouble shooting)</div>
+                            <div class="bookmark-description">와이어샤크 = 실시간 네트워크 분석을 위해 패킷교환 과정을 포착하는 도구패킷 = 네트워크상에서 주고받는
+                                메시지 데이터 블록의 기본 단위 ex. 와이어샤크에서 각 한 줄은 패킷 하나를 의미위 사진에서 각 통신의 포트번호를 확인 가능한데, 여기서 80번 포트는
+                                http,
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://static.velog.io/favicons/apple-icon-152x152.png"/>https://velog.io/@manner9945/네트워크와-트러블-슈팅Trouble-shooting
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://velog.velcdn.com/images/manner9945/post/0ccfda29-e10c-4604-8804-d4a87a432979/image.png"/></a></figure>
+                <figure id="391e199f-fc21-4b21-a6ea-b06f75ff38a0"><a
+                        class="bookmark source" href="https://m.blog.naver.com/megaitacademy/223171866133">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">네트워크 트러블슈팅 제대로 알고 기업 보안 지키기</div>
+                            <div class="bookmark-description">네트워크 트러블슈팅 제대로 알고 기업 보안 지키기 안녕하세요. 메가IT입니다:) 회사 내부
+                                네트워크에서...
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://m.blog.naver.com/blog_192x192.png"/>https://m.blog.naver.com/megaitacademy/223171866133
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://blogthumb.pstatic.net/MjAyMzA4MDFfMjA3/MDAxNjkwODcwNTA1MDc3.1MXMUqpUeHz-HrH840aMjRxfIdHheheO_gypnPfIpGgg.PjK1f-9bKjbpULCVoBABkPrfXwKHL6EpFRxkfQKP1eYg.JPEG.megaitacademy/0801_%B8%DE%B0%A1IT_%BA%ED%B7%CE%B1%D7__1.jpg?type=w2"/></a></figure>
+                <figure id="e3e26ca5-e354-4d93-b8f4-9ea74cf20db5"><a class="bookmark source"
+                                                                     href="https://rrhh234cm.tistory.com/477">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">네트워크의 트러블 슈팅</div>
+                            <div class="bookmark-description">주된 네트워크 설정, 관리 커맨드 ping 커맨드 설정된 호스트(호스트명 또는 IP 주소 )에 ICMP
+                                패킷을 보내어 그 반응을 표시한다. 예를 들어 Web 서버에 악세스 되어도 web 페이지가 표시되지 않을 경우 web 서버 소프트웨어가 다운됐는지, 호스트
+                                자체가 다운되어 있는지 등을 확인하기 위해 이용한다. web 서버 소프트웨어가 다운되어도 호스트가 움직이고 있다면 반응은 되돌아온다. Linux의 ping
+                                커맨드에서는 송신 횟수를 지정하지 않으면 Ctrl + c 키를 눌러 취소 패킷을 보낸다. ping [ 옵션 ] 호스트명 또는 IP 주소 옵션 설명 -c 횟수
+                                지정한 횟수만 ICMP패킷을 송신한다. -i 간격 설정한 간격(초)에 따라 ICMP 패킷을 송신한다 ( 기본 1초 ) 해당 명령어를 사용할 ..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img class="icon bookmark-icon"
+                                                        src="https://rrhh234cm.tistory.com/favicon.ico"/>https://rrhh234cm.tistory.com/477
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbh6t4M%2FbtqzFdEPMF7%2FEF5hzm97bFt9FiprQCIZ9k%2Fimg.png"/></a></figure>
+                <figure id="3b89fc04-ed2a-4d0f-8b90-d3991dfe8357"><a
+                        class="bookmark source"
+                        href="https://co-no.tistory.com/entry/네트워크-Linux-환경에서-네트워크-관련-트러블슈팅을-위한-기본-command-가이드">
+                    <div class="bookmark-info">
+                        <div class="bookmark-text">
+                            <div class="bookmark-title">[네트워크] Linux 환경에서 네트워크 관련 트러블슈팅을 위한 기본 command 가이드</div>
+                            <div class="bookmark-description">1. ping : 대상 호스트(hostname or IP주소)로 ICMP(Internet Control
+                                Message Protocol)을 보내는 명령어 - 서비스가 안된다는 말을 들었을 때, 가장 먼저 해봐야 하는 command - 해당 소프트웨어가 문제인지,
+                                소프트웨어가 올라가 있는 호스트(서버) 자체의 문제인지 판단하기 위함 - 대상 호스트 자체가 살아 있다면 ping은 나가므로, ping이 나간다고 해서 해당
+                                소프트웨어가 정상이라고 판단하지 말 것 $ ping [hostname] 또는 $ ping [IP address] 2. netstat : Network
+                                Statistics로, TCP/IP Connection 네트워크의 통계 정보를 제공해주는 명령어 - 열려있는 포트 및 동작하고 있는 소프트웨어 ..
+                            </div>
+                        </div>
+                        <div class="bookmark-href"><img
+                                class="icon bookmark-icon"
+                                src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico"/>https://co-no.tistory.com/entry/네트워크-Linux-환경에서-네트워크-관련-트러블슈팅을-위한-기본-command-가이드
+                        </div>
+                    </div>
+                    <img class="bookmark-image"
+                         src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbMjyh3%2FbtrXChKJjJt%2FI5ZGKkG8wMScEtgh8sqpS0%2Fimg.png"/></a></figure>
+            </div>
+            <div class="column" id="f8a34ef0-8129-43c7-acf4-f9fe4c0d2c5f" style="width:50%"><p
+                    class="" id="eddd251e-542a-402c-a978-7ff22b231c70"><strong>중요도: ⭐⭐⭐</strong></p>
+                <ul class="bulleted-list" id="67a77897-d4c7-42b1-81e8-8e17c41a5d05">
+                    <li style="list-style-type:disc">네트워크 트러블슈팅(Network Troubleshooting)이란 무엇인가?</li>
+                </ul>
+                <ul class="bulleted-list" id="612ee8fb-e3bc-42ed-ac12-1c710f5f2229">
+                    <li style="list-style-type:disc">네트워크 트러블슈팅에선 무엇을 하는가?</li>
+                </ul>
+                <ul class="bulleted-list" id="a74f9959-04cc-4082-8f52-784a3b0602f1">
+                    <li style="list-style-type:disc">어떠한 명령어들이 사용되는가?</li>
+                </ul>
+            </div>
+        </div>
+        <p class="" id="3d253a7f-7c0b-462a-8435-8fcfa5025f52">
+        </p></div>
+</article>
+<span class="sans" style="font-size:14px;padding-top:2em"></span></body>
+</html>

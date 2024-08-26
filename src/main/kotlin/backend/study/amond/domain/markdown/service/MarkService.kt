@@ -2,19 +2,19 @@ package backend.study.amond.domain.markdown.service
 
 import backend.study.amond.global.markdown.LocalMarkdownPath
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.io.BufferedReader
-import java.nio.file.Files
+import org.springframework.web.server.ResponseStatusException
 import java.nio.file.Paths
 
 @Service
 class MarkService(private val localMarkdownPath: LocalMarkdownPath) {
-    fun getMarkdownValueFormLocal(manualPage: String): String {
-        val stringBuilder: StringBuilder = StringBuilder()
-        val classPathResource: ClassPathResource =
-            ClassPathResource(localMarkdownPath.LOCAL_MARKDOWN_PATH() + manualPage)
-        val br: BufferedReader = Files.newBufferedReader(Paths.get(classPathResource.getURI()))
-        br.lines().forEach { line -> stringBuilder.append(line).append('\n') }
-        return stringBuilder.toString()
+    fun getMarkdownValueFromLocal(manualPage: String): String {
+        val markdownFilePath = Paths.get(localMarkdownPath.LOCAL_MARKDOWN_PATH(), "$manualPage.md").toString()
+        val classPathResource = ClassPathResource(markdownFilePath)
+        if (!classPathResource.exists()) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Markdown file not found at path: $markdownFilePath")
+        }
+        return classPathResource.inputStream.bufferedReader().use { it.readText() }
     }
 }

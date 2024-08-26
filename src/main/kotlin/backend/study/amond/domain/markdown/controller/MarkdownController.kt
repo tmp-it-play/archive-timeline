@@ -18,9 +18,9 @@ class MarkdownController(private val markService: MarkService) {
 
     @GetMapping("/view/{page}")
     fun markdownView(@PathVariable("page") page: String, model: Model): String {
-        val markdownValueFormLocal: String = markService.getMarkdownValueFormLocal(page)
+        val markdownValueFromLocal = markService.getMarkdownValueFromLocal(page)
         val parser: Parser = Parser.builder().build()
-        val document = parser.parse(markdownValueFormLocal)
+        val document = parser.parse(markdownValueFromLocal)
         val renderer = HtmlRenderer.builder().build()
         model.addAttribute("contents", renderer.render(document))
         return "view"

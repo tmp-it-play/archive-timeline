@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Database</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="b9a749e7-8f06-4d35-a3c4-26ca047dd5f7" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">💿</span></div><h1 class="page-title">Database</h1><p class="page-description"></p></header><div class="page-body"><div id="fff8f98f-3310-8040-9b0c-df433f4cb3c0" class="column-list"><div id="045ace55-8712-44b4-94fc-7eb572ba4eb0" style="width:50%" class="column"><h3 id="7430ba4e-ede0-49b4-982c-138961db40c8" class="">DB기본 개념 및 DBMS의 예시</h3><figure id="c50ccef0-0158-45b1-8111-929da9710f57"><div class="source"><a href="https://www.youtube.com/watch?v=ZVuHZ2Fjkl4">https://www.youtube.com/watch?v=ZVuHZ2Fjkl4</a></div></figure></div><div id="e867c4dd-4cc7-4945-a0d3-10e2c88234b0" style="width:50%" class="column"><p id="2c236780-a9eb-46e3-a0a1-a74fcfdd6ca8" class=""><strong>중요도: ⭐⭐⭐⭐</strong></p><ul id="642389c6-f0d8-4d68-88e5-49b5a8b0b398" class="bulleted-list"><li style="list-style-type:disc">데이터베이스(Database)란 무엇인가?</li></ul><ul id="49b5e416-d359-426d-ae36-330f2e142131" class="bulleted-list"><li style="list-style-type:disc">DB에는 어떤 종류가 있는가?</li></ul><ul id="375cc587-9247-4fa7-8eff-b9ef3db0250f" class="bulleted-list"><li style="list-style-type:disc">DBMS(DataBase Management System)엔 어떤 것들이 있는가?</li></ul></div></div><div id="a81103df-4255-422a-8e5b-edc97eecc956" class="column-list"><div id="792d45ad-2898-4b49-89cb-3d929789f312" style="width:50%" class="column"><h3 id="9c40dfcb-ad80-4192-a322-eb44109759e0" class="">JSON의 개념</h3><figure id="ebbe25e3-fa08-465b-a776-5b78a97162d7"><div class="source"><a href="https://youtu.be/1ID6pfTViXo?si=_JasXQW8MtZxFloz">https://youtu.be/1ID6pfTViXo?si=_JasXQW8MtZxFloz</a></div></figure></div><div id="ad451477-8b2b-454f-ba21-ee556a47b455" style="width:50%" class="column"><p id="347ed4cd-02e9-4bbe-8571-ee3341fdff0b" class=""><strong>중요도: ⭐⭐</strong></p><ul id="e73a1070-12b2-4be1-921b-aa9b93578179" class="bulleted-list"><li style="list-style-type:disc">JSON(JavaScript Object Notation)이란 무엇인가?</li></ul><ul id="b21cab43-afd8-4f48-bded-123fff0742b6" class="bulleted-list"><li style="list-style-type:disc">어떤 형태를 가지고 있는가?</li></ul></div></div><div id="570c0fa5-4591-4a7c-8259-90086e0592a1" class="column-list"><div id="2918327b-2751-46ec-b79f-a16ff061ba74" style="width:50%" class="column"><h3 id="01f34c93-2961-46e1-950d-55b74ff8d8f5" class="">관계형 데이터베이스 정리</h3><figure id="3fb95e3c-fd0c-4de1-a5be-a3369f0e667e"><a href="https://github.com/snowykte0426/Today-I-Learned/blob/main/Database/Relational%20DataBase.md" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Today-I-Learned/Database/Relational DataBase.md at main · snowykte0426/Today-I-Learned</div><div class="bookmark-description">Where I organize what I studied today. Contribute to snowykte0426/Today-I-Learned development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/snowykte0426/Today-I-Learned/blob/main/Database/Relational%20DataBase.md</div></div><img src="https://opengraph.githubassets.com/85d661e7ffa45e1fcc3ef6f33077c8a7eddf4bcce55debf3c9b7857043d8caa6/snowykte0426/Today-I-Learned" class="bookmark-image"/></a></figure><figure id="912b49bb-23b1-4545-8cd1-7b9f5abe890a"><a href="https://noahlogs.tistory.com/37" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">[데이터베이스] 관계형 데이터베이스(RDB)란 ?</div><div class="bookmark-description">개인 혹은 기업의 필요에 따라 데이터베이스 모델을 선택하여 사용하는데 아직까지는 관계형 데이터베이스가 주류를 이룬다. 데이터베이스에서 간단하게 설명을 했지만 자주 사용하는 것인 만큼 자세히 알아둘 필요가 있다. 2019/06/07 - [IT 정보 로그캣/데이터베이스] - [데이터 베이스] 데이터베이스란 ? [데이터 베이스] 데이터베이스란 ? 우리는 자료와 정보라는 말을 많이 사용한다. 보통 두 단어를 혼동해서 많이 사용하는데 엄밀히 따지자면 각각 정의가 다르다. 자료(Data) 는 숫자, 영상, 단어 등의 형태로 된 의미 단위로 날것(raw)에 가깝다... noahlogs.tistory.com 관계형 데이터베이스( Relational DataBase )란 관계형 데이터베이스는 1970년대에 IBM에서 일..</div></div><div class="bookmark-href"><img src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico" class="icon bookmark-icon"/>https://noahlogs.tistory.com/37</div></div><img src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc6To1n%2FbtqvW1V7Thn%2FgZJQyaQGZtgekI7qMkHdL1%2Fimg.png" class="bookmark-image"/></a></figure></div><div id="a7f33a69-8895-4bcf-96a9-f1583345aae8" style="width:50%" class="column"><p id="52b0756f-9053-41f1-afa5-6cc4e52344ba" class=""><strong>중요도: ⭐⭐⭐⭐⭐</strong></p><ul id="b4852a0c-7ce0-43bb-90b3-32b5e93321e4" class="bulleted-list"><li style="list-style-type:disc">관계형 데이터베이스(Relational Database)란 무엇인가?</li></ul><ul id="a66fcf2f-a986-403d-9044-ae92bdfa18f2" class="bulleted-list"><li style="list-style-type:disc">주요 개념에는 무엇이 있는가?</li></ul><ul id="8ccd07a1-4fac-44b1-8fb2-7b9ea1acfa5f" class="bulleted-list"><li style="list-style-type:disc">SQL이란 무엇인가?</li></ul></div></div><div id="794af9b6-2e3d-42f8-9bfa-cf2f22e4d995" class="column-list"><div id="34e2dd6b-3a80-4471-ab4b-5da775556f5f" style="width:50%" class="column"><h3 id="2d29258f-86ab-402d-980c-04e19150ee5d" class="">스키마(Schema)에 관하여</h3><figure id="8ffe804b-5ffd-45b4-ae4c-64796f4689ff"><a href="https://terms.tta.or.kr/dictionary/dictionaryView.do?subject=데이터베이스+스키마" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">TTA정보통신용어사전</div><div class="bookmark-description">한국정보통신기술협회(TTA)는 정보통신 기술 발전과 타 분야와의 기술 융합에 따라 무수히 생성되는 정보통신용어를 해설하고 표준화하여, 전문가뿐만 아니라 비전문가들도 올바르게 활용할 수 있도록 정보통신용어사전을 서비스하고 있습니다. PC 또는 스마트폰으로 웹에 직접 접속하시거나 모바일 앱 마켓에서 정보통신용어사전 앱을 내려 받아 이용하실 수 있습니다.</div></div><div class="bookmark-href">https://terms.tta.or.kr/dictionary/dictionaryView.do?subject=데이터베이스+스키마</div></div><img src="https://terms.tta.or.kr/webcont/images_old/sub/test_mainimg02.gif" class="bookmark-image"/></a></figure><figure id="1fa09e02-60bc-4685-be33-7edd2c66a55e"><a href="https://jwprogramming.tistory.com/47" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">스키마란? (개념스키마, 내부스키마, 외부스키마)</div><div class="bookmark-description">Database의 시작을 무엇으로 할 까 하다가.. 스키마에 대한 내용으로 시작하게 되었습니다.스키마의 소개와 개념/내부/외부 스키마의 정의와 특징에 대해 살펴보겠습니다. 먼저 스키마란 - 데이터베이스의 구조와 제약조건에 관해 전반적인 명세를 기술한 것 입니다.상세하게 말하면, 개체의 특성을 나타내는 속성(Attribute)과 속성들의 집합으로 이루어진 개체(Entity), 개체 사이에 존재하는 관계(Relation)에 대한 정의와 이들이 유지해야 할 제약조건들을 기술한 것입니다. 쉽게 정리하여, DB내에 어떤 구조로 데이터가 저장되는가를 나타내는 데이터베이스 구조를 스키마라고 합니다. (스키마의 특징)1) 스키마는 데이터 사전(Data Dictionary)에 저장됩니다.*데이터 사전 : 시스템 전체에서..</div></div><div class="bookmark-href"><img src="https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico" class="icon bookmark-icon"/>https://jwprogramming.tistory.com/47</div></div><img src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F2362DF40571C8BE623" class="bookmark-image"/></a></figure></div><div id="24abbd17-d147-43b9-b149-f004db68b709" style="width:50%" class="column"><p id="06a6d4d8-2163-4bb9-9c17-bbf11ec8ec24" class=""><strong>중요도: ⭐⭐⭐⭐⭐</strong></p><ul id="6d30baae-9215-44a3-8e50-98bcc0a4687c" class="bulleted-list"><li style="list-style-type:disc">스키마(Schema)란 무엇인가?</li></ul><ul id="95db1073-1e7e-4d93-8565-a9fbb100c88d" class="bulleted-list"><li style="list-style-type:disc">어떤 스키마들이 있는가?</li></ul></div></div><div id="86cb89ec-9d95-40df-a74a-c425a218fe42" class="column-list"><div id="7c1de7cb-9685-4304-a746-7a8630aa9d6c" style="width:50%" class="column"><h3 id="ef865b2b-4581-4624-8bd6-bb54c1c4a27e" class="">SQL(Structured Query Language)?</h3><figure id="84b4b4a3-8d52-4707-bde1-90ec6b78f979"><a href="https://www.elancer.co.kr/blog/view?seq=156" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">SQL 이란? 정의부터 특징까지 SQL을 사용하는 이유를 알려드립니다! I 이랜서 블로그</div><div class="bookmark-description">데이터 베이스에서 필요한 데이터를 추출하고 분석하는데 사용하는 &#x27;데이터 처리 언어 SQL&#x27;의 정의부터 특징과 사용하는 이유까지 자세하게 알려 드립니다. I sql, sql developer, sql join, sql 자격증, sql case, sql distinct, sql serrver, sql count</div></div><div class="bookmark-href"><img src="https://www.elancer.co.kr/images/favicons.png" class="icon bookmark-icon"/>https://www.elancer.co.kr/blog/view?seq=156</div></div><img src="http://ems.elancer.co.kr/99_upload/Append/T_Blog/thumb/156.png" class="bookmark-image"/></a></figure><figure id="8e441ed5-5fc2-4732-be68-afd257e16298"><a href="https://rachel0115.tistory.com/entry/SQL-기본-문법-정리-SELECT-절" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">[MySQL] - SQL 기본 문법 정리 - (SELECT, WHERE, ORDER BY ..)</div><div class="bookmark-description">- SELECT 문의 기본 형식은 다음과 같다.SELECT 열_이름 FROM 테이블_이름 WHERE 조건식 GROUP BY 열_이름 HAVING 조건식 ORDER BY 열_이름 LIMIT 숫자 📌 USE - 스키마 (데이터베이스) 선택-- USE &#x27;스키마명&#x27; USE market_db;USE 문을 사용하여 SQL을 사용할 스키마를 지정할 수 있다. 📌 SELECT - 조회할 데이터(컬럼) 지정-- SELECT &#x27;컬럼명&#x27; FROM &#x27;테이블명&#x27; SELECT member_id, name FROM member; -- SELECT 와 FROM 사이에 *를 적으면 테이블의 모든 컬럼을 조회한다. SELECT * FROM member; -- 두 SQL은 동일한 기능을 한다. SELECT * FROM market_db...</div></div><div class="bookmark-href"><img src="https://rachel0115.tistory.com/favicon.ico" class="icon bookmark-icon"/>https://rachel0115.tistory.com/entry/SQL-기본-문법-정리-SELECT-절</div></div><img src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbqmNwD%2Fbtr1UTshodU%2FFYv1f4sIMgEFk6EDi5AiVK%2Fimg.jpg" class="bookmark-image"/></a></figure><figure id="e38326e4-f44a-4e25-84b4-8868b855e930"><a href="https://velog.io/@tlsdnxkr/SQL-기본문법-정리" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">[SQL] 기본문법 정리</div><div class="bookmark-description">SELECT에는 검색하고 싶은 속성을 적는다.만약 고객들의 핸드폰 번호를 검색하고 싶으면 아래처럼 적으면 된다.핸드폰 번호와 주소를 출력하고 싶다면FROM에는 검색하고 싶은 속성이 있는 테이블의 이름을 나열한다.검색 결과는 테이블로 반환된다.모든 도서의 가격과 이</div></div><div class="bookmark-href"><img src="https://static.velog.io/favicons/apple-icon-152x152.png" class="icon bookmark-icon"/>https://velog.io/@tlsdnxkr/SQL-기본문법-정리</div></div><img src="https://velog.velcdn.com/images/tlsdnxkr/post/ce47c197-2840-40c0-81c3-f27f208fb62e/image.png" class="bookmark-image"/></a></figure></div><div id="c7e3dfb3-fcb6-497b-ac73-f7df1bb5b2fc" style="width:50%" class="column"><p id="3598b4fb-ec96-4a52-a622-a707900e862f" class=""><strong>중요도: ⭐⭐⭐</strong></p><ul id="8e4fc767-d89a-487d-884e-ca67b98566d3" class="bulleted-list"><li style="list-style-type:disc">SQL(Structured Query Language)이란 무엇인가?</li></ul><ul id="977fe7a4-edf8-4a7c-83da-a99833d8fe21" class="bulleted-list"><li style="list-style-type:disc">DDL,DML,DCL에는 어떤 명령들이 속하는가?</li></ul><ul id="6d31ab88-f6b5-4a97-b1c5-cd315f524396" class="bulleted-list"><li style="list-style-type:disc">SQL은 어떻게 사용하는가?</li></ul></div></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
