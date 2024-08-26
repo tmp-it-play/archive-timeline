@@ -2,11 +2,13 @@ package backend.study.amond.domain.markdown.service
 
 import backend.study.amond.global.markdown.LocalMarkdownPath
 import org.springframework.core.io.ClassPathResource
+import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class getMarkdownValueFormLocal(private val localMarkdownPath: LocalMarkdownPath) {
+@Service
+class MarkService(private val localMarkdownPath: LocalMarkdownPath) {
     fun getMarkdownValueFormLocal(manualPage: String): String {
         val stringBuilder: StringBuilder = StringBuilder()
         val classPathResource: ClassPathResource =
