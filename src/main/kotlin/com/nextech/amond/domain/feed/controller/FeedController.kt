@@ -1,32 +1,39 @@
 package com.nextech.amond.domain.feed.controller
 
-import com.nextech.amond.domain.feed.dto.response.FeedResponse
-import com.nextech.amond.domain.feed.entity.Feed
-import com.nextech.amond.domain.feed.repository.FeedRepository
-import com.nextech.amond.domain.feed.service.FeedService
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
-@RestController
-@RequestMapping("/api/v1/feed")
-class FeedController(
-    private val repository: FeedRepository,
-    private val feedService: FeedService
-) {
+@Configuration
+@EnableWebSecurity
+class SecurityConfig {
 
-    @GetMapping("/random")
-    fun randomFeed(): Feed? {
-        return repository.findRandomFeed()
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        http.cors { it.configurationSource(corsConfigurationSource()) }.csrf { it.disable() }
+            .authorizeHttpRequests { authorizeRequests ->
+                authorizeRequests.requestMatchers("/api/v1/feed/**").permitAll().anyRequest().authenticated()
+            }.formLogin { it.disable() }.httpBasic { it.disable() }
+
+        return http.build()
     }
 
-    @PostMapping
-    fun postFeed(
-        @RequestParam("title") title: String,
-        @RequestParam("content") content: String,
-        @RequestParam("picture") picture: MultipartFile?
-    ): ResponseEntity<FeedResponse> {
-        val response = feedService.createFeed(title, content, picture)
-        return ResponseEntity.ok(response)
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration().apply {
+            allowedOriginPatterns = listOf("*")
+            allowedMethods = listOf("*")
+            allowedHeaders = listOf("*")
+            allowCredentials = true
+        }
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }
