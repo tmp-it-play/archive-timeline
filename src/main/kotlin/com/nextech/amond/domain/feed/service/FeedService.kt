@@ -18,16 +18,11 @@ class FeedService(
     private lateinit var bucketName: String
 
     fun createFeed(title: String, content: String, picture: MultipartFile?): FeedResponse {
-        // S3에 파일 업로드 및 URL 반환
         val pictureUrl = picture?.let {
             fileUploadService.uploadFile(it, bucketName)
         }
-
-        // 피드 생성 및 저장
         val feed = Feed(title = title, content = content, pictureUrl = pictureUrl)
         val savedFeed = repository.save(feed)
-
-        // 응답 DTO 생성
         return FeedResponse(
             id = savedFeed.id,
             title = savedFeed.title ?: "",
