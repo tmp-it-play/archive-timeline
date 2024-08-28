@@ -39,9 +39,6 @@ dependencies {
 
 	// Spring Boot Starter for Thymeleaf (for rendering HTML views)
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-	testImplementation("org.springframework.security:spring-security-test")
 
 	// Spring Boot DevTools (for hot reloading during development)
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
