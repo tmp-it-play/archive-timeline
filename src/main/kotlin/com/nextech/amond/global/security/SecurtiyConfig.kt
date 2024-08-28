@@ -1,5 +1,4 @@
 package com.nextech.amond.global.security
-
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,10 +14,16 @@ class SecurityConfig {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.cors { it.configurationSource(corsConfigurationSource()) }.csrf { it.disable() }
+        http
+            .cors { it.configurationSource(corsConfigurationSource()) }
+            .csrf { it.disable() }
             .authorizeHttpRequests { authorizeRequests ->
-                authorizeRequests.anyRequest().permitAll()
-            }.formLogin { it.disable() }.httpBasic { it.disable() }
+                authorizeRequests
+                    .requestMatchers("/api/v1/feed/**").permitAll()
+                    .anyRequest().authenticated()
+            }
+            .formLogin { it.disable() }
+            .httpBasic { it.disable() }
 
         return http.build()
     }
@@ -26,7 +31,7 @@ class SecurityConfig {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOrigins = listOf("*")
+            allowedOriginPatterns = listOf("*")
             allowedMethods = listOf("*")
             allowedHeaders = listOf("*")
             allowCredentials = true
