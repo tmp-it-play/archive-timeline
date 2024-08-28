@@ -2,6 +2,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -14,9 +15,9 @@ class SecurityConfig {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests.anyRequest().permitAll()
-            }.cors { cors ->
-                cors.configurationSource(corsConfigurationSource())
-            }.csrf { it.disable() }.formLogin { it.disable() }.httpBasic { it.disable() }
+            }.csrf { it.disable() }.cors { it.configurationSource(corsConfigurationSource()) }
+            .formLogin { it.disable() }.httpBasic { it.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
 
         return http.build()
     }
