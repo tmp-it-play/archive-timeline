@@ -19,7 +19,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/v1/feed/**").permitAll()
+                    .requestMatchers("/api/**").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { it.disable() }
