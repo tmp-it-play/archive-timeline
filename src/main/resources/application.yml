@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: amond
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate: ddl-auto:update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    generate-ddl: on
+server:
+  port: 5000
+aws:
+  s3:
+    AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+    AWS_S3_REGION: ${AWS_S3_REGION}
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+    AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+    AWS_S3_BUCKET: ${AWS_S3_BUCKET}
