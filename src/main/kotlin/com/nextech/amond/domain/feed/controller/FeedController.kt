@@ -23,9 +23,10 @@ class FeedController(
     fun postFeed(
         @RequestPart("title", required = true) title: String,
         @RequestPart("content", required = true) content: String,
-        @RequestPart("picture", required = false) picture: MultipartFile?
+        @RequestPart("picture", required = false) picture: MultipartFile?,
+        @RequestParam("pictureUrl", required = false) pictureUrl: String?
     ): ResponseEntity<FeedResponse> {
-        val response = feedService.createFeed(title, content, picture)
+        val response = feedService.createFeed(title, content, picture, pictureUrl)
         return ResponseEntity.ok(response)
     }
 }
