@@ -10,17 +10,19 @@ import org.springframework.web.multipart.MultipartFile
 
 @Service
 class FeedService(
-    private val repository: FeedRepository,
-    private val fileUploadService: FileUploadService
+    private val repository: FeedRepository, private val fileUploadService: FileUploadService
 ) {
 
     @Value("\${AWS_S3_BUCKET}")
     private lateinit var bucketName: String
 
-    fun createFeed(title: String, content: String, picture: MultipartFile?): FeedResponse {
-        val pictureUrl = picture?.let {
-            fileUploadService.uploadFile(it, bucketName)
+    fun createFeed(title: String, content: String, picture: MultipartFile?, externalPictureUrl: String?): FeedResponse {
+        val pictureUrl = when {
+            picture != null -> fileUploadService.uploadFile(picture, bucketName)
+            externalPictureUrl != null -> externalPictureUrl
+            else -> null
         }
+
         val feed = Feed(title = title, content = content, pictureUrl = pictureUrl)
         val savedFeed = repository.save(feed)
         return FeedResponse(
