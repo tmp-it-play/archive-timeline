@@ -1,9 +1,12 @@
-COUNT = 100
-START = 1.0
-END = 2.0
+import turtle
 
-for i in range(COUNT):
-    x = START + i * ((END - START) / COUNT)
-    f = (pow(x, 2) - x - 1)
-    if abs(f - 0.0) < 0.01:
-        print("방정식의 해는", x)
+t = turtle.Turtle()
+t.shape("turtle")
+s = turtle.textinput("", "몇각형을 원하시나요?: ")
+n = int(s)
+angle = 360 / n
+for i in range(n):
+    t.forward(100)
+    t.left(angle)
+turtle.mainloop()
+turtle.bye()

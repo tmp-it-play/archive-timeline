@@ -1,4 +1,2 @@
-num, result = int(input("Enter the number: ")), 1
-for i in range(1, num + 1):
-    result *= i
-print(f"Factorial({num}!):{result}")
+for i in range(10, 0, -2):
+    print("Student" + str(i))
