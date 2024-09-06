@@ -1,55 +1,44 @@
 #include "stdio.h"
+#define STACK_SIZE 5
+typedef int element;
+element stack[STACK_SIZE];
+int top = -1;
 
-typedef struct Stack {
-	int top;
-	int capacity;
-	int* array;
-} Stack;
-
-Stack* createStack(int capacity) {
-	Stack* stack = (Stack*)malloc(sizeof(Stack));
-	stack->capacity = capacity;
-	stack->top = -1;
-	stack->array = (int*)malloc(stack->capacity * sizeof(int));
-	return stack;
-}
-
-int isFull(Stack* stack) {
-	return stack->top == stack->capacity - 1;
-}
-
-int isEmpty(Stack* stack) {
-	return stack->top == -1;
-}
-
-void push(Stack* stack, int item) {
-	if (isFull(stack)) {
+void push(element item) {
+	if (top >= STACK_SIZE - 1) {
+		printf("Stack is full\n");
 		return;
 	}
-	stack->array[++stack->top] = item;
-	printf("%d pushed to stack\n", item);
+	else stack[++top] = item;
 }
 
-int pop(Stack* stack) {
-	if (isEmpty(stack)) {
-		return -1;
+element pop() {
+	if (top == -1) {
+		printf("Stack is empty\n");
+		return 0;
 	}
-	return stack->array[stack->top--];
+	else return stack[top--];
 }
 
-int peek(Stack* stack) {
-	if (isEmpty(stack)) {
-		return -1;
+element peek(void) {
+	if (top == -1) {
+		printf("Stack is empty\n");
+		return 0;
 	}
-	return stack->array[stack->top];
+	else return stack[top];
 }
-
-int main() {
-	Stack* stack = createStack(100);
-	push(stack, 10);
-	push(stack, 20);
-	push(stack, 30);
-	printf("%d popped from stack\n", pop(stack));
-	printf("Top item is %d\n", peek(stack));
-	return 0;
+/*
+void main() {
+	push(1);
+	push(2);
+	push(3);
+	int temp = peek();
+	printf("%d\n", temp);
+	printf("%d\n", pop());
+	temp = peek();
+	printf("%d\n", temp);
+	printf("%d\n", pop());
+	printf("%d\n", pop());
+	printf("%d\n", pop());
 }
+*/

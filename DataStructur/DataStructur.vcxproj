@@ -127,6 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CircleQueue.c" />
+    <ClCompile Include="Queue.c" />
+    <ClCompile Include="Stack-apply.c" />
     <ClCompile Include="Stack.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

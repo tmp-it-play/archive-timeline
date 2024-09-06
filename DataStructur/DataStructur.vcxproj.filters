@@ -18,5 +18,14 @@
     <ClCompile Include="Stack.c">
       <Filter>리소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Stack-apply.c">
+      <Filter>리소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue.c">
+      <Filter>리소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleQueue.c">
+      <Filter>리소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
