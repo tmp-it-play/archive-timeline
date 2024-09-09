@@ -36,7 +36,6 @@ friends.append('고든')
 print(friends)
 friends.insert(1, '퍼시')
 print(friends)
-
 friends.extend(['빌', '벤'])
 print(friends)
 friends.remove('퍼시')
