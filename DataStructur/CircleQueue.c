@@ -4,7 +4,7 @@
 #define FALSE 0
 #define ERROR -1
 #define MAX_SIZE 10
-
+/*
 typedef int element;
 typedef int boolean;
 
@@ -79,3 +79,4 @@ int main(void) {
 	free(q.data);
 	return 0;
 }
+*/

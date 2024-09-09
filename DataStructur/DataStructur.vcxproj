@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="CircleQueue.c" />
     <ClCompile Include="Queue.c" />
+    <ClCompile Include="SinglyLinkedList.c" />
     <ClCompile Include="Stack-apply.c" />
     <ClCompile Include="Stack.c" />
   </ItemGroup>
