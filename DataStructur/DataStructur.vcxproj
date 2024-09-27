@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CircleQueue.c" />
+    <ClCompile Include="MaxHeapTree.c" />
     <ClCompile Include="Queue.c" />
     <ClCompile Include="SinglyLinkedList.c" />
     <ClCompile Include="Stack-apply.c" />
