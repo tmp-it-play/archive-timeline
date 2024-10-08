@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지 페이지</title>
+    <link rel="stylesheet" href="dark-notice-page.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Page loaded");
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li onclick="console.log('메인화면 클릭됨')">메인화면</li>
+                    <li onclick="console.log('입신 현황 클릭됨')">입신 현황</li>
+                    <li onclick="console.log('미인사자 현황 클릭됨')">미인사자 현황</li>
+                    <li class="active" onclick="console.log('공지 클릭됨')">공지</li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="content">
+            <div class="notice-list">
+                <div class="search-box">
+                    <input type="text" placeholder="방소, 이름 등을 검색해보세요" oninput="console.log('검색어 입력 중: ' + this.value)">
+                </div>
+                <div class="notice-item" onclick="console.log('공지사항 항목 클릭됨: 2024.07.14 기수사 토수 공지사항')">
+                    <p class="date">2024.07.14</p>
+                    <p class="title">기수사 토수 공지사항<span>*</span></p>
+                    <p class="summary">기수사 토수로 발생한 문제와 장소는...</p>
+                </div>
+                <div class="notice-item" onclick="console.log('공지사항 항목 클릭됨: 2024.07.14 기수사 토수 공지사항')">
+                    <p class="date">2024.07.14</p>
+                    <p class="title">기수사 토수 공지사항<span>*</span></p>
+                    <p class="summary">기수사 토수로 발생한 문제와 장소는...</p>
+                </div>
+                <div class="notice-item" onclick="console.log('공지사항 항목 클릭됨: 2024.07.14 기수사 토수 공지사항')">
+                    <p class="date">2024.07.14</p>
+                    <p class="title">기수사 토수 공지사항<span>*</span></p>
+                    <p class="summary">기수사 토수로 발생한 문제와 장소는...</p>
+                </div>
+            </div>
+
+            <div class="notice-details">
+                <div class="placeholder">
+                    <p>공지 전문 읽기</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
