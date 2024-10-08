@@ -1,18 +1,21 @@
-#box1{
-    width: 500px;
-    height: 200px;
-    background-color: gray;
-}
-
-#position_relative_parent{
-    background-color: yellow;
-    width: 500px;
-}
-
-#position_relative_child{
-    background-color: tomato;
+.container {
+    width: 400px;
+    height: 400px;
+    background-color: lightgray;
+  }
+  
+  .relative-box {
     position: relative;
     width: 200px;
     height: 200px;
-    margin: 100px;
-}
+    background-color: lightblue;
+  }
+  
+  .absolute-box {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 100px;
+    height: 100px;
+    background-color: coral;
+  }  
