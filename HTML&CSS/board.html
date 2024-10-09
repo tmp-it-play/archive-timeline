@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Bulletin Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #board {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        #postForm {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        #postForm textarea {
+            resize: none;
+            height: 80px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #postForm button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #postList {
+            list-style: none;
+            padding: 0;
+        }
+        .post {
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="board">
+        <h2>Simple Bulletin Board</h2>
+        <div id="postForm">
+            <textarea id="postContent" placeholder="Write your message here..."></textarea>
+            <button onclick="addPost()">Post</button>
+        </div>
+        <ul id="postList"></ul>
+    </div>
+    
+    <script>
+        function addPost() {
+            const content = document.getElementById('postContent').value;
+            if (content.ㅇ() === '') {
+                alert('Please write something before posting!');
+                return;
+            }
+            
+            const postList = document.getElementById('postList');
+            const newPost = document.createElement('li');
+            newPost.className = 'post';
+            newPost.textContent = content;
+            postList.insertBefore(newPost, postList.firstChild);
+            
+            document.getElementById('postContent').value = '';
+        }
+    </script>
+</body>
+</html>
