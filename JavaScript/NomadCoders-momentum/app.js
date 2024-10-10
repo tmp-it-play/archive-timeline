@@ -1,2 +1,2 @@
-console.log(document.body)
-console.log(document.location)
+const title = document.getElementById("title");
+console.dir(title);
