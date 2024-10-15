@@ -40,6 +40,18 @@ function clickCounter(){
     countOutput.innerText = "Count: " + count.toString()
 }
 
+function handleWindowResize() {
+    document.body.style.backgroundColor = "tomato"
+}
+
+function handleWindowCopy() {
+    alert("First alert!");
+    alert("Second alert!");
+    alert("Third alert!");
+}
+
 title.addEventListener("click", handleTitleClick)
 title.addEventListener("mouseover", handleTitleHover)
 title.addEventListener("mouseout", handleTitleMouseLeave)
+window.addEventListener("resize", handleWindowResize)
+window.addEventListener("copy", handleWindowCopy)
