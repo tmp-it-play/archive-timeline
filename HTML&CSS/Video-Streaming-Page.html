@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>동영상 스트리밍 서비스</title>
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                background-color: #f9f9f9;
+            }
+
+            .header {
+                background-color: #ff0000;
+                color: white;
+                padding: 10px;
+                text-align: center;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .container {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 20px;
+            }
+
+            .video-card {
+                background-color: #fff;
+                margin: 10px;
+                padding: 10px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: calc(25% - 20px);
+            }
+
+            .video-card img {
+                width: 100%;
+                border-radius: 8px;
+            }
+
+            .video-title {
+                font-size: 18px;
+                margin: 10px 0;
+                font-weight: bold;
+            }
+
+            .video-description {
+                font-size: 14px;
+                color: #555;
+            }
+
+            @media (max-width: 768px) {
+                .video-card {
+                    width: calc(50% - 20px);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .video-card {
+                    width: calc(100% - 20px);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+            console.log("Page loaded");
+        </script>
+        <div class="header">나의 동영상 스트리밍 서비스</div>
+        <script>
+            console.log("Header rendered");
+        </script>
+        <div class="container">
+            <script>
+                console.log("Container rendering started");
+            </script>
+            <div class="video-card">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHZpZGVvfGVufDB8fHx8MTY4MTcyMjY2MA&ixlib=rb-4.0.3&q=80&w=400" alt="Video Thumbnail">
+                <script>
+                    console.log("Video card 1 image loaded");
+                </script>
+                <div class="video-title">동영상 제목 1</div>
+                <script>
+                    console.log("Video card 1 title rendered");
+                </script>
+                <div class="video-description">이 동영상의 간단한 설명입니다.</div>
+                <script>
+                    console.log("Video card 1 description rendered");
+                </script>
+            </div>
+            <div class="video-card">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHZpZGVvfGVufDB8fHx8MTY4MTcyMjY2MA&ixlib=rb-4.0.3&q=80&w=400" alt="Video Thumbnail">
+                <script>
+                    console.log("Video card 2 image loaded");
+                </script>
+                <div class="video-title">동영상 제목 2</div>
+                <script>
+                    console.log("Video card 2 title rendered");
+                </script>
+                <div class="video-description">이 동영상의 간단한 설명입니다.</div>
+                <script>
+                    console.log("Video card 2 description rendered");
+                </script>
+            </div>
+            <div class="video-card">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHZpZGVvfGVufDB8fHx8MTY4MTcyMjY2MA&ixlib=rb-4.0.3&q=80&w=400" alt="Video Thumbnail">
+                <script>
+                    console.log("Video card 3 image loaded");
+                </script>
+                <div class="video-title">동영상 제목 3</div>
+                <script>
+                    console.log("Video card 3 title rendered");
+                </script>
+                <div class="video-description">이 동영상의 간단한 설명입니다.</div>
+                <script>
+                    console.log("Video card 3 description rendered");
+                </script>
+            </div>
+            <div class="video-card">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHZpZGVvfGVufDB8fHx8MTY4MTcyMjY2MA&ixlib=rb-4.0.3&q=80&w=400" alt="Video Thumbnail">
+                <script>
+                    console.log("Video card 4 image loaded");
+                </script>
+                <div class="video-title">동영상 제목 4</div>
+                <script>
+                    console.log("Video card 4 title rendered");
+                </script>
+                <div class="video-description">이 동영상의 간단한 설명입니다.</div>
+                <script>
+                    console.log("Video card 4 description rendered");
+                </script>
+            </div>
+            <script>
+                console.log("Container rendering finished");
+            </script>
+        </div>
+    </body>
+</html>
