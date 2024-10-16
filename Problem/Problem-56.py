@@ -37,3 +37,10 @@ print("------------------------")
 aList = [1, 2, 3, 4]
 aList[1:4] = [5, 6, 7]
 print(aList)
+nList = aList.copy()
+print(nList)
+aList.pop()
+print(aList)
+aList = [1, 2, 3, 4, 5, 6]
+aList.insert(1,20)
+print(aList)
