@@ -1,4 +1,5 @@
 const colorOptions = Array.from(document.getElementsByClassName("color-option"));
+const fileInput = document.getElementById("file");
 const color = document.getElementById("color");
 const modeBtn = document.getElementById("mode-btn");
 const destoryBtn = document.getElementById("destory-btn");
@@ -80,4 +81,18 @@ EraseBtn.addEventListener("click", () => {
     modeBtn.innerText = "Fill";
     ctx.fillStyle = "white";
     color.value = "white";
+});
+
+fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            fileInput.value = null;
+        }
+    }
+    reader.readAsDataURL(file);
 });
