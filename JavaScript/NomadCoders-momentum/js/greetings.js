@@ -16,7 +16,13 @@ function onLoginSubmit(event) {
 function paintGreeting(username) {
     greeting.classList.remove(HIDDEN_CLASSNAME);
     greeting.innerText = `Hello ${username}`;
+    greeting.style.display = "flex";
+    greeting.style.justifyContent = "center";
+    greeting.style.alignItems = "center";
+    greeting.style.height = "100vh";
+    greeting.style.transform = "translateY(-30%)";
 }
+
 
 const savedUsername = localStorage.getItem(USERNAME_KEY);
 

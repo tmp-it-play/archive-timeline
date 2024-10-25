@@ -6,6 +6,7 @@ function getClock() {
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const second = String(date.getSeconds()).padStart(2, "0");
     clock.innerText = `${hours}:${minutes}:${second}`;
+
 }
 
 getClock();

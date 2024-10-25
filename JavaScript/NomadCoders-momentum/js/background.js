@@ -1,5 +1,14 @@
 const images = ["0.jpeg", "1.jpeg", "2.jpeg", "Seoul-attractions-Changdeokgung.jpg"];
 const chosenImage = images[Math.floor(Math.random() * images.length)];
-const bgimage = document.createElement("img");
-bgimage.src = `img/${chosenImage}`;
+const bgimage = document.createElement("span");
+bgimage.style.backgroundImage = `url(img/${chosenImage})`;
+bgimage.style.position = 'fixed';
+bgimage.style.top = '0';
+bgimage.style.left = '0';
+bgimage.style.width = '100%';
+bgimage.style.height = '100%';
+bgimage.style.backgroundSize = 'cover';
+bgimage.style.backgroundPosition = 'center';
+bgimage.style.backgroundRepeat = 'no-repeat';
+bgimage.style.zIndex = '-1';
 document.body.appendChild(bgimage);

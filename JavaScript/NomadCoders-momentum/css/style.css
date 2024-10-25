@@ -1,3 +1,13 @@
 .hidden {
     display: none;
 }
+
+#greeting {
+    color: white;
+    font-size: 64px;
+}
+
+#clock {
+    font-size: 24px;
+    margin-top: 10px;
+}
