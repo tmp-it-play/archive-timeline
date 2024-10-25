@@ -1,4 +1,5 @@
 const colorOptions = Array.from(document.getElementsByClassName("color-option"));
+const textInput = document.getElementById("text");
 const fileInput = document.getElementById("file");
 const color = document.getElementById("color");
 const modeBtn = document.getElementById("mode-btn");
@@ -10,6 +11,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 800;
 ctx.lineWidth = lineWidth.value;
+ctx.lineCap = "round";
 let isPainting = false;
 let isFilling = false;
 function onMove(event) {
@@ -35,6 +37,16 @@ function onCanvasClick() {
     }
 }
 
+canvas.addEventListener("dblclick", () => {
+    const text = textInput.value;
+    if (text !== "") {
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.font = "48px serif";
+        ctx.fillText(text, event.offsetX, event.offsetY);
+        ctx.restore();
+    }
+});
 canvas.addEventListener("click", onCanvasClick);
 canvas.addEventListener("mousemove", onMove);
 canvas.addEventListener("mousedown", onMousedown);
