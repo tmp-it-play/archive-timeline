@@ -1,6 +1,7 @@
 const colorOptions = Array.from(document.getElementsByClassName("color-option"));
 const textInput = document.getElementById("text");
 const fileInput = document.getElementById("file");
+const saveBtn = document.getElementById("save");
 const color = document.getElementById("color");
 const modeBtn = document.getElementById("mode-btn");
 const destoryBtn = document.getElementById("destory-btn");
@@ -107,4 +108,12 @@ fileInput.addEventListener("change", (event) => {
         }
     }
     reader.readAsDataURL(file);
+});
+
+saveBtn.addEventListener("click", () => {
+    const image = canvas.toDataURL();
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "MEME.png";
+    link.click();
 });
