@@ -75,11 +75,11 @@ colorOptions.forEach(element => {
 modeBtn.addEventListener("click", () => {
     if (isFilling) {
         isFilling = false;
-        modeBtn.innerText = "Fill";
+        modeBtn.innerText = "🩸Fill";
     }
     else {
         isFilling = true;
-        modeBtn.innerText = "Draw";
+        modeBtn.innerText = "🖌️Draw";
     }
 });
 
@@ -91,7 +91,7 @@ destoryBtn.addEventListener("click", () => {
 EraseBtn.addEventListener("click", () => {
     ctx.strokeStyle = "white";
     isFilling = false;
-    modeBtn.innerText = "Fill";
+    modeBtn.innerText = "🩸Fill";
     ctx.fillStyle = "white";
     color.value = "white";
 });
