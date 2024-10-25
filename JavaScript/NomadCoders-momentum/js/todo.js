@@ -39,14 +39,13 @@ function handleToDoSubmit(event) {
     };
     toDos.push(newToDoObj);
     paintToDo(newToDoObj);
-    saveToDos()
+    saveToDos();
 }
 
 toDoForm.addEventListener("submit", handleToDoSubmit);
 const savedToDos = localStorage.getItem(TODOS_KEY);
-console.log(savedToDos);
 if (savedToDos) {
     const parsedToDos = JSON.parse(savedToDos);
-    toDos = parsedToDos
+    toDos = parsedToDos;
     parsedToDos.forEach(paintToDo);
 }
