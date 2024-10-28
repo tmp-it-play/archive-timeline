@@ -6,35 +6,39 @@
 }
 
 .logo {
-    position: absolute;
+    position: fixed;
     z-index: 2;
     top: 17.1px;
     left: 30px;
 }
 
 .sidebar-text{
-    position: absolute;
+    position: fixed;
     z-index: 2;
-    top: 240px;
-    left: 34px;
     font-size: 11px;
     font-family: 'AppleGothic-M';
     font-weight: 8px;
     color: #6d6d6d;
 }
 
-#sidebar {
+#library-text {
+    top: 240px;
+    left: 34px;
+}
+
+.sidebar {
     position: fixed;
     float: left;
     width: 259px;
     height: 100vh;
     background-color: #f9f9f9;
     z-index: 1;
+    border-right: #e0e0e0 solid 1px;
 }
 
 #search {
     all: unset;
-    position: relative;
+    position: fixed;
     width: 175px;
     height: 30px;
     border-radius: 5px;
@@ -48,7 +52,7 @@
 }
 
 #secrch-icon {
-    position: absolute;
+    position: fixed;
     top: 69px;
     left: 37px;
     stroke-width: 1px;
@@ -62,7 +66,7 @@
 
 .sidebar-btn {
     all: unset;
-    position: absolute;
+    position: fixed;
     width: 190px;
     height: 38px;
     z-index: 3;
@@ -75,7 +79,7 @@
 }
 
 #home-icon {
-    position: absolute;
+    position: fixed;
     top: 125px;
     left: 40px;
     z-index: 4;
@@ -90,7 +94,7 @@
 }
 
 #new-music-icon {
-    position: absolute;
+    position: fixed;
     top: 163px;
     left: 40px;
     z-index: 4;
@@ -105,11 +109,155 @@
 }
 
 #radio-icon {
-    position: absolute;
+    position: fixed;
     top: 201px;
     left: 40px;
     z-index: 4;
     stroke: #c2423f;
     stroke-width: 0px;
     fill: #c2423f
+}
+
+#recently-added-btn {
+    top: 253px;
+    left: 33px;
+}
+
+#recently-added-icon{
+    position: fixed;
+    top: 259px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#artist-btn {
+    top: 291px;
+    left: 33px;
+}
+
+#artist-icon {
+    position: fixed;
+    top: 297px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#album-btn {
+    top: 329px;
+    left: 33px;
+}
+
+#album-icon {
+    position: fixed;
+    top: 335px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#music-icon {
+    position: fixed;
+    top: 373px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#music-btn {
+    top: 365px;
+    left: 33px;
+}
+
+#made-for-you-btn {
+    top: 401px;
+    left: 33px;
+}
+
+#made-for-you-icon {
+    position: fixed;
+    top: 407px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#playlist-text{
+    top: 451px;
+    left: 34px;
+}
+
+#all-playlist-btn {
+    top: 466px;
+    left: 33px;
+}
+
+#all-playlist-icon {
+    position: fixed;
+    top: 472px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#sidebar-footer-box{
+    position: fixed;
+    top: 550px;
+    left: 0px;
+    width: 259px;
+    height: 138px;
+    background-color: #f9f9f9;
+    border-color: #ffffff;
+    z-index: 3;;
+    border-top: #e0e0e0 solid 1px;
+    border-top-width: 1px;
+    border-right: #e0e0e0 solid 1px;
+}
+
+#itunes-icon {
+    position: fixed;
+    top: 570px;
+    left: 35px;
+    z-index: 4;
+    fill: #6d6d6d
+}
+
+#itunes-link{
+    position: fixed;
+    top: 578px;
+    left: 68px;
+    z-index: 4;
+    font-size: 13px;
+    font-family: 'AppleGothic-L';
+    color: #6d6d6d;
+}
+
+#beta-link{
+    position: fixed;
+    top: 635px;
+    left: 35px;
+    z-index: 4;
+    font-size: 13px;
+    font-family: 'AppleGothic-L';
+    color: #6d6d6d;
+}
+
+header{
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    border-bottom: #e0e0e0 solid 1px;
 }
