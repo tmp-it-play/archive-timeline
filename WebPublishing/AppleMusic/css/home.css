@@ -1,0 +1,115 @@
+@import "reset.css";
+@import "fonts.css";
+
+#container {
+    position: relative;
+}
+
+.logo {
+    position: absolute;
+    z-index: 2;
+    top: 17.1px;
+    left: 30px;
+}
+
+.sidebar-text{
+    position: absolute;
+    z-index: 2;
+    top: 240px;
+    left: 34px;
+    font-size: 11px;
+    font-family: 'AppleGothic-M';
+    font-weight: 8px;
+    color: #6d6d6d;
+}
+
+#sidebar {
+    position: fixed;
+    float: left;
+    width: 259px;
+    height: 100vh;
+    background-color: #f9f9f9;
+    z-index: 1;
+}
+
+#search {
+    all: unset;
+    position: relative;
+    width: 175px;
+    height: 30px;
+    border-radius: 5px;
+    z-index: 2;
+    float: left;
+    background-color: #ffffff;
+    margin: 65px 0 0 27px;
+    padding-left: 37px;
+    border-color: #d9d9d9;
+    font-size: small;
+}
+
+#secrch-icon {
+    position: absolute;
+    top: 69px;
+    left: 37px;
+    stroke-width: 1px;
+    z-index: 3;
+}
+
+#home-btn {
+    top: 119px;
+    left: 33px;
+}
+
+.sidebar-btn {
+    all: unset;
+    position: absolute;
+    width: 190px;
+    height: 38px;
+    z-index: 3;
+    background-color: #f9f9f9;
+    border-color: #ffffff;
+    text-align: left;
+    padding-left: 35px;
+    font-size: 13px;
+    font-family: 'AppleGothic-L';
+}
+
+#home-icon {
+    position: absolute;
+    top: 125px;
+    left: 40px;
+    z-index: 4;
+    stroke: #f0d1d0;
+    stroke-width: 1px;
+    fill: #c2423f
+}
+
+#new-music-btn{
+    top: 157px;
+    left: 33px;
+}
+
+#new-music-icon {
+    position: absolute;
+    top: 163px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}
+
+#radio-btn {
+    top: 195px;
+    left: 33px;
+}
+
+#radio-icon {
+    position: absolute;
+    top: 201px;
+    left: 40px;
+    z-index: 4;
+    stroke: #c2423f;
+    stroke-width: 0px;
+    fill: #c2423f
+}

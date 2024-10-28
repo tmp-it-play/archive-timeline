@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'AppleGothic-L';
+    src: url("/WebPublishing/AppleMusic/font/AppleSDGothicNeoL.ttf");
+}
+
+#font {
+    font-family: 'AppleGothic-M';
+    src: url("/WebPublishing/AppleMusic/font/AppleSDGothicNeoM.ttf");
+}
