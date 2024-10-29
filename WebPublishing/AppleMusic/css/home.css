@@ -268,6 +268,7 @@ header {
     height: 50px;
     width: 100%;
     border-bottom: #e0e0e0 solid 1px;
+    scrollbar-width: none;
 }
 
 #header-play-btn {
@@ -477,10 +478,20 @@ input[type="range"]::-ms-fill-upper {
     background: #d9d9d9;
 }
 
+#lyrics-btn-box{
+    position: fixed;
+    top: 13px;
+    left: 1384px;
+    z-index: 6;
+    width: 30px;
+    height: 25px;
+    border-radius: 5px;
+}
+
 #lyrics-btn{
     position: fixed;
     top: 16px;
-    left: 1380px;
+    left: 1390px;
     z-index: 2;
     width: 2.1%;
     fill: #707070;
@@ -489,7 +500,7 @@ input[type="range"]::-ms-fill-upper {
 #playlist-btn{
     position: fixed;
     top: 16px;
-    left: 1410px;
+    left: 1420px;
     z-index: 2;
     width: 2.1%;
     fill: #707070;
@@ -498,8 +509,34 @@ input[type="range"]::-ms-fill-upper {
 #account-btn{
     position: fixed;
     top: 10px;
-    left: 1440px;
+    left: 1450px;
     z-index: 2;
     width: 2.1%;
     fill: #ba2926;
+}
+
+.main-box {
+    position: fixed;
+    top: 50px;
+    left: 259px;
+    width: 100%;
+    height: 100%;;
+}
+
+#lyrics-container{
+    position: fixed;
+    top: 50px;
+    left: 1400px;
+    width: 0px;
+    height: 100%;
+    background-color: #f9f9f9;
+    transition: width .3s;
+}
+
+#lyrics-box{
+    top: 50px;
+    left: 259px;
+    width: 100%;
+    height: 100%;
+    background-color: #f9f9f9;
 }

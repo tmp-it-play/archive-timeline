@@ -26,3 +26,21 @@ Array.prototype.forEach.call(sidebarBtns, function (btn) {
         activeBtn = btn;
     });
 });
+
+const lyricsBtn = document.getElementById('lyrics-btn');
+const lyricsBtnBox = document.getElementById('lyrics-btn-box');
+const lyricsBox = document.getElementById('lyrics-container');
+let isAtive = false
+lyricsBtnBox.addEventListener('click', function () {
+    if (isAtive) {
+        lyricsBtnBox.style.backgroundColor = '';
+        lyricsBtn.style.fill = '';
+        lyricsBox.style.width = '0px';
+        isAtive = false;
+    } else {
+        lyricsBtnBox.style.backgroundColor = '#6c6c6c';
+        lyricsBtn.style.fill = '#fff';
+        lyricsBox.style.width = '1200px';
+        isAtive = true
+    }
+});
