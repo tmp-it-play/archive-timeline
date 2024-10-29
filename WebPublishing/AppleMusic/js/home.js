@@ -30,17 +30,21 @@ Array.prototype.forEach.call(sidebarBtns, function (btn) {
 const lyricsBtn = document.getElementById('lyrics-btn');
 const lyricsBtnBox = document.getElementById('lyrics-btn-box');
 const lyricsBox = document.getElementById('lyrics-container');
+const mainContent = document.querySelector('main');
+console.log(mainContent)
 let isAtive = false
 lyricsBtnBox.addEventListener('click', function () {
     if (isAtive) {
         lyricsBtnBox.style.backgroundColor = '';
         lyricsBtn.style.fill = '';
         lyricsBox.style.width = '0px';
+        mainContent.style.width = 'calc(100%- 300px)';
         isAtive = false;
     } else {
         lyricsBtnBox.style.backgroundColor = '#6c6c6c';
         lyricsBtn.style.fill = '#fff';
-        lyricsBox.style.width = '1200px';
+        lyricsBox.style.width = '300px';
+        mainContent.style.width = 'calc((100% - 259px)- 300px)';
         isAtive = true
     }
 });
