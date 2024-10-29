@@ -7,3 +7,22 @@ playMiniBox.addEventListener('mouseover', () => {
 playMiniBox.addEventListener('mouseout', () => {
     mouseHoverBox.classList.remove('show');
 });
+
+const rangeInput = document.querySelector('input[type="range"]');
+
+rangeInput.addEventListener('input', function () {
+    const value = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.setProperty('--value', `${value}%`);
+});
+
+const sidebarBtns = document.getElementsByClassName('sidebar-btn');
+let activeBtn = null;
+Array.prototype.forEach.call(sidebarBtns, function (btn) {
+    btn.addEventListener('click', function () {
+        if (activeBtn) {
+            activeBtn.style.backgroundColor = '#f9f9f9';
+        }
+        btn.style.backgroundColor = '#e0e0e0';
+        activeBtn = btn;
+    });
+});
