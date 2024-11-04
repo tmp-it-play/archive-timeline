@@ -21,8 +21,12 @@ def hello_world():
 from page.login_page import login_page_code
 @app.route("/login",methods=['GET'])
 def login_page():
-    print(login_page_code)
     return render_template_string(login_page_code)
+
+from page.signup_page import signup_page_code
+@app.route("/signup",methods=['GET'])
+def signup_page():
+    return render_template_string(signup_page_code)
 
 @app.route("/login",methods=['POST'])
 def login():
