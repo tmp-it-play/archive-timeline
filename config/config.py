@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 class Config:
     DB_USER = os.getenv('DB_USERNAME')
     DB_PASSWORD = os.getenv('DB_PASSWORD')

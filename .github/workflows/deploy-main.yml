@@ -43,6 +43,10 @@ jobs:
                   value: ${{ secrets.DB_PORT }}
                 - name: DB_NAME
                   value: ${{ secrets.DB_NAME }}
+                - name: FLASK_KEY
+                  value: ${{ secrets.FLASK_KEY }}
+                - name: SERVER_URL
+                  value: ${{ secrets.SERVER_URL }}
               args: []
             context:
               git:
