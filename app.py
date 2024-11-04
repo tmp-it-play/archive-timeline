@@ -14,9 +14,10 @@ def create_app():
 
 app = create_app()
 
+from page.main_page import main_page_code
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return render_template_string(main_page_code)
 
 from page.login_page import login_page_code
 @app.route("/login",methods=['GET'])
