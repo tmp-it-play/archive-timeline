@@ -97,7 +97,7 @@ login_page_code = """
             <button type="submit" class="login-button">로그인</button>
         </form>
         <div class="additional-links">
-            <a href="#">계정이 없으신가요? 회원가입 하기</a>
+            <a href="https://port-0-nothingtime-lzsaeexf05f2c47e.sel4.cloudtype.app/login">계정이 없으신가요? 회원가입 하기</a>
         </div>
     </div>
 </body>
