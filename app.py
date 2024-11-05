@@ -25,7 +25,7 @@ class User(db.Model):
 
     def __init__(self, user_id, password):
         self.user_id = user_id
-        self.password = generate_password_hash(password)  # 비밀번호 해시 저장
+        self.password = generate_password_hash(password)
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -69,8 +69,12 @@ def signup():
     new_user = User(user_id=user_id, password=password)
     db.session.add(new_user)
     db.session.commit()
-
     return redirect(url_for('login_page'))
+
+from page.canvas_page import canvas_page_code
+@app.route("/canvas")
+def canvas():
+    return render_template_string(canvas_page_code)
 
 if __name__ == '__main__':
     app.run(debug=True)
