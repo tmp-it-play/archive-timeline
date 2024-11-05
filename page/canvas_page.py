@@ -104,6 +104,7 @@ canvas_page_code = """
         }
 
         body {
+            scrollbar-width: 0px;
             line-height: 1;
             display: flex;
             gap: 20px;
@@ -138,8 +139,8 @@ canvas_page_code = """
         }
 
         canvas {
-            width: 800px;
-            height: 800px;
+            width: 630px;
+            height: 630px;
             background-color: white;
             border-radius: 10px;
             position: relative;
@@ -154,9 +155,37 @@ canvas_page_code = """
         .color-options {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             align-items: center;
         }
+
+        .color-option-setting-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            background-color: white;
+            border: 5px solid white;
+            transition: transform ease-in-out .1s;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .color-option-setting-btn:hover {
+            transform: scale(1.2);
+        }
+
+        #color-option-setting-btn-img {
+            width: 30px;
+            z-index: 10;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
 
         .color-option {
             width: 50px;
@@ -230,15 +259,14 @@ canvas_page_code = """
         <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
         <div class="color-option" style="background-color: #f1c40f;" data-color="#f1c40f"></div>
         <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
-        <div class="color-option" style="background-color: #95a5a6;" data-color="#95a5a6"></div>
-        <div class="color-option" style="background-color: #d35400;" data-color="#d35400"></div>
-        <div class="color-option" style="background-color: #bdc3c7;" data-color="#bdc3c7"></div>
-        <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
-        <div class="color-option" style="background-color: #e67e22;" data-color="#e67e22"></div>
+        <div class="color-option-setting-btn">
+            <img src="https://github.com/snowykte0426/NothingTime/blob/main/image/setting-btn-img.png?raw=true"
+                alt="이미지 로딩 실패" id="color-option-setting-btn-img">
+        </div>
     </div>
     <canvas></canvas>
-    <span>Pencil Width</span>
     <div class="btns">
+        <span>Pencil Width</span>
         <input id="line-width" type="range" min="1" max="10" value="5" step="0.2" />
         <button id="mode-btn">🩸Fill</button>
         <button id="destory-btn">💣Destory</button>
@@ -251,12 +279,50 @@ canvas_page_code = """
         </label>
         <input type="text" id="text" placeholder="Add text here... :)" />
         <button id="save">🖼️Save Image</button>
+        <button id="share-btn">🚀Share Image</button>
     </div>
     <script>
         const colorOptions = Array.from(document.getElementsByClassName("color-option"));
+        const colorSettingBtn = document.querySelector(".color-option-setting-btn");
+        const originalColors = colorOptions.map(element => element.dataset.color);
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        let holdTimeout;
+
+        colorSettingBtn.addEventListener("mousedown", () => {
+            colorOptions.forEach(element => {
+                const randomColor = getRandomColor();
+                element.style.backgroundColor = randomColor;
+                element.dataset.color = randomColor;
+            });
+
+            holdTimeout = setTimeout(() => {
+                colorOptions.forEach((element, index) => {
+                    element.style.backgroundColor = originalColors[index];
+                    element.dataset.color = originalColors[index];
+                });
+            }, 1000);
+        });
+
+        colorSettingBtn.addEventListener("mouseup", () => {
+            clearTimeout(holdTimeout);
+        });
+
+        colorSettingBtn.addEventListener("mouseleave", () => {
+            clearTimeout(holdTimeout);
+        });
         const textInput = document.getElementById("text");
         const fileInput = document.getElementById("file");
         const saveBtn = document.getElementById("save");
+        const shareBtn = document.getElementById("share-btn");
         const color = document.getElementById("color");
         const modeBtn = document.getElementById("mode-btn");
         const destoryBtn = document.getElementById("destory-btn");
@@ -266,8 +332,9 @@ canvas_page_code = """
         const lineWidth = document.getElementById("line-width");
         const canvas = document.querySelector("canvas");
         const ctx = canvas.getContext("2d");
-        canvas.width = 800;
-        canvas.height = 800;
+        const presetBtn = document.getElementById("preset-btn");
+        canvas.width = 630;
+        canvas.height = 630;
         ctx.lineWidth = lineWidth.value;
         ctx.lineCap = "round";
         let isPainting = false;
@@ -277,6 +344,9 @@ canvas_page_code = """
         let resizingSticker = false;
         let undoStack = [];
         let redoStack = [];
+        let isThrottling = false;
+
+
         window.addEventListener("load", () => {
             const savedColor = localStorage.getItem("color");
             const savedLineWidth = localStorage.getItem("lineWidth");
@@ -292,17 +362,23 @@ canvas_page_code = """
         });
 
         function saveState() {
-            undoStack.push(canvas.toDataURL());
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            undoStack.push(imageData);
             redoStack = [];
         }
 
         function onMove(event) {
+            if (isThrottling) return;
+            isThrottling = true;
             if (isPainting) {
                 ctx.lineTo(event.offsetX, event.offsetY);
                 ctx.stroke();
             }
             ctx.beginPath();
             ctx.moveTo(event.offsetX, event.offsetY);
+            requestAnimationFrame(() => {
+                isThrottling = false;
+            });
         }
 
         function onMousedown(event) {
@@ -321,7 +397,7 @@ canvas_page_code = """
             }
         }
 
-        canvas.addEventListener("dblclick", () => {
+        canvas.addEventListener("dblclick", (event) => {
             const text = textInput.value;
             if (text !== "") {
                 ctx.save();
@@ -464,8 +540,10 @@ canvas_page_code = """
 
         window.addEventListener("keydown", (event) => {
             if (event.ctrlKey && event.key === 'z') {
+                event.preventDefault();
                 undoAction();
             } else if (event.ctrlKey && event.key === 'y') {
+                event.preventDefault();
                 redoAction();
             }
         });
@@ -473,36 +551,62 @@ canvas_page_code = """
         function undoAction() {
             if (undoStack.length > 0) {
                 const previousState = undoStack.pop();
-                redoStack.push(canvas.toDataURL());
-                const img = new Image();
-                img.src = previousState;
-                img.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                };
+                redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                ctx.putImageData(previousState, 0, 0);
             }
         }
 
         function redoAction() {
             if (redoStack.length > 0) {
                 const nextState = redoStack.pop();
-                undoStack.push(canvas.toDataURL());
-                const img = new Image();
-                img.src = nextState;
-                img.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                };
+                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                ctx.putImageData(nextState, 0, 0);
             }
         }
 
-        saveBtn.addEventListener("click", () => {
+        shareBtn.addEventListener("click", () => {
             drawStickers();
             const image = canvas.toDataURL();
-            const link = document.createElement("a");
-            link.href = image;
-            link.download = "MEME.png";
-            link.click();
+            fetch('https://your-secure-api-server.com/share', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: image })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Image shared successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to share the image.');
+                });
+        });
+
+        presetBtn.addEventListener("click", () => {
+            // Example action for changing the preset colors
+            const newPresets = [
+                "#ff5733",
+                "#33ff57",
+                "#3357ff",
+                "#ff33a6",
+                "#a633ff",
+                "#33fff0"
+            ];
+
+            colorOptions.forEach((element, index) => {
+                if (index < newPresets.length) {
+                    element.style.backgroundColor = newPresets[index];
+                    element.dataset.color = newPresets[index];
+                }
+            });
         });
     </script>
 </body>
