@@ -5,7 +5,7 @@ canvas_page_code = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Maker</title>
+    <title>Canvas</title>
     <style>
         html,
         body,
@@ -142,6 +142,7 @@ canvas_page_code = """
             height: 800px;
             background-color: white;
             border-radius: 10px;
+            position: relative;
         }
 
         .btns {
@@ -242,6 +243,8 @@ canvas_page_code = """
         <button id="mode-btn">🩸Fill</button>
         <button id="destory-btn">💣Destory</button>
         <button id="eraser-btn">❌Erase</button>
+        <button id="undo-btn">⏪Undo</button>
+        <button id="redo-btn">⏩Redo</button>
         <label for="file">
             📁Upload Image
             <input type="file" accept="image/*" id="file" />
@@ -258,6 +261,8 @@ canvas_page_code = """
         const modeBtn = document.getElementById("mode-btn");
         const destoryBtn = document.getElementById("destory-btn");
         const EraseBtn = document.getElementById("eraser-btn");
+        const undoBtn = document.getElementById("undo-btn");
+        const redoBtn = document.getElementById("redo-btn");
         const lineWidth = document.getElementById("line-width");
         const canvas = document.querySelector("canvas");
         const ctx = canvas.getContext("2d");
@@ -267,6 +272,11 @@ canvas_page_code = """
         ctx.lineCap = "round";
         let isPainting = false;
         let isFilling = false;
+        let stickers = [];
+        let currentSticker = null;
+        let resizingSticker = false;
+        let undoStack = [];
+        let redoStack = [];
         window.addEventListener("load", () => {
             const savedColor = localStorage.getItem("color");
             const savedLineWidth = localStorage.getItem("lineWidth");
@@ -281,6 +291,11 @@ canvas_page_code = """
             }
         });
 
+        function saveState() {
+            undoStack.push(canvas.toDataURL());
+            redoStack = [];
+        }
+
         function onMove(event) {
             if (isPainting) {
                 ctx.lineTo(event.offsetX, event.offsetY);
@@ -292,6 +307,7 @@ canvas_page_code = """
 
         function onMousedown(event) {
             isPainting = true;
+            saveState();
         }
 
         function cancelPainting(event) {
@@ -300,6 +316,7 @@ canvas_page_code = """
 
         function onCanvasClick() {
             if (isFilling) {
+                saveState();
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         }
@@ -312,6 +329,7 @@ canvas_page_code = """
                 ctx.font = "48px serif";
                 ctx.fillText(text, event.offsetX, event.offsetY);
                 ctx.restore();
+                saveState();
             }
         });
         canvas.addEventListener("click", onCanvasClick);
@@ -353,6 +371,7 @@ canvas_page_code = """
         });
 
         destoryBtn.addEventListener("click", () => {
+            saveState();
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         });
@@ -373,14 +392,112 @@ canvas_page_code = """
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = () => {
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    stickers.push({ img: img, x: 0, y: 0, width: img.width / 2, height: img.height / 2 });
+                    drawStickers();
+                    saveState();
                     fileInput.value = null;
                 }
             }
             reader.readAsDataURL(file);
         });
 
+        canvas.addEventListener("mousedown", (event) => {
+            const { offsetX, offsetY } = event;
+            for (let i = stickers.length - 1; i >= 0; i--) {
+                const sticker = stickers[i];
+                if (offsetX > sticker.x && offsetX < sticker.x + sticker.width && offsetY > sticker.y && offsetY < sticker.y + sticker.height) {
+                    if (event.ctrlKey) {
+                        resizingSticker = true;
+                        currentSticker = sticker;
+                    } else {
+                        currentSticker = sticker;
+                        canvas.addEventListener("mousemove", moveSticker);
+                    }
+                    break;
+                }
+            }
+        });
+
+        window.addEventListener("mouseup", () => {
+            currentSticker = null;
+            resizingSticker = false;
+            canvas.removeEventListener("mousemove", moveSticker);
+            canvas.removeEventListener("mousemove", resizeSticker);
+        });
+
+        canvas.addEventListener("mousemove", (event) => {
+            if (resizingSticker && currentSticker) {
+                resizeSticker(event);
+            }
+        });
+
+        function moveSticker(event) {
+            if (currentSticker && !resizingSticker) {
+                currentSticker.x = event.offsetX - currentSticker.width / 2;
+                currentSticker.y = event.offsetY - currentSticker.height / 2;
+                drawStickers();
+            }
+        }
+
+        function resizeSticker(event) {
+            if (currentSticker) {
+                currentSticker.width = event.offsetX - currentSticker.x;
+                currentSticker.height = event.offsetY - currentSticker.y;
+                drawStickers();
+            }
+        }
+
+        function drawStickers() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stickers.forEach(sticker => {
+                ctx.drawImage(sticker.img, sticker.x, sticker.y, sticker.width, sticker.height);
+            });
+        }
+
+        undoBtn.addEventListener("click", () => {
+            undoAction();
+        });
+
+        redoBtn.addEventListener("click", () => {
+            redoAction();
+        });
+
+        window.addEventListener("keydown", (event) => {
+            if (event.ctrlKey && event.key === 'z') {
+                undoAction();
+            } else if (event.ctrlKey && event.key === 'y') {
+                redoAction();
+            }
+        });
+
+        function undoAction() {
+            if (undoStack.length > 0) {
+                const previousState = undoStack.pop();
+                redoStack.push(canvas.toDataURL());
+                const img = new Image();
+                img.src = previousState;
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
+        function redoAction() {
+            if (redoStack.length > 0) {
+                const nextState = redoStack.pop();
+                undoStack.push(canvas.toDataURL());
+                const img = new Image();
+                img.src = nextState;
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
         saveBtn.addEventListener("click", () => {
+            drawStickers();
             const image = canvas.toDataURL();
             const link = document.createElement("a");
             link.href = image;
