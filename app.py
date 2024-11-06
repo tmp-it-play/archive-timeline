@@ -1,5 +1,5 @@
+from flask import Flask, request, render_template_string, redirect, url_for, g, jsonify, send_from_directory
 import os
-from flask import Flask, request, render_template_string, redirect, url_for, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config.config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,9 +17,9 @@ def create_app():
     return app
 
 app = create_app()
+
 class User(db.Model):
     __tablename__ = 'users'
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
@@ -34,6 +34,7 @@ def close_connection(exception):
     if db_instance is not None:
         db_instance.close()
 
+# 페이지 템플릿 가져오기
 from templates.main_page import main_page_code
 @app.route('/')
 def hello_world():
@@ -72,16 +73,17 @@ def signup():
     db.session.commit()
     return redirect(url_for('login_page'))
 
+# 캔버스 페이지 가져오기
 from templates.canvas_page import canvas_page_code
 @app.route("/canvas")
 def canvas():
     return render_template_string(canvas_page_code)
 
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-file_counter = len(os.listdir(UPLOAD_FOLDER))
+# 이미지 업로드 설정 및 경로 생성 함수
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+file_counter = len([f for f in os.listdir(app.config['UPLOAD_FOLDER']) if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], f))])
 
 def get_next_filename():
     global file_counter
@@ -101,9 +103,16 @@ def upload_file():
         file.save(filepath)
         return jsonify({"message": "File saved successfully", "filepath": filepath}), 200
 
-@app.route("/feed",methods=['GET'])
+from templates.feed_page import feed_page_template
+@app.route("/feed-page", methods=['GET'])
+def feed_page():
+    return render_template_string(feed_page_template)
+
+@app.route("/feed", methods=['POST'])
 def feed():
-    return "피드 페이지"
+    image_files = os.listdir(app.config['UPLOAD_FOLDER'])
+    image_paths = [url_for('static', filename=f"uploads/{file}") for file in image_files if file.endswith(('.jpg', '.jpeg', '.png', '.gif'))]
+    return jsonify(image_paths)
 
 if __name__ == '__main__':
     app.run(debug=True)
