@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template_string, redirect, url_for, g
+import os
+from flask import Flask, request, render_template_string, redirect, url_for, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config.config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -33,17 +34,17 @@ def close_connection(exception):
     if db_instance is not None:
         db_instance.close()
 
-from page.main_page import main_page_code
+from templates.main_page import main_page_code
 @app.route('/')
 def hello_world():
     return render_template_string(main_page_code)
 
-from page.login_page import login_page_code
+from templates.login_page import login_page_code
 @app.route("/login", methods=['GET'])
 def login_page():
     return render_template_string(login_page_code)
 
-from page.signup_page import signup_page_code
+from templates.signup_page import signup_page_code
 @app.route("/signup", methods=['GET'])
 def signup_page():
     return render_template_string(signup_page_code)
@@ -71,10 +72,38 @@ def signup():
     db.session.commit()
     return redirect(url_for('login_page'))
 
-from page.canvas_page import canvas_page_code
+from templates.canvas_page import canvas_page_code
 @app.route("/canvas")
 def canvas():
     return render_template_string(canvas_page_code)
+
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+file_counter = len(os.listdir(UPLOAD_FOLDER))
+
+def get_next_filename():
+    global file_counter
+    file_counter += 1
+    return f"{file_counter:05}.jpg"
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    if file:
+        filename = get_next_filename()
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        return jsonify({"message": "File saved successfully", "filepath": filepath}), 200
+
+@app.route("/feed",methods=['GET'])
+def feed():
+    return "피드 페이지"
 
 if __name__ == '__main__':
     app.run(debug=True)
