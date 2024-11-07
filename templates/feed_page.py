@@ -71,15 +71,20 @@ feed_page_template = """
         #canvas-btn {
             width: 30px;
             height: 30px;
-            left: 95%;
+            right: 20px;
+            bottom: 20px;
             position: fixed;
             filter: invert(1);
             border-radius: 50px;
             background-color: #7e4709;
             border: 2px solid black;
             padding: 5px;
-            /* 이미지와 테두리 간의 간격 */
             cursor: pointer;
+            transition: all ease-in-out 0.3s;
+        }
+
+        #canvas-btn:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
@@ -88,7 +93,6 @@ feed_page_template = """
     <h1 align="center">Feed</h1>
     <div class="grid-container" id="imageGrid"></div>
 
-    <!-- 모달 HTML 구조 -->
     <div class="modal" id="imageModal" onclick="closeModal(event)">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -96,7 +100,6 @@ feed_page_template = """
         </div>
     </div>
 
-    <!-- SVG 버튼 -->
     <svg id="canvas-btn" onclick="handleCanvasClick()" version="1.0" xmlns="http://www.w3.org/2000/svg"
         width="931.000000pt" height="1280.000000pt" viewBox="0 0 931.000000 1280.000000"
         preserveAspectRatio="xMidYMid meet">
@@ -150,8 +153,20 @@ feed_page_template = """
             }
         }
 
-        function handleCanvasClick() {
-            alert("Canvas 버튼 클릭됨! 여기에서 원하는 동작을 수행하세요.");
+        async function handleCanvasClick() {
+            const url = "https://port-0-nothingtime-lzsaeexf05f2c47e.sel4.cloudtype.app/canvas";
+            try {
+                const response = await fetch(url, { method: 'GET' });
+                if (response.ok) {
+                    window.location.href = url;
+                } else {
+                    console.error("Failed to load page:", response.status);
+                    alert("페이지 로드에 실패했습니다. 상태 코드: " + response.status);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("오류 발생: " + error.message);
+            }
         }
 
         window.addEventListener("keydown", (event) => {
