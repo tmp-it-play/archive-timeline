@@ -667,7 +667,7 @@ canvas_page_code = r"""
                 }
                 const formData = new FormData();
                 formData.append("file", blob, "canvas_image.png");
-                fetch("http://localhost:5000/upload", {
+                fetch("ttps://port-0-nothingtime-lzsaeexf05f2c47e.sel4.cloudtype.app/upload", {
                     method: "POST",
                     body: formData,
                 })
