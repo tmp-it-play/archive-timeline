@@ -93,6 +93,40 @@ feed_page_template = """
         #canvas-btn:hover {
             transform: scale(1.2);
         }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #canvas-btn {
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                margin-left: 2%;
+                margin-right: 2%;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            #canvas-btn {
+                width: 20px;
+                height: 20px;
+                right: 10px;
+                bottom: 10px;
+            }
+        }
     </style>
 </head>
 
