@@ -8,8 +8,15 @@ feed_page_template = """
     <title>NothingTime-Feed</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
-        body {
-            background-color: #dcdcdc;
+        @font-face {
+            font-family: 'SUIT-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        h1 {
+            font-family: 'SUIT-Regular';
         }
 
         .grid-container {
@@ -26,7 +33,7 @@ feed_page_template = """
             object-fit: cover;
             border: 2px solid rgba(200, 200, 200, 0.5);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 5px;
+            border-radius: 25px;
         }
 
         .grid-item img:hover {
@@ -90,7 +97,7 @@ feed_page_template = """
 </head>
 
 <body>
-    <h1 align="center">Feed</h1>
+    <h1 align="center">공유된 이미지</h1>
     <div class="grid-container" id="imageGrid"></div>
 
     <div class="modal" id="imageModal" onclick="closeModal(event)">
