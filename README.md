@@ -8,5 +8,21 @@ Github에서 제공하는 **Issue**를 이용하여 체계적으로 공부합니
 
 ## 연락할 때는?
 + [Tistory-Amond의 코딩기록](https://amond-codingredord.tistory.com)
-+ [Gmail](s24058@gsm.hs.kr)
++ [Gmail](mailto:s24058@gsm.hs.kr)
 + [Steam](https://steamcommunity.com/id/Kimtaeeanjjab4044/)
+
+<br><br>
+
+# Snowykte0426 Dev.World with English
+A study journal of [snowykte0426](https://github.com/snowykte0426), aspiring to grow continuously as a developer.  
+I systematically study using **Issues** provided by GitHub.
+
+## When creating an issue...
++ Please **do not use** the [Study](https://github.com/snowykte0426/todo/blob/main/.github/ISSUE_TEMPLATE/study.md) and [Review](https://github.com/snowykte0426/todo/blob/main/.github/ISSUE_TEMPLATE/review.md) templates!  
++ If you have suggestions (technologies, theories, advice, etc.), use the [Suggestion](https://github.com/snowykte0426/todo/blob/main/.github/ISSUE_TEMPLATE/suggestion.md) template.  
+  If you need assistance, use the [Help](https://github.com/snowykte0426/todo/blob/main/.github/ISSUE_TEMPLATE/help.md) template.
+
+## How to reach me?
++ [Tistory - Amond's Coding Record](https://amond-codingredord.tistory.com)  
++ [Gmail](mailto:s24058@gsm.hs.kr)  
++ [Steam](https://steamcommunity.com/id/Kimtaeeanjjab4044/)  
