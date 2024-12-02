@@ -1,5 +1,5 @@
 ---
-name: 복습 할 것
+name: Review
 about: 미래에 복습 할 것을 정리한 Issue
 title: "[Review]복습"
 labels: review
@@ -13,7 +13,7 @@ assignees: snowykte0426
 
 연관 Issue📜
 ---
-> 해당 내용을 학습하기 전 알아야 할 선행 지식이 있다면 태크하여주세요
+> 해당 내용과 연관된 Issue가 있다면 태그하여주세요
 
 참고자료📑
 ---

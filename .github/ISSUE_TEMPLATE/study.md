@@ -1,5 +1,5 @@
 ---
-name: 공부 할 것
+name: Study
 about: 미래에 공부 할 것을 정리한 Issue
 title: "[Backend] 공부"
 labels: issue, technology, thinking
