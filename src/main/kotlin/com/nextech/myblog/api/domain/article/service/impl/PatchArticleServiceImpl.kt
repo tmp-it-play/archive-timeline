@@ -26,7 +26,7 @@ class PatchArticleServiceImpl(
         image?.let {
             val decodedImage = Base64.getDecoder().decode(it.substringAfter("base64,"))
             val multipartFile = Base64DecodedMultipartFile(decodedImage, "image/jpeg")
-            val uploadResult = fileUploadService.uploadFile(multipartFile).get()
+            val uploadResult = fileUploadService.uploadFile(multipartFile).get() //TODO 기존 파일 삭제 및 파일 이름 갱신까지 구현!!
             val uploadedUrl = uploadResult.first
             val uploadedFileName = uploadResult.second
             println("Uploaded file URL: $uploadedUrl, Name: $uploadedFileName")
