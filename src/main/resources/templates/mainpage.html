@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 블로그</title>
+    <link rel="stylesheet" href="/css/mainpage_styles.css">
+</head>
+<body>
+    <div class="toggle-mode">
+        <label class="switch">
+            <input type="checkbox" id="modeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div class="container">
+        <aside>
+            <h3>태그</h3>
+            <ul id="tagList" class="tag-list">
+            </ul>
+        </aside>
+        <main>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+            </div>
+            <div id="postList">
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;">
+            </div>
+        </main>
+    </div>
+    <script src="/js/mainpage_script.js"></script>
+</body>
+</html>

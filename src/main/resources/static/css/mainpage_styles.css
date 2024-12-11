@@ -1,0 +1,285 @@
+/* 기본 스타일 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: black;
+}
+
+/* 컨테이너 레이아웃 */
+.container {
+    display: flex;
+}
+
+/* 사이드바와 메인 콘텐츠 */
+aside {
+    width: 200px;
+    padding: 20px;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* 모드 전환 스위치 */
+.toggle-mode {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-top: 12px;
+}
+
+/* 검색창 스타일 */
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.search-box input:hover,
+.search-box input:focus {
+    background-color: #e0e0e0;
+    border-color: #999;
+    outline: none;
+}
+
+/* 포스트 리스트 스타일 */
+#postList {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-item {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 0;
+    cursor: pointer;
+}
+
+.post-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* 다크 모드 스타일 */
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+.dark-mode .post-item:hover {
+    background-color: #1e1e1e;
+}
+
+.dark-mode .search-box input {
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #333;
+}
+
+.dark-mode .search-box input:hover,
+.dark-mode .search-box input:focus {
+    background-color: #2e2e2e;
+    border-color: #555;
+}
+
+/* 해시태그 스타일 */
+.tag-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tag-list li {
+    display: inline-block;
+    margin: 5px;
+}
+
+.tag-list button {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tag-list button:hover {
+    background-color: #e0e0e0;
+}
+
+/* 해시태그 활성화 스타일 */
+.tag-list button.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+.dark-mode .tag-list button {
+    background-color: #2e2e2e;
+    color: white;
+}
+
+.dark-mode .tag-list button:hover {
+    background-color: #3e3e3e;
+}
+
+.dark-mode .tag-list button.active {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* 오류 메시지 스타일 */
+.error-message {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fef6f6;
+    color: #d9534f;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    position: relative;
+}
+
+.error-message::before {
+    content: "";
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB...'); /* 아이콘 이미지 */
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.error-message span {
+    margin-left: 40px;
+    display: block;
+}
+
+/* 다크 모드에서 오류 메시지 스타일 */
+.dark-mode .error-message {
+    background-color: #3e1e1e;
+    color: #f8d7da;
+    border-color: #f5c2c2;
+}
+
+/* 스위치 스타일 */
+.toggle-mode .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-mode .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-mode .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px; /* 모서리를 더 둥글게 */
+}
+
+.toggle-mode .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%; /* 핸들을 둥글게 */
+}
+
+.toggle-mode input:checked + .slider {
+    background-color: #2196F3;
+}
+
+.toggle-mode input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+.toggle-mode input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.dark-mode .toggle-mode .slider {
+    background-color: #555; /* 슬라이더 배경색 어둡게 */
+}
+
+.dark-mode .toggle-mode input:checked + .slider {
+    background-color: dimgrey; /* 체크 시 색상 변경 */
+}
+
+.dark-mode .toggle-mode .slider:before {
+    background-color: #f1f1f1; /* 핸들 색상 밝게 */
+}
+
+/* ----- 반응형 디자인을 위한 미디어 쿼리 ----- */
+
+/* 화면 너비가 768px 이하일 때 */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    aside {
+        width: 100%;
+        order: 2;
+    }
+    
+    main {
+        width: 100%;
+        order: 1;
+    }
+    
+    .toggle-mode {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+    }
+}
+
+/* 화면 너비가 480px 이하일 때 */
+@media screen and (max-width: 480px) {
+    .search-box input {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    
+    .tag-list button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .toggle-mode .switch {
+        width: 50px;
+        height: 28px;
+    }
+    
+    .toggle-mode .slider:before {
+        height: 22px;
+        width: 22px;
+    }
+}
