@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const modeToggle = document.getElementById('modeToggle');
 
-    // URL에서 글 ID 추출
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id');
 
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // API 호출하여 글 상세 정보 가져오기
     fetch(`/api/v1/article/${postId}`)
         .then(response => {
             if (!response.ok) throw new Error('글 정보를 가져오는 데 실패했습니다.');
