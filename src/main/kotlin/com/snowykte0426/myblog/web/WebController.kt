@@ -9,4 +9,9 @@ class WebController{
     fun getMainPage(): String {
         return "mainpage"
     }
+
+    @GetMapping("/article")
+    fun getArticlePage(): String {
+        return "postpage"
+    }
 }
