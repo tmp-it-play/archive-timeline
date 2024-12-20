@@ -22,8 +22,8 @@ class PostArticleServiceImpl(
         tag: String,
         image: String
     ): ArticleResponse {
-        val decodedImage = Base64.getDecoder().decode(image.substringAfter("base64,"))
-        val multipartFile = Base64DecodedMultipartFile(decodedImage, "image/jpeg")
+        val multipartFile =
+            Base64DecodedMultipartFile(Base64.getDecoder().decode(image.substringAfter("base64,")), "image/jpeg")
         val (uploadedFileUrl, uploadedFileName) = fileUploadService.uploadFile(multipartFile)
         val article = createArticle.execute(title, content, tag, uploadedFileName, uploadedFileUrl)
         return ArticleResponse(
