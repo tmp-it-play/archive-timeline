@@ -147,8 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchInput.addEventListener('input', filterPosts);
-
     function openPost(id) {
+        fetch(`/api/v1/articles/${id}/view`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).catch(error => {
+            console.warn('조회수 증가 요청 중 오류 발생:', error);
+        });
         window.location.href = `/post?id=${id}`;
     }
 
