@@ -43,6 +43,7 @@ dependencies {
 
 	// 데이터베이스 드라이버
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+	runtimeOnly("com.mysql:mysql-connector-j")
 
 	// AWS SDK v1
 	implementation("com.amazonaws:aws-java-sdk-s3:1.12.691")
