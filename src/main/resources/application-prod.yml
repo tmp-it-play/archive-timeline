@@ -3,7 +3,7 @@ spring:
     name: my-blog
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:${DB_TYPE:mariadb}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:my_blog}?serverTimezone=KST
+    url: ${DB_URL}
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:123456}
   jpa:
