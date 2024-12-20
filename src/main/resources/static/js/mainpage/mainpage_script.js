@@ -1,6 +1,3 @@
-let posts = [];
-let uniqueTags = [];
-
 document.addEventListener('DOMContentLoaded', () => {
     const postList = document.getElementById('postList');
     const tagList = document.getElementById('tagList');
@@ -63,12 +60,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         filteredPosts.forEach(post => {
-            const div = document.createElement('div');
-            div.className = 'post-item';
-            div.textContent = post.title;
-            div.addEventListener('click', () => openPost(post.id));
-            postList.appendChild(div);
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post-item';
+
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'post-image';
+            if (post.imageUrl) {
+                const img = document.createElement('img');
+                img.src = post.imageUrl;
+                img.alt = post.title;
+                imageDiv.appendChild(img);
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'post-content';
+
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'post-title';
+            titleEl.textContent = post.title;
+
+            const contentEl = document.createElement('p');
+            contentEl.className = 'post-excerpt';
+            contentEl.textContent = stripMarkdown(post.content);
+
+            contentDiv.appendChild(titleEl);
+            contentDiv.appendChild(contentEl);
+
+            postDiv.appendChild(imageDiv);
+            postDiv.appendChild(contentDiv);
+
+            postDiv.addEventListener('click', () => openPost(post.id));
+            postList.appendChild(postDiv);
         });
+    }
+
+    function stripMarkdown(markdown) {
+        return markdown
+            .replace(/[#_*~`>\-]+/g, '') // Remove markdown syntax
+            .replace(/\[.*?\]\(.*?\)/g, '') // Remove links
+            .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
+            .trim();
     }
 
     function showErrorMessage(message) {
