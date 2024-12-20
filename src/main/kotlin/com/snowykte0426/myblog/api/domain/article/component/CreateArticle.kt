@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component
 
 @Component
 class CreateArticle(private val articleRepository: ArticleRepository) {
-    fun execute(title: String, content: String, tag: String): Article {
+    fun execute(title: String, content: String, tag: String, imageName: String, imageUrl: String): Article {
         return articleRepository.save(
             Article(
                 title = title,
                 content = content,
-                tag = tag
+                tag = tag,
+                imageName = imageName,
+                imageUrl = imageUrl
             )
         )
     }

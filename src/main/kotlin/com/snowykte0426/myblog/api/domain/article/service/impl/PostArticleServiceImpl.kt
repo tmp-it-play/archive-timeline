@@ -22,10 +22,10 @@ class PostArticleServiceImpl(
         tag: String,
         image: String
     ): ArticleResponse {
-        val article = createArticle.execute(title, content, tag)
         val decodedImage = Base64.getDecoder().decode(image.substringAfter("base64,"))
         val multipartFile = Base64DecodedMultipartFile(decodedImage, "image/jpeg")
-        val (_, uploadedFileName) = fileUploadService.uploadFile(multipartFile)
+        val (uploadedFileUrl, uploadedFileName) = fileUploadService.uploadFile(multipartFile)
+        val article = createArticle.execute(title, content, tag, uploadedFileName, uploadedFileUrl)
         return ArticleResponse(
             id = article.id!!,
             title = article.title,
@@ -33,7 +33,7 @@ class PostArticleServiceImpl(
             tag = article.tag,
             createdAt = article.createdAt.toString(),
             viewCount = article.viewCount,
-            imageUrl = "$devUrl/$uploadedFileName"
+            imageUrl = article.imageUrl
         )
     }
 }
