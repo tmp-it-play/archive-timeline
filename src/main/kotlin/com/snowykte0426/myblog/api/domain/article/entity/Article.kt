@@ -1,5 +1,6 @@
 package com.snowykte0426.myblog.api.domain.article.entity
 
+import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.ArticleDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -18,8 +19,18 @@ data class Article(
     var createdAt: LocalDateTime = LocalDateTime.now(),
     @Column(nullable = false)
     var viewCount: Long = 0L,
-    @Column(nullable = true)
-    var imageName: String? = null,
-    @Column(nullable = true)
-    var imageUrl: String? = null
-)
+    @Column(nullable = false)
+    var imageName: String,
+    @Column(nullable = false)
+    var imageUrl: String
+) {
+    fun toDto() = ArticleDto(
+        id = id!!,
+        title = title,
+        content = content,
+        tag = tag,
+        createdAt = createdAt.toString(),
+        viewCount = viewCount,
+        imageUrl = imageUrl
+    )
+}
