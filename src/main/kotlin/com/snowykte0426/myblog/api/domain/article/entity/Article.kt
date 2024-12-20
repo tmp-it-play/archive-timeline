@@ -6,8 +6,13 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "article_table")
+@SecondaryTable(
+    name = "article_view_count",
+    pkJoinColumns = [PrimaryKeyJoinColumn(name = "article_id", referencedColumnName = "id")]
+)
 data class Article(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false, length = 100)
     var title: String,
@@ -17,7 +22,7 @@ data class Article(
     var tag: String,
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     var createdAt: LocalDateTime = LocalDateTime.now(),
-    @Column(nullable = false)
+    @Column(name = "view_count", table = "article_view_count", nullable = false)
     var viewCount: Long = 0L,
     @Column(nullable = false)
     var imageName: String,
