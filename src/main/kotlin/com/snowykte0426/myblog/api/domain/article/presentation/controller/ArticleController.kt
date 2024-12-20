@@ -1,5 +1,6 @@
 package com.snowykte0426.myblog.api.domain.article.presentation.controller
 
+import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.ArticleDto
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PatchArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PostArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
@@ -15,7 +16,8 @@ class ArticleController(
     private val getArticleService: GetArticleService,
     private val postArticleService: PostArticleService,
     private val patchArticleService: PatchArticleService,
-    private val deleteArticleService: DeleteArticleService
+    private val deleteArticleService: DeleteArticleService,
+    private val patchViewCountService: PatchViewCountService
 ) {
     @GetMapping
     fun getArticles(): ResponseEntity<List<ArticleResponse>> {
@@ -59,5 +61,10 @@ class ArticleController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteArticle(@PathVariable id: Long) {
         deleteArticleService.execute(id)
+    }
+
+    @PatchMapping("/{id}/view")
+    fun patchViewCount(@PathVariable id: Long): ResponseEntity<ArticleDto> {
+        return ResponseEntity.ok(patchViewCountService.execute(id))
     }
 }
