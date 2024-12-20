@@ -3,15 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagList = document.getElementById('tagList');
     const searchInput = document.getElementById('searchInput');
     const modeToggle = document.getElementById('modeToggle');
+    const sortSelect = document.getElementById('sortSelect');
     const errorMessage = document.getElementById('errorMessage');
 
     let selectedTags = [];
+    let posts = [];
 
     fetch('/api/v1/articles')
         .then(response => response.json())
         .then(data => {
             posts = data;
-            uniqueTags = [...new Set(posts.map(post => post.tag))];
+            const uniqueTags = [...new Set(posts.map(post => post.tag))];
             renderTags(uniqueTags);
             renderPosts(posts);
         })
@@ -20,11 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
             showErrorMessage('글 목록을 가져오는 중 오류가 발생했습니다.');
         });
 
-    const savedMode = localStorage.getItem('mode');
-    if (savedMode === 'dark') {
-        document.body.classList.add('dark-mode');
-        modeToggle.checked = true;
-    }
+    sortSelect.addEventListener('change', () => {
+        const sortBy = sortSelect.value;
+        const sortedPosts = [...posts].sort(sortFunctions[sortBy]);
+        renderPosts(sortedPosts);
+    });
+
+    const sortFunctions = {
+        newest: (a, b) => b.id - a.id,
+        oldest: (a, b) => a.id - b.id,
+        views: (a, b) => b.viewCount - a.viewCount,
+    };
 
     function renderTags(tags) {
         tagList.innerHTML = '';
@@ -81,10 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const contentEl = document.createElement('p');
             contentEl.className = 'post-excerpt';
-            contentEl.textContent = stripMarkdown(post.content);
+            contentEl.textContent = truncateContent(stripMarkdown(post.content));
+
+            const metaEl = document.createElement('div');
+            metaEl.className = 'post-meta';
+            metaEl.textContent = `${formatDate(post.createdAt)} • 조회수: ${post.viewCount}`;
 
             contentDiv.appendChild(titleEl);
             contentDiv.appendChild(contentEl);
+            contentDiv.appendChild(metaEl);
 
             postDiv.appendChild(imageDiv);
             postDiv.appendChild(contentDiv);
@@ -94,12 +107,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function truncateContent(content, maxLength = 100) {
+        if (content.length <= maxLength) return content;
+        return content.substring(0, maxLength) + '...';
+    }
+
     function stripMarkdown(markdown) {
         return markdown
             .replace(/[#_*~`>\-]+/g, '') // Remove markdown syntax
             .replace(/\[.*?\]\(.*?\)/g, '') // Remove links
             .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
             .trim();
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     function showErrorMessage(message) {
