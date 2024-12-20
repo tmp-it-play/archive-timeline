@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stripMarkdown(markdown) {
         return markdown
-            .replace(/[#_*~`>\-]+/g, '') // Remove markdown syntax
-            .replace(/\[.*?\]\(.*?\)/g, '') // Remove links
-            .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
+            .replace(/[#_*~`>\-]+/g, '')
+            .replace(/\[.*?\]\(.*?\)/g, '')
+            .replace(/!\[.*?\]\(.*?\)/g, '')
             .trim();
     }
 
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', filterPosts);
 
     function openPost(id) {
-        window.location.href = `/post.html?id=${id}`;
+        window.location.href = `/post?id=${id}`;
     }
 
     modeToggle.addEventListener('change', () => {
