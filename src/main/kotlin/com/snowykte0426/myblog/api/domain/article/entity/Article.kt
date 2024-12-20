@@ -31,6 +31,7 @@ data class Article(
         tag = tag,
         createdAt = createdAt.toString(),
         viewCount = viewCount,
+        imageName = imageName,
         imageUrl = imageUrl
     )
 }

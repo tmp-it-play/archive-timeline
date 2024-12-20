@@ -3,13 +3,14 @@ package com.snowykte0426.myblog.api.domain.article.presentation.controller.dto
 import com.snowykte0426.myblog.api.domain.article.entity.Article
 
 data class ArticleDto(
-    val id: Long?,
-    val title: String,
-    val content: String,
-    val tag: String,
-    val createdAt: String,
-    val viewCount: Long,
-    val imageUrl: String
+    var id: Long?,
+    var title: String,
+    var content: String,
+    var tag: String,
+    var createdAt: String,
+    var viewCount: Long,
+    var imageName: String,
+    var imageUrl: String
 ) {
     fun toEntity() = Article(
         id = id,
@@ -18,7 +19,7 @@ data class ArticleDto(
         tag = tag,
         createdAt = java.time.LocalDateTime.parse(createdAt),
         viewCount = viewCount,
-        imageName = "",
+        imageName = imageName,
         imageUrl = imageUrl
     )
 }

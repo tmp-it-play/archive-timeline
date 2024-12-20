@@ -29,9 +29,7 @@ class PatchArticleServiceImpl(
         content?.let { article.content = it }
         tag?.let { article.tag = it }
         image?.let {
-            article.imageName?.let { existingImageName ->
-                fileDeleteService.deleteFile(existingImageName)
-            }
+            fileDeleteService.deleteFile(article.imageName)
             val decodedImage = Base64.getDecoder().decode(it.substringAfter("base64,"))
             val multipartFile = Base64DecodedMultipartFile(decodedImage, "image/jpeg")
             val (uploadedUrl, uploadedFileName) = fileUploadService.uploadFile(multipartFile)
@@ -43,8 +41,8 @@ class PatchArticleServiceImpl(
             title = article.title,
             content = article.content,
             tag = article.tag,
-            imageUrl = article.imageUrl!!,
-            imageName = article.imageName!!
+            imageUrl = article.imageUrl,
+            imageName = article.imageName
         )
         return ArticleResponse(
             id = article.id!!,
