@@ -4,7 +4,7 @@ RUN apk update && apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
     && echo "Asia/Seoul" > /etc/timezone \
     && apk del tzdata
-RUN apk add --no-cache curl bash openjdk21 \
+RUN apk add --no-cache curl bash openjdk21 zip \
     && curl -s "https://get.sdkman.io" | bash \
     && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install gradle 8.3"
 COPY . .
