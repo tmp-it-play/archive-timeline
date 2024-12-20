@@ -16,6 +16,7 @@ class FindArticle(private val articleRepository: ArticleRepository) {
                 tag = it.tag,
                 createdAt = it.createdAt.toString(),
                 viewCount = it.viewCount,
+                imageName = it.imageName,
                 imageUrl = it.imageUrl
             )
         }
