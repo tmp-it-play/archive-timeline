@@ -3,10 +3,8 @@ package com.snowykte0426.myblog.api.domain.article.presentation.controller
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PatchArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PostArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
-import com.snowykte0426.myblog.api.domain.article.service.GetAllArticleService
-import com.snowykte0426.myblog.api.domain.article.service.GetArticleService
-import com.snowykte0426.myblog.api.domain.article.service.PatchArticleService
-import com.snowykte0426.myblog.api.domain.article.service.PostArticleService
+import com.snowykte0426.myblog.api.domain.article.service.*
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -16,7 +14,8 @@ class ArticleController(
     private val getAllArticleService: GetAllArticleService,
     private val getArticleService: GetArticleService,
     private val postArticleService: PostArticleService,
-    private val patchArticleService: PatchArticleService
+    private val patchArticleService: PatchArticleService,
+    private val deleteArticleService: DeleteArticleService
 ) {
     @GetMapping
     fun getArticles(): ResponseEntity<List<ArticleResponse>> {
@@ -41,7 +40,10 @@ class ArticleController(
     }
 
     @PatchMapping("/{id}")
-    fun patchArticle(@PathVariable id: Long, @RequestBody request: PatchArticleRequest): ResponseEntity<ArticleResponse> {
+    fun patchArticle(
+        @PathVariable id: Long,
+        @RequestBody request: PatchArticleRequest
+    ): ResponseEntity<ArticleResponse> {
         return ResponseEntity.ok(
             patchArticleService.execute(
                 id = id,
@@ -51,5 +53,11 @@ class ArticleController(
                 image = request.image
             )
         )
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteArticle(@PathVariable id: Long) {
+        deleteArticleService.execute(id)
     }
 }
