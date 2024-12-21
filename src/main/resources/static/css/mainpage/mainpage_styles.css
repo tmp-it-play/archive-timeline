@@ -89,7 +89,6 @@ main {
     background: #f5f5f5;
 }
 
-/* 애니메이션 */
 .sort-select {
     transition: height 0.3s ease-in-out;
 }
