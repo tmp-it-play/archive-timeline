@@ -45,6 +45,9 @@ dependencies {
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     runtimeOnly("com.mysql:mysql-connector-j")
 
+    // Markdown
+    implementation("com.vladsch.flexmark:flexmark-all:0.64.0")
+
     // AWS SDK
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.691")
 
