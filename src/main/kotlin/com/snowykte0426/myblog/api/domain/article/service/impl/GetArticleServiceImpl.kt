@@ -25,7 +25,7 @@ class GetArticleServiceImpl(
             tag = article.tag,
             createdAt = article.createdAt.toString(),
             viewCount = article.viewCount,
-            imageUrl = if (article.imageUrl != null) devUrl + "/" + article.imageName else null
+            imageUrl = devUrl + "/" + article.imageName
         )
     }
 }
