@@ -4,6 +4,7 @@ import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.Ar
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PatchArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PostArticleRequest
 import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
+import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.TagResponse
 import com.snowykte0426.myblog.api.domain.article.service.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,7 +18,8 @@ class ArticleController(
     private val postArticleService: PostArticleService,
     private val patchArticleService: PatchArticleService,
     private val deleteArticleService: DeleteArticleService,
-    private val patchViewCountService: PatchViewCountService
+    private val patchViewCountService: PatchViewCountService,
+    private val getTagService: GetTagService
 ) {
     @GetMapping
     fun getArticles(): ResponseEntity<List<ArticleResponse>> {
@@ -67,5 +69,10 @@ class ArticleController(
     @PatchMapping("/{id}/view")
     fun patchViewCount(@PathVariable id: Long): ResponseEntity<ArticleDto> {
         return ResponseEntity.ok(patchViewCountService.execute(id))
+    }
+
+    @GetMapping("/tags")
+    fun getTags(): ResponseEntity<TagResponse> {
+        return ResponseEntity.ok(getTagService.execute())
     }
 }
