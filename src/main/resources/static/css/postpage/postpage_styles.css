@@ -70,3 +70,18 @@
 .dark-mode .post-content {
     color: #999;
 }
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    padding: 1rem;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+}

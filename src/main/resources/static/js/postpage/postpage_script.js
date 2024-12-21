@@ -2,16 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const postDetail = document.getElementById('postDetail');
     const errorMessage = document.getElementById('errorMessage');
     const modeToggle = document.getElementById('modeToggle');
-
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id');
-
     if (!postId) {
         showErrorMessage('잘못된 요청입니다. 글 ID가 없습니다.');
         return;
     }
 
-    fetch(`/api/v1/article/${postId}`)
+    fetch(`/api/v1/articles/${postId}`)
         .then(response => {
             if (!response.ok) throw new Error('글 정보를 가져오는 데 실패했습니다.');
             return response.json();
@@ -40,11 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPostDetail(post) {
         postDetail.innerHTML = '';
-
         const titleEl = document.createElement('h1');
         titleEl.className = 'post-title';
         titleEl.textContent = post.title;
-
         const imageDiv = document.createElement('div');
         imageDiv.className = 'post-image';
         if (post.imageUrl) {
@@ -53,31 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
             img.alt = post.title;
             imageDiv.appendChild(img);
         }
-
         const metaEl = document.createElement('div');
         metaEl.className = 'post-meta';
         metaEl.textContent = `작성일: ${formatDate(post.createdAt)} • 조회수: ${post.viewCount}`;
-
         const contentEl = document.createElement('div');
         contentEl.className = 'post-content';
-        contentEl.innerHTML = convertMarkdownToHTML(post.content);
-
+        contentEl.innerHTML = marked.parse(post.content);
         postDetail.appendChild(titleEl);
         postDetail.appendChild(imageDiv);
         postDetail.appendChild(metaEl);
         postDetail.appendChild(contentEl);
-    }
-
-    function convertMarkdownToHTML(markdown) {
-        return markdown
-            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-            .replace(/\*(.*)\*/gim, '<em>$1</em>')
-            .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" />')
-            .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>')
-            .replace(/\n$/gim, '<br />');
+        hljs.highlightAll();
     }
 
     function formatDate(dateString) {

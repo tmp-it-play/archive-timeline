@@ -2,22 +2,43 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>글 상세 보기</title>
-    <link rel="stylesheet" href="/css/postpage/postpage_styles.css">
+    <link href="/css/postpage/postpage_styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/javascript.min.js"></script>
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            padding: 1rem;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+    </style>
 </head>
 <body>
 <div class="toggle-mode">
     <label class="switch">
-        <input type="checkbox" id="modeToggle">
+        <input id="modeToggle" type="checkbox">
         <span class="slider"></span>
     </label>
 </div>
 <div class="container">
     <main>
-        <div id="postDetail" class="post-detail">
+        <div class="post-detail" id="postDetail">
         </div>
-        <div id="errorMessage" class="error-message" style="display: none;"></div>
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
     </main>
 </div>
 <script src="/js/postpage/postpage_script.js"></script>
