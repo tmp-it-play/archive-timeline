@@ -15,4 +15,9 @@ class WebController {
     fun getArticlePage(@RequestParam id: Long): String {
         return "postpage"
     }
+
+    @GetMapping("/write")
+    fun getWritePage(): String {
+        return "writepage"
+    }
 }
