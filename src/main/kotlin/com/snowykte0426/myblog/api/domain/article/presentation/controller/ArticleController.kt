@@ -30,6 +30,7 @@ class ArticleController(
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun postArticle(@RequestBody request: PostArticleRequest): ResponseEntity<ArticleResponse> {
         return ResponseEntity.status(201).body(
             postArticleService.execute(
