@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글 작성</title>
+  <link href="/css/writepage/writepage_styles.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="page-title">글 작성</h1>
+  <form id="articleForm" class="write-form">
+    <div class="form-group">
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title" class="form-control" placeholder="제목을 입력하세요" required>
+    </div>
+    <div class="form-group">
+      <label for="tag">태그</label>
+      <div id="tagInputContainer" class="tag-input-container">
+        <input type="text" id="tagInput" class="form-control" placeholder="태그 입력 후 Enter를 누르세요">
+        <div id="tagList" class="tag-list"></div>
+      </div>
+      <div class="tag-suggestions">
+        <strong>추천 태그:</strong>
+        <div id="tagOptions" class="tag-options">
+          <!-- 동적으로 로드된 태그 버튼 -->
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="content">본문</label>
+      <textarea id="content" name="content" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="image">이미지 업로드</label>
+      <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn-submit">작성 완료</button>
+  </form>
+</div>
+<script src="/js/writepage/writepage_script.js"></script>
+</body>
+</html>
