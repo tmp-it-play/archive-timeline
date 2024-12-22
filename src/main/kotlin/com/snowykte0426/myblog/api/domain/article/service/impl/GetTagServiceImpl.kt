@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class GetTagServiceImpl(private val findArticle: FindArticle) : GetTagService {
     override fun execute(): TagResponse {
         val articles = findArticle.execute()
-        val tags = articles.map { it.tag }
+        val tags = articles.map { it.tag }.distinct()
         return TagResponse(tags = tags.joinToString(","))
     }
 }
