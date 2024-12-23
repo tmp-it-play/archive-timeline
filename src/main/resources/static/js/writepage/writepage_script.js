@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let darkMode = localStorage.getItem('mode') === 'dark';
+    if (darkMode) {
+        document.body.classList.add('dark-mode');
+    }
     const form = document.getElementById('articleForm');
     const tagInput = document.getElementById('tagInput');
     const tagList = document.getElementById('tagList');
