@@ -130,3 +130,184 @@ textarea {
 .btn-submit:hover {
     background: #333;
 }
+
+.dark-mode body {
+    background-color: #1a1a1a;
+}
+
+.dark-mode .container {
+    background-color: #1a1a1a;
+    border-color: #333;
+}
+
+.dark-mode label {
+    color: #ffffff;
+}
+
+.dark-mode input[type="text"],
+.dark-mode textarea,
+.dark-mode input[type="file"] {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #555;
+}
+
+.dark-mode .tag {
+    background: #333;
+    border-color: #555;
+    color: #ffffff;
+}
+
+.dark-mode .tag .remove-tag {
+    color: #f87171;
+}
+
+.dark-mode .tag-button {
+    background: #333;
+    border-color: #555;
+    color: #ffffff;
+}
+
+.dark-mode .btn-submit {
+    background: #444;
+}
+
+.dark-mode .btn-submit:hover {
+    background: #666;
+}
+
+.dark-mode .post-title {
+    color: #ffffff;
+}
+
+.CodeMirror {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+.CodeMirror-cursor {
+    border-left: 1px solid #ffffff;
+}
+
+.cm-s-default .cm-header {
+    color: #ffffff !important;
+}
+
+.cm-s-default .cm-keyword {
+    color: #81a1c1 !important;
+}
+
+.cm-s-default .cm-string {
+    color: #a3be8c !important;
+}
+
+.cm-s-default .cm-comment {
+    color: #616e88 !important;
+}
+
+.toggle-mode {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e5e5e5;
+    transition: 0.2s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.2s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #1a1a1a;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.image-preview-container {
+    position: relative;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.image-preview {
+    display: none;
+    max-width: 100%;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.file-name-display {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #666;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.resize-handle.top-left {
+    top: -5px;
+    left: -5px;
+    cursor: nwse-resize;
+}
+
+.resize-handle.top-right {
+    top: -5px;
+    right: -5px;
+    cursor: nesw-resize;
+}
+
+.resize-handle.bottom-left {
+    bottom: -5px;
+    left: -5px;
+    cursor: nesw-resize;
+}
+
+.resize-handle.bottom-right {
+    bottom: -5px;
+    right: -5px;
+    cursor: nwse-resize;
+}
