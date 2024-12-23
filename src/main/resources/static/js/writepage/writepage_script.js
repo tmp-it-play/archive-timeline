@@ -38,10 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tagInput.value = '';
         }
     });
+
     function sanitizeTag(tag) {
         const cleanedTag = tag.replace(/[^a-zA-Z0-9가-힣]/g, '');
         return cleanedTag ? (cleanedTag.startsWith('#') ? cleanedTag : `#${cleanedTag}`) : null;
     }
+
     function addTag(tag) {
         if (tags.has(tag)) return;
         tags.add(tag);
@@ -58,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tagEl.appendChild(removeEl);
         tagList.appendChild(tagEl);
     }
+
     function renderTagOptions(existingTags) {
         existingTags.forEach(tag => {
             const button = document.createElement('button');
@@ -68,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tagOptions.appendChild(button);
         });
     }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const title = titleInput.value.trim();
@@ -99,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('글 작성 중 오류가 발생했습니다.');
             });
     });
+
     function toBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -107,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         });
     }
+
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -126,9 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePreview.style.display = 'none';
         }
     });
+
     function sanitizeFileName(fileName) {
         return fileName.replace(/[<>:"\/\\|?*]+/g, '_');
     }
+
     function addResizeHandles(image) {
         const handles = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
         handles.forEach((position) => {
@@ -137,12 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
             imagePreviewContainer.appendChild(handle);
             handle.addEventListener('mousedown', startResizing);
         });
+
         function startResizing(e) {
             e.preventDefault();
             const startX = e.clientX;
             const startY = e.clientY;
             const startWidth = image.offsetWidth;
             const startHeight = image.offsetHeight;
+
             function resize(e) {
                 const deltaX = e.clientX - startX;
                 const deltaY = e.clientY - startY;
@@ -160,14 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     image.style.height = `${startHeight + deltaY}px`;
                 }
             }
+
             function stopResizing() {
                 document.removeEventListener('mousemove', resize);
                 document.removeEventListener('mouseup', stopResizing);
             }
+
             document.addEventListener('mousemove', resize);
             document.addEventListener('mouseup', stopResizing);
         }
     }
+
     const savedMode = localStorage.getItem('mode');
     if (savedMode === 'dark') {
         applyDarkMode();
@@ -182,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('mode', 'light');
         }
     });
+
     function applyDarkMode() {
         document.body.classList.add('dark-mode');
         const wrapper = simplemde.codemirror.getWrapperElement();
@@ -194,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pageTitle.style.color = '#fff';
         document.body.style.backgroundColor = '#222';
     }
+
     function removeDarkMode() {
         document.body.classList.remove('dark-mode');
         const wrapper = simplemde.codemirror.getWrapperElement();
@@ -206,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pageTitle.style.color = '#000';
         document.body.style.backgroundColor = '#f9f9f9';
     }
+
     titleInput.addEventListener('input', () => {
         pageTitle.textContent = titleInput.value.trim() || '글 작성';
     });
