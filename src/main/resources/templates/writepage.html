@@ -9,8 +9,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
 </head>
 <body>
+<div class="toggle-mode">
+  <label class="switch">
+    <input id="modeToggle" type="checkbox">
+    <span class="slider"></span>
+  </label>
+</div>
 <div class="container">
-  <h1 class="page-title">글 작성</h1>
+  <h1 id="pageTitle" class="page-title">글 작성</h1>
   <form id="articleForm" class="write-form">
     <div class="form-group">
       <label for="title">제목</label>
@@ -24,9 +30,7 @@
       </div>
       <div class="tag-suggestions">
         <strong>추천 태그:</strong>
-        <div id="tagOptions" class="tag-options">
-          <!-- 동적으로 로드된 태그 버튼 -->
-        </div>
+        <div id="tagOptions" class="tag-options"></div>
       </div>
     </div>
     <div class="form-group">
@@ -36,6 +40,13 @@
     <div class="form-group">
       <label for="image">이미지 업로드</label>
       <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
+      <div id="imagePreviewContainer" class="image-preview-container">
+        <img id="imagePreview" class="image-preview" src="" alt="이미지 미리보기">
+        <div class="image-size-control">
+          <label for="imageSizeSlider">이미지 크기 조절</label>
+          <input type="range" id="imageSizeSlider" min="50" max="500" value="300">
+        </div>
+      </div>
     </div>
     <button type="submit" class="btn-submit">작성 완료</button>
   </form>
