@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             posts = data;
-            const uniqueTags = [...new Set(posts.map(post => post.tag))];
+            const uniqueTags = extractUniqueTags(posts);
             renderTags(uniqueTags);
             renderPosts(posts);
         })
@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         oldest: (a, b) => a.id - b.id,
         views: (a, b) => b.viewCount - a.viewCount,
     };
+
+    function extractUniqueTags(posts) {
+        const allTags = posts.flatMap(post => post.tag.split(',').map(tag => tag.trim()));
+        return [...new Set(allTags)];
+    }
 
     function renderTags(tags) {
         tagList.innerHTML = '';
@@ -61,16 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPosts(filteredPosts) {
         postList.innerHTML = '';
         errorMessage.style.display = 'none';
-
         if (filteredPosts.length === 0) {
             showErrorMessage('조건에 맞는 글이 없습니다.');
             return;
         }
-
         filteredPosts.forEach(post => {
             const postDiv = document.createElement('div');
             postDiv.className = 'post-item';
-
             const imageDiv = document.createElement('div');
             imageDiv.className = 'post-image';
             if (post.imageUrl) {
@@ -79,29 +81,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.alt = post.title;
                 imageDiv.appendChild(img);
             }
-
             const contentDiv = document.createElement('div');
             contentDiv.className = 'post-content';
-
             const titleEl = document.createElement('h3');
             titleEl.className = 'post-title';
             titleEl.textContent = post.title;
-
             const contentEl = document.createElement('p');
             contentEl.className = 'post-excerpt';
-            contentEl.textContent = truncateContent(stripMarkdown(post.content));
-
+            contentEl.textContent = truncateContent(removeMarkdownAndHtml(post.content));
             const metaEl = document.createElement('div');
             metaEl.className = 'post-meta';
             metaEl.textContent = `${formatDate(post.createdAt)} • 조회수: ${post.viewCount}`;
-
             contentDiv.appendChild(titleEl);
             contentDiv.appendChild(contentEl);
             contentDiv.appendChild(metaEl);
-
             postDiv.appendChild(imageDiv);
             postDiv.appendChild(contentDiv);
-
             postDiv.addEventListener('click', () => openPost(post.id));
             postList.appendChild(postDiv);
         });
@@ -112,8 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return content.substring(0, maxLength) + '...';
     }
 
-    function stripMarkdown(markdown) {
-        return markdown
+    function removeMarkdownAndHtml(content) {
+        return content
+            .replace(/<[^>]*>/g, '')
             .replace(/[#_*~`>\-]+/g, '')
             .replace(/\[.*?\]\(.*?\)/g, '')
             .replace(/!\[.*?\]\(.*?\)/g, '')
@@ -138,10 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
         let filtered = posts;
         if (query) {
-            filtered = filtered.filter(post => post.title.toLowerCase().includes(query));
+            filtered = filtered.filter(post => {
+                const title = post.title.toLowerCase();
+                const content = removeMarkdownAndHtml(post.content).toLowerCase();
+                return title.includes(query) || content.includes(query);
+            });
         }
         if (selectedTags.length > 0) {
-            filtered = filtered.filter(post => selectedTags.includes(post.tag));
+            filtered = filtered.filter(post => {
+                const postTags = post.tag.split(',').map(tag => tag.trim());
+                return selectedTags.every(tag => postTags.includes(tag));
+            });
         }
         renderPosts(filtered);
     }
@@ -158,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         window.location.href = `/post?id=${id}`;
     }
-
     modeToggle.addEventListener('change', () => {
         if (modeToggle.checked) {
             document.body.classList.add('dark-mode');
