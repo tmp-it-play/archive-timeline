@@ -2,13 +2,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const postList = document.getElementById('postList');
     const tagList = document.getElementById('tagList');
     const searchInput = document.getElementById('searchInput');
-    const modeToggle = document.getElementById('modeToggle');
     const sortSelect = document.getElementById('sortSelect');
     const errorMessage = document.getElementById('errorMessage');
+    const toggleButton = document.body.getElementsByClassName("switch")[1];
+    const modeToggle = document.getElementById('modeToggle');
+    const switchElement = document.querySelector(".switch"); // "switch" 클래스의 첫 번째 요소 선택
+    const sliderElement = switchElement ? switchElement.querySelector(".slider") : null; // 내부의 "slider" 요소 선택
 
+    // 다크 모드 상태 확인 및 설정
+    let darkMode = localStorage.getItem('mode') === 'dark';
+    if (darkMode) {
+        document.body.classList.add('dark-mode');
+        if (modeToggle) {
+            modeToggle.checked = true; // 체크박스 상태 설정
+        }
+    }
+
+    // 다크 모드 토글
+    if (modeToggle) {
+        modeToggle.addEventListener('change', () => {
+            if (modeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('mode', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('mode', 'light');
+            }
+
+            // 추가 동작: sliderElement 스타일 변경 예시
+            if (sliderElement) {
+                sliderElement.style.backgroundColor = modeToggle.checked ? '#444' : '#e5e5e5';
+            }
+        });
+    }
     let selectedTags = [];
     let posts = [];
-
     fetch('/api/v1/articles')
         .then(response => response.json())
         .then(data => {
@@ -21,13 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('글 목록을 가져오는 중 오류 발생:', error);
             showErrorMessage('글 목록을 가져오는 중 오류가 발생했습니다.');
         });
-
     sortSelect.addEventListener('change', () => {
         const sortBy = sortSelect.value;
         const sortedPosts = [...posts].sort(sortFunctions[sortBy]);
         renderPosts(sortedPosts);
     });
-
     const sortFunctions = {
         newest: (a, b) => b.id - a.id,
         oldest: (a, b) => a.id - b.id,
@@ -150,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchInput.addEventListener('input', filterPosts);
+
     function openPost(id) {
         fetch(`/api/v1/articles/${id}/view`, {
             method: 'PATCH',
@@ -161,13 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         window.location.href = `/post?id=${id}`;
     }
+
     modeToggle.addEventListener('change', () => {
         if (modeToggle.checked) {
             document.body.classList.add('dark-mode');
             localStorage.setItem('mode', 'dark');
+            darkMode = true;
         } else {
             document.body.classList.remove('dark-mode');
             localStorage.setItem('mode', 'light');
+            darkMode = false;
         }
     });
 });

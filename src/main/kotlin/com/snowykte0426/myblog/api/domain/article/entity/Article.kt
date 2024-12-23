@@ -1,6 +1,6 @@
 package com.snowykte0426.myblog.api.domain.article.entity
 
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.ArticleDto
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.ArticleDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

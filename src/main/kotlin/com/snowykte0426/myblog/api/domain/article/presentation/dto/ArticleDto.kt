@@ -1,6 +1,7 @@
-package com.snowykte0426.myblog.api.domain.article.presentation.controller.dto
+package com.snowykte0426.myblog.api.domain.article.presentation.dto
 
 import com.snowykte0426.myblog.api.domain.article.entity.Article
+import java.time.LocalDateTime
 
 data class ArticleDto(
     var id: Long?,
@@ -17,7 +18,7 @@ data class ArticleDto(
         title = title,
         content = content,
         tag = tag,
-        createdAt = java.time.LocalDateTime.parse(createdAt),
+        createdAt = LocalDateTime.parse(createdAt),
         viewCount = viewCount,
         imageName = imageName,
         imageUrl = imageUrl

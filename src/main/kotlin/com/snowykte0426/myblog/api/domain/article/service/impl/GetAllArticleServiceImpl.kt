@@ -2,7 +2,7 @@ package com.snowykte0426.myblog.api.domain.article.service.impl
 
 import com.snowykte0426.myblog.api.domain.article.service.GetAllArticleService
 import com.snowykte0426.myblog.api.domain.article.component.FindArticle
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.response.ArticleResponse
 import com.snowykte0426.myblog.api.domain.article.exception.ArticleNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

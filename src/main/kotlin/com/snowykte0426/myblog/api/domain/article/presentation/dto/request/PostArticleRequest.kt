@@ -1,4 +1,4 @@
-package com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request
+package com.snowykte0426.myblog.api.domain.article.presentation.dto.request
 
 import org.jetbrains.annotations.NotNull
 

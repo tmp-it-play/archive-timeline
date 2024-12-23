@@ -1,10 +1,10 @@
 package com.snowykte0426.myblog.api.domain.article.presentation.controller
 
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.ArticleDto
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PatchArticleRequest
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.request.PostArticleRequest
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.TagResponse
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.ArticleDto
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.request.PatchArticleRequest
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.request.PostArticleRequest
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.response.ArticleResponse
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.response.TagResponse
 import com.snowykte0426.myblog.api.domain.article.service.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

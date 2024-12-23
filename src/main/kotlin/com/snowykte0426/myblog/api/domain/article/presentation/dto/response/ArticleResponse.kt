@@ -1,4 +1,4 @@
-package com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response
+package com.snowykte0426.myblog.api.domain.article.presentation.dto.response
 
 data class ArticleResponse(
     val id: Long,

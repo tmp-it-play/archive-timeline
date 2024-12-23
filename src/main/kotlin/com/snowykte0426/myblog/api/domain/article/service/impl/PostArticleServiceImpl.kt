@@ -1,7 +1,7 @@
 package com.snowykte0426.myblog.api.domain.article.service.impl
 
 import com.snowykte0426.myblog.api.domain.article.component.CreateArticle
-import com.snowykte0426.myblog.api.domain.article.presentation.controller.dto.response.ArticleResponse
+import com.snowykte0426.myblog.api.domain.article.presentation.dto.response.ArticleResponse
 import com.snowykte0426.myblog.api.domain.article.service.PostArticleService
 import com.snowykte0426.myblog.api.global.aws.service.FileUploadService
 import com.snowykte0426.myblog.api.global.util.Base64DecodedMultipartFile
