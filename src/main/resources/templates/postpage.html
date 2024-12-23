@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="width=device-width, initial-scale=1.0">
     <title>글 상세 보기</title>
     <link href="/css/postpage/postpage_styles.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" rel="stylesheet">
@@ -18,7 +18,12 @@
 </div>
 <div class="container">
     <main>
+        <button class="btn-home" onclick="location.href='/main'">홈으로</button>
         <div class="post-detail" id="postDetail"></div>
+        <div class="navigation-buttons">
+            <div class="post-navigation" id="prevPost"></div>
+            <div class="post-navigation" id="nextPost"></div>
+        </div>
         <div class="error-message" id="errorMessage" style="display: none;"></div>
     </main>
 </div>
