@@ -126,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = (event) => {
                 imagePreview.src = event.target.result;
                 imagePreview.style.display = 'block';
-                imagePreviewContainer.style.position = 'relative'; // 크기 조절을 위한 설정
-                addResizeHandles(imagePreview); // 핸들 추가
+                imagePreviewContainer.style.position = 'relative';
+                addResizeHandles(imagePreview);
             };
             reader.readAsDataURL(file);
         } else {

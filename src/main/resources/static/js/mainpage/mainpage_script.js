@@ -6,19 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const toggleButton = document.body.getElementsByClassName("switch")[1];
     const modeToggle = document.getElementById('modeToggle');
-    const switchElement = document.querySelector(".switch"); // "switch" 클래스의 첫 번째 요소 선택
-    const sliderElement = switchElement ? switchElement.querySelector(".slider") : null; // 내부의 "slider" 요소 선택
+    const switchElement = document.querySelector(".switch");
+    const sliderElement = switchElement ? switchElement.querySelector(".slider") : null;
 
-    // 다크 모드 상태 확인 및 설정
     let darkMode = localStorage.getItem('mode') === 'dark';
     if (darkMode) {
         document.body.classList.add('dark-mode');
         if (modeToggle) {
-            modeToggle.checked = true; // 체크박스 상태 설정
+            modeToggle.checked = true;
         }
     }
 
-    // 다크 모드 토글
     if (modeToggle) {
         modeToggle.addEventListener('change', () => {
             if (modeToggle.checked) {
@@ -28,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('dark-mode');
                 localStorage.setItem('mode', 'light');
             }
-
-            // 추가 동작: sliderElement 스타일 변경 예시
             if (sliderElement) {
                 sliderElement.style.backgroundColor = modeToggle.checked ? '#444' : '#e5e5e5';
             }
