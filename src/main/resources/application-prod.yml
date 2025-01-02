@@ -13,8 +13,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   cache:
     type: caffeine
+  security:
+    jwt:
+      secret: ${JWT_SECRET:my-secret-key}
+      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600}  # 1 hour
+      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:172800}  # 2 days
 aws:
   s3:
     access-key: ${AWS_ACCESS_KEY_ID}
