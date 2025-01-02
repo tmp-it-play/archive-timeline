@@ -36,6 +36,11 @@ dependencies {
     // JSON 처리
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Java JSON Web Token
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
+
     // Caffeine
     implementation("com.github.ben-manes.caffeine:caffeine")
 
@@ -45,9 +50,6 @@ dependencies {
     // 데이터베이스 드라이버
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     runtimeOnly("com.mysql:mysql-connector-j")
-
-    // Markdown
-    implementation("com.vladsch.flexmark:flexmark-all:0.64.0")
 
     // AWS SDK
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.691")
