@@ -1,5 +1,8 @@
 package com.snowykte0426.myblog.security.jwt.service.impl
 
+import com.snowykte0426.myblog.security.jwt.component.SaveRefreshToken
+import com.snowykte0426.myblog.security.jwt.entity.RefreshToken
+import com.snowykte0426.myblog.security.jwt.exception.RefreshTokenSaveException
 import com.snowykte0426.myblog.security.jwt.presentation.dto.TokenDto
 import com.snowykte0426.myblog.security.jwt.service.JwtIssueService
 import io.jsonwebtoken.Jwts
@@ -14,11 +17,12 @@ import java.util.*
 @Service
 class JwtIssueServiceImpl(
     @Value("\${spring.security.jwt.secret}")
-    val secretKey: String,
+    private val secretKey: String,
     @Value("\${spring.security.jwt.access-token-expiration}")
-    val accessTokenExpiration: Long,
+    private val accessTokenExpiration: Long,
     @Value("\${spring.security.jwt.refresh-token-expiration}")
-    val refreshTokenExpiration: Long
+    private val refreshTokenExpiration: Long,
+    private val saveRefreshToken: SaveRefreshToken
 ) : JwtIssueService {
     private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
     override fun issueAccessToken(userId: String): TokenDto {
@@ -40,6 +44,9 @@ class JwtIssueServiceImpl(
             .setExpiration(Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant()))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
+        if (!saveRefreshToken.execute(RefreshToken(refreshToken, expirationTime))) {
+            throw RefreshTokenSaveException("Failed to save refresh token")
+        }
         return TokenDto(refreshToken, expirationTime)
     }
 }
