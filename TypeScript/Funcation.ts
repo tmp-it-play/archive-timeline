@@ -1,3 +1,5 @@
+// @ts-ignore
+
 function sum(a: number, b: number): number {
     return a + b;
 }
@@ -25,3 +27,8 @@ fetchVideo(
     () => console.log("Success"),
     () => console.log("Failure")
 );
+
+fetch("https://amond-blog.n-e.kr/api/v1/articles")
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.log("Failure", error));
