@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Movie } from './entity/movies.entity';
+import { Injectable } from "@nestjs/common";
+import { Movie } from "./entity/movies.entity";
 
 @Injectable()
 export class MoviesService {
@@ -9,13 +9,13 @@ export class MoviesService {
     return this.movies;
   }
 
-  getOne(id: string): Movie {
-    return this.movies.find(movie => movie.id === parseInt(id));
+  getOne(id: number): Movie {
+    return this.movies.find((movie) => movie.id === id);
   }
 
-  deleteOne(id: string): boolean {
+  deleteOne(id: number): boolean {
     this.getOne(id);
-    this.movies = this.movies.filter(movie => movie.id !== parseInt(id));
+    this.movies = this.movies.filter((movie) => movie.id !== id);
     return true;
   }
 
@@ -26,7 +26,7 @@ export class MoviesService {
     });
   }
 
-  update(id: string, updateData) {
+  update(id: number, updateData) {
     const movie = this.getOne(id);
     this.deleteOne(id);
     this.movies.push({ ...movie, ...updateData });
