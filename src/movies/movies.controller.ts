@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { Movie } from './entity/movies.entity';
 import { MoviesService } from './movies.service';
 
@@ -12,7 +12,11 @@ export class MoviesController {
 
   @Get(':id')
   getOne(@Param('id') movieId: string): Movie {
-    return this.moviesService.getOne(movieId);
+    const movies = this.moviesService.getOne(movieId);
+    if (!movies) {
+      throw new NotFoundException(`Movie with ID ${movieId} not found.`);
+    }
+    return movies;
   }
 
   @Post()
@@ -27,9 +31,6 @@ export class MoviesController {
 
   @Patch(':id')
   patch(@Param('id') movieId: string, @Body() updateData) {
-    return {
-      updatedMovie: movieId,
-      ...updateData,
-    };
+    return this.moviesService.update(movieId, updateData);
   }
 }

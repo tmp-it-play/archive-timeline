@@ -3,7 +3,7 @@ import { Movie } from './entity/movies.entity';
 
 @Injectable()
 export class MoviesService {
-  private movies:Movie[] = [];
+  private movies: Movie[] = [];
 
   getAll(): Movie[] {
     return this.movies;
@@ -14,6 +14,7 @@ export class MoviesService {
   }
 
   deleteOne(id: string): boolean {
+    this.getOne(id);
     this.movies = this.movies.filter(movie => movie.id !== parseInt(id));
     return true;
   }
@@ -23,5 +24,11 @@ export class MoviesService {
       id: this.movies.length + 1,
       ...movieData,
     });
+  }
+
+  update(id: string, updateData) {
+    const movie = this.getOne(id);
+    this.deleteOne(id);
+    this.movies.push({ ...movie, ...updateData });
   }
 }
