@@ -29,27 +29,28 @@ repositories {
 }
 
 dependencies {
-    // Spring 의존성
+    /* Spring Boot */
     implementation(Dependencies.SPRING_JPA)
     implementation(Dependencies.SPRING_WEB)
     implementation(Dependencies.SPRING_AOP)
 
-    // AspectJ (필요 시만 유지)
+    /* AspectJ */
     implementation(Dependencies.ASPECTJ)
 
-    // 개발 전용
+    /* Spring Boot DevTools */
     developmentOnly(Dependencies.SPRING_DEVTOOLS)
+    developmentOnly(Dependencies.MARIA_DB)
 
-    // Database
+    /* Database */
     implementation(Dependencies.JDBC)
     implementation(Dependencies.MYSQL)
     implementation(Dependencies.REDIS)
 
-    // Lombok
+    /* Lombok */
     implementation(Dependencies.LOMBOK)
     annotationProcessor(Dependencies.LOMBOK)
 
-    // 테스트 의존성
+    /* Test */
     testImplementation(Dependencies.SPRING_TEST)
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.MOCKITO_JUNIT)
@@ -60,6 +61,11 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
+}
+
+tasks.withType<Jar> {
+    archiveBaseName.set("application")
+    archiveVersion.set("1.0.0")
 }
 
 tasks.withType<Test> {
