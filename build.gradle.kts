@@ -1,42 +1,67 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-	java
-	id("org.springframework.boot") version "3.3.8"
-	id("io.spring.dependency-management") version "1.1.7"
+    java
+    id("org.springframework.boot") version PluginVersion.SPRING_BOOT
+    id("io.spring.dependency-management") version PluginVersion.SPRING_DEPENDENCY_MANAGEMENT
+    kotlin("jvm") version PluginVersion.KOTLIN_JVM
+    kotlin("plugin.spring") version PluginVersion.KOTLIN_SPRING
 }
 
 group = "com.the-moment"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(23)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom(configurations.annotationProcessor.get())
-	}
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("org.springframework.boot:spring-boot-starter-jdbc")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	compileOnly("org.projectlombok:lombok")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-	runtimeOnly("com.mysql:mysql-connector-j")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Spring 의존성
+    implementation(Dependencies.SPRING_JPA)
+    implementation(Dependencies.SPRING_WEB)
+    implementation(Dependencies.SPRING_AOP)
+
+    // AspectJ (필요 시만 유지)
+    implementation(Dependencies.ASPECTJ)
+
+    // 개발 전용
+    developmentOnly(Dependencies.SPRING_DEVTOOLS)
+
+    // Database
+    implementation(Dependencies.JDBC)
+    implementation(Dependencies.MYSQL)
+    implementation(Dependencies.REDIS)
+
+    // Lombok
+    implementation(Dependencies.LOMBOK)
+    annotationProcessor(Dependencies.LOMBOK)
+
+    // 테스트 의존성
+    testImplementation(Dependencies.SPRING_TEST)
+    testImplementation(Dependencies.JUNIT)
+    testImplementation(Dependencies.MOCKITO_JUNIT)
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs += "-Xjsr305=strict"
+        jvmTarget = "17"
+    }
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
