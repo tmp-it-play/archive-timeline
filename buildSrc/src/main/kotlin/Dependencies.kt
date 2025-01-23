@@ -8,6 +8,7 @@ object Dependencies{
 
     const val JDBC = "org.springframework.boot:spring-boot-starter-jdbc"
     const val MYSQL = "com.mysql:mysql-connector-j"
+    const val MARIA_DB = "org.mariadb.jdbc:mariadb-java-client"
     const val REDIS = "org.springframework.boot:spring-boot-starter-data-redis"
 
     const val LOMBOK = "org.projectlombok:lombok"
