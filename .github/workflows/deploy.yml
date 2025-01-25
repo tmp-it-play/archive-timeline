@@ -27,8 +27,7 @@ jobs:
       - name: Add execute permissions to gradlew
         run: chmod +x ./gradlew
       - name: Create application-prod.yml
-        run: |
-          echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
+        run: echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Create deployment ZIP file
@@ -42,8 +41,9 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.BUCKET_NAME }}/prod/$GITHUB_SHA.zip
       - name: CodeDeploy
-        run: aws deploy create-deployment \
-          --application-name Hello-App \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name Hello-App-Group \
-          --s3-location bucket=${{ secrets.BUCKET_NAME }},bundleType=zip,key=prod/$GITHUB_SHA.zip
+        run:
+          aws deploy create-deployment 
+            --application-name Hello-App 
+            --deployment-config-name CodeDeployDefault.AllAtOnce 
+            --deployment-group-name Hello-App-Group 
+            --s3-location bucket=${{ secrets.BUCKET_NAME }},bundleType=zip,key=prod/$GITHUB_SHA.zip
