@@ -1,8 +1,8 @@
 #!/bin/bash
 IMAGE_NAME=hello-app-image
 CONTAINER_NAME=hello-app-container
-DOCKERFILE_PATH=/home/ec2-user/builds/Dockerfile
-BUILD_DIR=/home/ec2-user/builds
+DOCKERFILE_PATH=/home/ec2-user/src/Dockerfile
+BUILD_DIR=/home/ec2-user/src
 if [ ! -d "$BUILD_DIR" ]; then
   echo "ERROR: Directory '$BUILD_DIR' does not exist. Exiting."
   exit 1
@@ -15,6 +15,11 @@ echo "INFO: Building Docker image '$IMAGE_NAME'..."
 if ! docker build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH" .; then
   echo "ERROR: Failed to build Docker image '$IMAGE_NAME'. Exiting."
   exit 1
+fi
+if docker ps -q -f name="$CONTAINER_NAME"; then
+  echo "INFO: Stopping and removing existing container '$CONTAINER_NAME'..."
+  docker stop "$CONTAINER_NAME"
+  docker rm "$CONTAINER_NAME"
 fi
 echo "INFO: Starting Docker container '$CONTAINER_NAME'..."
 if docker run -d --name "$CONTAINER_NAME" -p 8080:8080 "$IMAGE_NAME"; then
