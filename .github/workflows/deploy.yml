@@ -17,6 +17,9 @@ jobs:
           cache: gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Add execute permissions to gradlew
+        run: chmod +x ./gradlew
+
       - name: Create application-prod.yml
         run: |
           echo "${{ secrets.PROD_WEB_YML }}" > ./src/main/resources/application-prod.yml
