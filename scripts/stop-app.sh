@@ -4,22 +4,21 @@ IMAGE_NAME=hello-app-image
 CONTAINER_NAME=hello-app-container
 DOCKERFILE_PATH=/home/ec2-user/builds/Dockerfile
 if [ ! -d "/home/ec2-user/builds" ]; then
-  echo "Directory /home/ec2-user/builds does not exist. Skipping Docker build and run."
-  exit 0
+  echo "Directory /home/ec2-user/builds does not exist. Creating directory..."
+  mkdir -p /home/ec2-user/builds
 fi
 cd /home/ec2-user/builds || exit
 if ! docker images | grep -q "$IMAGE_NAME"; then
-  echo "Docker image '$IMAGE_NAME' not found. Building Docker image..."
-  docker build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH" .
+  echo "Docker image '$IMAGE_NAME' not found. Skipping image build step."
 else
-  echo "Docker image '$IMAGE_NAME' already exists. Skipping build step."
+  echo "Docker image '$IMAGE_NAME' exists. Skipping image build step."
 fi
-if docker ps | grep -q "$CONTAINER_NAME"; then
+if docker ps -a | grep -q "$CONTAINER_NAME"; then
   echo "Stopping and removing existing Docker container '$CONTAINER_NAME'..."
-  docker stop "$CONTAINER_NAME"
-  docker rm "$CONTAINER_NAME"
+  docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || echo "Container '$CONTAINER_NAME' is already stopped."
+  docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || echo "Container '$CONTAINER_NAME' is already removed."
 else
-  echo "Docker container '$CONTAINER_NAME' is not running. Skipping stop and remove steps."
+  echo "Docker container '$CONTAINER_NAME' does not exist. Skipping stop and remove steps."
 fi
-echo "Starting new Docker container..."
-docker run -d --name "$CONTAINER_NAME" -p 8080:8080 "$IMAGE_NAME"
+echo "Script completed successfully."
+exit 0
