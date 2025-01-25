@@ -26,6 +26,7 @@ configurations {
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
 }
 
 dependencies {
@@ -33,9 +34,14 @@ dependencies {
     implementation(Dependencies.SPRING_JPA)
     implementation(Dependencies.SPRING_WEB)
     implementation(Dependencies.SPRING_AOP)
+    implementation(Dependencies.SPRING_JSON)
 
     /* AspectJ */
     implementation(Dependencies.ASPECTJ)
+
+    /* NLP */
+    implementation(Dependencies.APACHE_LANG3)
+    implementation(Dependencies.DEEPLEARNING4J_NLP)
 
     /* Spring Boot DevTools */
     developmentOnly(Dependencies.SPRING_DEVTOOLS)
