@@ -27,8 +27,7 @@ jobs:
       - name: Add execute permissions to gradlew
         run: chmod +x ./gradlew
       - name: Create application-prod.yml
-        run: |
-          echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
+        run: echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Create deployment ZIP file
