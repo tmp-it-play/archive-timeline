@@ -10,6 +10,8 @@ if [ ! -z "$CURRENT_CONTAINER_ID" ]; then
   docker stop $CONTAINER_NAME
   docker rm $CONTAINER_NAME
 fi
+echo "INFO: 공간 확보를 위하여 Docker Clean-up 작업을 수행합니다..."
+docker system prune -f
 echo "INFO: 애플리케이션 디렉토리로 이동합니다: $APP_DIR"
 cd $APP_DIR || { echo "ERROR: 디렉토리 $APP_DIR 를 찾을 수 없습니다. 종료합니다."; exit 1; }
 echo "INFO: Docker 이미지를 빌드합니다: $IMAGE_NAME"
