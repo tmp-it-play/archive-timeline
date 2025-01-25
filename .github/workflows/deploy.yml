@@ -37,7 +37,7 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.BUCKET_NAME }}/prod/$GITHUB_SHA.zip
       - name: CodeDeploy
         run: aws deploy create-deployment \
-          --application-name hellogsm-prod-codedeploy \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name api-prod-hellogsm-kr \
+          --application-name Hello-App \
+          --deployment-config-name Hello-all \
+          --deployment-group-name Hello-App-Group \
           --s3-location bucket=${{ secrets.BUCKET_NAME }},bundleType=zip,key=prod/$GITHUB_SHA.zip
