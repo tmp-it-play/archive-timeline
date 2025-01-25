@@ -3,7 +3,9 @@ package com.the_moment.hello_app.domain.news.persistence.mapper;
 import com.the_moment.hello_app.domain.news.domain.News;
 import com.the_moment.hello_app.domain.news.persistence.entity.NewsJpaEntity;
 import com.the_moment.hello_app.global.mapper.GenericMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NewsMapper implements GenericMapper<NewsJpaEntity,News> {
     @Override
     public NewsJpaEntity toEntity(News domain) {
