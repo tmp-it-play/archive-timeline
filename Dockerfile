@@ -1,7 +1,13 @@
-FROM openjdk:17-jdk-alpine3.13 AS build
+FROM gradle:7.6.0-jdk17 AS build
 WORKDIR /app
-ARG JAR_FILE=build/libs/application-1.0.0.jar
-COPY ${JAR_FILE} app.jar
+COPY build.gradle.kts settings.gradle.kts gradlew /app/
+COPY gradle /app/gradle
+COPY src /app/src
+COPY buildSrc /app/buildSrc
+RUN ./gradlew clean build --no-daemon
+FROM openjdk:17-jdk-alpine3.13
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
     echo "Asia/Seoul" > /etc/timezone
