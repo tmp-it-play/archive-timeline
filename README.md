@@ -9,6 +9,7 @@ Github에서 제공하는 **Issue**를 이용하여 체계적으로 공부합니
 ## 연락할 때는?
 + [Tistory-Amond의 코딩기록](https://amond-codingredord.tistory.com)
 + [Gmail](mailto:s24058@gsm.hs.kr)
++ [Naver Mail](mailto:snowykte0426@naver.com)
 + [Steam](https://steamcommunity.com/id/Kimtaeeanjjab4044/)
 
 <br><br>
@@ -24,5 +25,6 @@ I systematically study using **Issues** provided by GitHub.
 
 ## How to reach me?
 + [Tistory - Amond's Coding Record](https://amond-codingredord.tistory.com)  
-+ [Gmail](mailto:s24058@gsm.hs.kr)  
++ [Gmail](mailto:s24058@gsm.hs.kr)
++ [Naver Mail](mailto:snowykte0426@naver.com)
 + [Steam](https://steamcommunity.com/id/Kimtaeeanjjab4044/)  
