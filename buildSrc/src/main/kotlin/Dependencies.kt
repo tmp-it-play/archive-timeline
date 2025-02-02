@@ -7,6 +7,10 @@ object Dependencies {
     const val SPRING_BOOT_STARTER_VALIDATION =
         "org.springframework.boot:spring-boot-starter-validation:${DependencyVersion.SPRING_BOOT_VERSION}"
 
+    // 성능 모니터링 및 관리
+    const val SPRING_BOOT_STARTER_ACTUATOR =
+        "org.springframework.boot:spring-boot-starter-actuator:${DependencyVersion.SPRING_BOOT_VERSION}"
+
     // 개발 도구 및 유틸리티
     const val SPRING_BOOT_DEVTOOLS =
         "org.springframework.boot:spring-boot-devtools:${DependencyVersion.SPRING_BOOT_DEVTOOLS_VERSION}"

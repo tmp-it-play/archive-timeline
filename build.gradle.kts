@@ -36,6 +36,7 @@ subprojects{
 		implementation(Dependencies.SPRING_BOOT_STARTER_AOP)
 		implementation(Dependencies.SPRING_BOOT_STARTER_TEST)
 		developmentOnly(Dependencies.SPRING_BOOT_DEVTOOLS)
+		implementation(Dependencies.SPRING_BOOT_STARTER_ACTUATOR)
 
 		implementation(Dependencies.ASPECTJ_WEAVER)
 
