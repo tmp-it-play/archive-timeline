@@ -33,7 +33,7 @@ jobs:
         run: |
           IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/multi-module-spring-app"
           TIMESTAMP=$(date +'%Y%m%d%H%M%S')
-          
+          echo "Using Docker image: $IMAGE_NAME"
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$TIMESTAMP .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$TIMESTAMP
