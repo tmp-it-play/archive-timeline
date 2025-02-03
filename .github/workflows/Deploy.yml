@@ -31,7 +31,7 @@ jobs:
 
       - name: 📦 Build and Push Docker Image
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/Multi-Module-Spring-Boot-App"
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/multi-module-spring-app"
           TIMESTAMP=$(date +'%Y%m%d%H%M%S')
           
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$TIMESTAMP .
