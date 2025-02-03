@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    environment: Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +39,7 @@ jobs:
           docker push $IMAGE_NAME:$TIMESTAMP
 
   deploy:
+    environment: Deploy
     needs: build
     runs-on: ubuntu-latest
 
