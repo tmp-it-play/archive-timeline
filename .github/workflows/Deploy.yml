@@ -56,11 +56,12 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
 
-            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/spring-app"
+            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/multi-module-spring-app"
+            CONTAINER_NAME="multi-module-spring-app"
 
             echo "🛑 Stopping and removing existing container..."
-            docker stop spring-app || true
-            docker rm spring-app || true
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
 
             echo "📥 Pulling the latest Docker image..."
             docker pull $IMAGE_NAME:latest
@@ -69,9 +70,9 @@ jobs:
             docker system prune -af
 
             echo "🚀 Running the new container..."
-            docker run -d --name spring-app -p 8080:8080 --restart always \
+            docker run -d --name $CONTAINER_NAME -p 8080:8080 --restart always \
               -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            $IMAGE_NAME:latest
+              $IMAGE_NAME:latest
 
             echo "⏳ Waiting for the new container to start..."
             sleep 15
@@ -79,13 +80,13 @@ jobs:
             echo "✅ Checking application health..."
             if ! curl -f http://localhost:8080/actuator/health; then
               echo "❌ Deployment failed! Rolling back to previous version..."
-          
-              docker stop spring-app || true
-              docker rm spring-app || true
-          
+
+              docker stop $CONTAINER_NAME || true
+              docker rm $CONTAINER_NAME || true
+
               LAST_IMAGE_TAG=$(docker images $IMAGE_NAME --format "{{.Tag}}" | sort -r | sed -n '2p')
               if [ -n "$LAST_IMAGE_TAG" ]; then
-                docker run -d --name spring-app -p 8080:8080 --restart always $IMAGE_NAME:$LAST_IMAGE_TAG
+                docker run -d --name $CONTAINER_NAME -p 8080:8080 --restart always $IMAGE_NAME:$LAST_IMAGE_TAG
                 echo "🔄 Rolled back to $LAST_IMAGE_TAG"
               else
                 echo "⚠️ No previous version found, rollback not possible."
