@@ -16,7 +16,7 @@ object DependencyVersion {
     const val JACKSON_VERSION = "2.12.5"
 
     // 데이터베이스 관련 라이브러리 버전
-    const val MYSQL_CONNECTOR_J_VERSION = "8.0.27"
+    const val MYSQL_CONNECTOR_J_VERSION = "8.0.33"
 
     // 테스트 관련 라이브러리 버전
     const val JUNIT_VERSION = "5.8.1"
