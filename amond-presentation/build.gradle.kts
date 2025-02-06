@@ -9,6 +9,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":amond-application"))
+
     implementation(Dependencies.SPRING_BOOT_STARTER_WEB)
 
     implementation(Dependencies.JACKSON_MODULE_KOTLIN)
@@ -20,6 +22,6 @@ dependencies {
     implementation(Dependencies.KOTLIN_TEST_JUNIT5)
 }
 
-tasks.getByName<Jar>("bootJar") {
-    enabled = false
+tasks.getByName<Jar>("jar") {
+    enabled = true
 }
