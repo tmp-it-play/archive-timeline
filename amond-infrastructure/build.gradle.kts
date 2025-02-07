@@ -2,7 +2,6 @@ plugins {
     id(Plugins.SPRING_BOOT) version PluginVersion.SPRING_BOOT_VERSION
     id(Plugins.SPRING_DEPENDENCY_MANAGEMENT) version PluginVersion.SPRING_DEPENDENCY_MANAGEMENT_VERSION
     id(Plugins.KOTLIN_SPRING) version PluginVersion.KOTLIN_SPRING_VERSION
-    id(Plugins.KOTLIN_JPA) version PluginVersion.KOTLIN_JPA_VERSION
 }
 
 repositories {
@@ -43,4 +42,12 @@ tasks.getByName<Jar>("jar") {
 
 tasks.getByName<Jar>("bootJar") {
     enabled = false
+}
+
+kapt{
+    correctErrorTypes = true
+    javacOptions {
+        option("-source", "17")
+        option("-target", "17")
+    }
 }
