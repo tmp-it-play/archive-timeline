@@ -1,5 +1,7 @@
 plugins {
 	id(Plugins.KOTLIN_JVM) version PluginVersion.KOTLIN_JVM_VERSION
+	id(Plugins.KAPT) version PluginVersion.KAPT_VERSION
+	id(Plugins.NO_ARG) version PluginVersion.KOTLIN_JVM_VERSION
 }
 
 subprojects {
@@ -27,7 +29,6 @@ allprojects {
 	group = "com.amond"
 	version = "0.0.1-SNAPSHOT"
 	java.sourceCompatibility = JavaVersion.VERSION_17
-
 	tasks {
 		compileKotlin {
 			compilerOptions {
