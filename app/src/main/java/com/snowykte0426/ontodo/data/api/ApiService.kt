@@ -28,4 +28,10 @@ interface ApiService {
 
     @DELETE("api/v1/articles/{articleId}")
     suspend fun deleteArticle(@Path("articleId") id: Int)
+
+    @PATCH("api/v1/articles/{articleId}/complate")
+    suspend fun completeTodo(
+        @Path("articleId") id: Int,
+        @Body body: Map<String, Boolean>
+    )
 }

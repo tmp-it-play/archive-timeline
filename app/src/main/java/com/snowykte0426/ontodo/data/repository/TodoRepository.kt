@@ -23,6 +23,9 @@ class TodoRepository {
     suspend fun updateArticle(id: Int, todo: TodoArticle) = apiService.updateArticle(id, todo)
 
     suspend fun deleteArticle(id: Int) = apiService.deleteArticle(id)
+
+    suspend fun toggleComplete(id: Int, isComplete: Boolean) {
+    RetrofitClient.apiService.completeTodo(id, mapOf("isCompleted" to isComplete))
 }
 */
 import kotlinx.coroutines.delay
@@ -46,6 +49,29 @@ class TodoRepository {
     suspend fun createArticle(todo: TodoArticle): TodoArticle {
         mockTodos.add(todo)
         return todo
+    }
+
+    suspend fun searchArticles(
+        keyword: String?,
+        isComplete: Boolean?,
+        date: String?,
+        level: Int?,
+        offset: Int,
+        limit: Int
+    ): List<TodoArticle> {
+        return mockTodos.filter {
+            (keyword == null || it.context.contains(keyword, ignoreCase = true)) &&
+                    (isComplete == null || it.isComplete == isComplete) &&
+                    (date == null || it.context.contains(date, ignoreCase = true)) &&
+                    (level == null || it.level == level)
+        }
+    }
+
+    suspend fun completeArticle(id: Int, isComplete: Boolean) {
+        val index = mockTodos.indexOfFirst { it.id == id }
+        if (index != -1) {
+            mockTodos[index] = mockTodos[index].copy(isComplete = isComplete)
+        }
     }
 
     // 🚀 TODO 수정
