@@ -1,90 +1,28 @@
 package com.snowykte0426.ontodo.data.repository
 
 import com.snowykte0426.ontodo.data.api.RetrofitClient
-import com.snowykte0426.ontodo.data.model.TodoArticle
-
-/*
-class TodoRepository {
-    private val apiService = RetrofitClient.apiService
-
-    suspend fun getArticles(offset: Int, limit: Int) = apiService.getArticles(offset, limit)
-
-    suspend fun searchArticles(
-        keyword: String?,
-        isComplete: Boolean?,
-        date: String?,
-        level: Int?,
-        offset: Int,
-        limit: Int
-    ) = apiService.searchArticles(keyword, isComplete, date, level, offset, limit)
-
-    suspend fun createArticle(todo: TodoArticle) = apiService.createArticle(todo)
-
-    suspend fun updateArticle(id: Int, todo: TodoArticle) = apiService.updateArticle(id, todo)
-
-    suspend fun deleteArticle(id: Int) = apiService.deleteArticle(id)
-
-    suspend fun toggleComplete(id: Int, isComplete: Boolean) {
-    RetrofitClient.apiService.completeTodo(id, mapOf("isCompleted" to isComplete))
-}
-*/
-import kotlinx.coroutines.delay
+import com.snowykte0426.ontodo.data.dto.request.PatchArticleRequest
+import com.snowykte0426.ontodo.data.dto.request.PostArticleRequest
 
 class TodoRepository {
+    private val api = RetrofitClient.apiService
 
-    // 🚀 임시 데이터 리스트
-    private val mockTodos = mutableListOf(
-        TodoArticle(1, "Jetpack Compose 배우기", 2, false),
-        TodoArticle(2, "Spring Boot API 개발", 3, true),
-        TodoArticle(3, "운동 가기", 1, false),
-    )
+    suspend fun getArticles() = api.getArticles().articles
 
-    // 🚀 TODO 리스트 가져오기 (네트워크 대신 임시 데이터 반환)
-    suspend fun getArticles(offset: Int, limit: Int): List<TodoArticle> {
-        delay(500) // 네트워크 지연을 시뮬레이션
-        return mockTodos
-    }
+    suspend fun searchArticles(keyword: String?) = api.searchArticles(
+        keyword = keyword,
+        isCompleted = null,
+        date = null,
+        level = null,
+        offset = 0,
+        limit = 20
+    ).articles
 
-    // 🚀 TODO 추가 (네트워크 대신 로컬 리스트에 추가)
-    suspend fun createArticle(todo: TodoArticle): TodoArticle {
-        mockTodos.add(todo)
-        return todo
-    }
+    suspend fun createArticle(content: String, level: String) =
+        api.createArticle(PostArticleRequest(content, level))
 
-    suspend fun searchArticles(
-        keyword: String?,
-        isComplete: Boolean?,
-        date: String?,
-        level: Int?,
-        offset: Int,
-        limit: Int
-    ): List<TodoArticle> {
-        return mockTodos.filter {
-            (keyword == null || it.context.contains(keyword, ignoreCase = true)) &&
-                    (isComplete == null || it.isComplete == isComplete) &&
-                    (date == null || it.context.contains(date, ignoreCase = true)) &&
-                    (level == null || it.level == level)
-        }
-    }
+    suspend fun updateArticle(id: Long, content: String?, level: String?, isCompleted: Boolean?) =
+        api.updateArticle(id, PatchArticleRequest(content, level, isCompleted))
 
-    suspend fun completeArticle(id: Int, isComplete: Boolean) {
-        val index = mockTodos.indexOfFirst { it.id == id }
-        if (index != -1) {
-            mockTodos[index] = mockTodos[index].copy(isComplete = isComplete)
-        }
-    }
-
-    // 🚀 TODO 수정
-    suspend fun updateArticle(id: Int, updatedTodo: TodoArticle): TodoArticle {
-        val index = mockTodos.indexOfFirst { it.id == id }
-        if (index != -1) {
-            mockTodos[index] = updatedTodo
-        }
-        return updatedTodo
-    }
-
-    // 🚀 TODO 삭제
-    suspend fun deleteArticle(id: Int) {
-        mockTodos.removeAll { it.id == id }
-    }
+    suspend fun deleteArticle(id: Long) = api.deleteArticle(id)
 }

@@ -7,68 +7,57 @@ import com.snowykte0426.ontodo.data.repository.TodoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-/*
-class TodoViewModel : ViewModel() {
-    private val repository = TodoRepository()
-
-    private val _todoList = MutableStateFlow<List<TodoArticle>>(emptyList())
-    val todoList: StateFlow<List<TodoArticle>> = _todoList
-
-    fun loadTodos(offset: Int, limit: Int) {
-        viewModelScope.launch {
-            _todoList.value = repository.getArticles(offset, limit)
-        }
-    }
-
-    fun toggleComplete(todo: TodoArticle) {
-        viewModelScope.launch {
-            val updatedTodo = todo.copy(isComplete = !todo.isComplete)
-            repository.updateArticle(todo.id, updatedTodo)
-            loadTodos(0, 10)
-        }
-    }
-}
-*/
 
 class TodoViewModel : ViewModel() {
     private val repository = TodoRepository()
 
     private val _todoList = MutableStateFlow<List<TodoArticle>>(emptyList())
     val todoList: StateFlow<List<TodoArticle>> = _todoList
+
+    var isRefreshing = MutableStateFlow(false)
 
     init {
         loadTodos()
     }
 
-    // 🚀 서버 대신 임시 데이터를 가져옴
     fun loadTodos() {
         viewModelScope.launch {
-            _todoList.value = repository.getArticles(0, 10)
+            isRefreshing.value = true
+            _todoList.value = repository.getArticles()
+            isRefreshing.value = false
         }
     }
 
-    // 🚀 TODO 추가
-    fun addTodo(context: String, level: Int) {
+    fun searchTodos(keyword: String) {
         viewModelScope.launch {
-            val newTodo = TodoArticle(_todoList.value.size + 1, context, level, false)
-            repository.createArticle(newTodo)
-            loadTodos() // 리스트 갱신
+            _todoList.value = repository.searchArticles(keyword)
         }
     }
 
-    // 🚀 TODO 완료 체크
-    fun toggleComplete(todo: TodoArticle) {
+    fun addTodo(content: String, level: String) {
         viewModelScope.launch {
-            val updatedTodo = todo.copy(isComplete = !todo.isComplete)
-            repository.updateArticle(todo.id, updatedTodo)
+            repository.createArticle(content, level)
             loadTodos()
         }
     }
 
-    // 🚀 TODO 삭제
-    fun deleteTodo(id: Int) {
+    fun updateTodo(todo: TodoArticle, content: String?, level: String?, isCompleted: Boolean?) {
+        viewModelScope.launch {
+            repository.updateArticle(todo.id, content, level, isCompleted)
+            loadTodos()
+        }
+    }
+
+    fun deleteTodo(id: Long) {
         viewModelScope.launch {
             repository.deleteArticle(id)
+            loadTodos()
+        }
+    }
+
+    fun toggleComplete(todo: TodoArticle) {
+        viewModelScope.launch {
+            repository.updateArticle(todo.id, null, null, !todo.isCompleted)
             loadTodos()
         }
     }

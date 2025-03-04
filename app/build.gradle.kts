@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.google.accompanist.swiperefresh)
 
     implementation(libs.ui)
     implementation(libs.material3)

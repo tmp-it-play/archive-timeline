@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.snowykte0426.ontodo.ui.screens.HomeScreen
 import com.snowykte0426.ontodo.ui.theme.OnTODOTheme

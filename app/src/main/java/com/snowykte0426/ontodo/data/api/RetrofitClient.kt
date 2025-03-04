@@ -4,8 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    /*
-    private const val BASE_URL = "http://YOUR_SERVER_IP:PORT/"  // TODO: Replace with your server IP and port
+    private const val BASE_URL = "https://amond-server.kro.kr/ontodo/"
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()
@@ -14,5 +13,4 @@ object RetrofitClient {
             .build()
             .create(ApiService::class.java)
     }
-     */
 }

@@ -1,37 +1,35 @@
 package com.snowykte0426.ontodo.data.api
 
-import com.snowykte0426.ontodo.data.model.TodoArticle
+import com.snowykte0426.ontodo.data.dto.request.PatchArticleRequest
+import com.snowykte0426.ontodo.data.dto.request.PostArticleRequest
+import com.snowykte0426.ontodo.data.dto.response.GetArticleResponse
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
+
     @GET("api/v1/articles")
-    suspend fun getArticles(
-        @Query("offset") offset: Int,
-        @Query("limit") limit: Int
-    ): List<TodoArticle>
+    suspend fun getArticles(): GetArticleResponse
 
     @GET("api/v1/articles/search")
     suspend fun searchArticles(
         @Query("keyword") keyword: String?,
-        @Query("isComplete") isComplete: Boolean?,
+        @Query("isCompleted") isCompleted: Boolean?,
         @Query("date") date: String?,
-        @Query("level") level: Int?,
-        @Query("offset") offset: Int,
-        @Query("limit") limit: Int
-    ): List<TodoArticle>
+        @Query("level") level: String?,
+        @Query("offset") offset: Int?,
+        @Query("limit") limit: Int?
+    ): GetArticleResponse
 
     @POST("api/v1/articles")
-    suspend fun createArticle(@Body todo: TodoArticle): TodoArticle
+    suspend fun createArticle(@Body request: PostArticleRequest): Response<Unit>
 
-    @PUT("api/v1/articles/{articleId}")
-    suspend fun updateArticle(@Path("articleId") id: Int, @Body todo: TodoArticle): TodoArticle
+    @PATCH("api/v1/articles/{articleId}")
+    suspend fun updateArticle(
+        @Path("articleId") id: Long,
+        @Body request: PatchArticleRequest
+    ): Response<Unit>
 
     @DELETE("api/v1/articles/{articleId}")
-    suspend fun deleteArticle(@Path("articleId") id: Int)
-
-    @PATCH("api/v1/articles/{articleId}/complate")
-    suspend fun completeTodo(
-        @Path("articleId") id: Int,
-        @Body body: Map<String, Boolean>
-    )
+    suspend fun deleteArticle(@Path("articleId") id: Long): Response<Unit>
 }

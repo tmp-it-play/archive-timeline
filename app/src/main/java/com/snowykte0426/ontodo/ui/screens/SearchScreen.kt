@@ -1,7 +1,10 @@
 package com.snowykte0426.ontodo.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -13,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.snowykte0426.ontodo.viewmodel.TodoViewModel
 
@@ -20,16 +24,24 @@ import com.snowykte0426.ontodo.viewmodel.TodoViewModel
 fun SearchScreen(todoViewModel: TodoViewModel = viewModel()) {
     var keyword by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         OutlinedTextField(
             value = keyword,
             onValueChange = { keyword = it },
-            label = { Text("검색") }
+            label = { Text("검색") },
+            modifier = Modifier.fillMaxWidth()
         )
 
-        Button(onClick = { todoViewModel.loadTodos() }) {
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = { todoViewModel.searchTodos(keyword) },
+            modifier = Modifier.align(Alignment.End)
+        ) {
             Text("검색하기")
         }
     }
