@@ -1,4 +1,7 @@
 package com.snowykte0426.eventsourcing.presentation.user.dto
 
-class RegisterUserRequest {
-}
+data class RegisterUserRequest(
+    val userId: String,
+    val username: String,
+    val email: String
+)

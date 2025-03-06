@@ -1,4 +1,7 @@
 package com.snowykte0426.eventsourcing.domain.user.command
 
-class RegisterUserCommand {
-}
+data class RegisterUserCommand(
+    val userId: String,
+    val username: String,
+    val email: String
+)

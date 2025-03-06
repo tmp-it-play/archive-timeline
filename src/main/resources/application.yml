@@ -1,1 +1,17 @@
-spring.application.name=Event-Sourcing
+spring:
+  application:
+    name: Event-Sourcing
+  r2dbc:
+    url: r2dbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/study
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD}
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 40
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+    default-property-inclusion: non_null
+  codec:
+    max-in-memory-size: 10MB

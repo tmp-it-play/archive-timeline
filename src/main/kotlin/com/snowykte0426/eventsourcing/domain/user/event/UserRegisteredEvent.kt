@@ -1,4 +1,4 @@
-package com.snowykte0426.eventsourcing.infrastructure.r2dbc
+package com.snowykte0426.eventsourcing.domain.user.event
 
 sealed interface DomainEvent
 
