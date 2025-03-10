@@ -22,10 +22,17 @@ class EventStore(
         return eventRepository.save(entity).then()
     }
 
-    fun loadEvents(aggregateId: String): Flux<DomainEvent> =
-        eventRepository.findByAggregateIdOrderByCreatedAt(aggregateId)
+    fun loadEvents(aggregateId: String): Flux<DomainEvent> {
+        return eventRepository.findByAggregateIdOrderByCreatedAt(aggregateId)
             .flatMap { entity ->
-                val clazz = Class.forName("com.example.events.${entity.eventType}")
-                Mono.just(objectMapper.readValue(entity.payload, clazz) as DomainEvent)
+                try {
+                    val clazz = Class.forName("com.snowykte0426.eventsourcing.domain.user.event.${entity.eventType}")
+                    val event = objectMapper.readValue(entity.payload, clazz) as? DomainEvent
+                        ?: return@flatMap Mono.error<DomainEvent>(IllegalArgumentException("Invalid event type: ${entity.eventType}"))
+                    Mono.just(event)
+                } catch (e: Exception) {
+                    Mono.error<DomainEvent>(IllegalArgumentException("Failed to load event: ${entity.eventType}", e))
+                }
             }
+    }
 }

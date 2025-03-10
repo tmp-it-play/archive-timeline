@@ -8,6 +8,7 @@ import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.*
+
 @Component
 class UserHandler(
     private val userService: UserService
@@ -25,9 +26,13 @@ class UserHandler(
     }
 
     suspend fun getUser(request: ServerRequest): ServerResponse {
-        val userId = request.pathVariable("id")
-        val aggregate = userService.getUser(userId).awaitSingle()
-        val response = UserResponse(aggregate.id, aggregate.username, aggregate.email)
-        return ServerResponse.ok().bodyValueAndAwait(response)
+        return try {
+            val userId = request.pathVariable("id")
+            val aggregate = userService.getUser(userId).awaitSingle() ?: return ServerResponse.notFound().buildAndAwait()
+            val response = UserResponse(aggregate.id, aggregate.username, aggregate.email)
+            ServerResponse.ok().bodyValueAndAwait(response)
+        } catch (e: Exception) {
+            ServerResponse.status(500).bodyValueAndAwait("Internal Server Error: ${e.message}")
+        }
     }
 }
