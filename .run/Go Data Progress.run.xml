@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Go Data Progress" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="minsole.main" />
+    <working_directory value="$PROJECT_DIR$/src/main/go" />
+    <sudo value="true" />
+    <kind value="DIRECTORY" />
+    <package value="dataprogress" />
+    <directory value="$PROJECT_DIR$/src/main/go/com/snowykte0426/minsole/dataprogress" />
+    <filePath value="$PROJECT_DIR$/../minsole|$PROJECT_DIR$/src/main/go/com/snowykte0426/minsole/dataprogress/xslxPreprocessing.go" />
+    <method v="2" />
+  </configuration>
+</component>
