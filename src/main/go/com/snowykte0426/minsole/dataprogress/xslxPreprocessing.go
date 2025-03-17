@@ -3,10 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/xuri/excelize/v2"
-	"golang.org/x/text/encoding/korean"
-	"golang.org/x/text/transform"
-	"os"
-	"strings"
 )
 
 func main() {
@@ -32,7 +28,6 @@ func main() {
 		fmt.Println("Error reading rows:", err)
 		return
 	}
-
 	if len(rows) == 0 {
 		fmt.Println("Error: Empty sheet.")
 		return
@@ -44,41 +39,32 @@ func main() {
 			break
 		}
 	}
-
 	if statusIndex == -1 {
 		fmt.Println("Error: '영업상태명' column not found")
 		return
 	}
-	var filteredRows [][]string
-	filteredRows = append(filteredRows, rows[0])
-
+	newFile := excelize.NewFile()
+	newSheet := "FilteredData"
+	_, _ = newFile.NewSheet(newSheet)
+	for colIdx, colName := range rows[0] {
+		cell := fmt.Sprintf("%s1", string(rune('A'+colIdx)))
+		_ = newFile.SetCellValue(newSheet, cell, colName)
+	}
+	rowNum := 2
 	for _, row := range rows[1:] {
 		if len(row) > statusIndex && row[statusIndex] == "영업" {
-			filteredRows = append(filteredRows, row)
+			for colIdx, value := range row {
+				cell := fmt.Sprintf("%s%d", string(rune('A'+colIdx)), rowNum)
+				_ = newFile.SetCellValue(newSheet, cell, value)
+			}
+			rowNum++
 		}
 	}
-	outputFile, err := os.Create("result/filtered_data.csv")
+	outputFilePath := "result/filtered_data.xlsx"
+	err = newFile.SaveAs(outputFilePath)
 	if err != nil {
-		fmt.Println("Error creating CSV file:", err)
+		fmt.Println("Error saving XLSX file:", err)
 		return
 	}
-	defer func(outputFile *os.File) {
-		err := outputFile.Close()
-		if err != nil {
-			fmt.Println("Error closing CSV file:", err)
-		}
-	}(outputFile)
-
-	writer := transform.NewWriter(outputFile, korean.EUCKR.NewEncoder())
-
-	for _, row := range filteredRows {
-		line := strings.Join(row, ",") + "\n"
-		_, err := writer.Write([]byte(line))
-		if err != nil {
-			fmt.Println("Error writing to CSV:", err)
-			return
-		}
-	}
-
-	fmt.Println("Filtered data saved to filtered_data.csv")
+	fmt.Println("Filtered data saved to:", outputFilePath)
 }
