@@ -9,7 +9,7 @@ v1.0.0
 
 이 프로젝트는 대한민국의 음식점 데이터를 활용하여 사용자에게 신뢰할 수 있는 맛집 리스트를 제공하는 애플리케이션입니다.
 모범음식점 공공데이터와 전국 일반 음식점 공공데이터를 Go 언어로 전처리하여, "영업" 상태인 음식점 데이터만 선별하였습니다.
-추가적으로, Naver 지역검색 API를 활용해 평점이 일정 기준 이상인 음식점만을 필터링하고, 이를 데이터베이스에 저장하여 Spring 기반의 RESTful 애플리케이션으로 구현하였습니다.
+추가적으로, Naver 지역검색 API를 활용해 평점이 일정 기준 이상인 음식점만 필터링하고, 이를 데이터베이스에 저장하여 Spring 기반의 RESTful 애플리케이션으로 구현하였습니다.
 
 == 주요 기능
 
@@ -25,7 +25,7 @@ v1.0.0
 
 == 기술 스택
 
-* **백엔드 프레임워크:** Springboot Framework
+* **백엔드 프레임워크:** Spring Boot
 * **데이터 전처리:** Go
 * **API 연동:** Naver 지역검색 API
 * **데이터베이스:** MySQL
@@ -37,15 +37,18 @@ v1.0.0
 [plantuml, "system-diagram.png", png]
 ----
 @startuml
-actor 사용자
-rectangle "Spring 애플리케이션" {
+actor "사용자" as user
+
+rectangle "Spring 애플리케이션" as springApp {
   [REST API] --> [DB]
   [REST API] --> [Naver 지역검색 API]
 }
-rectangle "데이터 전처리 (Go)" {
+
+rectangle "데이터 전처리 (Go)" as goApp {
   [공공데이터 전처리]
 }
-사용자 --> [REST API]
+
+user --> [REST API]
 [공공데이터 전처리] --> [DB]
 @enduml
 ----
@@ -57,55 +60,72 @@ rectangle "데이터 전처리 (Go)" {
 * Java 17 이상
 * Go 1.15 이상
 * Gradle
-* MySQL 또는 PostgreSQL 등 데이터베이스
+* MySQL 등 관계형 데이터베이스
 
 === 1. Go 데이터 전처리
 
-1. 공공데이터를 다운로드 받은 후, data-preprocessing 디렉토리로 이동합니다.
+1. 공공데이터를 다운로드 받은 후, `go` 디렉토리로 이동합니다.
 2. Go 코드를 빌드 및 실행하여 영업 상태의 데이터만 선별하고, Naver API를 통해 평점이 일정 이상인 음식점을 필터링합니다.
 3. 전처리된 데이터를 데이터베이스에 저장합니다.
 
 [source,bash]
 ----
-cd data-preprocessing
+cd go
 go build .
-./data-preprocessing
+./go
 ----
 
 === 2. Spring 애플리케이션 실행
 
-1. spring-app 디렉토리로 이동하여 애플리케이션을 빌드 및 실행합니다.
+1. `java` 디렉토리(또는 Spring Boot 프로젝트 루트)로 이동하여 애플리케이션을 빌드 및 실행합니다.
 
 [source,bash]
 ----
-cd spring-app
-./mvnw spring-boot:run
+cd java
+./gradlew bootRun
 ----
-
-== API 문서
-
-애플리케이션은 RESTful API를 제공합니다. 주요 엔드포인트는 다음과 같습니다:
-
-* `GET /restaurants` - 맛집 리스트 조회
-* `GET /restaurants/{id}` - 특정 맛집 상세 정보 조회
-* `POST /restaurants` - 새로운 맛집 데이터 등록 (관리자용)
-* `PUT /restaurants/{id}` - 맛집 정보 수정 (관리자용)
-* `DELETE /restaurants/{id}` - 맛집 데이터 삭제 (관리자용)
-
-자세한 API 스펙은 `docs/api.adoc` 파일을 참고하세요.
-
 == 환경 변수 설정
 
-애플리케이션 실행 시 필요한 환경 변수는 다음과 같습니다:
+아래 예시는 `application.yml`에서 환경 변수를 활용하는 방법을 보여줍니다. 실제 환경 변수와 매핑되는 부분은 `${...}` 형태로 표기됩니다.
 
-* `DB_HOST` - 데이터베이스 호스트
-* `DB_PORT` - 데이터베이스 포트
-* `DB_USER` - 데이터베이스 사용자
-* `DB_PASS` - 데이터베이스 비밀번호
-* `DB_NAME` - 데이터베이스 이름
-* `NAVER_CLIENT_ID` - Naver API 클라이언트 아이디
-* `NAVER_CLIENT_SECRET` - Naver API 클라이언트 시크릿
-* `NAVER_MIN_RATING` - 평점 필터링 최소 기준
+[source,yaml]
+----
+spring:
+  application:
+    name: hot-place-research
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${RDB_HOST:localhost}:${RDB_PORT:3306}/${RDB_SCHEMA:hot_place_research}?useSSL=false
+    username: ${RDB_USER:root}
+    password: ${RDB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${RDB_DDL-AUTO:update}
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+naver:
+  url:
+    search:
+      local: https://openapi.naver.com/v1/search/local.json
+      image: https://openapi.naver.com/v1/search/image
+  client:
+    id: ${NAVER_CLIENT_ID}
+    secret: ${NAVER_CLIENT_SECRET}
+----
+
+위 설정에서 사용되는 주요 환경 변수는 다음과 같습니다:
+
+* `RDB_HOST` : 데이터베이스 호스트 (기본값: `localhost`)
+* `RDB_PORT` : 데이터베이스 포트 (기본값: `3306`)
+* `RDB_SCHEMA` : 데이터베이스 스키마명 (기본값: `hot_place_research`)
+* `RDB_USER` : 데이터베이스 사용자명 (기본값: `root`)
+* `RDB_PASSWORD` : 데이터베이스 비밀번호 (기본값: 없음)
+* `RDB_DDL-AUTO` : JPA DDL 설정 (예: `update`, `create`, `none` 등)
+* `NAVER_CLIENT_ID` : Naver API 클라이언트 아이디
+* `NAVER_CLIENT_SECRET` : Naver API 클라이언트 시크릿
 
 == 프로젝트 구조
 
@@ -114,11 +134,11 @@ cd spring-app
 .
 ├── go
 │   ├── all_restaurant_preprocessing.go
-│   └── model_restaurant_preprocessing.go
-|   └── data
-|   |   ├── all_restaurant_sheet.xlsx
-|   |   ├── model_restaurant_sheet.xlsx
-|   └── ...
+│   ├── model_restaurant_preprocessing.go
+│   └── data
+│       ├── all_restaurant_sheet.xlsx
+│       ├── model_restaurant_sheet.xlsx
+│       └── ...
 ├── java
 │   ├── domain
 │   │   └── ...
@@ -128,7 +148,9 @@ cd spring-app
 │   │   └── ...
 │   └── MinsoleApplication.java
 ├── resources
-│   ├── application.yml
+│   └── application.yml
+├── docs
+│   └── api.adoc
 ├── README.adoc
 └── LICENSE
 ----
@@ -145,6 +167,6 @@ cd spring-app
 
 == 참고 자료
 
-* 모범음식점 공공데이터: [데이터 포털](http://example.com)
-* 전국 일반 음식점 공공데이터: [데이터 포털](http://example.com)
+* 모범음식점 공공데이터: [데이터 포털](https://www.data.go.kr/data/15096282/standard.do)
+* 전국 일반 음식점 공공데이터: [데이터 포털](https://www.data.go.kr/data/15096283/standard.do?recommendDataYn=Y)
 * Naver 지역검색 API: https://developers.naver.com/docs/serviceapi/search/local/local.md
