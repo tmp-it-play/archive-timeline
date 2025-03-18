@@ -60,7 +60,7 @@ func main() {
 			rowNum++
 		}
 	}
-	outputFilePath := "result/filtered_data.xlsx"
+	outputFilePath := "result/model_filtered_data.xlsx"
 	err = newFile.SaveAs(outputFilePath)
 	if err != nil {
 		fmt.Println("Error saving XLSX file:", err)
