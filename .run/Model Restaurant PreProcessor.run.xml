@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Go Data Progress" type="GoApplicationRunConfiguration" factoryName="Go Application">
+  <configuration default="false" name="Model Restaurant PreProcessor" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="minsole" />
     <working_directory value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress" />
     <sudo value="true" />
     <kind value="FILE" />
     <package value="dataprogress" />
     <directory value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress" />
-    <filePath value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress/model_restaurant_preprocessor.go.go|$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress/all_restaurant_preprocessor.go" />
+    <filePath value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress/model_restaurant_preprocessor.go.go" />
     <method v="2" />
   </configuration>
 </component>
