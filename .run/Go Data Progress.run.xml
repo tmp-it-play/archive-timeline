@@ -3,10 +3,10 @@
     <module name="minsole" />
     <working_directory value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress" />
     <sudo value="true" />
-    <kind value="DIRECTORY" />
+    <kind value="FILE" />
     <package value="dataprogress" />
     <directory value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress" />
-    <filePath value="$PROJECT_DIR$/../minsole|$PROJECT_DIR$/src/main/go/com/snowykte0426/minsole/dataprogress/xslxPreprocessing.go" />
+    <filePath value="$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress/model_restaurant_preprocessor.go.go|$PROJECT_DIR$/com/snowykte0426/minsole/dataprogress/all_restaurant_preprocessor.go" />
     <method v="2" />
   </configuration>
 </component>
