@@ -1,4 +1,4 @@
-package com.snowykte0426.minsole.security;
+package com.snowykte0426.minsole.global.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
