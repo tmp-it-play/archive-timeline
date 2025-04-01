@@ -29,41 +29,28 @@ public class SearchService {
      * @return SearchDto 객체 리스트
      */
     public List<SearchDto> search(String query) {
-        // 검색어 자동 보완: "맛집"이 없으면 추가
         if (!query.contains("맛집")) {
             query += " 맛집";
         }
-
-        // 지역 검색 요청: DTO에 기본 display, start, sort가 설정되어 있음
         SearchLocalRequest localRequest = new SearchLocalRequest();
         localRequest.setQuery(query);
-
-        // 네이버 지역검색 API 호출
         SearchLocalResponse localResponse = naverClient.localSearch(localRequest);
         List<SearchDto> resultList = new ArrayList<>();
-
         if (localResponse != null && localResponse.getTotal() > 0) {
-            // 로컬 검색 결과의 각 항목을 순회
             for (var localItem : localResponse.getItems()) {
-                // 이미지 검색을 위한 쿼리: HTML 태그 제거 후 사용
                 String imageQuery = localItem.getTitle().replaceAll("<[^>]*>", "");
                 SearchImageRequest imageRequest = new SearchImageRequest();
                 imageRequest.setQuery(imageQuery);
-
-                // 네이버 이미지 검색 API 호출
                 SearchImageResponse imageResponse = naverClient.imageSearch(imageRequest);
                 List<String> imageLinks = new ArrayList<>();
                 if (imageResponse != null
                         && imageResponse.getTotal() > 0
                         && imageResponse.getItems() != null
                         && !imageResponse.getItems().isEmpty()) {
-                    // 이미지 검색 결과 전체를 순회하며 링크를 추출
                     for (var imageItem : imageResponse.getItems()) {
                         imageLinks.add(imageItem.getLink());
                     }
                 }
-
-                // SearchDto 객체 생성 및 값 설정
                 SearchDto dto = new SearchDto();
                 dto.setTitle(localItem.getTitle());
                 dto.setCategory(localItem.getCategory());
