@@ -23,4 +23,10 @@ public class SearchController {
         List<SearchDto> searchDtoList = searchService.search(query);
         return ResponseEntity.ok(searchDtoList);
     }
+
+    @GetMapping("/db/search")
+    public ResponseEntity<List<SearchDto>> searchDb(@RequestParam("query") String query) {
+        List<SearchDto> searchDtoList = searchService.searchDb(query);
+        return ResponseEntity.ok(searchDtoList);
+    }
 }
