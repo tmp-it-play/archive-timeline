@@ -122,7 +122,7 @@ public class XlsxDataImporter {
         } else if (cell.getCellType() == CellType.STRING) {
             String dateStr = cell.getStringCellValue().trim();
             try {
-                return LocalDate.parse(dateStr); // 기본 ISO ("yyyy-MM-dd")
+                return LocalDate.parse(dateStr);
             } catch (DateTimeParseException e) {
                 try {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
