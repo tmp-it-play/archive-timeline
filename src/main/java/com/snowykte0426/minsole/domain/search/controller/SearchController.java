@@ -1,5 +1,6 @@
 package com.snowykte0426.minsole.domain.search.controller;
 
+import com.snowykte0426.minsole.domain.search.dto.DbDataDto;
 import com.snowykte0426.minsole.domain.search.dto.SearchDto;
 import com.snowykte0426.minsole.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class SearchController {
     }
 
     @GetMapping("/db/search")
-    public ResponseEntity<List<SearchDto>> searchDb(@RequestParam("query") String query) {
-        List<SearchDto> searchDtoList = searchService.searchDb(query);
+    public ResponseEntity<List<DbDataDto>> searchDb(@RequestParam("query") String query) {
+        List<DbDataDto> searchDtoList = searchService.searchDb(query);
         return ResponseEntity.ok(searchDtoList);
     }
 }
