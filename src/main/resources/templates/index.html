@@ -95,6 +95,24 @@
             border-color: var(--primary-color);
         }
 
+        .category-filter {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .category-filter select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 25px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
         .api-toggle {
             display: flex;
             gap: 1rem;
@@ -117,7 +135,7 @@
         }
 
         #search-btn {
-            background-color: #3f51b5;
+            background-color: var(--primary-color);
             border: none;
             border-radius: 25px;
             padding: 0.75rem 1.5rem;
@@ -136,6 +154,17 @@
             flex-wrap: wrap;
             gap: 1.5rem;
             justify-content: center;
+        }
+
+        .category-section {
+            width: 100%;
+        }
+
+        .category-section h2 {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
         }
 
         .result-card {
@@ -190,6 +219,10 @@
             .search-bar {
                 flex-direction: column;
             }
+
+            .category-filter {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -203,6 +236,12 @@
         <div class="search-bar">
             <input type="text" id="search-query" placeholder="검색어를 입력하세요..."/>
             <button id="search-btn">검색</button>
+        </div>
+        <!-- 카테고리 필터 추가 -->
+        <div class="category-filter">
+            <select id="category-filter">
+                <option value="">전체 카테고리</option>
+            </select>
         </div>
         <div class="api-toggle">
             <button class="api-btn active" data-api="search">일반 검색</button>
@@ -230,55 +269,92 @@
         btn.addEventListener('click', () => {
             apiButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            // 카테고리 필터는 일반 검색일 때만 활성화
+            document.getElementById('category-filter').disabled = btn.getAttribute('data-api') !== 'search';
         });
     });
 
     const resultsContainer = document.getElementById('results');
+    let lastSearchData = [];
+
+    function populateCategoryFilter(data) {
+        const filter = document.getElementById('category-filter');
+        // 고유 카테고리 추출
+        const categories = Array.from(new Set(data.map(item => item.category))).sort();
+        // 기존 옵션 초기화
+        filter.innerHTML = '<option value="">전체 카테고리</option>';
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            filter.appendChild(opt);
+        });
+    }
 
     function renderSearchResults(data) {
+        const selectedCat = document.getElementById('category-filter').value;
+        // 필터 적용
+        const filtered = selectedCat ? data.filter(item => item.category === selectedCat) : data;
         resultsContainer.innerHTML = "";
-        if (!data.length) {
+        if (!filtered.length) {
             resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
             return;
         }
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = "result-card";
+        // 카테고리별 그룹화
+        const grouped = filtered.reduce((acc, item) => {
+            (acc[item.category] = acc[item.category] || []).push(item);
+            return acc;
+        }, {});
+        // 그룹별 렌더링
+        Object.keys(grouped).forEach(cat => {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+            const heading = document.createElement('h2');
+            heading.textContent = cat;
+            section.appendChild(heading);
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.className = 'results-container';
+            grouped[cat].forEach(item => {
+                const card = document.createElement('div');
+                card.className = "result-card";
 
-            if (item.imageLinks && item.imageLinks.length > 0) {
-                const img = document.createElement('img');
-                img.src = item.imageLinks[0];
-                img.alt = item.title;
-                img.className = "result-image";
-                card.appendChild(img);
-            }
+                if (item.imageLinks && item.imageLinks.length > 0) {
+                    const img = document.createElement('img');
+                    img.src = item.imageLinks[0];
+                    img.alt = item.title;
+                    img.className = "result-image";
+                    card.appendChild(img);
+                }
 
-            const title = document.createElement('h3');
-            title.textContent = item.title;
-            card.appendChild(title);
+                const title = document.createElement('h3');
+                title.textContent = item.title;
+                card.appendChild(title);
 
-            const category = document.createElement('p');
-            category.innerHTML = "<strong>카테고리:</strong> " + item.category;
-            card.appendChild(category);
+                const category = document.createElement('p');
+                category.innerHTML = "<strong>카테고리:</strong> " + item.category;
+                card.appendChild(category);
 
-            const address = document.createElement('p');
-            address.innerHTML = "<strong>주소:</strong> " + item.address;
-            card.appendChild(address);
+                const address = document.createElement('p');
+                address.innerHTML = "<strong>주소:</strong> " + item.address;
+                card.appendChild(address);
 
-            if (item.readAddress) {
-                const readAddr = document.createElement('p');
-                readAddr.innerHTML = "<strong>도로명:</strong> " + item.readAddress;
-                card.appendChild(readAddr);
-            }
+                if (item.readAddress) {
+                    const readAddr = document.createElement('p');
+                    readAddr.innerHTML = "<strong>도로명:</strong> " + item.readAddress;
+                    card.appendChild(readAddr);
+                }
 
-            if (item.homePageLink) {
-                const link = document.createElement('a');
-                link.href = item.homePageLink;
-                link.target = "_blank";
-                link.textContent = "홈페이지 방문";
-                card.appendChild(link);
-            }
-            resultsContainer.appendChild(card);
+                if (item.homePageLink) {
+                    const link = document.createElement('a');
+                    link.href = item.homePageLink;
+                    link.target = "_blank";
+                    link.textContent = "홈페이지 방문";
+                    card.appendChild(link);
+                }
+                cardsWrapper.appendChild(card);
+            });
+            section.appendChild(cardsWrapper);
+            resultsContainer.appendChild(section);
         });
     }
 
@@ -331,8 +407,11 @@
         fetch(endpoint)
             .then(response => response.json())
             .then(data => {
+                lastSearchData = data;
                 if (selectedApi === "search") {
+                    populateCategoryFilter(data);
                     renderSearchResults(data);
+                    document.getElementById('category-filter').addEventListener('change', () => renderSearchResults(lastSearchData));
                 } else {
                     renderDbResults(data);
                 }
