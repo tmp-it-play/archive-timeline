@@ -248,8 +248,7 @@
             <button class="api-btn" data-api="dbSearch">DB 검색</button>
         </div>
     </div>
-    <div id="results" class="results-container">
-    </div>
+    <div id="results" class="results-container"></div>
 </main>
 <script>
     const themeToggle = document.getElementById('theme-toggle');
@@ -269,19 +268,23 @@
         btn.addEventListener('click', () => {
             apiButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            // 카테고리 필터는 일반 검색일 때만 활성화
-            document.getElementById('category-filter').disabled = btn.getAttribute('data-api') !== 'search';
+            // 카테고리 필터는 항상 활성화 (일반/DB 모두 사용)
+            document.getElementById('category-filter').disabled = false;
         });
     });
 
     const resultsContainer = document.getElementById('results');
     let lastSearchData = [];
 
-    function populateCategoryFilter(data) {
+    function populateCategoryFilter(data, type) {
         const filter = document.getElementById('category-filter');
-        // 고유 카테고리 추출
-        const categories = Array.from(new Set(data.map(item => item.category))).sort();
-        // 기존 옵션 초기화
+        let categories;
+        if (type === 'search') {
+            categories = Array.from(new Set(data.map(item => item.category)));
+        } else {
+            categories = Array.from(new Set(data.map(item => item.foodType)));
+        }
+        categories.sort();
         filter.innerHTML = '<option value="">전체 카테고리</option>';
         categories.forEach(cat => {
             const opt = document.createElement('option');
@@ -291,134 +294,116 @@
         });
     }
 
-    function renderSearchResults(data) {
+    function renderResultsGrouped(data, keyField, renderer) {
         const selectedCat = document.getElementById('category-filter').value;
-        // 필터 적용
-        const filtered = selectedCat ? data.filter(item => item.category === selectedCat) : data;
-        resultsContainer.innerHTML = "";
+        const filtered = selectedCat ? data.filter(item => item[keyField] === selectedCat) : data;
+
+        resultsContainer.innerHTML = '';
         if (!filtered.length) {
-            resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+            resultsContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
             return;
         }
-        // 카테고리별 그룹화
+
         const grouped = filtered.reduce((acc, item) => {
-            (acc[item.category] = acc[item.category] || []).push(item);
+            const cat = item[keyField];
+            (acc[cat] = acc[cat] || []).push(item);
             return acc;
         }, {});
-        // 그룹별 렌더링
-        Object.keys(grouped).forEach(cat => {
+
+        Object.keys(grouped).sort().forEach(cat => {
             const section = document.createElement('div');
             section.className = 'category-section';
             const heading = document.createElement('h2');
             heading.textContent = cat;
             section.appendChild(heading);
-            const cardsWrapper = document.createElement('div');
-            cardsWrapper.className = 'results-container';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'results-container';
             grouped[cat].forEach(item => {
-                const card = document.createElement('div');
-                card.className = "result-card";
-
-                if (item.imageLinks && item.imageLinks.length > 0) {
-                    const img = document.createElement('img');
-                    img.src = item.imageLinks[0];
-                    img.alt = item.title;
-                    img.className = "result-image";
-                    card.appendChild(img);
-                }
-
-                const title = document.createElement('h3');
-                title.textContent = item.title;
-                card.appendChild(title);
-
-                const category = document.createElement('p');
-                category.innerHTML = "<strong>카테고리:</strong> " + item.category;
-                card.appendChild(category);
-
-                const address = document.createElement('p');
-                address.innerHTML = "<strong>주소:</strong> " + item.address;
-                card.appendChild(address);
-
-                if (item.readAddress) {
-                    const readAddr = document.createElement('p');
-                    readAddr.innerHTML = "<strong>도로명:</strong> " + item.readAddress;
-                    card.appendChild(readAddr);
-                }
-
-                if (item.homePageLink) {
-                    const link = document.createElement('a');
-                    link.href = item.homePageLink;
-                    link.target = "_blank";
-                    link.textContent = "홈페이지 방문";
-                    card.appendChild(link);
-                }
-                cardsWrapper.appendChild(card);
+                const card = renderer(item);
+                wrapper.appendChild(card);
             });
-            section.appendChild(cardsWrapper);
+            section.appendChild(wrapper);
             resultsContainer.appendChild(section);
         });
     }
 
-    function renderDbResults(data) {
-        resultsContainer.innerHTML = "";
-        if (!data.length) {
-            resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
-            return;
+    function renderSearchCard(item) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        if (item.imageLinks && item.imageLinks.length) {
+            const img = document.createElement('img');
+            img.src = item.imageLinks[0];
+            img.alt = item.title;
+            img.className = 'result-image';
+            card.appendChild(img);
         }
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = "result-card";
-
-            const title = document.createElement('h3');
-            title.textContent = item.bizName;
-            card.appendChild(title);
-
-            const idEl = document.createElement('p');
-            idEl.innerHTML = "<strong>ID:</strong> " + item.id;
-            card.appendChild(idEl);
-
-            const permitEl = document.createElement('p');
-            permitEl.innerHTML = "<strong>인허가 번호:</strong> " + item.permitNo;
-            card.appendChild(permitEl);
-
-            const addrEl = document.createElement('p');
-            addrEl.innerHTML = "<strong>주소:</strong> " + item.roadAddr;
-            card.appendChild(addrEl);
-
-            resultsContainer.appendChild(card);
+        const title = document.createElement('h3');
+        title.textContent = item.title;
+        card.appendChild(title);
+        ['category', 'address', 'readAddress'].forEach(field => {
+            if (item[field]) {
+                const p = document.createElement('p');
+                const label = field === 'readAddress' ? '도로명' : field === 'category' ? '카테고리' : '주소';
+                p.innerHTML = `<strong>${label}:</strong> ${item[field]}`;
+                card.appendChild(p);
+            }
         });
+        if (item.homePageLink) {
+            const link = document.createElement('a');
+            link.href = item.homePageLink;
+            link.target = '_blank';
+            link.textContent = '홈페이지 방문';
+            card.appendChild(link);
+        }
+        return card;
+    }
+
+    function renderDbCard(item) {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        const title = document.createElement('h3');
+        title.textContent = item.bizName;
+        card.appendChild(title);
+        [
+            {label: 'ID', value: item.id},
+            {label: '인허가 번호', value: item.permitNo},
+            {label: '주소', value: item.roadAddr},
+            {label: '대표 음식', value: item.mainFood},
+        ].forEach(({label, value}) => {
+            if (value) {
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>${label}:</strong> ${value}`;
+                card.appendChild(p);
+            }
+        });
+        return card;
     }
 
     document.getElementById('search-btn').addEventListener('click', () => {
         const query = document.getElementById('search-query').value.trim();
-        if (!query) {
-            alert("검색어를 입력하세요.");
-            return;
-        }
-        const selectedApi = document.querySelector('.api-btn.active').getAttribute('data-api');
-        let endpoint = "";
-        if (selectedApi === "search") {
-            endpoint = "/api/v1/search/search?query=" + encodeURIComponent(query);
-        } else if (selectedApi === "dbSearch") {
-            endpoint = "/api/v1/search/db/search?query=" + encodeURIComponent(query);
-        }
+        if (!query) return alert('검색어를 입력하세요.');
 
-        resultsContainer.innerHTML = "<p>검색 중...</p>";
+        const api = document.querySelector('.api-btn.active').dataset.api;
+        const url = api === 'search'
+            ? `/api/v1/search/search?query=${encodeURIComponent(query)}`
+            : `/api/v1/search/db/search?query=${encodeURIComponent(query)}`;
 
-        fetch(endpoint)
-            .then(response => response.json())
+        resultsContainer.innerHTML = '<p>검색 중...</p>';
+        fetch(url)
+            .then(res => res.json())
             .then(data => {
                 lastSearchData = data;
-                if (selectedApi === "search") {
-                    populateCategoryFilter(data);
-                    renderSearchResults(data);
-                    document.getElementById('category-filter').addEventListener('change', () => renderSearchResults(lastSearchData));
-                } else {
-                    renderDbResults(data);
-                }
+                populateCategoryFilter(data, api);
+                document.getElementById('category-filter').onchange = () =>
+                    renderResultsGrouped(lastSearchData, api === 'search' ? 'category' : 'foodType',
+                        api === 'search' ? renderSearchCard : renderDbCard);
+                renderResultsGrouped(data, api === 'search' ? 'category' : 'foodType',
+                    api === 'search' ? renderSearchCard : renderDbCard);
             })
             .catch(err => {
-                resultsContainer.innerHTML = "<p>검색 결과를 불러오는데 오류가 발생했습니다.</p>";
                 console.error(err);
+                resultsContainer.innerHTML = '<p>검색 결과를 불러오는데 오류가 발생했습니다.</p>';
             });
     });
 </script>
