@@ -30,4 +30,10 @@ public class SearchController {
         List<DbDataDto> searchDtoList = searchService.searchDb(query);
         return ResponseEntity.ok(searchDtoList);
     }
+
+    @GetMapping("/cross/search")
+    public ResponseEntity<List<SearchDto>> crossSearch(@RequestParam("query") String query) {
+        List<SearchDto> validated = searchService.crossValidatedSearch(query);
+        return ResponseEntity.ok(validated);
+    }
 }

@@ -11,11 +11,15 @@ import com.snowykte0426.minsole.domain.search.dto.response.SearchLocalResponse;
 import com.snowykte0426.minsole.infrastructure.NaverClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +108,47 @@ public class SearchService {
             }
         }
         return searchDtoList;
+    }
+
+    public List<SearchDto> crossValidatedSearch(String query) {
+        // 1) 네이버 로컬
+        List<SearchDto> naverResults = search(query);
+
+        // 2) DB
+        List<DbDataDto> dbResults = searchDb(query);
+
+        // 3) 문자열 유사도 비교를 위한 준비
+        JaroWinklerDistance jw = new JaroWinklerDistance();
+        final double THRESHOLD = 0.88;  // 유사도 임계치(0~1)
+
+        // 4) DB 결과를 map으로 빠르게 조회
+        Map<Long, DbDataDto> dbById = dbResults.stream()
+                .collect(Collectors.toMap(DbDataDto::getId, Function.identity()));
+
+        // 5) 교차검증: naverResults 중에서,
+        //    (a) DB의 이름(bizName)과 유사하거나
+        //    (b) 도로명주소(roadAddr)가 포함 매칭되는 경우만 필터링
+        List<SearchDto> filtered = new ArrayList<>();
+        for (SearchDto nv : naverResults) {
+            String nvTitle = nv.getTitle().replaceAll("<[^>]*>", "").trim();
+            String nvAddr  = nv.getReadAddress() != null ? nv.getReadAddress() : nv.getAddress();
+
+            boolean matchFound = dbResults.stream().anyMatch(db -> {
+                // (1) 이름 유사도
+                double sim = jw.apply(nvTitle, db.getBizName());
+                if (sim >= THRESHOLD) return true;
+
+                // (2) 주소 포함 매칭 (간단히 부분 문자열 검색)
+                return nvAddr != null
+                        && db.getRoadAddr() != null
+                        && (nvAddr.contains(db.getRoadAddr()) || db.getRoadAddr().contains(nvAddr));
+            });
+
+            if (matchFound) {
+                filtered.add(nv);
+            }
+        }
+
+        return filtered;
     }
 }
