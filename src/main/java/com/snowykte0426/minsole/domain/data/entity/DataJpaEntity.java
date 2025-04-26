@@ -72,8 +72,12 @@ public class DataJpaEntity {
     @Column(name = "phone_num")
     private String phoneNum;
 
+    // 네이버 평점
+    @Column(name = "naver_rating")
+    private Double naverRating;
+
     @Builder
-    public DataJpaEntity(Long id, String serviceId, String orgCode, String manageCode, String bizName, String permitNo, String roadAddr, String jibunAddr, LocalDate applyDate, LocalDate designateDate, String foodType, String mainFood, LocalDateTime lastUpdateDate, String phoneNum) {
+    public DataJpaEntity(Long id, String serviceId, String orgCode, String manageCode, String bizName, String permitNo, String roadAddr, String jibunAddr, LocalDate applyDate, LocalDate designateDate, String foodType, String mainFood, LocalDateTime lastUpdateDate, String phoneNum, Double naverRating) {
         this.id = id;
         this.serviceId = serviceId;
         this.orgCode = orgCode;
@@ -88,5 +92,6 @@ public class DataJpaEntity {
         this.mainFood = mainFood;
         this.lastUpdateDate = lastUpdateDate;
         this.phoneNum = phoneNum;
+        this.naverRating = naverRating;
     }
 }
