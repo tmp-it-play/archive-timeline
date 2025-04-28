@@ -280,22 +280,31 @@
         };
 
         // AI 키워드 가져오기
+        // AI 키워드 가져오기
         function fetchKeywords(){
             fetch(`/api/v1/search/ai/keywords?limit=10`)
-                .then(r=>r.json())
+                .then(r=>{
+                    if(!r.ok) throw new Error(r.statusText);
+                    return r.json();
+                })
                 .then(json=>{
-                    suggestions.innerHTML = json.items
+                    // items나 keywords 둘 중에 있는 쪽을 사용
+                    const kws = json.items ?? json.keywords;
+                    if(!Array.isArray(kws)) throw new Error('키워드 배열이 아닙니다');
+
+                    suggestions.innerHTML = kws
                         .map(k=>`<button class="keyword-btn">${k}</button>`)
                         .join('');
                     results.innerHTML = '<p>키워드를 선택해주세요.</p>';
-                    // 키워드 클릭 시 추천 호출
+
                     suggestions.querySelectorAll('.keyword-btn').forEach(btn=>{
-                        btn.onclick = ()=>{
-                            fetchRecommendations(btn.textContent);
-                        };
+                        btn.onclick = ()=> fetchRecommendations(btn.textContent);
                     });
                 })
-                .catch(()=> results.innerHTML = '<p>키워드 호출 오류</p>');
+                .catch(err=>{
+                    console.error('fetchKeywords 에러:', err);
+                    results.innerHTML = '<p>키워드 호출 오류</p>';
+                });
         }
 
         // AI 추천 검색
