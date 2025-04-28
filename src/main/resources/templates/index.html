@@ -1,61 +1,324 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>ㄹㅈㄷ 맛집탐방</title>
-    <link rel="stylesheet" href="/css/style.css"/>
+    <style>
+        :root {
+            --primary: #5c6bc0;
+            --primary-dark: #3f51b5;
+            --bg-light: #f0f2f5;
+            --bg-dark: #1e1e2f;
+            --header-h: 60px;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body {
+            font-family: sans-serif;
+            background: var(--bg-light);
+            color: #333;
+            overflow: hidden;
+        }
+        body[data-theme=dark] {
+            background: var(--bg-dark);
+            color: #eee;
+        }
+        header {
+            position: fixed; top:0; left:0; right:0;
+            height: var(--header-h);
+            background: #fff; z-index: 100;
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background .3s;
+        }
+        body[data-theme=dark] header {
+            background: #2a2a3d;
+        }
+        header h1 { font-size:1.4rem; letter-spacing:2px }
+        .btn-group {
+            display:flex; align-items:center; gap:.6rem;
+        }
+        .btn-group button {
+            padding:.4rem .8rem;
+            border:none; border-radius:4px;
+            background: var(--bg-light);
+            color:inherit; cursor:pointer;
+            transition: background .2s, color .2s;
+            font-size:.9rem;
+        }
+        .btn-group button:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-group button.active {
+            background: var(--primary-dark);
+            color: #fff;
+        }
+        #theme-toggle {
+            background: none; padding: .4rem .6rem;
+        }
+
+        main {
+            display:flex;
+            margin-top: var(--header-h);
+            height: calc(100vh - var(--header-h));
+        }
+        .left {
+            flex:1; padding:1rem;
+            overflow-y: auto;
+        }
+        .search-bar {
+            display:flex; gap:.5rem; margin-bottom:1rem;
+        }
+        .search-bar input {
+            flex:1; padding:.6rem; border:1px solid #ccc;
+            border-radius:4px;
+        }
+        .search-bar button {
+            background: var(--primary);
+            color:#fff; border:none;
+            padding:0 .8rem; border-radius:4px;
+            cursor:pointer; transition: background .2s;
+        }
+        .search-bar button:hover {
+            background: var(--primary-dark);
+        }
+        /* filter icon */
+        #filter-toggle {
+            width:2.8rem; height:2.8rem;
+            display:flex; align-items:center; justify-content:center;
+            background: var(--primary);
+            border-radius:50%; border:none;
+        }
+        #filter-toggle svg path {
+            fill: #fff;
+        }
+
+        .cards {
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap:1rem;
+        }
+        .card {
+            background:#fff; border-radius:8px;
+            overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.1);
+            display:flex; flex-direction:column;
+            transition: transform .2s;
+        }
+        body[data-theme=dark] .card {
+            background:#2a2a3d;
+        }
+        .card:hover { transform: translateY(-3px) }
+        .card img {
+            width:100%; height:140px; object-fit:cover;
+        }
+        .card .content {
+            padding:.8rem; display:flex; flex-direction:column; gap:.4rem;
+        }
+        .card h3 { font-size:1.1rem; margin-bottom:.3rem }
+        .card p { font-size:.85rem; color:#555 }
+        body[data-theme=dark] .card p { color:#ccc }
+        .card a {
+            margin-top:auto; font-size:.9rem;
+            color: var(--primary); text-decoration:none;
+            font-weight:500;
+        }
+
+        /* overlay + sidebar */
+        .overlay {
+            position:fixed; top:var(--header-h); left:0; right:0; bottom:0;
+            background: rgba(0,0,0,0.3);
+            visibility:hidden; opacity:0;
+            transition: opacity .3s, visibility .3s;
+            z-index: 90;
+        }
+        .overlay.open {
+            visibility: visible; opacity:1;
+        }
+        .sidebar {
+            position:fixed; top:var(--header-h); right:-320px;
+            width:320px; bottom:0; background:#fff;
+            box-shadow:-4px 0 8px rgba(0,0,0,.1);
+            padding:1rem; overflow-y:auto;
+            transition: right .3s;
+            z-index: 95;
+        }
+        body[data-theme=dark] .sidebar {
+            background: #2a2a3d;
+        }
+        .sidebar.open { right:0; }
+        .sidebar h3 { margin-bottom:.5rem }
+        .sidebar label {
+            display:block; margin:.6rem 0 .2rem;
+            font-size:.9rem;
+        }
+        .sidebar select, .sidebar input {
+            width:100%; padding:.5rem; border-radius:4px;
+            border:1px solid #ccc;
+        }
+        .sidebar button {
+            width:100%; padding:.6rem;
+            background: var(--primary); color:#fff;
+            border:none; border-radius:4px;
+            cursor:pointer; margin-top:1rem;
+        }
+        @media(max-width:768px) {
+            .sidebar { width:100%; }
+        }
+    </style>
 </head>
 <body data-theme="light">
 <header>
     <h1>ㄹㅈㄷ 맛집탐방</h1>
-    <div class="header-controls">
-        <button id="theme-toggle" class="toggle-btn">다크 모드 전환</button>
-        <div class="api-toggle">
-            <button class="api-btn active" data-api="search">일반 검색</button>
-            <button class="api-btn" data-api="dbSearch">DB 검색</button>
-            <button class="api-btn" data-api="cross">교차 검색</button>
-        </div>
+    <div class="btn-group">
+        <button data-api="local" class="active">일반</button>
+        <button data-api="db">DB</button>
+        <button data-api="cross">교차</button>
+        <button id="theme-toggle">다크 모드</button>
     </div>
 </header>
-
 <main>
-    <div class="search-container">
+    <div class="left">
         <div class="search-bar">
-            <input type="text" id="search-query" placeholder="검색어를 입력하세요…" />
-            <button id="search-btn">검색</button>
-            <button id="filter-toggle" class="filter-btn">🔍 필터</button>
+            <input id="q" placeholder="검색어를 입력하세요…"/>
+            <button id="search">검색</button>
+            <button id="filter-toggle" title="필터">
+                <svg viewBox="0 0 24 24" width="18"><path d="M3 4h18v2l-7 7v5l-4 1v-6L3 6V4z"/></svg>
+            </button>
         </div>
-        <div class="category-filter">
-            <select id="category-filter" disabled>
-                <option value="">전체 카테고리</option>
-            </select>
+        <div id="results" class="cards">
+            <p>검색 결과가 없습니다.</p>
         </div>
     </div>
-
-    <!-- 사이드 필터 패널 -->
-    <aside id="filter-panel" class="filter-panel">
-        <h3>검색 필터</h3>
-        <label>
-            카테고리
-            <select id="filter-category">
-                <option value="">전체</option>
-            </select>
-        </label>
-        <label>
-            최소 평점
-            <input type="number" id="filter-rating-min" min="0" max="5" step="0.1" placeholder="4.0" />
-        </label>
-        <button id="apply-filters" class="apply-btn">적용</button>
-    </aside>
-
-    <!-- 오버레이 -->
     <div id="overlay" class="overlay"></div>
-
-    <!-- 결과 -->
-    <div id="results" class="results-container"></div>
+    <aside id="sidebar" class="sidebar">
+        <h3>검색 필터</h3>
+        <label for="f-cat">카테고리</label>
+        <select id="f-cat"><option value="">전체</option></select>
+        <label for="f-min">최소 평점</label>
+        <input id="f-min" type="number" min="0" max="5" step="0.1" placeholder="예:4.0"/>
+        <button id="apply">적용</button>
+    </aside>
 </main>
+<script>
+    (()=>{
+        const body = document.body;
+        const themeBtn = document.getElementById('theme-toggle');
+        const modeBtns = document.querySelectorAll('[data-api]');
+        const q = document.getElementById('q');
+        const searchBtn = document.getElementById('search');
+        const filterToggle = document.getElementById('filter-toggle');
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebar');
+        const results = document.getElementById('results');
+        const fCat = document.getElementById('f-cat');
+        const fMin = document.getElementById('f-min');
+        const applyBtn = document.getElementById('apply');
+        let api = 'local', dataSet = [];
 
-<script src="/js/script.js"></script>
+        // 테마 전환
+        themeBtn.onclick = ()=>{
+            body.dataset.theme = body.dataset.theme==='light'?'dark':'light';
+            themeBtn.textContent = body.dataset.theme==='light'?'다크 모드':'라이트 모드';
+        };
+
+        // 모드 선택
+        modeBtns.forEach(btn=>{
+            btn.onclick = ()=>{
+                modeBtns.forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+                api = btn.dataset.api;
+            };
+        });
+
+        // 필터 열기/닫기
+        filterToggle.onclick = ()=>{
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        };
+        overlay.onclick = ()=>{
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        };
+
+        // 결과 그리기
+        function render(list){
+            if(!list.length) return results.innerHTML = '<p>검색 결과가 없습니다.</p>';
+            results.innerHTML = list.map(item=>{
+                if(api==='image'){
+                    return `<div class="card">
+              <img src="${item.thumbnail}" alt="">
+              <div class="content">
+                <h3>${item.title.replace(/<[^>]+>/g,'')}</h3>
+                <a href="${item.link}" target="_blank">원본 보기</a>
+              </div>
+            </div>`;
+                }
+                if(api==='local'){
+                    return `<div class="card">
+              <div class="content">
+                <h3>${item.title.replace(/<[^>]+>/g,'')}</h3>
+                <p><strong>카테고리:</strong> ${item.category||'—'}</p>
+                <p><strong>주소:</strong> ${item.address||'—'}</p>
+                <p><strong>도로명:</strong> ${item.roadAddress||'—'}</p>
+                <a href="${item.link}" target="_blank">자세히</a>
+              </div>
+            </div>`;
+                }
+                // db / cross
+                return `<div class="card">
+            <div class="content">
+              <h3>${item.bizName}</h3>
+              <p><strong>대표:</strong> ${item.mainFood||'—'}</p>
+              <p><strong>주소:</strong> ${item.roadAddr||'—'}</p>
+              <p><strong>평점:</strong> ${item.naverRating!=null?item.naverRating.toFixed(1)+' ⭐️':'—'}</p>
+            </div>
+          </div>`;
+            }).join('');
+        }
+
+        // 카테고리 채우기
+        function fillCategories(){
+            const key = api==='db'?'foodType':'category';
+            const cats = Array.from(new Set(dataSet.map(d=>d[key]).filter(x=>x))).sort();
+            fCat.innerHTML = `<option value="">전체</option>` +
+                cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+        }
+
+        // 필터 적용
+        applyBtn.onclick = ()=>{
+            let list = dataSet.slice();
+            const cat = fCat.value;
+            const min = parseFloat(fMin.value);
+            if(cat) list = list.filter(d=>(api==='db'?d.foodType:d.category)===cat);
+            if(!isNaN(min)) list = list.filter(d=>d.naverRating!=null && d.naverRating>=min);
+            render(list);
+            sidebar.classList.remove('open'); overlay.classList.remove('open');
+        };
+
+        // 검색 실행
+        searchBtn.onclick = ()=>{
+            const qv = q.value.trim();
+            if(!qv) return alert('검색어를 입력해주세요.');
+            results.innerHTML = '<p>검색 중…</p>';
+            let url;
+            if(api==='local')    url = `/api/v1/search/local?query=${qv}`;
+            else if(api==='image')url = `/api/v1/search/image?query=${qv}`;
+            else if(api==='db')   url = `/api/v1/search/db/search?query=${qv}`;
+            else                  url = `/api/v1/search/cross/search?query=${qv}`;
+
+            fetch(url).then(r=>r.json()).then(js=>{
+                dataSet = api==='image'?js.items:(api==='local'?js.items:js);
+                if(api!=='image') fillCategories();
+                render(dataSet);
+            }).catch(()=>{
+                results.innerHTML = '<p>오류가 발생했습니다.</p>';
+            });
+        };
+
+    })();
+</script>
 </body>
 </html>
