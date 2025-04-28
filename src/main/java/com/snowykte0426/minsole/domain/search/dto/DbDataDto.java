@@ -27,4 +27,5 @@ public class DbDataDto {
     private String mainFood; // 주된 음식
     private LocalDateTime lastUpdateDate; // 마지막 업데이트 일자
     private String phoneNum; // 전화번호
+    private Double naverRating; // 네이버 평점
 }

@@ -1,35 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ㄹㅈㄷ 맛집탐방</title>
-    <link href="/css/style.css" rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body data-theme="light">
 <header>
     <h1>ㄹㅈㄷ 맛집탐방</h1>
-    <button class="toggle-btn" id="theme-toggle">다크 모드 전환</button>
-</header>
-<main>
-    <div class="search-container">
-        <div class="search-bar">
-            <input type="text" id="search-query" placeholder="검색어를 입력하세요..."/>
-            <button id="search-btn">검색</button>
-        </div>
-        <div class="category-filter">
-            <select id="category-filter">
-                <option value="">전체 카테고리</option>
-            </select>
-        </div>
+    <div class="header-controls">
+        <button id="theme-toggle" class="toggle-btn">다크 모드 전환</button>
         <div class="api-toggle">
             <button class="api-btn active" data-api="search">일반 검색</button>
             <button class="api-btn" data-api="dbSearch">DB 검색</button>
             <button class="api-btn" data-api="cross">교차 검색</button>
         </div>
     </div>
+</header>
+
+<main>
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" id="search-query" placeholder="검색어를 입력하세요…" />
+            <button id="search-btn">검색</button>
+            <button id="filter-toggle" class="filter-btn">🔍 필터</button>
+        </div>
+        <div class="category-filter">
+            <select id="category-filter" disabled>
+                <option value="">전체 카테고리</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 사이드 필터 패널 -->
+    <aside id="filter-panel" class="filter-panel">
+        <h3>검색 필터</h3>
+        <label>
+            카테고리
+            <select id="filter-category">
+                <option value="">전체</option>
+            </select>
+        </label>
+        <label>
+            최소 평점
+            <input type="number" id="filter-rating-min" min="0" max="5" step="0.1" placeholder="4.0" />
+        </label>
+        <button id="apply-filters" class="apply-btn">적용</button>
+    </aside>
+
+    <!-- 오버레이 -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- 결과 -->
     <div id="results" class="results-container"></div>
 </main>
+
 <script src="/js/script.js"></script>
 </body>
 </html>

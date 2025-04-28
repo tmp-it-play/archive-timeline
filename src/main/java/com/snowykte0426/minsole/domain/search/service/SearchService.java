@@ -11,7 +11,7 @@ import com.snowykte0426.minsole.domain.search.dto.response.SearchLocalResponse;
 import com.snowykte0426.minsole.infrastructure.NaverClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.similarity.JaroWinklerDistance;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -104,6 +104,7 @@ public class SearchService {
                 dto.setMainFood(result.getMainFood());
                 dto.setLastUpdateDate(result.getLastUpdateDate());
                 dto.setPhoneNum(result.getPhoneNum());
+                dto.setNaverRating(result.getNaverRating());
                 searchDtoList.add(dto);
             }
         }
@@ -111,15 +112,15 @@ public class SearchService {
     }
 
     public List<SearchDto> crossValidatedSearch(String query) {
-        // 1) 네이버 로컬
+        // 1) 네이버 로컬 검색
         List<SearchDto> naverResults = search(query);
 
-        // 2) DB
+        // 2) DB 검색
         List<DbDataDto> dbResults = searchDb(query);
 
-        // 3) 문자열 유사도 비교를 위한 준비
-        JaroWinklerDistance jw = new JaroWinklerDistance();
-        final double THRESHOLD = 0.88;  // 유사도 임계치(0~1)
+        // 3) 문자열 유사도 비교 준비 (Levenshtein 사용)
+        LevenshteinDistance ld = new LevenshteinDistance();
+        final double THRESHOLD = 0.88;  // 유사도 임계치 (0 ~ 1)
 
         // 4) DB 결과를 map으로 빠르게 조회
         Map<Long, DbDataDto> dbById = dbResults.stream()
@@ -134,11 +135,16 @@ public class SearchService {
             String nvAddr  = nv.getReadAddress() != null ? nv.getReadAddress() : nv.getAddress();
 
             boolean matchFound = dbResults.stream().anyMatch(db -> {
-                // (1) 이름 유사도
-                double sim = jw.apply(nvTitle, db.getBizName());
+                // (1) 이름 유사도 (Levenshtein 기반)
+                if (db.getBizName() == null) return false;
+                int distance = ld.apply(nvTitle, db.getBizName());
+                int maxLength = Math.max(nvTitle.length(), db.getBizName().length());
+                if (maxLength == 0) return false; // 둘 다 빈 문자열 방지
+
+                double sim = 1.0 - ((double) distance / maxLength);
                 if (sim >= THRESHOLD) return true;
 
-                // (2) 주소 포함 매칭 (간단히 부분 문자열 검색)
+                // (2) 주소 포함 매칭
                 return nvAddr != null
                         && db.getRoadAddr() != null
                         && (nvAddr.contains(db.getRoadAddr()) || db.getRoadAddr().contains(nvAddr));

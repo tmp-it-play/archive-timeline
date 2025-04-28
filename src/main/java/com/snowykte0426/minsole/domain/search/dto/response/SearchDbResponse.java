@@ -27,9 +27,10 @@ public class SearchDbResponse {
     private String mainFood;
     private LocalDateTime lastUpdateDate;
     private String phoneNum;
+    private Double naverRating;
 
     @Builder
-    public SearchDbResponse(Long id, String serviceId, String orgCode, String manageCode, String bizName, String permitNo, String roadAddr, String jibunAddr, LocalDate applyDate, LocalDate designateDate, String foodType, String mainFood, LocalDateTime lastUpdateDate, String phoneNum) {
+    public SearchDbResponse(Long id, String serviceId, String orgCode, String manageCode, String bizName, String permitNo, String roadAddr, String jibunAddr, LocalDate applyDate, LocalDate designateDate, String foodType, String mainFood, LocalDateTime lastUpdateDate, String phoneNum, Double naverRating) {
         this.id = id;
         this.serviceId = serviceId;
         this.orgCode = orgCode;
@@ -44,5 +45,6 @@ public class SearchDbResponse {
         this.mainFood = mainFood;
         this.lastUpdateDate = lastUpdateDate;
         this.phoneNum = phoneNum;
+        this.naverRating = naverRating;
     }
 }
