@@ -2,6 +2,7 @@ package com.snowykte0426.minsole.domain.search.controller;
 
 import com.snowykte0426.minsole.domain.search.dto.DbDataDto;
 import com.snowykte0426.minsole.domain.search.dto.SearchDto;
+import com.snowykte0426.minsole.domain.search.service.KeywordRecommendService;
 import com.snowykte0426.minsole.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 public class SearchController {
 
     private final SearchService searchService;
+    private final KeywordRecommendService keywordRecommendService;
 
     @GetMapping("/search")
     public ResponseEntity<List<SearchDto>> search(@RequestParam("query") String query) {
@@ -35,5 +37,12 @@ public class SearchController {
     public ResponseEntity<List<SearchDto>> crossSearch(@RequestParam("query") String query) {
         List<SearchDto> validated = searchService.crossValidatedSearch(query);
         return ResponseEntity.ok(validated);
+    }
+
+    @GetMapping("/ai/recommend")
+    public ResponseEntity<List<SearchDto>> aiRecommend(
+            @RequestParam("keywords") String keywords) {
+        List<SearchDto> recommendations = keywordRecommendService.recommend(keywords);
+        return ResponseEntity.ok(recommendations);
     }
 }
