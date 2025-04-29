@@ -91,13 +91,13 @@ class AIRecommender:
         print(f"DB에서 맛집 데이터: {len(rows)}개 로드됨")
         try:
             resp = client.chat.completions.create(
-                model="gpt-4-turbo",
+                model="gpt-4-32k",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
                 temperature=0.0,
-                max_tokens=500
+                max_tokens=3200000,
             )
             text = resp.choices[0].message.content
             match = re.search(r"\[.*\]", text, re.DOTALL)

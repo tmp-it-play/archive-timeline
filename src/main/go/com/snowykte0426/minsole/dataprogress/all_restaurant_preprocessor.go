@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	filePath := "data/all_restaurant_sheet.xlsx"
+	filePath := "data/fulldata_07_22_18_P_제과점영업.xlsx"
 	f, err := excelize.OpenFile(filePath)
 	if err != nil {
 		fmt.Println("Error opening XLSX file:", err)

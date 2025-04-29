@@ -14,9 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -26,9 +24,9 @@ public class XlsxDataImporter {
     private final DataJpaRepository dataRepository;
 
     @Async
-    public CompletableFuture<Void> processRowAsync(Row row) {
+    public CompletableFuture<Void> processRowAsync(Row row, Map<String, Integer> headerMap, long id) {
         try {
-            DataJpaEntity entity = buildEntityFromRow(row);
+            DataJpaEntity entity = buildEntityFromRow(row, headerMap, id);
             dataRepository.save(entity);
         } catch (Exception e) {
             System.err.println("행 처리 중 에러: " + e.getMessage());
@@ -43,14 +41,19 @@ public class XlsxDataImporter {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
-            if (rowIterator.hasNext()) {
-                rowIterator.next();
+            if (!rowIterator.hasNext()) {
+                throw new IllegalStateException("빈 파일입니다.");
             }
 
+            // 헤더 읽기
+            Row headerRow = rowIterator.next();
+            Map<String, Integer> headerMap = buildHeaderMap(headerRow);
+
             List<CompletableFuture<Void>> futures = new ArrayList<>();
+            long idCounter = 65525;
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                futures.add(processRowAsync(row));
+                futures.add(processRowAsync(row, headerMap, idCounter++));
             }
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
@@ -61,21 +64,29 @@ public class XlsxDataImporter {
         }
     }
 
-    private DataJpaEntity buildEntityFromRow(Row row) {
-        long id = (long) getNumericCellValue(row.getCell(0));
-        String serviceId = getStringCellValue(row.getCell(1));
-        String orgCode = getStringCellValue(row.getCell(2));
-        String manageCode = getStringCellValue(row.getCell(3));
-        String bizName = getStringCellValue(row.getCell(4));
-        String permitNo = getStringCellValue(row.getCell(5));
-        String roadAddr = getStringCellValue(row.getCell(6));
-        String jibunAddr = getStringCellValue(row.getCell(7));
-        LocalDate applyDate = getLocalDateFromCell(row.getCell(8));
-        LocalDate designateDate = getLocalDateFromCell(row.getCell(9));
-        String foodType = getStringCellValue(row.getCell(10));
-        String mainFood = getStringCellValue(row.getCell(11));
-        LocalDateTime lastUpdateDate = getLocalDateTimeFromCell(row.getCell(12));
-        String phoneNum = getStringCellValue(row.getCell(13));
+    private Map<String, Integer> buildHeaderMap(Row headerRow) {
+        Map<String, Integer> headerMap = new HashMap<>();
+        for (Cell cell : headerRow) {
+            cell.setCellType(CellType.STRING);
+            headerMap.put(cell.getStringCellValue().trim(), cell.getColumnIndex());
+        }
+        return headerMap;
+    }
+
+    private DataJpaEntity buildEntityFromRow(Row row, Map<String, Integer> headerMap, long id) {
+        String serviceId = getStringCellValue(row, headerMap, "serviceId");
+        String orgCode = getStringCellValue(row, headerMap, "orgCode");
+        String manageCode = getStringCellValue(row, headerMap, "manageCode");
+        String bizName = getStringCellValue(row, headerMap, "bizName");
+        String permitNo = getStringCellValue(row, headerMap, "permitNo");
+        String roadAddr = getStringCellValue(row, headerMap, "roadAddr");
+        String jibunAddr = getStringCellValue(row, headerMap, "jibunAddr");
+        LocalDate applyDate = getLocalDateFromCell(row, headerMap, "applyDate");
+        LocalDate designateDate = getLocalDateFromCell(row, headerMap, "designateDate");
+        String foodType = getStringCellValue(row, headerMap, "foodType");
+        String mainFood = getStringCellValue(row, headerMap, "mainFood");
+        LocalDateTime lastUpdateDate = getLocalDateTimeFromCell(row, headerMap, "lastUpdateDate");
+        String phoneNum = getStringCellValue(row, headerMap, "phoneNum");
 
         return DataJpaEntity.builder()
                 .id(id)
@@ -95,58 +106,47 @@ public class XlsxDataImporter {
                 .build();
     }
 
-    private String getStringCellValue(Cell cell) {
+    private String getStringCellValue(Row row, Map<String, Integer> headerMap, String fieldName) {
+        Integer idx = headerMap.get(fieldName);
+        if (idx == null) return null;
+        Cell cell = row.getCell(idx);
         if (cell == null) return null;
         cell.setCellType(CellType.STRING);
         return cell.getStringCellValue().trim();
     }
 
-    private double getNumericCellValue(Cell cell) {
-        if (cell == null) return 0;
-        if (cell.getCellType() == CellType.NUMERIC) {
-            return cell.getNumericCellValue();
-        } else if (cell.getCellType() == CellType.STRING) {
-            try {
-                return Double.parseDouble(cell.getStringCellValue().trim());
-            } catch (NumberFormatException e) {
-                System.err.println("숫자로 변환 불가: " + cell.getStringCellValue());
-            }
-        }
-        return 0;
-    }
-
-    private LocalDate getLocalDateFromCell(Cell cell) {
+    private LocalDate getLocalDateFromCell(Row row, Map<String, Integer> headerMap, String fieldName) {
+        Integer idx = headerMap.get(fieldName);
+        if (idx == null) return null;
+        Cell cell = row.getCell(idx);
         if (cell == null) return null;
-        if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
-            return cell.getLocalDateTimeCellValue().toLocalDate();
-        } else if (cell.getCellType() == CellType.STRING) {
-            String dateStr = cell.getStringCellValue().trim();
-            try {
+        try {
+            if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+                return cell.getLocalDateTimeCellValue().toLocalDate();
+            } else if (cell.getCellType() == CellType.STRING) {
+                String dateStr = cell.getStringCellValue().trim();
                 return LocalDate.parse(dateStr);
-            } catch (DateTimeParseException e) {
-                try {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-                    return LocalDate.parse(dateStr, formatter);
-                } catch (DateTimeParseException ex) {
-                    System.err.println("LocalDate 파싱 실패: " + dateStr);
-                }
             }
+        } catch (Exception e) {
+            System.err.println("LocalDate 파싱 실패: " + cell.toString());
         }
         return null;
     }
 
-    private LocalDateTime getLocalDateTimeFromCell(Cell cell) {
+    private LocalDateTime getLocalDateTimeFromCell(Row row, Map<String, Integer> headerMap, String fieldName) {
+        Integer idx = headerMap.get(fieldName);
+        if (idx == null) return null;
+        Cell cell = row.getCell(idx);
         if (cell == null) return null;
-        if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
-            return cell.getLocalDateTimeCellValue();
-        } else if (cell.getCellType() == CellType.STRING) {
-            String dtStr = cell.getStringCellValue().trim();
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                return LocalDateTime.parse(dtStr, formatter);
-            } catch (DateTimeParseException e) {
-                System.err.println("LocalDateTime 파싱 실패: " + dtStr);
+        try {
+            if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+                return cell.getLocalDateTimeCellValue();
+            } else if (cell.getCellType() == CellType.STRING) {
+                String dtStr = cell.getStringCellValue().trim();
+                return LocalDateTime.parse(dtStr);
             }
+        } catch (Exception e) {
+            System.err.println("LocalDateTime 파싱 실패: " + cell.toString());
         }
         return null;
     }

@@ -2,83 +2,98 @@ package main
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/xuri/excelize/v2"
+	"log"
+	"os"
+	"strings"
 )
 
 func main() {
-	f, err := excelize.OpenFile("result/output.xlsx")
+	inputPath := "/Users/snowykte0426/Programming/BigData-Server/src/main/go/com/snowykte0426/minsole/dataprogress/result/all_restaurant_filtered_data.xlsx"
+	outputPath := "result/filtered_output.xlsx"
+
+	f, err := excelize.OpenFile(inputPath)
 	if err != nil {
 		log.Fatalf("파일 열기 실패: %v", err)
 	}
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Fatalf("파일 닫기 실패: %v", err)
+		}
+	}()
+
 	sheetName := f.GetSheetName(0)
+	if sheetName == "" {
+		log.Fatal("시트를 찾을 수 없습니다.")
+	}
+
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
 		log.Fatalf("행 읽기 실패: %v", err)
 	}
 	if len(rows) == 0 {
-		log.Fatal("데이터가 없습니다.")
+		log.Fatal("엑셀에 데이터가 없습니다.")
 	}
+
+	// 남길 컬럼 매핑
+	keepColumns := map[string]string{
+		"개방서비스아이디": "serviceId",
+		"개방자치단체코드": "orgCode",
+		"관리번호":     "manageCode",
+		"사업장명":     "bizName",
+		"소재지도로명주소": "roadAddr",
+		"소재지지번주소":  "jibunAddr",
+		"인허가일자":    "applyDate",
+		"주된음식":     "mainFood",
+		"데이터갱신일자":  "lastUpdateDate",
+		"소재지전화":    "phoneNum",
+	}
+
+	// 헤더 찾기
 	header := rows[0]
-	designatedIndex := -1
-	removeColNames := map[string]bool{
-		"지정취소일자":   true,
-		"저정취소사유":   true,
-		"폐업일자":     true,
-		"불가일자":     true,
-		"불가사유":     true,
-		"재지정일자":    true,
-		"데이터갱신구분":  true,
-		"데이터갱신일자":  true,
-		"영업상태명":    true,
-		"영업상태구분코드": true,
-	}
-	removeCols := make(map[int]bool)
-	for i, colName := range header {
-		if removeColNames[colName] {
-			removeCols[i] = true
-		}
-		if colName == "지정취소일자" {
-			designatedIndex = i
+	var keepOrder []int    // 남길 컬럼 인덱스 순서
+	var newHeader []string // 새로 쓸 헤더
+
+	for idx, colName := range header {
+		if newName, ok := keepColumns[colName]; ok {
+			keepOrder = append(keepOrder, idx)
+			newHeader = append(newHeader, newName)
 		}
 	}
-	if designatedIndex == -1 {
-		log.Println("경고: '지정취소일자' 칼럼을 찾을 수 없습니다.")
-	}
-	var newRows [][]string
-	var newHeader []string
-	for i, col := range header {
-		if !removeCols[i] {
-			newHeader = append(newHeader, col)
-		}
-	}
-	newRows = append(newRows, newHeader)
-	for _, row := range rows[1:] {
-		if designatedIndex < len(row) && row[designatedIndex] != "" {
-			continue
-		}
-		var newRow []string
-		for i, cell := range row {
-			if !removeCols[i] {
-				newRow = append(newRow, cell)
-			}
-		}
-		newRows = append(newRows, newRow)
-	}
+
+	// 새 파일 만들기
 	newFile := excelize.NewFile()
 	newSheet := newFile.GetSheetName(newFile.GetActiveSheetIndex())
-	for r, row := range newRows {
-		for c, cell := range row {
-			cellName, err := excelize.CoordinatesToCellName(c+1, r+1)
-			if err != nil {
-				log.Fatalf("셀명 변환 오류: %v", err)
+
+	// 새 헤더 작성
+	for colIdx, fieldName := range newHeader {
+		cell, _ := excelize.CoordinatesToCellName(colIdx+1, 1)
+		newFile.SetCellValue(newSheet, cell, fieldName)
+	}
+
+	// 데이터 복사
+	for rowIdx, row := range rows[1:] {
+		for colIdx, originalIdx := range keepOrder {
+			cellValue := ""
+			if originalIdx < len(row) {
+				cellValue = strings.TrimSpace(row[originalIdx])
 			}
-			_ = newFile.SetCellValue(newSheet, cellName, cell)
+			cell, _ := excelize.CoordinatesToCellName(colIdx+1, rowIdx+2)
+			newFile.SetCellValue(newSheet, cell, cellValue)
 		}
 	}
-	if err := newFile.SaveAs("result/outpt.xlsx"); err != nil {
+
+	// 디렉토리 생성
+	if _, err := os.Stat("result"); os.IsNotExist(err) {
+		if err := os.Mkdir("result", 0755); err != nil {
+			log.Fatalf("result 디렉토리 생성 실패: %v", err)
+		}
+	}
+
+	// 파일 저장
+	if err := newFile.SaveAs(outputPath); err != nil {
 		log.Fatalf("파일 저장 실패: %v", err)
 	}
-	fmt.Println("처리 완료: output.xlsx 파일이 생성되었습니다.")
+
+	fmt.Println("✅ 처리 완료! 저장된 경로:", outputPath)
 }

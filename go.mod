@@ -1,4 +1,4 @@
-module module
+module myexcel
 
 go 1.24.1
 

@@ -1,5 +1,6 @@
 package com.snowykte0426.minsole.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.DisposableBean;
 
 import java.io.File;
 
+@Slf4j
 @Component
 public class PythonServerStarter implements ApplicationRunner, DisposableBean {
 
@@ -25,14 +27,14 @@ public class PythonServerStarter implements ApplicationRunner, DisposableBean {
         pb.redirectError(ProcessBuilder.Redirect.INHERIT);
         pythonProcess = pb.start();
 
-        System.out.println("✅ Python AI 서버가 시작되었습니다: " + script.getAbsolutePath());
+        log.info("Python AI 서버가 시작되었습니다: {}", script.getAbsolutePath());
     }
 
     @Override
     public void destroy() throws Exception {
         if (pythonProcess != null && pythonProcess.isAlive()) {
             pythonProcess.destroy();
-            System.out.println("🛑 Python AI 서버를 종료했습니다.");
+            log.info("Python AI 서버가 종료되었습니다.");
         }
     }
 }

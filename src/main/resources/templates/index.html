@@ -12,6 +12,7 @@
             --bg-dark: #1e1e2f;
             --header-h: 60px;
         }
+
         /*— AI 키워드 버튼 스타일 —*/
         .keyword-btn {
             background: #fff;
@@ -22,144 +23,276 @@
             cursor: pointer;
             transition: background .2s, color .2s;
         }
+
         .keyword-btn.active {
             background: var(--primary);
             color: #fff;
         }
+
         .keyword-btn:hover {
             background: var(--primary);
             color: #fff;
         }
+
         /*================================*/
-        *{box-sizing:border-box;margin:0;padding:0}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
         body {
-            font-family:sans-serif;
-            background:var(--bg-light);
-            color:#333;
-            overflow:hidden;
+            font-family: sans-serif;
+            background: var(--bg-light);
+            color: #333;
+            overflow: hidden;
         }
+
         body[data-theme=dark] {
-            background:var(--bg-dark);
-            color:#eee;
+            background: var(--bg-dark);
+            color: #eee;
         }
+
         header {
-            position:fixed; top:0; left:0; right:0;
-            height:var(--header-h);
-            background:#fff; z-index:100;
-            display:flex; align-items:center;
-            justify-content:space-between;
-            padding:0 1rem;
-            box-shadow:0 2px 5px rgba(0,0,0,0.1);
-            transition:background .3s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            background: #fff;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background .3s;
         }
-        body[data-theme=dark] header { background:#2a2a3d; }
-        header h1 { font-size:1.4rem; letter-spacing:2px }
-        .btn-group { display:flex; align-items:center; gap:.6rem; }
+
+        body[data-theme=dark] header {
+            background: #2a2a3d;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            letter-spacing: 2px
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
         .btn-group button {
-            padding:.4rem .8rem;
-            border:none; border-radius:4px;
-            background:var(--bg-light);
-            color:inherit; cursor:pointer;
-            transition:background .2s,color .2s;
-            font-size:.9rem;
+            padding: .4rem .8rem;
+            border: none;
+            border-radius: 4px;
+            background: var(--bg-light);
+            color: inherit;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+            font-size: .9rem;
         }
+
         .btn-group button:hover {
-            background:var(--primary);
-            color:#fff;
+            background: var(--primary);
+            color: #fff;
         }
+
         .btn-group button.active {
-            background:var(--primary-dark);
-            color:#fff;
+            background: var(--primary-dark);
+            color: #fff;
         }
-        #theme-toggle { background:none; padding:.4rem .6rem; }
+
+        #theme-toggle {
+            background: none;
+            padding: .4rem .6rem;
+        }
 
         main {
-            display:flex;
-            margin-top:var(--header-h);
-            height:calc(100vh - var(--header-h));
+            display: flex;
+            margin-top: var(--header-h);
+            height: calc(100vh - var(--header-h));
         }
-        .left { flex:1; padding:1rem; overflow-y:auto; }
-        .search-bar { display:flex; gap:.5rem; margin-bottom:1rem; }
+
+        .left {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: .5rem;
+            margin-bottom: 1rem;
+        }
+
         .search-bar input {
-            flex:1; padding:.6rem; border:1px solid #ccc;
-            border-radius:4px;
+            flex: 1;
+            padding: .6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
+
         .search-bar button {
-            background:var(--primary);
-            color:#fff; border:none;
-            padding:0 .8rem; border-radius:4px;
-            cursor:pointer; transition:background .2s;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0 .8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .2s;
         }
+
         .search-bar button:hover {
-            background:var(--primary-dark);
+            background: var(--primary-dark);
         }
+
         #filter-toggle {
-            width:2.8rem; height:2.8rem;
-            display:flex; align-items:center; justify-content:center;
-            background:var(--primary); border-radius:50%; border:none;
+            width: 2.8rem;
+            height: 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            border-radius: 50%;
+            border: none;
         }
-        #filter-toggle svg path { fill:#fff; }
+
+        #filter-toggle svg path {
+            fill: #fff;
+        }
+
         .cards {
-            display:grid;
-            grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-            gap:1rem;
+            display: grid;
+            grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
         }
+
         .card {
-            background:#fff; border-radius:8px;
-            box-shadow:0 1px 4px rgba(0,0,0,.1);
-            display:flex; flex-direction:column;
-            transition:transform .2s;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s;
         }
-        body[data-theme=dark] .card { background:#2a2a3d; }
-        .card:hover { transform:translateY(-3px) }
+
+        body[data-theme=dark] .card {
+            background: #2a2a3d;
+        }
+
+        .card:hover {
+            transform: translateY(-3px)
+        }
+
         .card img {
-            width:100%; height:140px; object-fit:cover;
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
         }
+
         .card .content {
-            padding:.8rem; display:flex; flex-direction:column; gap:.4rem;
+            padding: .8rem;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
         }
-        .card h3 { font-size:1.1rem; margin-bottom:.3rem }
-        .card p { font-size:.85rem; color:#555 }
-        body[data-theme=dark] .card p { color:#ccc }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: .3rem
+        }
+
+        .card p {
+            font-size: .85rem;
+            color: #555
+        }
+
+        body[data-theme=dark] .card p {
+            color: #ccc
+        }
+
         .card a {
-            margin-top:auto; font-size:.9rem;
-            color:var(--primary); text-decoration:none;
-            font-weight:500;
+            margin-top: auto;
+            font-size: .9rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
         }
+
         .overlay {
-            position:fixed; top:var(--header-h); left:0; right:0; bottom:0;
-            background:rgba(0,0,0,0.3);
-            visibility:hidden; opacity:0;
-            transition:opacity .3s,visibility .3s;
-            z-index:90;
+            position: fixed;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity .3s, visibility .3s;
+            z-index: 90;
         }
-        .overlay.open { visibility:visible; opacity:1; }
+
+        .overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .sidebar {
-            position:fixed; top:var(--header-h); right:-320px;
-            width:320px; bottom:0; background:#fff;
-            box-shadow:-4px 0 8px rgba(0,0,0,.1);
-            padding:1rem; overflow-y:auto;
-            transition:right .3s;
-            z-index:95;
+            position: fixed;
+            top: var(--header-h);
+            right: -320px;
+            width: 320px;
+            bottom: 0;
+            background: #fff;
+            box-shadow: -4px 0 8px rgba(0, 0, 0, .1);
+            padding: 1rem;
+            overflow-y: auto;
+            transition: right .3s;
+            z-index: 95;
         }
-        body[data-theme=dark] .sidebar { background:#2a2a3d; }
-        .sidebar h3 { margin-bottom:.5rem }
+
+        body[data-theme=dark] .sidebar {
+            background: #2a2a3d;
+        }
+
+        .sidebar h3 {
+            margin-bottom: .5rem
+        }
+
         .sidebar label, .sidebar input, .sidebar select {
-            display:block; width:100%; margin-top:.4rem;
+            display: block;
+            width: 100%;
+            margin-top: .4rem;
         }
+
         .sidebar input, .sidebar select {
-            padding:.5rem; border:1px solid #ccc; border-radius:4px;
+            padding: .5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
+
         .sidebar button {
-            margin-top:1rem; width:100%; padding:.6rem;
-            background:var(--primary); color:#fff; border:none; border-radius:4px;
-            cursor:pointer;
+            margin-top: 1rem;
+            width: 100%;
+            padding: .6rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
+
         .sidebar.open {
             right: 0;
         }
-        @media(max-width:768px) {
-            .sidebar { width:100%; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -180,7 +313,9 @@
             <input id="q" placeholder="검색어를 입력하세요…"/>
             <button id="search">검색</button>
             <button id="filter-toggle" title="필터">
-                <svg viewBox="0 0 24 24" width="18"><path d="M3 4h18v2l-7 7v5l-4 1v-6L3 6V4z"/></svg>
+                <svg viewBox="0 0 24 24" width="18">
+                    <path d="M3 4h18v2l-7 7v5l-4 1v-6L3 6V4z"/>
+                </svg>
             </button>
         </div>
 
@@ -196,7 +331,9 @@
     <aside id="sidebar" class="sidebar">
         <h3>검색 필터</h3>
         <label for="f-cat">카테고리</label>
-        <select id="f-cat"><option value="">전체</option></select>
+        <select id="f-cat">
+            <option value="">전체</option>
+        </select>
         <label for="f-min">최소 평점</label>
         <input id="f-min" type="number" min="0" max="5" step="0.1" placeholder="예:4.0"/>
         <button id="apply">적용</button>
@@ -204,19 +341,19 @@
 </main>
 <script>
     (() => {
-        const body         = document.body;
-        const themeBtn     = document.getElementById('theme-toggle');
-        const modeBtns     = document.querySelectorAll('[data-api]');
-        const q            = document.getElementById('q');
-        const searchBtn    = document.getElementById('search');
+        const body = document.body;
+        const themeBtn = document.getElementById('theme-toggle');
+        const modeBtns = document.querySelectorAll('[data-api]');
+        const q = document.getElementById('q');
+        const searchBtn = document.getElementById('search');
         const filterToggle = document.getElementById('filter-toggle');
-        const overlay      = document.getElementById('overlay');
-        const sidebar      = document.getElementById('sidebar');
-        const results      = document.getElementById('results');
-        const suggestions  = document.getElementById('keyword-suggestions');
-        const fCat         = document.getElementById('f-cat');
-        const fMin         = document.getElementById('f-min');
-        const applyBtn     = document.getElementById('apply');
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebar');
+        const results = document.getElementById('results');
+        const suggestions = document.getElementById('keyword-suggestions');
+        const fCat = document.getElementById('f-cat');
+        const fMin = document.getElementById('f-min');
+        const applyBtn = document.getElementById('apply');
 
         let api = 'local';
         let selectedKeywords = [];
@@ -248,8 +385,8 @@
             sidebar.classList.toggle('open');
             overlay.classList.toggle('open');
         };
-        overlay.onclick      = () => sidebar.classList.remove('open') || overlay.classList.remove('open');
-        applyBtn.onclick     = () => {
+        overlay.onclick = () => sidebar.classList.remove('open') || overlay.classList.remove('open');
+        applyBtn.onclick = () => {
             sidebar.classList.remove('open');
             overlay.classList.remove('open');
             if (api !== 'recommend') doSearch();
@@ -279,7 +416,10 @@
         // AI 키워드 가져오기
         function fetchKeywords() {
             fetch(`/api/v1/search/ai/keywords?limit=10`)
-                .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+                .then(r => {
+                    if (!r.ok) throw new Error(r.statusText);
+                    return r.json();
+                })
                 .then(json => {
                     const kws = json.keywords || json.items;
                     suggestions.innerHTML = kws.map(k => `<button class="keyword-btn">${k}</button>`).join('') +
@@ -327,8 +467,8 @@
                         ${item.imageLinks?.[0] ? `<img src="${item.imageLinks[0]}" alt="">` : ''}
                         <div class="content">
                             <h3>${item.title}</h3>
-                            <p><strong>주소:</strong> ${item.address||'—'}</p>
-                            <p><strong>도로명:</strong> ${item.readAddress||'—'}</p>
+                            <p><strong>주소:</strong> ${item.address || '—'}</p>
+                            <p><strong>도로명:</strong> ${item.readAddress || '—'}</p>
                             <a href="#" target="_blank">자세히 보기</a>
                         </div>
                     </div>`;
@@ -337,21 +477,25 @@
                         ${item.imageLinks?.[0] ? `<img src="${item.imageLinks[0]}" alt="">` : ''}
                         <div class="content">
                             <h3>${item.title}</h3>
-                            <p><strong>카테고리:</strong> ${item.category||'—'}</p>
-                            <p><strong>주소:</strong> ${item.address||'—'}</p>
-                            <p><strong>도로명:</strong> ${item.readAddress||'—'}</p>
-                            <a href="${item.homePageLink||'#'}" target="_blank">자세히 보기</a>
+                            <p><strong>카테고리:</strong> ${item.category || '—'}</p>
+                            <p><strong>주소:</strong> ${item.address || '—'}</p>
+                            <p><strong>도로명:</strong> ${item.readAddress || '—'}</p>
+                            <a href="${item.homePageLink || '#'}" target="_blank">자세히 보기</a>
                         </div>
                     </div>`;
                 } else {
                     return `<div class="card">
-                        <div class="content">
-                            <h3>${item.bizName}</h3>
-                            <p><strong>주된 음식:</strong> ${item.mainFood||'—'}</p>
-                            <p><strong>주소:</strong> ${item.roadAddr||'—'}</p>
-                            <p><strong>평점:</strong> ${item.naverRating?.toFixed(1)+' ⭐️' || '—'}</p>
-                        </div>
-                    </div>`;
+            <div class="content">
+                <h3>${item.bizName}</h3>
+                <p><strong>주된 음식:</strong> ${item.mainFood || '—'}</p>
+                <p><strong>주소:</strong> ${item.roadAddr || '—'}</p>
+                <p><strong>평점:</strong> ${
+                        (typeof item.naverRating === 'number')
+                            ? item.naverRating.toFixed(1) + ' ⭐️'
+                            : '—'
+                    }</p>
+            </div>
+        </div>`;
                 }
             }).join('');
         }
