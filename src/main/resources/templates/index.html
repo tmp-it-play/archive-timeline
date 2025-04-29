@@ -4,6 +4,14 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>ㄹㅈㄷ 맛집탐방</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#5c6bc0" />
+    <link rel="icon" href="/icons/icon-192.png" />
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js');
+        }
+    </script>
     <style>
         :root {
             --primary: #5c6bc0;
@@ -292,6 +300,15 @@
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
+            }
+        }
+
+        @media (max-width: 414px) {
+            .sidebar {
+                width: 100%;
+            }
+            .cards {
+                grid-template-columns: 1fr;
             }
         }
     </style>
