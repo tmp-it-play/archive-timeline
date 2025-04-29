@@ -3,62 +3,68 @@ package com.snowykte0426.minsole.domain.search.service;
 import com.snowykte0426.minsole.domain.data.entity.DataJpaEntity;
 import com.snowykte0426.minsole.domain.data.repository.DataJpaRepository;
 import com.snowykte0426.minsole.domain.search.dto.SearchDto;
+import com.snowykte0426.minsole.domain.search.dto.RecommendResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class KeywordRecommendService {
 
-    private final DataJpaRepository dataJpaRepository;
+    private final DataJpaRepository repository;
 
-    public List<SearchDto> recommend(String text) {
+    public RecommendResponse recommend(String text, int limit) {
         if (text == null || text.isBlank()) {
-            return Collections.emptyList();
+            return new RecommendResponse(Collections.emptyList());
         }
 
-        // 1) 간단 토큰화
-        Set<String> tokens = Arrays.stream(text.split("\\W+"))
-                .map(String::trim)
-                .filter(t -> t.length() > 1)
-                .collect(Collectors.toSet());
+        // 1) Use a Pattern to pull out “words” (letters, digits, including 한글)
+        Pattern word = Pattern.compile("[\\p{IsLetter}\\p{IsDigit}]{2,}");
+        Matcher m = word.matcher(text);
 
-        // 2) 불용어 제거
-        tokens.removeAll(Set.of("맛집", "추천", "검색", "음식"));
+        // 2) Collect unique tokens, drop stopwords
+        Set<String> stopwords = Set.of("맛집","추천","검색","음식");
+        LinkedHashSet<String> tokens = new LinkedHashSet<>();
+        while (m.find()) {
+            String tok = m.group().trim();
+            if (!stopwords.contains(tok)) {
+                tokens.add(tok);
+            }
+        }
 
-        // 3) 결과 집합(최대 20개)
+        // 3) Now query the DB
         LinkedHashMap<Long, SearchDto> result = new LinkedHashMap<>();
         for (String kw : tokens) {
-            List<DataJpaEntity> list = dataJpaRepository
+            List<DataJpaEntity> list = repository
                     .findByBizNameContainingIgnoreCaseOrMainFoodContainingIgnoreCase(
-                            kw, kw, PageRequest.of(0, 10)
+                            kw, kw, PageRequest.of(0, limit)
                     );
-
             for (DataJpaEntity ent : list) {
-                if (result.size() >= 20) break;
-                if (!result.containsKey(ent.getId())) {
-                    SearchDto dto = new SearchDto(
-                            result.size() + 1,           // index
-                            ent.getBizName(),            // title
-                            ent.getFoodType(),           // category
-                            ent.getJibunAddr(),          // address (지번주소)
-                            ent.getRoadAddr(),           // readAddress (도로명주소)
-                            null,                        // homePageLink
-                            Collections.emptyList(),     // imageLinks
-                            false,                       // isVisit
-                            0,                           // visitCount
-                            null                         // lastVisitDate
-                    );
-                    result.put(ent.getId(), dto);
-                }
+                if (result.size() >= limit) break;
+                result.computeIfAbsent(ent.getId(), id -> SearchDto.builder()
+                        .index(result.size() + 1)
+                        .title(ent.getBizName())
+                        .category(ent.getFoodType())
+                        .address(ent.getJibunAddr())
+                        .readAddress(ent.getRoadAddr())
+                        .homePageLink(null)
+                        .imageLinks(Collections.emptyList())
+                        .isVisit(false)
+                        .visitCount(0)
+                        .lastVisitDate(null)
+                        .naverRating(ent.getNaverRating())
+                        .build()
+                );
             }
-            if (result.size() >= 20) break;
+            if (result.size() >= limit) break;
         }
 
-        return new ArrayList<>(result.values());
+        return new RecommendResponse(new ArrayList<>(result.values()));
     }
 }
