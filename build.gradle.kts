@@ -13,10 +13,19 @@ java {
     }
 }
 
+extra["springCloudVersion"] = "2024.0.0"
+
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
 }
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -33,6 +42,7 @@ dependencies {
     implementation("ai.djl:api:0.26.0")
     implementation("ai.djl.pytorch:pytorch-engine:0.26.0")
     implementation("ai.djl.huggingface:tokenizers:0.26.0")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

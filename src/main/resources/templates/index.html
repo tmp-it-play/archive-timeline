@@ -12,7 +12,6 @@
             --bg-dark: #1e1e2f;
             --header-h: 60px;
         }
-
         /*— AI 키워드 버튼 스타일 —*/
         .keyword-btn {
             background: #fff;
@@ -23,12 +22,15 @@
             cursor: pointer;
             transition: background .2s, color .2s;
         }
+        .keyword-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
         .keyword-btn:hover {
             background: var(--primary);
             color: #fff;
         }
         /*================================*/
-
         *{box-sizing:border-box;margin:0;padding:0}
         body {
             font-family:sans-serif;
@@ -52,9 +54,7 @@
         }
         body[data-theme=dark] header { background:#2a2a3d; }
         header h1 { font-size:1.4rem; letter-spacing:2px }
-        .btn-group {
-            display:flex; align-items:center; gap:.6rem;
-        }
+        .btn-group { display:flex; align-items:center; gap:.6rem; }
         .btn-group button {
             padding:.4rem .8rem;
             border:none; border-radius:4px;
@@ -78,13 +78,8 @@
             margin-top:var(--header-h);
             height:calc(100vh - var(--header-h));
         }
-        .left {
-            flex:1; padding:1rem;
-            overflow-y:auto;
-        }
-        .search-bar {
-            display:flex; gap:.5rem; margin-bottom:1rem;
-        }
+        .left { flex:1; padding:1rem; overflow-y:auto; }
+        .search-bar { display:flex; gap:.5rem; margin-bottom:1rem; }
         .search-bar input {
             flex:1; padding:.6rem; border:1px solid #ccc;
             border-radius:4px;
@@ -148,17 +143,20 @@
             z-index:95;
         }
         body[data-theme=dark] .sidebar { background:#2a2a3d; }
-        .sidebar.open { right:0; }
         .sidebar h3 { margin-bottom:.5rem }
-        .sidebar label { display:block; margin:.6rem 0 .2rem; font-size:.9rem; }
-        .sidebar select, .sidebar input {
-            width:100%; padding:.5rem; border-radius:4px; border:1px solid #ccc;
+        .sidebar label, .sidebar input, .sidebar select {
+            display:block; width:100%; margin-top:.4rem;
+        }
+        .sidebar input, .sidebar select {
+            padding:.5rem; border:1px solid #ccc; border-radius:4px;
         }
         .sidebar button {
-            width:100%; padding:.6rem;
-            background:var(--primary); color:#fff;
-            border:none; border-radius:4px;
-            cursor:pointer; margin-top:1rem;
+            margin-top:1rem; width:100%; padding:.6rem;
+            background:var(--primary); color:#fff; border:none; border-radius:4px;
+            cursor:pointer;
+        }
+        .sidebar.open {
+            right: 0;
         }
         @media(max-width:768px) {
             .sidebar { width:100%; }
@@ -205,7 +203,7 @@
     </aside>
 </main>
 <script>
-    (function(){
+    (() => {
         const body         = document.body;
         const themeBtn     = document.getElementById('theme-toggle');
         const modeBtns     = document.querySelectorAll('[data-api]');
@@ -220,145 +218,143 @@
         const fMin         = document.getElementById('f-min');
         const applyBtn     = document.getElementById('apply');
 
-        let api = 'local', dataSet = [];
+        let api = 'local';
+        let selectedKeywords = [];
 
-        // 테마 전환
-        themeBtn.onclick = ()=>{
-            body.dataset.theme = body.dataset.theme==='light' ? 'dark' : 'light';
-            themeBtn.textContent = body.dataset.theme==='light' ? '다크 모드' : '라이트 모드';
+        // 테마 토글
+        themeBtn.onclick = () => {
+            body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
+            themeBtn.textContent = body.dataset.theme === 'light' ? '다크 모드' : '라이트 모드';
         };
 
-        // mode 버튼 처리
-        modeBtns.forEach(btn=>{
-            btn.onclick = ()=>{
-                modeBtns.forEach(b=>b.classList.remove('active'));
+        // 모드 버튼
+        modeBtns.forEach(btn => {
+            btn.onclick = () => {
+                modeBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 api = btn.dataset.api;
-
-                if(api==='recommend'){
-                    // AI 추천 모드 진입하자마자 키워드 호출
+                if (api === 'recommend') {
                     q.value = '';
                     results.innerHTML = '<p>키워드를 불러옵니다…</p>';
                     suggestions.innerHTML = '';
+                    selectedKeywords = [];
                     fetchKeywords();
                 }
             };
         });
 
         // 필터 열기/닫기
-        filterToggle.onclick = ()=> sidebar.classList.toggle('open') && overlay.classList.toggle('open');
-        overlay.onclick      = ()=> sidebar.classList.remove('open') || overlay.classList.remove('open');
-        applyBtn.onclick     = ()=> {
-            sidebar.classList.remove('open'); overlay.classList.remove('open');
-            if(api!=='recommend') doSearch();
+        filterToggle.onclick = () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        };
+        overlay.onclick      = () => sidebar.classList.remove('open') || overlay.classList.remove('open');
+        applyBtn.onclick     = () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            if (api !== 'recommend') doSearch();
         };
 
         // 일반/DB/교차 검색
-        function doSearch(){
+        function doSearch() {
             const qv = q.value.trim();
-            if(!qv) return alert('검색어를 입력해주세요.');
+            if (!qv) return alert('검색어를 입력해주세요.');
             results.innerHTML = '<p>검색 중…</p>';
             suggestions.innerHTML = '';
 
-            let url = `/api/v1/search?type=${api}&q=${encodeURIComponent(qv)}` +
+            const url = `/api/v1/search?type=${api}&q=${encodeURIComponent(qv)}` +
                 (fCat.value ? `&category=${encodeURIComponent(fCat.value)}` : '') +
-                (api==='db' && fMin.value ? `&minRating=${fMin.value}` : '');
+                (api === 'db' && fMin.value ? `&minRating=${fMin.value}` : '');
 
             fetch(url)
-                .then(r=>r.json())
-                .then(json=>{
-                    dataSet = json.items;
-                    fillCategories(json.facets || {categories:[]});
-                    render(dataSet);
-                })
-                .catch(()=> results.innerHTML = '<p>오류가 발생했습니다.</p>');
+                .then(r => r.json())
+                .then(json => render(json.items))
+                .catch(() => results.innerHTML = '<p>오류가 발생했습니다.</p>');
         }
 
-        searchBtn.onclick = ()=>{
-            if(api==='recommend') return;  // 검색 버튼은 일반 검색 모드에서만
-            doSearch();
+        searchBtn.onclick = () => {
+            if (api !== 'recommend') doSearch();
         };
 
         // AI 키워드 가져오기
-        // AI 키워드 가져오기
-        function fetchKeywords(){
+        function fetchKeywords() {
             fetch(`/api/v1/search/ai/keywords?limit=10`)
-                .then(r=>{
-                    if(!r.ok) throw new Error(r.statusText);
-                    return r.json();
-                })
-                .then(json=>{
-                    // items나 keywords 둘 중에 있는 쪽을 사용
-                    const kws = json.items ?? json.keywords;
-                    if(!Array.isArray(kws)) throw new Error('키워드 배열이 아닙니다');
-
-                    suggestions.innerHTML = kws
-                        .map(k=>`<button class="keyword-btn">${k}</button>`)
-                        .join('');
+                .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+                .then(json => {
+                    const kws = json.keywords || json.items;
+                    suggestions.innerHTML = kws.map(k => `<button class="keyword-btn">${k}</button>`).join('') +
+                        '<button id="recommend-btn" disabled>추천</button>';
                     results.innerHTML = '<p>키워드를 선택해주세요.</p>';
-
-                    suggestions.querySelectorAll('.keyword-btn').forEach(btn=>{
-                        btn.onclick = ()=> fetchRecommendations(btn.textContent);
+                    document.querySelectorAll('.keyword-btn').forEach(btn => {
+                        btn.onclick = () => {
+                            const kw = btn.textContent;
+                            if (btn.classList.toggle('active')) {
+                                selectedKeywords.push(kw);
+                            } else {
+                                selectedKeywords = selectedKeywords.filter(k => k !== kw);
+                            }
+                            document.getElementById('recommend-btn').disabled = selectedKeywords.length === 0;
+                        };
                     });
+                    document.getElementById('recommend-btn').onclick = () => fetchRecommendations(selectedKeywords);
                 })
-                .catch(err=>{
-                    console.error('fetchKeywords 에러:', err);
+                .catch(err => {
+                    console.error(err);
                     results.innerHTML = '<p>키워드 호출 오류</p>';
                 });
         }
 
-        // AI 추천 검색
-        function fetchRecommendations(keyword){
+        // AI 추천 결과 가져오기 (GET)
+        function fetchRecommendations(keywords) {
             results.innerHTML = '<p>추천 검색 중…</p>';
             suggestions.innerHTML = '';
-            fetch(`/api/v1/search/ai/recommend?keyword=${encodeURIComponent(keyword)}`)
-                .then(r=>r.json())
-                .then(json=>{
-                    dataSet = json.items;
-                    render(dataSet);
-                })
-                .catch(()=> results.innerHTML = '<p>추천 검색 오류</p>');
+            const param = keywords.map(encodeURIComponent).join(',');
+            fetch(`/api/v1/search/ai/recommend?keywords=${param}`)
+                .then(r => r.json())
+                .then(json => render(json.items))
+                .catch(() => results.innerHTML = '<p>추천 검색 오류</p>');
         }
 
         // 결과 렌더링
-        function render(list){
-            if(!list.length){
+        function render(list) {
+            if (!Array.isArray(list) || !list.length) {
                 results.innerHTML = '<p>검색 결과가 없습니다.</p>';
                 return;
             }
-            results.innerHTML = list.map(item=>{
-                if(api!=='db'){
+            results.innerHTML = list.map(item => {
+                if (api === 'recommend') {
                     return `<div class="card">
-                    ${item.imageLinks?.[0]?`<img src="${item.imageLinks[0]}" alt="">`:``}
-                    <div class="content">
-                        <h3>${item.title}</h3>
-                        <p><strong>카테고리:</strong> ${item.category||'—'}</p>
-                        <p><strong>주소:</strong> ${item.address||'—'}</p>
-                        <p><strong>도로명:</strong> ${item.readAddress||'—'}</p>
-                        <a href="${item.homePageLink||'#'}" target="_blank">자세히 보기</a>
-                    </div>
-                </div>`;
+                        ${item.imageLinks?.[0] ? `<img src="${item.imageLinks[0]}" alt="">` : ''}
+                        <div class="content">
+                            <h3>${item.title}</h3>
+                            <p><strong>주소:</strong> ${item.address||'—'}</p>
+                            <p><strong>도로명:</strong> ${item.readAddress||'—'}</p>
+                            <a href="#" target="_blank">자세히 보기</a>
+                        </div>
+                    </div>`;
+                } else if (api !== 'db') {
+                    return `<div class="card">
+                        ${item.imageLinks?.[0] ? `<img src="${item.imageLinks[0]}" alt="">` : ''}
+                        <div class="content">
+                            <h3>${item.title}</h3>
+                            <p><strong>카테고리:</strong> ${item.category||'—'}</p>
+                            <p><strong>주소:</strong> ${item.address||'—'}</p>
+                            <p><strong>도로명:</strong> ${item.readAddress||'—'}</p>
+                            <a href="${item.homePageLink||'#'}" target="_blank">자세히 보기</a>
+                        </div>
+                    </div>`;
                 } else {
                     return `<div class="card">
-                    <div class="content">
-                        <h3>${item.bizName}</h3>
-                        <p><strong>주된 음식:</strong> ${item.mainFood||'—'}</p>
-                        <p><strong>주소:</strong> ${item.roadAddr||'—'}</p>
-                        <p><strong>평점:</strong> ${item.naverRating!=null?item.naverRating.toFixed(1)+' ⭐️':'—'}</p>
-                    </div>
-                </div>`;
+                        <div class="content">
+                            <h3>${item.bizName}</h3>
+                            <p><strong>주된 음식:</strong> ${item.mainFood||'—'}</p>
+                            <p><strong>주소:</strong> ${item.roadAddr||'—'}</p>
+                            <p><strong>평점:</strong> ${item.naverRating?.toFixed(1)+' ⭐️' || '—'}</p>
+                        </div>
+                    </div>`;
                 }
             }).join('');
         }
-
-        // 카테고리 채우기
-        function fillCategories(facets){
-            fCat.innerHTML =
-                '<option value="">전체</option>' +
-                facets.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
-        }
-
-        // 초기 진입: 기본이 local 이므로 아무 작업 안 함
 
     })();
 </script>
