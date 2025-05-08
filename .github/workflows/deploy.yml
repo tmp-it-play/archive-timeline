@@ -45,5 +45,5 @@ jobs:
           aws deploy create-deployment 
             --application-name Hello-App 
             --deployment-config-name CodeDeployDefault.AllAtOnce 
-            --deployment-group-name Hello-App-Group 
+            --deployment-group-name Hello-App-Deploy 
             --s3-location bucket=${{ secrets.BUCKET_NAME }},bundleType=zip,key=prod/$GITHUB_SHA.zip
