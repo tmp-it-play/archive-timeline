@@ -18,7 +18,7 @@ public class HealthCheckWebAdapter {
     }
 
     @GetMapping("/error")
-    public ResponseEntity<Byte> error() {
+    public ResponseEntity<?> error() {
         return ResponseEntity.status(HttpStatus.VARIANT_ALSO_NEGOTIATES).body((byte) 0);
     }
 }
