@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class TimeZoneConfig {
 
     @PostConstruct
-    public void init() {
+    public void timeZoneConfig() {
         try {
             System.setProperty("user.timezone", "Asia/Seoul");
             TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
