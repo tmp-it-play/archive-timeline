@@ -45,11 +45,11 @@ dependencies {
 
     /* Spring Boot DevTools */
     developmentOnly(Dependencies.SPRING_DEVTOOLS)
-    developmentOnly(Dependencies.MARIA_DB)
 
     /* Database */
     implementation(Dependencies.JDBC)
     implementation(Dependencies.MYSQL)
+    implementation(Dependencies.MARIA_DB)
     implementation(Dependencies.REDIS)
 
     /* Lombok */
