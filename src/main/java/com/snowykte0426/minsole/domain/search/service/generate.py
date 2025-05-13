@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# generate_and_server.py
 import logging
 import os
 import re
@@ -9,13 +8,8 @@ import uvicorn
 from typing import List, Dict
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
-
-# OpenAI 1.x new API 사용
 from openai import OpenAI
 
-# —————————————————————————————————————————————————————————————
-# 1) API 키는 환경변수로 관리
-#    (export OPENAI_API_KEY="sk-...")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     OPENAI_API_KEY = ""
@@ -107,7 +101,6 @@ class AIRecommender:
         except Exception:
             pass
 
-        # fallback: 간단 필터
         filtered = []
         for row in rows:
             if keyword in row["title"] or keyword in row["address"] or keyword in row["readAddress"]:
