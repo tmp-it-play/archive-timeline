@@ -21,8 +21,6 @@ if not OPENAI_API_KEY:
     OPENAI_API_KEY = ""
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# —————————————————————————————————————————————————————————————
-
 class AIRecommender:
     def __init__(self):
         self.db_config = dict(
@@ -118,7 +116,6 @@ class AIRecommender:
                     break
         return filtered
 
-# FastAPI 앱 설정
 app = FastAPI(title="AI Restaurant Recommender (OpenAI GPT)")
 
 class KeywordResponse(BaseModel):
@@ -138,9 +135,6 @@ recommender = AIRecommender()
 @app.get("/ai/keywords", response_model=KeywordResponse)
 async def get_keywords(limit: int = Query(10, ge=1, le=20)):
     try:
-        # 동적 키워드 생성
-        # kws = recommender.generate_keywords(limit)
-        # 혹은 고정 리스트를 쓰려면:
         kws = ["도시락", "디저트", "한식", "일식", "양식",
                "초밥", "아시안", "샌드위치", "샐러드", "카페",
                 "피자","치킨","햄버거","브런치","빵"][:limit]

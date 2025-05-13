@@ -16,7 +16,6 @@ public class PythonServerStarter implements ApplicationRunner, DisposableBean {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // 프로젝트 루트에서의 상대경로 혹은 절대경로로 스크립트 위치 지정
         File script = new File("/Users/snowykte0426/Programming/BigData-Server/src/main/java/com/snowykte0426/minsole/domain/search/service/generate.py");
 
         ProcessBuilder pb = new ProcessBuilder(
