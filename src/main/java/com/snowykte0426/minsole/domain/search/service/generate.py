@@ -153,15 +153,12 @@ recommender = AIRecommender()
 async def get_keywords(
     request: Request,
     limit: int = Query(10, ge=1, le=20),
-    x_user_id: str = Header(None),      # 클라이언트가 보내는 고유 사용자 ID (없으면 IP fallback)
+    x_user_id: str = Header(None),
 ):
-    # 사용자 식별키 결정
     user_key = f"user:{x_user_id or request.client.host}"
 
-    # Redis에 저장된 최신 10개 검색어 가져오기
     history = recommender.redis_client.lrange(user_key, 0, 9)
 
-    # 히스토리가 3개 이상 쌓였으면 AI 기반 키워드 생성, 아니면 기본 리스트
     if len(history) >= 3:
         try:
             kws = recommender.generate_keywords_from_history(history, limit)
@@ -169,7 +166,6 @@ async def get_keywords(
         except Exception:
             pass
 
-    # 기본 하드코딩 키워드
     fallback = [
         "도시락","디저트","한식","일식","양식",
         "초밥","아시안","샌드위치","샐러드","카페",
