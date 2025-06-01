@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/articles")
+@CrossOrigin
 class ArticleController(
     private val getAllArticleService: GetAllArticleService,
     private val getArticleService: GetArticleService,
