@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>민쏠 맛집 탐방</title>
+    <meta name="theme-color" content="#d32f2f" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="민쏠 맛집">
+    <link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body>
+    <!-- 스플래시 화면 -->
+    <div class="screen splash-screen" id="splash">
+        <div class="splash-content">
+            <h1>오늘은 더 맛있게</h1>
+            <p>오늘을 더 행복하게</p>
+            <p>AI가 추천하는 맞춤 맛집을 찾아보세요</p>
+            <div class="splash-food-image">🍽️</div>
+        </div>
+    </div>
+
+    <!-- 메인 화면 -->
+    <div class="screen main-screen hidden" id="main">
+        <div class="header">
+            <div class="status-bar">
+                <span id="current-time">12:45</span>
+                <div>📶 📊 🔋</div>
+            </div>
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="맛집 이름을 검색해보세요" id="mainSearch">
+            </div>
+        </div>
+
+        <div class="categories">
+            <div class="category-title">식당찾기</div>
+            <div class="category-grid">
+                <div class="category-item" data-category="도시락">
+                    <div class="category-icon" style="background: #ff6b6b;">🍱</div>
+                    <div class="category-text">도시락</div>
+                </div>
+                <div class="category-item" data-category="디저트">
+                    <div class="category-icon" style="background: #4ecdc4;">🧁</div>
+                    <div class="category-text">디저트</div>
+                </div>
+                <div class="category-item" data-category="한식">
+                    <div class="category-icon" style="background: #45b7d1;">🍚</div>
+                    <div class="category-text">한식</div>
+                </div>
+                <div class="category-item" data-category="일식">
+                    <div class="category-icon" style="background: #f9ca24;">🍣</div>
+                    <div class="category-text">일식</div>
+                </div>
+                <div class="category-item" data-category="양식">
+                    <div class="category-icon" style="background: #6c5ce7;">🍝</div>
+                    <div class="category-text">양식</div>
+                </div>
+                <div class="category-item" data-category="중식">
+                    <div class="category-icon" style="background: #fd79a8;">🥟</div>
+                    <div class="category-text">중식</div>
+                </div>
+                <div class="category-item" data-category="아시안">
+                    <div class="category-icon" style="background: #00b894;">🍜</div>
+                    <div class="category-text">아시안</div>
+                </div>
+                <div class="category-item" data-category="샌드위치">
+                    <div class="category-icon" style="background: #e17055;">🥪</div>
+                    <div class="category-text">샌드위치</div>
+                </div>
+                <div class="category-item" data-category="샐러드">
+                    <div class="category-icon" style="background: #00cec9;">🥗</div>
+                    <div class="category-text">샐러드</div>
+                </div>
+                <div class="category-item" data-category="커피">
+                    <div class="category-icon" style="background: #636e72;">☕</div>
+                    <div class="category-text">커피</div>
+                </div>
+                <div class="category-item" data-category="피자">
+                    <div class="category-icon" style="background: #e84393;">🍕</div>
+                    <div class="category-text">피자</div>
+                </div>
+                <div class="category-item" data-category="치킨">
+                    <div class="category-icon" style="background: #fdcb6e;">🍗</div>
+                    <div class="category-text">치킨</div>
+                </div>
+                <div class="category-item" data-category="햄버거">
+                    <div class="category-icon" style="background: #a29bfe;">🍔</div>
+                    <div class="category-text">햄버거</div>
+                </div>
+                <div class="category-item" data-category="분짜">
+                    <div class="category-icon" style="background: #fab1a0;">🍜</div>
+                    <div class="category-text">분짜</div>
+                </div>
+                <div class="category-item" data-category="빵">
+                    <div class="category-icon" style="background: #ff7675;">🍞</div>
+                    <div class="category-text">빵</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>사용자 정보</h3>
+                <input type="text" class="form-input" placeholder="닉네임을 입력하세요" id="nickname">
+                <h3>개인 설정</h3>
+                <input type="password" class="form-input" placeholder="개인 비밀번호" id="password">
+                <h3>지역 설정</h3>
+                <input type="text" class="form-input" placeholder="현재 위치를 입력하세요 (예: 강남구)" id="location">
+                <button class="submit-button" onclick="searchRestaurants()">맛집 찾기 시작</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active" data-nav="home">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-text">홈</div>
+            </a>
+            <a href="#" class="nav-item" data-nav="search">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-text">검색</div>
+            </a>
+            <a href="#" class="nav-item" data-nav="profile">
+                <div class="nav-icon">👤</div>
+                <div class="nav-text">마이페이지</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div class="screen results-screen hidden" id="results">
+        <div class="results-header">
+            <div class="status-bar">
+                <span id="results-time">12:45</span>
+                <div>📶 📊 🔋</div>
+            </div>
+            <button class="back-button" onclick="goBack()">←</button>
+            <div class="results-search">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="다른 맛집을 검색해보세요" id="resultsSearch">
+            </div>
+            <div class="food-banner">🍗</div>
+        </div>
+
+        <div class="category-chips">
+            <div class="chip" data-chip="도시락">도시락</div>
+            <div class="chip" data-chip="디저트">디저트</div>
+            <div class="chip" data-chip="한식">한식</div>
+            <div class="chip" data-chip="일식">일식</div>
+            <div class="chip" data-chip="양식">양식</div>
+            <div class="chip" data-chip="카페">카페</div>
+            <div class="chip" data-chip="기타">기타</div>
+        </div>
+
+        <div class="recommendations">
+            <div class="recommendation-title">오늘의 추천 맛집</div>
+            <div id="restaurantList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="recommendation-title" style="margin-top: 2rem;">인기 맛집</div>
+            <div id="featuredList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <a href="#" class="nav-item" data-nav="home">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-text">홈</div>
+            </a>
+            <a href="#" class="nav-item active" data-nav="search">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-text">검색</div>
+            </a>
+            <a href="#" class="nav-item" data-nav="profile">
+                <div class="nav-icon">👤</div>
+                <div class="nav-text">마이페이지</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 토스트 메시지 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/js/mobile.js"></script>
+</body>
+</html>
