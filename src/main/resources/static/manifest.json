@@ -1,10 +1,12 @@
 {
-  "name": "ㄹㅈㄷ 맛집탐방",
-  "short_name": "맛집탐방",
-  "start_url": "/index.html",
+  "name": "민쏠 맛집 탐방",
+  "short_name": "민쏠맛집",
+  "description": "AI가 추천하는 맛집 찾기 서비스",
+  "start_url": "/mobile",
   "display": "standalone",
-  "background_color": "#f0f2f5",
-  "theme_color": "#5c6bc0",
+  "background_color": "#d32f2f",
+  "theme_color": "#d32f2f",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -12,7 +14,7 @@
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icons/icon-512.png", 
       "sizes": "512x512",
       "type": "image/png"
     }
