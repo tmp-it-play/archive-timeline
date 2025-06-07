@@ -10,4 +10,14 @@ public class PageController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/mobile")
+    public String mobile() {
+        return "mobile";
+    }
+
+    @GetMapping("/app")
+    public String app() {
+        return "mobile";
+    }
 }

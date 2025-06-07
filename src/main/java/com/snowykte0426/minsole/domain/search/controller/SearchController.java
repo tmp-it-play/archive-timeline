@@ -54,28 +54,38 @@ public class SearchController {
 
     @GetMapping("/ai/keywords")
     public ResponseEntity<?> aiKeywords(@RequestParam(name="limit", defaultValue="10") int limit) {
-        List<String> keywords = aiSearchService.fetchKeywords(limit);
-        return ResponseEntity.ok(new KeywordListResponse(keywords));
+        try {
+            List<String> keywords = aiSearchService.fetchKeywords(limit);
+            return ResponseEntity.ok(new KeywordListResponse(keywords));
+        } catch (Exception e) {
+            log.error("AI 키워드 가져오기 실패: {}", e.getMessage());
+            // 기본 키워드 반환
+            List<String> defaultKeywords = List.of("한식", "일식", "양식", "치킨", "피자");
+            return ResponseEntity.ok(new KeywordListResponse(defaultKeywords));
+        }
     }
 
     @GetMapping("/ai/recommend")
     public ResponseEntity<Map<String, List<AIFeignClient.RestaurantDto>>> aiRecommend(
             @RequestParam("keywords") String keywords
     ) {
-        // comma-separated string → List<String> 처리 (필요 없으면 생략)
-        List<String> kwList = Arrays.stream(keywords.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .toList();
-
-        // Feign client 에는 그냥 원문을 보내도록 했으므로, 필요하다면 join:
-        String sent = String.join(",", kwList);
-        List<AIFeignClient.RestaurantDto> recs = aiSearchService.recommend(sent);
-
-        // Front-end 가 json.items 로 접근하니 items 키로 감싸서 반환
-        return ResponseEntity.ok(
-                Collections.singletonMap("items", recs)
-        );
+        try {
+            List<String> kwList = Arrays.stream(keywords.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            String sent = String.join(",", kwList);
+            List<AIFeignClient.RestaurantDto> recs = aiSearchService.recommend(sent);
+            return ResponseEntity.ok(
+                    Collections.singletonMap("items", recs)
+            );
+        } catch (Exception e) {
+            log.error("AI 추천 실패: {}", e.getMessage());
+            // 빈 목록 반환으로 클라이언트가 폴백 처리하도록 함
+            return ResponseEntity.ok(
+                    Collections.singletonMap("items", Collections.emptyList())
+            );
+        }
     }
     public record KeywordListResponse(List<String> keywords) {}
 }
