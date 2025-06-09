@@ -26,7 +26,7 @@
         <div class="header">
             <div class="status-bar">
                 <span id="current-time">12:45</span>
-                <div>📶 📊 🔋</div>
+                <div></div>
             </div>
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
@@ -185,6 +185,21 @@
 
     <!-- 토스트 메시지 -->
     <div class="toast" id="toast"></div>
+
+    <!-- 레스토랑 상세 정보 모달 -->
+    <div class="modal-overlay" id="restaurantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">맛집 정보</h3>
+                <button class="modal-close" onclick="closeRestaurantModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/mobile.js"></script>
 </body>

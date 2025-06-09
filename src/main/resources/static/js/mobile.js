@@ -1,6 +1,10 @@
 // 전역 변수
 let currentScreen = 'splash';
 let selectedCategory = '';
+let userLocation = '';
+let favorites = new Set(); // 즐겨찾기 목록
+let currentUser = null;
+let sortBy = 'relevance'; // 정렬 방식
 
 // 시간 업데이트 함수
 function updateTime() {
@@ -76,6 +80,8 @@ function searchRestaurants() {
     }
 
     // 사용자 정보 저장
+    currentUser = nickname;
+    userLocation = location;
     localStorage.setItem('userInfo', JSON.stringify({
         nickname, password, location, selectedCategory
     }));
@@ -85,19 +91,35 @@ function searchRestaurants() {
     loadRestaurants();
 }
 
-// 레스토랑 데이터 로드
+// 레스토랑 데이터 로드 (향상된 버전)
 async function loadRestaurants() {
     try {
         showToast('추천 맛집을 찾는 중...');
         
-        // 먼저 AI 키워드 가져오기 시도
+        // 1. 위치 기반 근처 맛집 먼저 시도
+        if (userLocation) {
+            try {
+                const nearbyResponse = await fetch(`/api/v1/search/nearby?location=${encodeURIComponent(userLocation)}&radius=3.0&sortBy=rating`);
+                if (nearbyResponse.ok) {
+                    const nearbyData = await nearbyResponse.json();
+                    if (nearbyData.items && nearbyData.items.length > 0) {
+                        displayRestaurants(nearbyData.items, nearbyData.items.slice(0, Math.ceil(nearbyData.items.length / 2)));
+                        loadTrendingRestaurants(); // 별도로 인기 맛집 로드
+                        return;
+                    }
+                }
+            } catch (nearbyError) {
+                console.warn('근처 맛집 검색 실패:', nearbyError);
+            }
+        }
+        
+        // 2. AI 추천 시도
         try {
             const keywordsResponse = await fetch('/api/v1/search/ai/keywords?limit=5');
             if (keywordsResponse.ok) {
                 const keywordsData = await keywordsResponse.json();
                 
                 if (keywordsData.keywords && keywordsData.keywords.length > 0) {
-                    // AI 추천 시도
                     try {
                         const keywords = keywordsData.keywords.slice(0,3).join(',');
                         const recommendResponse = await fetch(`/api/v1/search/ai/recommend?keywords=${encodeURIComponent(keywords)}`);
@@ -105,8 +127,9 @@ async function loadRestaurants() {
                         if (recommendResponse.ok) {
                             const recommendData = await recommendResponse.json();
                             if (recommendData.items && recommendData.items.length > 0) {
-                                displayRestaurants(recommendData.items);
-                                return; // AI 추천 성공 시 종료
+                                displayRestaurants(recommendData.items, []);
+                                loadTrendingRestaurants();
+                                return;
                             }
                         }
                     } catch (aiError) {
@@ -118,59 +141,97 @@ async function loadRestaurants() {
             console.warn('AI 키워드 로드 실패:', keywordError);
         }
         
-        // AI 추천 실패 시 일반 검색으로 폴백
+        // 3. 일반 검색으로 폴백
         showToast('AI 추천이 어려워 일반 검색으로 찾아드릴게요!');
         const searchQuery = selectedCategory || '맛집';
-        const searchResponse = await fetch(`/api/v1/search?type=local&q=${encodeURIComponent(searchQuery)}`);
+        const searchParams = new URLSearchParams({
+            type: 'db',
+            q: searchQuery,
+            sortBy: 'rating'
+        });
+        
+        if (userLocation) {
+            searchParams.append('location', userLocation);
+        }
+        
+        const searchResponse = await fetch(`/api/v1/search?${searchParams}`);
         
         if (searchResponse.ok) {
             const searchData = await searchResponse.json();
-            displayRestaurants(searchData.items || []);
+            displayRestaurants(searchData.items || [], []);
+            loadTrendingRestaurants();
         } else {
-            // 일반 검색도 실패 시 DB 검색 시도
-            const dbResponse = await fetch(`/api/v1/search?type=db&q=${encodeURIComponent(searchQuery)}`);
-            if (dbResponse.ok) {
-                const dbData = await dbResponse.json();
-                displayRestaurants(dbData.items || []);
-            } else {
-                displayRestaurants([]);
-            }
+            // 모든 방법 실패 시 기본 데이터
+            displayRestaurants([], []);
         }
         
     } catch (error) {
         console.error('데이터 로드 실패:', error);
         showToast('맛집 정보를 불러오지 못했습니다. 다시 시도해주세요.');
-        displayRestaurants([]);
+        displayRestaurants([], []);
     }
 }
 
-// 레스토랑 목록 표시
-function displayRestaurants(restaurants) {
+// 인기 맛집 따로 로드
+async function loadTrendingRestaurants() {
+    try {
+        const trendingResponse = await fetch('/api/v1/search/trending?limit=10');
+        if (trendingResponse.ok) {
+            const trendingData = await trendingResponse.json();
+            if (trendingData.items && trendingData.items.length > 0) {
+                const featuredList = document.getElementById('featuredList');
+                featuredList.innerHTML = renderRestaurantCards(trendingData.items);
+            }
+        }
+    } catch (error) {
+        console.warn('인기 맛집 로드 실패:', error);
+    }
+}
+
+// 레스토랑 목록 표시 (향상된 버전)
+function displayRestaurants(restaurants, featuredRestaurants = []) {
     const restaurantList = document.getElementById('restaurantList');
     const featuredList = document.getElementById('featuredList');
     
     if (!restaurants || restaurants.length === 0) {
         const noResultsHtml = '<p style="text-align: center; color: #666; padding: 2rem;">검색 결과가 없습니다.</p>';
         restaurantList.innerHTML = noResultsHtml;
-        featuredList.innerHTML = noResultsHtml;
+        if (featuredRestaurants.length === 0) {
+            featuredList.innerHTML = noResultsHtml;
+        }
         return;
     }
 
-    const half = Math.ceil(restaurants.length / 2);
-    const firstHalf = restaurants.slice(0, half);
-    const secondHalf = restaurants.slice(half);
-
-    restaurantList.innerHTML = renderRestaurantCards(firstHalf);
-    featuredList.innerHTML = renderRestaurantCards(secondHalf);
+    // 첫 번째 섹션: 추천 맛집
+    restaurantList.innerHTML = renderRestaurantCards(restaurants);
+    
+    // 두 번째 섹션: 인기 맛집 (전달된 경우에만)
+    if (featuredRestaurants && featuredRestaurants.length > 0) {
+        featuredList.innerHTML = renderRestaurantCards(featuredRestaurants);
+    }
 }
 
-// 레스토랑 카드 렌더링
+// 레스토랑 카드 렌더링 (향상된 버전)
 function renderRestaurantCards(restaurants) {
     return restaurants.map(restaurant => {
         const name = restaurant.title || restaurant.bizName || '이름 없음';
         const address = restaurant.address || restaurant.roadAddr || '주소 없음';
         const rating = restaurant.naverRating ? `${restaurant.naverRating.toFixed(1)} ⭐` : '평점 없음';
         const category = restaurant.category || restaurant.foodType || restaurant.mainFood || '';
+        const restaurantId = restaurant.id || Math.random().toString(36).substr(2, 9);
+        
+        // 즐겨찾기 상태 확인
+        const isFavorited = favorites.has(restaurantId);
+        const favoriteIcon = isFavorited ? '❤️' : '🤍';
+        
+        // 거리 정보 (실제로는 GPS 기반 계산)
+        const distance = userLocation && address.includes(userLocation) ? '도보 5분' : '';
+        
+        // 영업 상태 (예시)
+        const isOpen = isBusinessOpen();
+        const statusBadge = isOpen ? 
+            '<span style="color: #4caf50; font-size: 0.8rem;">• 영업중</span>' : 
+            '<span style="color: #f44336; font-size: 0.8rem;">• 마감</span>';
         
         let imageContent = '🍽️';
         if (restaurant.imageLinks && restaurant.imageLinks[0]) {
@@ -178,21 +239,134 @@ function renderRestaurantCards(restaurants) {
         }
 
         return `
-            <div class="restaurant-card" onclick="showRestaurantDetail('${name}', '${address}', '${rating}')">
+            <div class="restaurant-card" onclick="showRestaurantDetail('${restaurantId}', '${name}', '${address}', '${rating}')">
                 <div class="restaurant-image">${imageContent}</div>
                 <div class="restaurant-info">
-                    <div class="restaurant-name">${name}</div>
-                    <div class="restaurant-rating">${rating} ${category ? '• ' + category : ''}</div>
-                    <div class="restaurant-distance">${address}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div class="restaurant-name">${name}</div>
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite('${restaurantId}', this)" 
+                                style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">
+                            ${favoriteIcon}
+                        </button>
+                    </div>
+                    <div class="restaurant-rating">
+                        ${rating} ${category ? '• ' + category : ''} ${statusBadge}
+                    </div>
+                    <div class="restaurant-distance">
+                        ${distance ? distance + ' • ' : ''} ${address}
+                    </div>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// 레스토랑 상세 정보 표시
-function showRestaurantDetail(name, address, rating) {
-    showToast(`${name} 상세 정보를 보여드립니다.`);
+// 즐겨찾기 토글
+async function toggleFavorite(restaurantId, buttonElement) {
+    try {
+        const wasFavorited = favorites.has(restaurantId);
+        
+        if (currentUser) {
+            // 서버에 즐겨찾기 상태 전송
+            const response = await fetch('/api/v1/search/favorite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: currentUser,
+                    restaurantId: restaurantId,
+                    isFavorited: wasFavorited
+                })
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    // 로컬 상태 업데이트
+                    if (wasFavorited) {
+                        favorites.delete(restaurantId);
+                        buttonElement.textContent = '🤍';
+                        showToast('즐겨찾기에서 제거되었습니다.');
+                    } else {
+                        favorites.add(restaurantId);
+                        buttonElement.textContent = '❤️';
+                        showToast('즐겨찾기에 추가되었습니다.');
+                    }
+                    
+                    // 로컬스토리지에 저장
+                    localStorage.setItem('favorites', JSON.stringify([...favorites]));
+                }
+            }
+        }
+    } catch (error) {
+        console.error('즐겨찾기 토글 실패:', error);
+        showToast('잘시 후 다시 시도해주세요.');
+    }
+}
+
+// 영업 시간 체크 (예시)
+function isBusinessOpen() {
+    const now = new Date();
+    const hour = now.getHours();
+    return hour >= 9 && hour < 22; // 9시-22시 영업
+}
+
+// 레스토랑 상세 정보 표시 (간단한 버전)
+async function showRestaurantDetail(restaurantId, name, address, rating) {
+    const modal = document.getElementById('restaurantModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    
+    // 모달 열기
+    modalTitle.textContent = name;
+    modal.classList.add('show');
+    
+    // 기본 정보 표시
+    modalBody.innerHTML = `
+        <div class="detail-section">
+            <h4>🏠 기본 정보</h4>
+            <div class="detail-info">
+                <div class="info-row">
+                    <span class="info-label">주소</span>
+                    <span class="info-value">${address}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">평점</span>
+                    <span class="info-value">${rating}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">영업 상태</span>
+                    <span class="info-value">${isBusinessOpen() ? '영업중' : '마감'}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="detail-section">
+            <h4>🚗 편의 시설</h4>
+            <div class="facility-list">
+                <span class="facility-tag">주차가능</span>
+                <span class="facility-tag">WiFi</span>
+                <span class="facility-tag">포장가능</span>
+                <span class="facility-tag">배달가능</span>
+            </div>
+        </div>
+        
+        <div class="detail-section">
+            <h4>📍 주변 정보</h4>
+            <ul class="nearby-list">
+                <li>지하철역 도보 5분</li>
+                <li>버스정류장 도보 2분</li>
+                <li>공영주차장 이용가능</li>
+            </ul>
+        </div>
+    `;
+}
+
+// 모달 닫기
+function closeRestaurantModal() {
+    const modal = document.getElementById('restaurantModal');
+    modal.classList.remove('show');
 }
 
 // 메인 검색 이벤트
@@ -448,8 +622,21 @@ window.addEventListener('load', () => {
             document.getElementById('nickname').value = userInfo.nickname || '';
             document.getElementById('location').value = userInfo.location || '';
             selectedCategory = userInfo.selectedCategory || '';
+            currentUser = userInfo.nickname || null;
+            userLocation = userInfo.location || '';
         } catch (error) {
             console.error('사용자 정보 복원 실패:', error);
+        }
+    }
+    
+    // 즐겨찾기 정보 복원
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+        try {
+            const favoritesList = JSON.parse(savedFavorites);
+            favorites = new Set(favoritesList);
+        } catch (error) {
+            console.error('즐겨찾기 정보 복원 실패:', error);
         }
     }
 });
