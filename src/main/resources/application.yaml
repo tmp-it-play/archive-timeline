@@ -2,38 +2,115 @@ spring:
   application:
     name: hot-place-research
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${RDB_HOST:localhost}:${RDB_PORT:3306}/${RDB_SCHEMA:hot_place_research}?useSSL=false
+    # 최신 MySQL 드라이버 사용
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${RDB_HOST:amond-server.kro.kr}:${RDB_PORT:3306}/${RDB_SCHEMA:hot_place_research}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: ${RDB_USER:root}
-    password: ${RDB_PASSWORD}
+    password: ${RDB_PASSWORD:rootpassword}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      
   jpa:
     hibernate:
-      ddl-auto: ${RDB_DDL-AUTO:update}
-    show-sql: true
+      ddl-auto: ${RDB_DDL-AUTO:validate}  # 프로덕션에서는 validate 권장
+    show-sql: ${SHOW_SQL:false}  # 프로덕션에서는 false
+    open-in-view: false  # 성능 최적화를 위해 false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
+        use_sql_comments: false
+        # 배치 처리 최적화
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+        
+  # 로깅 레벨 조정
+  logging:
+    level:
+      org.hibernate.SQL: ${LOG_SQL:warn}
+      org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_BIND:warn}
+      com.snowykte0426.minsole: info
+      
   cloud:
     openfeign:
       httpclient:
         connection-timeout: 5000
         ok-http:
-          read-timeout: 150s
+          read-timeout: 30s  # AI 서버 응답 시간 단축
+          
+  # 보안 설정 추가
+  security:
+    user:
+      name: ${ADMIN_USER:admin}
+      password: ${ADMIN_PASSWORD:secure_password_2024!}
+      roles: ADMIN
+
+# 네이버 API 설정
 naver:
   url:
     search:
       local: https://openapi.naver.com/v1/search/local.json
       image: https://openapi.naver.com/v1/search/image
   client:
-    id: ${NAVER_CLIENT_ID}
-    secret: ${NAVER_CLIENT_SECRET}
+    id: ${NAVER_CLIENT_ID:TEy_sAwe_9QcBVTeAYIQ}
+    secret: ${NAVER_CLIENT_SECRET:abkh3_V3lK}
+
+# Feign 클라이언트 설정
 feign:
   client:
     config:
       default:
-        connectTimeout: 5000   # 연결시도 타임아웃 (ms)
-        readTimeout: 120000    # 읽기(응답대기) 타임아웃 (ms)
+        connectTimeout: 5000
+        readTimeout: 30000  # AI 서버 타임아웃 단축
+      ai-service:
+        connectTimeout: 3000
+        readTimeout: 15000
+        
+# AI 서비스 설정
 ai:
   service:
-    url: http://localhost:8001
+    url: ${AI_SERVICE_URL:http://localhost:8001}
+    retry:
+      max-attempts: 3
+      delay: 1000
+      
+# 애플리케이션 설정
+app:
+  search:
+    max-results: 100
+    cache-ttl: 300  # 5분 캐시
+  location:
+    default-radius: 3.0
+    max-radius: 10.0
+
+# 메트릭 및 모니터링
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# 서버 설정
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
