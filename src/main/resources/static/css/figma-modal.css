@@ -1,0 +1,217 @@
+/* 모달 및 추가 컴포넌트 스타일 */
+
+/* 레스토랑 모달 */
+.restaurant-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.restaurant-modal {
+    background: white;
+    border-radius: 20px;
+    max-width: 400px;
+    width: 100%;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalSlideUp 0.3s ease;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-content {
+    padding: 24px;
+    overflow-y: auto;
+    max-height: calc(85vh - 80px);
+}
+
+.info-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F2F2F7;
+}
+
+.info-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-section h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #007AFF;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-section p {
+    margin: 6px 0;
+    font-size: 15px;
+    color: #1C1C1E;
+    line-height: 1.5;
+}
+
+/* 뱃지 스타일 */
+.blue-ribbon-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    z-index: 2;
+}
+
+.category-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0,122,255,0.1);
+    color: #007AFF;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    z-index: 2;
+}
+
+/* 버튼 스타일 */
+.action-button {
+    flex: 1;
+    border: none;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+.favorite-button {
+    background: linear-gradient(135deg, #FF3B30, #FF6B6B);
+    color: white;
+}
+
+.share-button {
+    background: linear-gradient(135deg, #34C759, #30D158);
+    color: white;
+}
+
+.reset-button {
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reset-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+}
+
+/* 커스텀 토스트 */
+.custom-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 2000;
+    max-width: 300px;
+    text-align: center;
+    transition: all 0.3s ease;
+    white-space: pre-line;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 다크모드 - 모달 */
+.dark-mode .restaurant-modal {
+    background: #2C2C2E;
+}
+
+.dark-mode .modal-content {
+    background: #2C2C2E;
+}
+
+.dark-mode .info-section {
+    border-bottom-color: #38383A;
+}
+
+.dark-mode .info-section p {
+    color: #F2F2F7;
+}
+
+.dark-mode .empty-results,
+.dark-mode .no-results {
+    background: #2C2C2E;
+    color: #F2F2F7;
+}
