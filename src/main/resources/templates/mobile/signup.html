@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빅테이터 - 회원가입</title>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+            font-family: var(--body-font);
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 375px;
+            padding: 60px 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 8px;
+        }
+
+        .back-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .signup-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 52px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-size: 16px;
+            font-family: var(--body-font);
+        }
+
+        .form-input::placeholder {
+            color: #9E9E9E;
+        }
+
+        .preference-section {
+            margin-bottom: 30px;
+        }
+
+        .preference-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .preference-description {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 16px;
+        }
+
+        .preference-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .preference-item {
+            position: relative;
+            aspect-ratio: 1/1;
+        }
+
+        .preference-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .preference-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+            background-color: #F7F7F7;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .preference-icon {
+            width: 36px;
+            height: 36px;
+            margin-bottom: 8px;
+        }
+
+        .preference-name {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .preference-input:checked + .preference-label {
+            border-color: #5E51F6;
+            background-color: rgba(94, 81, 246, 0.1);
+        }
+
+        .signup-button {
+            width: 100%;
+            height: 52px;
+            background-color: #5E51F6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
+            cursor: pointer;
+            font-family: var(--body-font);
+        }
+
+        .signup-button:disabled {
+            background-color: #C4C4C4;
+            cursor: not-allowed;
+        }
+
+        .login-guide {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .login-link {
+            color: #5E51F6;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        /* 단계별 표시 */
+        .steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #E0E0E0;
+            margin: 0 5px;
+        }
+
+        .step.active {
+            background-color: #5E51F6;
+        }
+
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            animation: fadeIn 0.5s ease-out both;
+        }
+
+        .steps {
+            animation: fadeIn 0.5s ease-out 0.1s both;
+        }
+
+        .signup-form {
+            animation: fadeIn 0.5s ease-out 0.2s both;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="header">
+            <button class="back-button" onclick="goBack()">
+                <svg class="back-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 19L8.5 12L15.5 5" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1 class="title">회원가입</h1>
+        </div>
+
+        <div class="steps">
+            <div class="step active" data-step="1"></div>
+            <div class="step" data-step="2"></div>
+            <div class="step" data-step="3"></div>
+        </div>
+
+        <!-- 단계 1: 기본 정보 입력 -->
+        <div class="signup-form" id="step1">
+            <div class="form-group">
+                <label class="form-label">이름</label>
+                <input type="text" class="form-input" id="name" placeholder="이름을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">이메일</label>
+                <input type="email" class="form-input" id="email" placeholder="이메일을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">비밀번호</label>
+                <input type="password" class="form-input" id="password" placeholder="비밀번호를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">비밀번호 확인</label>
+                <input type="password" class="form-input" id="confirmPassword" placeholder="비밀번호를 다시 입력해주세요">
+            </div>
+
+            <button class="signup-button" onclick="nextStep(2)">다음</button>
+        </div>
+
+        <!-- 단계 2: 음식 취향 선택 -->
+        <div class="signup-form" id="step2" style="display: none;">
+            <div class="preference-section">
+                <h2 class="preference-title">음식 취향을 선택해주세요</h2>
+                <p class="preference-description">좋아하는 음식 카테고리를 선택하면 맞춤 추천을 제공해드립니다. (최대 5개)</p>
+                
+                <div class="preference-grid">
+                    <div class="preference-item">
+                        <input type="checkbox" id="korean" class="preference-input" name="food-preference" value="korean">
+                        <label for="korean" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/cooked-rice_1f35a.png" alt="한식" class="preference-icon">
+                            <span class="preference-name">한식</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="japanese" class="preference-input" name="food-preference" value="japanese">
+                        <label for="japanese" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/steaming-bowl_1f35c.png" alt="일식" class="preference-icon">
+                            <span class="preference-name">일식</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="chinese" class="preference-input" name="food-preference" value="chinese">
+                        <label for="chinese" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/takeout-box_1f961.png" alt="중식" class="preference-icon">
+                            <span class="preference-name">중식</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="western" class="preference-input" name="food-preference" value="western">
+                        <label for="western" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/spaghetti_1f35d.png" alt="양식" class="preference-icon">
+                            <span class="preference-name">양식</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="asian" class="preference-input" name="food-preference" value="asian">
+                        <label for="asian" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/curry-rice_1f35b.png" alt="아시안" class="preference-icon">
+                            <span class="preference-name">아시안</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="snack" class="preference-input" name="food-preference" value="snack">
+                        <label for="snack" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/poultry-leg_1f357.png" alt="분식" class="preference-icon">
+                            <span class="preference-name">분식</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="fastfood" class="preference-input" name="food-preference" value="fastfood">
+                        <label for="fastfood" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/hamburger_1f354.png" alt="패스트푸드" class="preference-icon">
+                            <span class="preference-name">패스트푸드</span>
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <input type="checkbox" id="cafe" class="preference-input" name="food-preference" value="cafe">
+                        <label for="cafe" class="preference-label">
+                            <img src="https://em-content.zobj.net/thumbs/120/apple/354/hot-beverage_2615.png" alt="카페" class="preference-icon">
+                            <span class="preference-name">카페</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="signup-button" style="background-color: #F0F0F0; color: #333; margin-bottom: 10px;" onclick="prevStep(1)">이전</button>
+                <button class="signup-button" onclick="nextStep(3)">다음</button>
+            </div>
+        </div>
+
+        <!-- 단계 3: 지역 선택 -->
+        <div class="signup-form" id="step3" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">관심 지역 (선택사항)</label>
+                <input type="text" class="form-input" id="location" placeholder="예) 서울시 강남구">
+            </div>
+            <div class="form-group">
+                <label class="form-label">활동 반경 (선택사항)</label>
+                <select class="form-input" id="radius">
+                    <option value="">선택해주세요</option>
+                    <option value="1">1km 이내</option>
+                    <option value="3">3km 이내</option>
+                    <option value="5">5km 이내</option>
+                    <option value="10">10km 이내</option>
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button class="signup-button" style="background-color: #F0F0F0; color: #333; margin-bottom: 10px;" onclick="prevStep(2)">이전</button>
+                <button class="signup-button" onclick="submitSignup()">가입 완료</button>
+            </div>
+        </div>
+
+        <div class="login-guide">
+            이미 회원이신가요?<a href="/mobile/login" class="login-link">로그인</a>
+        </div>
+    </div>
+
+    <script>
+        // 현재 단계
+        let currentStep = 1;
+
+        // 뒤로가기
+        function goBack() {
+            if (currentStep > 1) {
+                prevStep(currentStep - 1);
+            } else {
+                window.location.href = '/mobile/login';
+            }
+        }
+
+        // 다음 단계로 이동
+        function nextStep(step) {
+            // 현재 단계 유효성 검사
+            if (currentStep === 1) {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!name || !email || !password || !confirmPassword) {
+                    alert('모든 필드를 입력해주세요.');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+            } else if (currentStep === 2) {
+                const checkedPreferences = document.querySelectorAll('input[name="food-preference"]:checked');
+                if (checkedPreferences.length === 0) {
+                    alert('최소 1개 이상의 음식 취향을 선택해주세요.');
+                    return;
+                }
+                if (checkedPreferences.length > 5) {
+                    alert('최대 5개까지 선택 가능합니다.');
+                    return;
+                }
+            }
+
+            // 현재 단계 숨기기
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            // 다음 단계 표시
+            document.getElementById(`step${step}`).style.display = 'block';
+            // 단계 표시 업데이트
+            document.querySelectorAll('.step').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+            // 현재 단계 업데이트
+            currentStep = step;
+        }
+
+        // 이전 단계로 이동
+        function prevStep(step) {
+            // 현재 단계 숨기기
+            document.getElementById(`step${currentStep}`).style.display = 'none';
+            // 이전 단계 표시
+            document.getElementById(`step${step}`).style.display = 'block';
+            // 단계 표시 업데이트
+            document.querySelectorAll('.step').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+            // 현재 단계 업데이트
+            currentStep = step;
+        }
+
+        // 가입 완료
+        function submitSignup() {
+            // 사용자 정보 수집
+            const userData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                preferences: Array.from(document.querySelectorAll('input[name="food-preference"]:checked'))
+                    .map(input => input.value),
+                location: document.getElementById('location').value,
+                radius: document.getElementById('radius').value
+            };
+
+            // API 호출 (실제로는 API 엔드포인트로 POST 요청)
+            // fetch('/api/auth/signup', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(userData)
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         window.location.href = '/mobile/login?registered=true';
+            //     } else {
+            //         alert(data.message || '회원가입에 실패했습니다.');
+            //     }
+            // })
+            // .catch(error => {
+            //     console.error('Error:', error);
+            //     alert('회원가입 중 오류가 발생했습니다.');
+            // });
+
+            // 테스트용: 회원가입 성공 시뮬레이션
+            console.log('회원가입 정보:', userData);
+            alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+            window.location.href = '/mobile/login?registered=true';
+        }
+
+        // 음식 취향 최대 선택 개수 제한
+        document.querySelectorAll('input[name="food-preference"]').forEach(input => {
+            input.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('input[name="food-preference"]:checked').length;
+                if (checkedCount > 5) {
+                    input.checked = false;
+                    alert('최대 5개까지 선택 가능합니다.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

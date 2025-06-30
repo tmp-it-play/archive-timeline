@@ -1,0 +1,64 @@
+/* 나눔 가람연꽃체 */
+@font-face {
+    font-family: 'NanumGaRamYeonGgoc';
+    src: url('/fonts/NanumGaRamYeonGgoc.woff2') format('woff2'),
+         url('/fonts/NanumGaRamYeonGgoc.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* SUIT 폰트 */
+@font-face {
+    font-family: 'SUIT';
+    src: url('/fonts/SUIT-Regular.woff2') format('woff2'),
+         url('/fonts/SUIT-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SUIT';
+    src: url('/fonts/SUIT-Medium.woff2') format('woff2'),
+         url('/fonts/SUIT-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SUIT';
+    src: url('/fonts/SUIT-SemiBold.woff2') format('woff2'),
+         url('/fonts/SUIT-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SUIT';
+    src: url('/fonts/SUIT-Bold.woff2') format('woff2'),
+         url('/fonts/SUIT-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 글꼴 적용 변수 */
+:root {
+    --title-font: 'NanumGaRamYeonGgoc', sans-serif;
+    --body-font: 'SUIT', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 로딩 화면용 폰트 설정 */
+.splash-title {
+    font-family: var(--title-font);
+    font-size: 48px;
+    font-weight: bold;
+}
+
+/* 일반 텍스트용 폰트 설정 */
+body {
+    font-family: var(--body-font);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--body-font);
+    font-weight: 600;
+}

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>빅데이터 - 맛집 추천 앱</title>
+    <meta name="theme-color" content="#BC0D17">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="빅데이터 맛집">
+    <link rel="stylesheet" href="/css/bigdata-mobile.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- 스플래시 화면 -->
+        <div class="splash-screen" id="splash">
+            <h1 class="splash-title">오늘을 더 맛있게<br>오늘을 더 행복하게</h1>
+            <p class="splash-subtitle">내 취향으로 나만의 맛집지도를 만들다</p>
+            <div class="splash-images">
+                <div class="splash-image-group">
+                    <div class="splash-image splash-image-1"></div>
+                </div>
+                <div class="splash-image-group">
+                    <div class="splash-image splash-image-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 화면 -->
+        <div class="main-screen" id="main">
+            <!-- 상단 상태 바 -->
+            <div class="status-bar">
+                <div class="time">12:45</div>
+                <div class="status-icons">
+                    <div class="status-icon wifi"></div>
+                    <div class="status-icon signal"></div>
+                    <div class="status-icon battery"></div>
+                </div>
+            </div>
+
+            <!-- 메인 콘텐츠 -->
+            <div class="main-content">
+                <!-- 상단 페이지 인디케이터 -->
+                <div class="page-indicator">
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot active"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-dot"></div>
+                </div>
+
+                <!-- 검색 바 -->
+                <div class="search-bar-container">
+                    <div class="search-bar">
+                        <div class="search-icon"></div>
+                        <input type="text" class="search-input" placeholder="먹고 싶은 메뉴나 가게를 검색해 주세요">
+                    </div>
+                </div>
+
+                <!-- 화면 콘텐츠 영역 -->
+                <div class="content-area">
+                    <!-- 오늘의 우리동네 추천 -->
+                    <div class="section">
+                        <h2 class="section-title">오늘의 우리동네 추천</h2>
+                        <div class="restaurant-list" id="localRecommendations">
+                            <!-- 레스토랑 카드 1 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 2 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 3 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 나의 또간집 -->
+                    <div class="section">
+                        <h2 class="section-title">나의 또간집</h2>
+                        <div class="restaurant-list" id="favorites">
+                            <!-- 레스토랑 카드 1 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 2 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 3 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">짬뽕관 광주송정선운점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">450m</span>
+                                        <span class="address">광주 광산구 소촌동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon"></div>
+                                            <span>4.9 (600)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 13,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 오늘의 블루리본 추천 -->
+                    <div class="section">
+                        <h2 class="section-title">오늘의 블루리본 추천</h2>
+                        <div class="restaurant-list" id="blueRibbonRecommendations">
+                            <!-- 레스토랑 카드 1 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image blue-ribbon"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">송정떡갈비1호점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">454m</span>
+                                        <span class="address">광주 광산구 송정동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon blue"></div>
+                                            <span>5.0 (2,263)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 20,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 2 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image blue-ribbon"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">송정떡갈비1호점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">454m</span>
+                                        <span class="address">광주 광산구 송정동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon blue"></div>
+                                            <span>5.0 (2,263)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 20,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 레스토랑 카드 3 -->
+                            <div class="restaurant-card">
+                                <div class="restaurant-image blue-ribbon"></div>
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">송정떡갈비1호점</h3>
+                                    <div class="restaurant-meta">
+                                        <span class="distance">454m</span>
+                                        <span class="address">광주 광산구 송정동</span>
+                                    </div>
+                                    <div class="restaurant-details">
+                                        <div class="rating">
+                                            <div class="star-icon blue"></div>
+                                            <span>5.0 (2,263)</span>
+                                        </div>
+                                        <div class="min-order">최소 주문: 20,000원</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 카테고리 섹션 -->
+                    <div class="section">
+                        <h2 class="section-title">카테고리</h2>
+                        <div class="category-grid">
+                            <!-- 도시락 -->
+                            <div class="category-item" data-category="도시락">
+                                <div class="category-icon bento-box"></div>
+                                <div class="category-name">도시락</div>
+                            </div>
+                            <!-- 디저트 -->
+                            <div class="category-item" data-category="디저트">
+                                <div class="category-icon dessert"></div>
+                                <div class="category-name">디저트</div>
+                            </div>
+                            <!-- 한식 -->
+                            <div class="category-item" data-category="한식">
+                                <div class="category-icon korean"></div>
+                                <div class="category-name">한식</div>
+                            </div>
+                            <!-- 일식 -->
+                            <div class="category-item" data-category="일식">
+                                <div class="category-icon japanese"></div>
+                                <div class="category-name">일식</div>
+                            </div>
+                            <!-- 양식 -->
+                            <div class="category-item" data-category="양식">
+                                <div class="category-icon western"></div>
+                                <div class="category-name">양식</div>
+                            </div>
+                            <!-- 초밥, 회 -->
+                            <div class="category-item" data-category="초밥">
+                                <div class="category-icon sushi"></div>
+                                <div class="category-name">초밥, 회</div>
+                            </div>
+                            <!-- 아시안 -->
+                            <div class="category-item" data-category="아시안">
+                                <div class="category-icon asian"></div>
+                                <div class="category-name">아시안</div>
+                            </div>
+                            <!-- 샌드위치 -->
+                            <div class="category-item" data-category="샌드위치">
+                                <div class="category-icon sandwich"></div>
+                                <div class="category-name">샌드위치</div>
+                            </div>
+                            <!-- 샐러드 -->
+                            <div class="category-item" data-category="샐러드">
+                                <div class="category-icon salad"></div>
+                                <div class="category-name">샐러드</div>
+                            </div>
+                            <!-- 카페 -->
+                            <div class="category-item" data-category="카페">
+                                <div class="category-icon cafe"></div>
+                                <div class="category-name">카페</div>
+                            </div>
+                            <!-- 피자 -->
+                            <div class="category-item" data-category="피자">
+                                <div class="category-icon pizza"></div>
+                                <div class="category-name">피자</div>
+                            </div>
+                            <!-- 치킨 -->
+                            <div class="category-item" data-category="치킨">
+                                <div class="category-icon chicken"></div>
+                                <div class="category-name">치킨</div>
+                            </div>
+                            <!-- 햄버거 -->
+                            <div class="category-item" data-category="햄버거">
+                                <div class="category-icon hamburger"></div>
+                                <div class="category-name">햄버거</div>
+                            </div>
+                            <!-- 빵 -->
+                            <div class="category-item" data-category="빵">
+                                <div class="category-icon bread"></div>
+                                <div class="category-name">빵</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 네비게이션 -->
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <div class="nav-icon map-icon"></div>
+                    <div class="nav-label">맛집지도</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon home-icon"></div>
+                    <div class="nav-label">홈</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon user-icon"></div>
+                    <div class="nav-label">마이페이지</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 지도 화면 (추가 구현) -->
+        <div class="map-screen" id="map">
+            <div class="map-header">
+                <div class="back-button"></div>
+                <h2 class="screen-title">맛집지도</h2>
+            </div>
+            <div class="map-container">
+                <div class="map-placeholder">
+                    지도 API가 로드되는 중입니다...
+                </div>
+            </div>
+        </div>
+
+        <!-- 마이페이지 화면 (추가 구현) -->
+        <div class="mypage-screen" id="mypage">
+            <div class="mypage-header">
+                <div class="back-button"></div>
+                <h2 class="screen-title">마이페이지</h2>
+            </div>
+            <div class="mypage-content">
+                <div class="profile-section">
+                    <div class="profile-image"></div>
+                    <div class="profile-info">
+                        <h3 class="profile-name">사용자</h3>
+                        <div class="profile-meta">광주광역시</div>
+                    </div>
+                </div>
+                <div class="mypage-section">
+                    <h3 class="section-title">나의 활동</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon reviews"></div>
+                            <div class="activity-label">나의 리뷰</div>
+                            <div class="activity-count">0</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon favorites"></div>
+                            <div class="activity-label">즐겨찾기</div>
+                            <div class="activity-count">0</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon points"></div>
+                            <div class="activity-label">포인트</div>
+                            <div class="activity-count">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mypage-section">
+                    <h3 class="section-title">계정 설정</h3>
+                    <div class="settings-list">
+                        <div class="settings-item">
+                            <div class="settings-icon profile"></div>
+                            <div class="settings-label">프로필 수정</div>
+                            <div class="settings-arrow"></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-icon notifications"></div>
+                            <div class="settings-label">알림 설정</div>
+                            <div class="settings-arrow"></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-icon location"></div>
+                            <div class="settings-label">위치 설정</div>
+                            <div class="settings-arrow"></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-icon logout"></div>
+                            <div class="settings-label">로그아웃</div>
+                            <div class="settings-arrow"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 레스토랑 상세 모달 -->
+        <div class="modal" id="restaurantModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">맛집 상세정보</h3>
+                    <div class="close-button" id="closeModal"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="restaurant-detail-image"></div>
+                    <div class="restaurant-detail-info">
+                        <h2 class="restaurant-detail-name">맛집 이름</h2>
+                        <div class="restaurant-detail-rating">
+                            <div class="star-icon"></div>
+                            <span class="rating-value">4.9</span>
+                            <span class="rating-count">(600)</span>
+                        </div>
+                        <div class="restaurant-detail-meta">
+                            <div class="meta-item">
+                                <div class="meta-icon location"></div>
+                                <div class="meta-text">광주 광산구 소촌동</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon phone"></div>
+                                <div class="meta-text">062-123-4567</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon time"></div>
+                                <div class="meta-text">10:00 - 22:00</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon category"></div>
+                                <div class="meta-text">한식</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="restaurant-detail-actions">
+                        <button class="action-button call">전화하기</button>
+                        <button class="action-button share">공유하기</button>
+                        <button class="action-button favorite">찜하기</button>
+                    </div>
+                    <div class="restaurant-detail-menu">
+                        <h3 class="detail-section-title">대표 메뉴</h3>
+                        <div class="menu-list">
+                            <div class="menu-item">
+                                <div class="menu-name">짬뽕</div>
+                                <div class="menu-price">8,000원</div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-name">짜장면</div>
+                                <div class="menu-price">7,000원</div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-name">탕수육</div>
+                                <div class="menu-price">20,000원</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 토스트 메시지 -->
+        <div class="toast" id="toast">
+            <div class="toast-content">메시지가 표시됩니다</div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/bigdata-mobile.js"></script>
+</body>
+</html>
