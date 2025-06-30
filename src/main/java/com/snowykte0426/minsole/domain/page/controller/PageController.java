@@ -20,4 +20,14 @@ public class PageController {
     public String app() {
         return "mobile";
     }
+
+    @GetMapping("/figma")
+    public String figma() {
+        return "figma-mobile";
+    }
+
+    @GetMapping("/figma-mobile")
+    public String figmaMobile() {
+        return "figma-mobile";
+    }
 }
