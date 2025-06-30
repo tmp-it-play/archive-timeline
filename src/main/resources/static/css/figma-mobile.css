@@ -1,4 +1,4 @@
-/* Figma 모바일 앱 스타일 - 로그인 제거 버전 */
+/* Figma 디자인 정확 복원 - 빅데이터 맛집 앱 */
 * {
     margin: 0;
     padding: 0;
@@ -6,37 +6,57 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: #f5f5f7;
-    height: 100vh;
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
+    background: #BC0D17;
+    min-height: 100vh;
+    overflow-x: hidden;
     position: relative;
 }
 
 .mobile-container {
-    width: 375px;
-    height: 812px;
-    margin: 20px auto;
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 412px;
+    height: 100vh;
+    margin: 0 auto;
+    background: #FFFFFF;
     position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* 데스크톱에서 모바일 시뮬레이션 */
+@media (min-width: 768px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .mobile-container {
+        width: 412px;
+        height: 917px;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
 }
 
 /* 온보딩 화면 */
 .onboarding-screen {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+    background: #BC0D17;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
     text-align: center;
-    padding: 40px;
+    padding: 40px 24px;
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 10;
     transition: opacity 0.5s ease;
     cursor: pointer;
@@ -48,24 +68,28 @@ body {
 }
 
 .onboarding-title {
-    font-size: 32px;
-    font-weight: 300;
+    font-size: 28px;
+    font-weight: 400;
     line-height: 1.2;
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+    animation: fadeInUp 1s ease 0.2s both;
 }
 
 .onboarding-subtitle {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 60px;
-    opacity: 0.9;
+    opacity: 1;
+    animation: fadeInUp 1s ease 0.4s both;
 }
 
 .onboarding-images {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .food-image {
@@ -76,18 +100,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 48px;
+    font-size: 60px;
     backdrop-filter: blur(10px);
+    animation: fadeInUp 1s ease 0.6s both;
 }
 
 /* 메인 화면 */
 .main-screen {
     width: 100%;
     height: 100%;
-    background: white;
+    background: #FFFFFF;
     display: none;
     flex-direction: column;
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 8;
 }
 
@@ -95,30 +122,31 @@ body {
     display: flex;
 }
 
-/* 상단 영역 */
+/* 상단 헤더 */
 .main-header {
-    background: white;
+    background: #FFFFFF;
     padding: 12px 0 0 0;
-    border-bottom: 1px solid #E5E5EA;
+    flex-shrink: 0;
 }
 
+/* 페이지 인디케이터 */
 .page-indicator {
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding: 16px 0;
+    padding: 12px 0;
 }
 
 .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #C7C7CC;
+    background: #E5E5EA;
     transition: all 0.3s;
 }
 
 .dot.active {
-    background: #007AFF;
+    background: #FFB800;
     transform: scale(1.2);
 }
 
@@ -130,17 +158,24 @@ body {
 .search-bar {
     display: flex;
     align-items: center;
-    background: #F2F2F7;
-    border-radius: 12px;
-    padding: 12px 16px;
+    background: #F8F8F8;
+    border-radius: 8px;
+    padding: 14px 16px;
     border: 1px solid #E5E5EA;
+    transition: all 0.2s;
+}
+
+.search-bar:focus-within {
+    border-color: #FFB800;
+    box-shadow: 0 0 0 3px rgba(255,184,0,0.1);
 }
 
 .search-icon {
     width: 20px;
     height: 20px;
-    margin-right: 8px;
-    opacity: 0.6;
+    margin-right: 12px;
+    opacity: 0.4;
+    flex-shrink: 0;
 }
 
 .search-input {
@@ -150,6 +185,7 @@ body {
     outline: none;
     font-size: 16px;
     color: #1C1C1E;
+    width: 100%;
 }
 
 .search-input::placeholder {
@@ -160,14 +196,20 @@ body {
 .content-area {
     flex: 1;
     overflow-y: auto;
-    background: #F2F2F7;
+    background: #FFFFFF;
     border-radius: 24px 24px 0 0;
-    padding: 24px;
+    padding: 24px 20px;
+    min-height: 0;
+    margin-top: 8px;
 }
 
 /* 추천 섹션 */
 .recommendation-section {
     margin-bottom: 32px;
+}
+
+.recommendation-section:last-child {
+    margin-bottom: 100px; /* 하단 네비게이션 공간 확보 */
 }
 
 .section-title {
@@ -182,63 +224,59 @@ body {
     gap: 16px;
     overflow-x: auto;
     padding-bottom: 8px;
+    scroll-behavior: smooth;
 }
 
 .restaurant-card {
     min-width: 280px;
+    width: 280px;
     background: white;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: transform 0.2s;
-    position: relative;
+    border-radius: 8px;
     overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 .restaurant-card:active {
     transform: scale(0.98);
 }
 
-.restaurant-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-.restaurant-card:hover::before {
-    left: 100%;
-}
-
 .restaurant-image {
     width: 100%;
     height: 120px;
-    background: linear-gradient(135deg, #FF9A9E, #FECFEF);
-    border-radius: 12px;
-    margin-bottom: 12px;
+    background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.restaurant-info {
+    padding: 16px;
 }
 
 .restaurant-info h3 {
     font-size: 16px;
     font-weight: 600;
     color: #1C1C1E;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    line-height: 1.2;
 }
 
 .restaurant-details {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .distance {
@@ -250,6 +288,7 @@ body {
 .location {
     color: #8E8E93;
     font-size: 14px;
+    flex: 1;
 }
 
 .rating-info {
@@ -266,13 +305,21 @@ body {
 }
 
 .star {
-    color: #FF9500;
-    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    background-image: url('/images/star-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.star.filled {
+    background-image: url('/images/star-filled-icon.svg');
 }
 
 .rating-text {
     color: #8E8E93;
     font-size: 14px;
+    margin-left: 4px;
 }
 
 .min-order {
@@ -293,75 +340,169 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 16px 8px;
+    padding: 8px;
     background: white;
-    border-radius: 12px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 70px;
+    border: 1px solid #F0F0F0;
+}
+
+.category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .category-item:active {
     transform: scale(0.95);
-    background: #F2F2F7;
 }
 
 .category-icon {
-    font-size: 28px;
-    margin-bottom: 8px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 6px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.category-icon.bento-box {
+    background-image: url('/images/bento-box.png');
+}
+
+.category-icon.birthday-cake {
+    background-image: url('/images/birthday-cake.png');
+}
+
+.category-icon.cooked-rice {
+    background-image: url('/images/cooked-rice.png');
+}
+
+.category-icon.steaming-bowl {
+    background-image: url('/images/steaming-bowl.png');
+}
+
+.category-icon.spaghetti {
+    background-image: url('/images/spaghetti.png');
+}
+
+.category-icon.sushi {
+    background-image: url('/images/sushi.png');
+}
+
+.category-icon.takeout-box {
+    background-image: url('/images/takeout-box.png');
+}
+
+.category-icon.sandwich {
+    background-image: url('/images/sandwich.png');
+}
+
+.category-icon.green-salad {
+    background-image: url('/images/green-salad.png');
+}
+
+.category-icon.hot-beverage {
+    background-image: url('/images/hot-beverage.png');
+}
+
+.category-icon.pizza {
+    background-image: url('/images/pizza.png');
+}
+
+.category-icon.poultry-leg {
+    background-image: url('/images/poultry-leg.png');
+}
+
+.category-icon.hamburger {
+    background-image: url('/images/hamburger.png');
+}
+
+.category-icon.croissant {
+    background-image: url('/images/croissant.png');
 }
 
 .category-name {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: #1C1C1E;
+    line-height: 1.2;
+    text-align: center;
 }
 
 /* 하단 네비게이션 */
 .bottom-nav {
     display: flex;
     background: white;
-    border-top: 1px solid #E5E5EA;
-    padding: 8px 0 20px;
+    padding: 8px 0;
     justify-content: space-around;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-shrink: 0;
+    box-shadow: 0 -1px 16px rgba(0,0,0,0.08);
+    safe-area-inset-bottom: env(safe-area-inset-bottom);
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
 }
 
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px;
+    padding: 8px 12px;
     cursor: pointer;
     transition: all 0.2s;
     text-decoration: none;
     min-height: 44px;
-    min-width: 44px;
+    border-radius: 8px;
+    flex: 1;
+    max-width: 80px;
+}
+
+.nav-item:hover {
+    background: rgba(255,184,0,0.05);
 }
 
 .nav-icon {
-    font-size: 24px;
+    width: 24px;
+    height: 24px;
     margin-bottom: 4px;
-    filter: grayscale(1);
     opacity: 0.6;
     transition: all 0.2s;
+    line-height: 1;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.nav-icon.map {
+    background-image: url('/images/map-icon.svg');
+}
+
+.nav-icon.home {
+    background-image: url('/images/home-icon.svg');
+}
+
+.nav-icon.user {
+    background-image: url('/images/user-icon.svg');
 }
 
 .nav-label {
-    font-size: 10px;
+    font-size: 11px;
     color: #8E8E93;
     font-weight: 500;
+    line-height: 1;
 }
 
 .nav-item.active .nav-icon {
-    filter: none;
     opacity: 1;
-    color: #007AFF;
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
 }
 
 .nav-item.active .nav-label {
-    color: #007AFF;
+    color: #FFB800;
 }
 
 /* 프로모션 배너 */
@@ -369,21 +510,29 @@ body {
     width: 100%;
     height: 120px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 16px;
+    border-radius: 12px;
     margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
-/* 로딩 애니메이션 */
+.promotion-banner:hover {
+    transform: scale(1.02);
+}
+
+/* 로딩 관련 스타일 */
 .loading-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 40px 20px;
 }
 
 .loading {
@@ -392,19 +541,19 @@ body {
     height: 24px;
     border: 3px solid #f3f3f3;
     border-radius: 50%;
-    border-top-color: #007AFF;
+    border-top-color: #FFB800;
     animation: spin 1s ease-in-out infinite;
 }
 
+/* 애니메이션 */
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
-/* 애니메이션 */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -416,70 +565,11 @@ body {
     animation: fadeInUp 0.6s ease;
 }
 
-/* 다크모드 스타일 */
-.dark-mode {
-    background: #000000;
-}
-
-.dark-mode .mobile-container {
-    background: #1C1C1E;
-}
-
-.dark-mode .main-screen {
-    background: #1C1C1E;
-}
-
-.dark-mode .content-area {
-    background: #000000;
-}
-
-.dark-mode .restaurant-card {
-    background: #2C2C2E;
-    border: 1px solid #38383A;
-}
-
-.dark-mode .category-item {
-    background: #2C2C2E;
-    border: 1px solid #38383A;
-}
-
-.dark-mode .section-title,
-.dark-mode .restaurant-info h3,
-.dark-mode .category-name {
-    color: #F2F2F7;
-}
-
-.dark-mode .search-bar {
-    background: #2C2C2E;
-    border-color: #38383A;
-}
-
-.dark-mode .search-input {
-    color: #F2F2F7;
-}
-
-.dark-mode .bottom-nav {
-    background: #1C1C1E;
-    border-top-color: #38383A;
-}
-
-.dark-mode .main-header {
-    background: #1C1C1E;
-    border-bottom-color: #38383A;
-}
-
-/* 접근성 개선 */
-.restaurant-card:focus,
-.category-item:focus,
-.nav-item:focus {
-    outline: 2px solid #007AFF;
-    outline-offset: 2px;
-}
-
-/* 스크롤바 숨김 */
+/* 스크롤바 스타일링 */
 .restaurant-list::-webkit-scrollbar,
 .content-area::-webkit-scrollbar {
-    display: none;
+    width: 0;
+    height: 0;
 }
 
 .restaurant-list,
@@ -488,52 +578,84 @@ body {
     scrollbar-width: none;
 }
 
-/* 반응형 조정 */
-@media (max-width: 400px) {
-    .mobile-container {
-        width: 100vw;
-        height: 100vh;
-        margin: 0;
-        border-radius: 0;
-    }
-    
+/* 반응형 디자인 */
+@media (max-width: 480px) {
     .category-grid {
         grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+    
+    .category-item {
+        padding: 8px 4px;
+        min-height: 65px;
+    }
+    
+    .category-icon {
+        width: 28px;
+        height: 28px;
+        margin-bottom: 4px;
+    }
+    
+    .category-name {
+        font-size: 10px;
+    }
+    
+    .restaurant-card {
+        min-width: 260px;
+        width: 260px;
     }
 }
 
-@media (max-height: 700px) {
-    .onboarding-title {
-        font-size: 28px;
+@media (max-width: 360px) {
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
     
-    .onboarding-subtitle {
-        font-size: 16px;
-        margin-bottom: 40px;
+    .search-container {
+        padding: 0 16px 16px;
     }
     
-    .food-image {
-        width: 100px;
-        height: 100px;
-        font-size: 40px;
+    .content-area {
+        padding: 20px 16px;
+    }
+    
+    .restaurant-card {
+        min-width: 240px;
+        width: 240px;
     }
 }
 
-/* 토스트 메시지 스타일 */
-.toast {
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 20px;
-    font-size: 14px;
-    z-index: 1000;
-    max-width: 300px;
-    text-align: center;
-    transition: opacity 0.3s ease;
-    white-space: pre-line;
-    opacity: 0;
+/* 모바일 safe area 대응 */
+@supports (padding: max(0px)) {
+    .main-header {
+        padding-top: max(12px, env(safe-area-inset-top));
+    }
+    
+    .bottom-nav {
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+}
+
+/* 접근성 */
+.restaurant-card:focus,
+.category-item:focus,
+.nav-item:focus {
+    outline: 2px solid #FFB800;
+    outline-offset: 2px;
+}
+
+/* 터치 최적화 */
+.category-item,
+.nav-item {
+    min-height: 44px;
+}
+
+/* 특수 효과 */
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }

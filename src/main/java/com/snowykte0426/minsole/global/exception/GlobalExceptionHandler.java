@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -18,6 +19,24 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        // 정적 리소스 예외는 로그만 남기고 404 응답
+        String resourcePath = e.getResourcePath();
+        
+        // favicon, CSS, JS 파일 등은 DEBUG 레벨로 로깅
+        if (resourcePath.contains("favicon.ico") || 
+            resourcePath.contains(".css") || 
+            resourcePath.contains(".js") ||
+            resourcePath.contains(".map")) {
+            log.debug("정적 리소스를 찾을 수 없음: {}", resourcePath);
+        } else {
+            log.warn("정적 리소스를 찾을 수 없음: {}", resourcePath);
+        }
+        
+        return ResponseEntity.notFound().build();
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {

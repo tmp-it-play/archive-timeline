@@ -31,26 +31,25 @@ public class FigmaSearchController {
 
             log.info("Figma 앱 검색 요청: {}", query);
 
-            // 간단한 검색 로직 (실제로는 더 복잡한 검색 엔진 사용)
-            List<RestaurantDto> results = restaurantService.getRecommendedRestaurants().stream()
-                .filter(restaurant -> 
-                    restaurant.getName().toLowerCase().contains(query.toLowerCase()) ||
-                    restaurant.getCategory().toLowerCase().contains(query.toLowerCase()) ||
-                    restaurant.getLocation().toLowerCase().contains(query.toLowerCase())
-                )
-                .limit(10)
-                .toList();
+            // 실제 데이터베이스에서 검색
+            List<RestaurantDto> results = restaurantService.searchRestaurants(query.trim());
+
+            log.info("검색 결과: {}개 맛집 발견", results.size());
 
             return ResponseEntity.ok(Map.of(
                 "results", results,
                 "total", results.size(),
-                "query", query
+                "query", query,
+                "success", true
             ));
 
         } catch (Exception e) {
             log.error("검색 처리 중 오류 발생", e);
             return ResponseEntity.internalServerError()
-                .body(Map.of("error", "검색 처리 중 오류가 발생했습니다"));
+                .body(Map.of(
+                    "error", "검색 처리 중 오류가 발생했습니다",
+                    "success", false
+                ));
         }
     }
 
@@ -58,9 +57,11 @@ public class FigmaSearchController {
     public ResponseEntity<Map<String, Object>> getSearchSuggestions(
             @RequestParam(required = false) String query) {
         
+        // 카테고리 기반 검색 제안
         List<String> suggestions = List.of(
-            "짬뽕", "떡갈비", "피자", "초밥", "치킨",
-            "한식", "일식", "양식", "중식", "카페"
+            "짬뽕", "떡갈비", "피자", "초밥", "치킨", "햄버거",
+            "한식", "일식", "양식", "중식", "카페", "디저트",
+            "갈비", "삼겹살", "파스타", "라멘", "돈카츠"
         );
 
         if (query != null && !query.trim().isEmpty()) {
@@ -69,6 +70,22 @@ public class FigmaSearchController {
                 .toList();
         }
 
-        return ResponseEntity.ok(Map.of("suggestions", suggestions));
+        return ResponseEntity.ok(Map.of(
+            "suggestions", suggestions,
+            "query", query != null ? query : ""
+        ));
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<Map<String, Object>> getPopularKeywords() {
+        List<String> popularKeywords = List.of(
+            "짬뽕", "떡갈비", "치킨", "피자", "한식", 
+            "일식", "중식", "카페", "디저트", "양식"
+        );
+        
+        return ResponseEntity.ok(Map.of(
+            "keywords", popularKeywords,
+            "success", true
+        ));
     }
 }

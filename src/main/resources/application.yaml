@@ -1,6 +1,15 @@
 spring:
   application:
     name: hot-place-research
+  mvc:
+    favicon:
+      enabled: false  # favicon 비활성화
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/static/
+      cache:
+        period: 86400  # 1일 캐시
   datasource:
     # 최신 MySQL 드라이버 사용
     driver-class-name: com.mysql.cj.jdbc.Driver

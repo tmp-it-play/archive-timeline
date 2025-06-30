@@ -2,9 +2,14 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>빅데이터 - 맛집 추천 앱</title>
+    <meta name="theme-color" content="#007AFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="빅데이터 맛집">
     <link rel="stylesheet" href="/css/figma-mobile.css">
+    <link rel="stylesheet" href="/css/figma-modal.css">
 </head>
 <body>
     <div class="mobile-container">
@@ -20,6 +25,7 @@
 
         <!-- 메인 화면 -->
         <div class="main-screen" id="main">
+            <!-- 상단 헤더 -->
             <div class="main-header">
                 <div class="page-indicator">
                     <div class="dot"></div>
@@ -38,36 +44,405 @@
                 </div>
             </div>
 
+            <!-- 메인 콘텐츠 -->
             <div class="content-area">
-                <div class="promotion-banner">🎯</div>
+                <!-- 프로모션 배너 -->
+                <div class="promotion-banner">🎯 오늘의 특별 혜택</div>
 
+                <!-- 오늘의 우리동네 추천 -->
                 <div class="recommendation-section">
                     <h2 class="section-title">오늘의 우리동네 추천</h2>
                     <div class="restaurant-list" id="todayRecommendations">
                         <div class="loading-container">
                             <div class="loading"></div>
+                            <div style="margin-top: 8px; font-size: 14px; color: #8E8E93;">맛집 로딩 중...</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 나의 또간집 -->
                 <div class="recommendation-section">
                     <h2 class="section-title">나의 또간집</h2>
                     <div class="restaurant-list" id="favoriteRestaurants">
-                        <div class="loading-container">
-                            <div class="loading"></div>
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #FF9A9E, #FECFEF);"></div>
+                            <div class="restaurant-info">
+                                <h3>짬뽕관 광주송정선운점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">450m</span>
+                                    <span class="location">광주 광산구 소촌동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">4.9 (600)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 13,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #FF9A9E, #FECFEF);"></div>
+                            <div class="restaurant-info">
+                                <h3>짬뽕관 광주송정선운점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">450m</span>
+                                    <span class="location">광주 광산구 소촌동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">4.9 (600)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 13,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #FF9A9E, #FECFEF);"></div>
+                            <div class="restaurant-info">
+                                <h3>짬뽕관 광주송정선운점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">450m</span>
+                                    <span class="location">광주 광산구 소촌동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">4.9 (600)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 13,000원</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 오늘의 블루리본 추천 -->
+                <div class="recommendation-section">
+                    <h2 class="section-title">오늘의 블루리본 추천</h2>
+                    <div class="restaurant-list" id="blueRibbonRecommendations">
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);"></div>
+                            <div class="restaurant-info">
+                                <h3>송정떡갈비1호점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">454m</span>
+                                    <span class="location">광주 광산구 송정동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">5.0 (2,263)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 20,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);"></div>
+                            <div class="restaurant-info">
+                                <h3>송정떡갈비1호점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">454m</span>
+                                    <span class="location">광주 광산구 송정동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">5.0 (2,263)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 20,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="restaurant-card">
+                            <div class="restaurant-image" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);"></div>
+                            <div class="restaurant-info">
+                                <h3>송정떡갈비1호점</h3>
+                                <div class="restaurant-details">
+                                    <span class="distance">454m</span>
+                                    <span class="location">광주 광산구 송정동</span>
+                                </div>
+                                <div class="rating-info">
+                                    <div class="rating">
+                                        <div class="star filled"></div>
+                                        <span class="rating-text">5.0 (2,263)</span>
+                                    </div>
+                                    <span class="min-order">최소 주문: 20,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 카테고리 섹션 -->
+                <div class="recommendation-section">
+                    <h2 class="section-title">카테고리</h2>
+                    <div class="category-grid">
+                        <div class="category-item" data-category="도시락">
+                            <div class="category-icon bento-box"></div>
+                            <div class="category-name">도시락</div>
+                        </div>
+                        <div class="category-item" data-category="디저트">
+                            <div class="category-icon birthday-cake"></div>
+                            <div class="category-name">디저트</div>
+                        </div>
+                        <div class="category-item" data-category="한식">
+                            <div class="category-icon cooked-rice"></div>
+                            <div class="category-name">한식</div>
+                        </div>
+                        <div class="category-item" data-category="일식">
+                            <div class="category-icon steaming-bowl"></div>
+                            <div class="category-name">일식</div>
+                        </div>
+                        <div class="category-item" data-category="양식">
+                            <div class="category-icon spaghetti"></div>
+                            <div class="category-name">양식</div>
+                        </div>
+                        <div class="category-item" data-category="초밥">
+                            <div class="category-icon sushi"></div>
+                            <div class="category-name">초밥, 회</div>
+                        </div>
+                        <div class="category-item" data-category="아시안">
+                            <div class="category-icon takeout-box"></div>
+                            <div class="category-name">아시안</div>
+                        </div>
+                        <div class="category-item" data-category="샌드위치">
+                            <div class="category-icon sandwich"></div>
+                            <div class="category-name">샌드위치</div>
+                        </div>
+                        <div class="category-item" data-category="샐러드">
+                            <div class="category-icon green-salad"></div>
+                            <div class="category-name">샐러드</div>
+                        </div>
+                        <div class="category-item" data-category="카페">
+                            <div class="category-icon hot-beverage"></div>
+                            <div class="category-name">카페</div>
+                        </div>
+                        <div class="category-item" data-category="피자">
+                            <div class="category-icon pizza"></div>
+                            <div class="category-name">피자</div>
+                        </div>
+                        <div class="category-item" data-category="치킨">
+                            <div class="category-icon poultry-leg"></div>
+                            <div class="category-name">치킨</div>
+                        </div>
+                        <div class="category-item" data-category="햄버거">
+                            <div class="category-icon hamburger"></div>
+                            <div class="category-name">햄버거</div>
+                        </div>
+                        <div class="category-item" data-category="빵">
+                            <div class="category-icon croissant"></div>
+                            <div class="category-name">빵</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단 네비게이션 -->
+            <div class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <div class="nav-icon map"></div>
+                    <div class="nav-label">맛집지도</div>
+                </a>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon home"></div>
+                    <div class="nav-label">홈</div>
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon user"></div>
+                    <div class="nav-label">마이페이지</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/figma-mobile-complete.js"></script>
+    
+    <!-- 추가 앱 기능을 위한 인라인 스크립트 -->
+    <script>
+        // PWA 관련 기능
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 뷰포트 높이 조정 (모바일 브라우저 주소창 대응)
+            const setVH = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
+
+            // 터치 스크롤 개선
+            let isScrolling = false;
+            document.addEventListener('touchstart', () => {
+                isScrolling = false;
+            });
+            
+            document.addEventListener('touchmove', () => {
+                isScrolling = true;
+            });
+
+            // 레스토랑 카드와 카테고리 아이템에 터치 피드백 추가
+            document.addEventListener('touchend', (e) => {
+                if (!isScrolling) {
+                    const target = e.target.closest('.restaurant-card, .category-item');
+                    if (target) {
+                        target.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            target.style.transform = '';
+                        }, 150);
+                    }
+                }
+            });
+
+            // 온보딩 화면 터치로 넘어가기
+            const onboarding = document.getElementById('onboarding');
+            const main = document.getElementById('main');
+            
+            onboarding.addEventListener('click', () => {
+                onboarding.classList.add('hidden');
+                main.classList.add('active');
+            });
+
+            // 3초 후 자동으로 메인 화면 표시
+            setTimeout(() => {
+                onboarding.classList.add('hidden');
+                main.classList.add('active');
+            }, 3000);
+
+            // 에러 핸들링
+            window.addEventListener('error', (e) => {
+                console.error('App Error:', e.error);
+            });
+
+            window.addEventListener('unhandledrejection', (e) => {
+                console.error('Unhandled Promise Rejection:', e.reason);
+                e.preventDefault();
+            });
+        });
+    </script>
+
+    <!-- CSS 변수 설정 -->
+    <style>
+        :root {
+            --vh: 1vh;
+        }
+        
+        /* 모바일 뷰포트 높이 조정 */
+        .mobile-container {
+            height: calc(var(--vh, 1vh) * 100);
+        }
+        
+        /* 터치 피드백 개선 */
+        .restaurant-card, .category-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 스크롤 성능 최적화 */
+        .content-area, .restaurant-list {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        /* Safe area 대응 강화 */
+        @supports (padding: max(0px)) {
+            .main-header {
+                padding-top: max(12px, env(safe-area-inset-top, 12px));
+            }
+            
+            .bottom-nav {
+                padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+            }
+            
+            .search-container {
+                padding-left: max(20px, env(safe-area-inset-left, 20px));
+                padding-right: max(20px, env(safe-area-inset-right, 20px));
+            }
+        }
+        
+        /* 추가 반응형 조정 */
+        @media (max-height: 600px) {
+            .recommendation-section {
+                margin-bottom: 20px;
+            }
+            
+            .promotion-banner {
+                height: 80px;
+                font-size: 16px;
+            }
+            
+            .page-indicator {
+                padding: 8px 0;
+            }
+        }
+        
+        /* 가로 모드 대응 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .onboarding-title {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+            
+            .onboarding-subtitle {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .onboarding-images {
+                margin-bottom: 20px;
+            }
+            
+            .food-image {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+        }
+    </style>
+</body>
+</html>
+                    <div class="restaurant-list" id="favoriteRestaurants">
+                        <div class="loading-container">
+                            <div class="loading"></div>
+                            <div style="margin-top: 8px; font-size: 14px; color: #8E8E93;">즐겨찾기 로딩 중...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 오늘의 블루리본 추천 -->
                 <div class="recommendation-section">
                     <h2 class="section-title">오늘의 블루리본 추천</h2>
                     <div class="restaurant-list" id="blueRibbonRecommendations">
                         <div class="loading-container">
                             <div class="loading"></div>
+                            <div style="margin-top: 8px; font-size: 14px; color: #8E8E93;">블루리본 로딩 중...</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 카테고리 섹션 -->
                 <div class="recommendation-section">
                     <h2 class="section-title">카테고리</h2>
                     <div class="category-grid">
@@ -131,6 +506,7 @@
                 </div>
             </div>
 
+            <!-- 하단 네비게이션 -->
             <div class="bottom-nav">
                 <a href="#" class="nav-item">
                     <div class="nav-icon">🗺️</div>
@@ -148,6 +524,201 @@
         </div>
     </div>
 
-    <script src="/js/figma-mobile.js"></script>
+    <!-- JavaScript -->
+    <script src="/js/figma-mobile-complete.js"></script>
+    
+    <!-- 추가 앱 기능을 위한 인라인 스크립트 -->
+    <script>
+        // PWA 관련 기능
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 뷰포트 높이 조정 (모바일 브라우저 주소창 대응)
+            const setVH = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
+
+            // 터치 스크롤 개선
+            let isScrolling = false;
+            document.addEventListener('touchstart', () => {
+                isScrolling = false;
+            });
+            
+            document.addEventListener('touchmove', () => {
+                isScrolling = true;
+            });
+
+            // 레스토랑 카드와 카테고리 아이템에 터치 피드백 추가
+            document.addEventListener('touchend', (e) => {
+                if (!isScrolling) {
+                    const target = e.target.closest('.restaurant-card, .category-item');
+                    if (target) {
+                        target.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            target.style.transform = '';
+                        }, 150);
+                    }
+                }
+            });
+
+            // 다크모드 자동 감지
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                if (localStorage.getItem('darkMode') === null) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'true');
+                }
+            }
+
+            // 다크모드 변경 감지
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (localStorage.getItem('darkMode') === null) {
+                    if (e.matches) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                }
+            });
+        });
+
+        // 성능 최적화: 이미지 지연 로딩
+        const observerOptions = {
+            root: null,
+            rootMargin: '50px',
+            threshold: 0.1
+        };
+
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        imageObserver.unobserve(img);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // 에러 핸들링
+        window.addEventListener('error', (e) => {
+            console.error('App Error:', e.error);
+            // 사용자에게 친화적인 오류 메시지 표시
+            if (window.app && window.app.showToast) {
+                window.app.showToast('앱 로딩 중 문제가 발생했습니다. 새로고침해주세요.');
+            }
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Unhandled Promise Rejection:', e.reason);
+            e.preventDefault();
+        });
+    </script>
+
+    <!-- CSS 변수 설정 -->
+    <style>
+        :root {
+            --vh: 1vh;
+        }
+        
+        /* 모바일 뷰포트 높이 조정 */
+        .mobile-container {
+            height: calc(var(--vh, 1vh) * 100);
+        }
+        
+        /* 터치 피드백 개선 */
+        .restaurant-card, .category-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 스크롤 성능 최적화 */
+        .content-area, .restaurant-list {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        /* 로딩 상태 최적화 */
+        .loading-container {
+            min-height: 100px;
+        }
+        
+        /* Safe area 대응 강화 */
+        @supports (padding: max(0px)) {
+            .main-header {
+                padding-top: max(12px, env(safe-area-inset-top, 12px));
+            }
+            
+            .bottom-nav {
+                padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+            }
+            
+            .search-container {
+                padding-left: max(20px, env(safe-area-inset-left, 20px));
+                padding-right: max(20px, env(safe-area-inset-right, 20px));
+            }
+        }
+        
+        /* 추가 반응형 조정 */
+        @media (max-height: 600px) {
+            .recommendation-section {
+                margin-bottom: 20px;
+            }
+            
+            .promotion-banner {
+                height: 80px;
+                font-size: 18px;
+            }
+            
+            .page-indicator {
+                padding: 12px 0;
+            }
+        }
+        
+        /* 가로 모드 대응 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .onboarding-title {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+            
+            .onboarding-subtitle {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .onboarding-images {
+                margin-bottom: 20px;
+            }
+            
+            .food-image {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+        }
+    </style>
 </body>
 </html>

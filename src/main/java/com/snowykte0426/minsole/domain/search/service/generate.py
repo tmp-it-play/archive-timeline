@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     logger.warning("OpenAI API 키가 설정되지 않았습니다. 환경변수를 확인해주세요.")
-    OPENAI_API_KEY = "sk-test-key"  # 테스트용
+    OPENAI_API_KEY = "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"  # 테스트용
 
 client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY != "sk-test-key" else None
 
