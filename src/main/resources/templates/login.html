@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빅테이터 - 로그인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .login-container {
+            width: 375px;
+            height: 812px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            height: 44px;
+        }
+
+        .status-bar .time {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .status-bar .icons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .main-content {
+            padding: 60px 32px;
+            text-align: center;
+            height: calc(100vh - 140px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-text {
+            margin-bottom: 8px;
+        }
+
+        .welcome-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .welcome-text p {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 60px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .input-group {
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+
+        .input-field::placeholder {
+            color: #9ca3af;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .google-login-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-top: 32px;
+        }
+
+        .google-login-btn:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .soft-keys {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 34px;
+            background-color: #000000;
+            border-radius: 0 0 0 0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time">12:45</div>
+            <div class="icons">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 7H21L19 2H5L3 7Z" stroke="#1f2937" stroke-width="1.5"/>
+                    <path d="M3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7" stroke="#1f2937" stroke-width="1.5"/>
+                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M2 17H6L8 22L16 2L18 7H22" stroke="#1f2937" stroke-width="1.5"/>
+                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="6" width="20" height="12" rx="2" stroke="#1f2937" stroke-width="1.5"/>
+                    <path d="M22 10L18 8V16L22 14V10Z" fill="#1f2937"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="welcome-text">
+                <h1>안녕하세요:)<br>오늘도 나의 맛집을 찾아볼까요?</h1>
+            </div>
+
+            <div class="login-form">
+                <div class="input-group">
+                    <label for="username">아이디</label>
+                    <input type="text" id="username" class="input-field" placeholder="아이디를 입력해주세요">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" class="input-field" placeholder="비밀번호를 입력해주세요">
+                </div>
+
+                <div class="divider">
+                    <span>또는</span>
+                </div>
+
+                <a href="/oauth2/authorization/google" class="google-login-btn">
+                    <svg class="google-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google로 로그인
+                </a>
+            </div>
+        </div>
+
+        <!-- Soft Keys -->
+        <div class="soft-keys"></div>
+    </div>
+</body>
+</html>
