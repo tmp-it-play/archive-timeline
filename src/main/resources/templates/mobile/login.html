@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빅테이터 - 로그인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 375px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 0;
+        }
+
+        .greeting {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 52px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 0 16px;
+            font-size: 16px;
+        }
+
+        .form-input::placeholder {
+            color: #9E9E9E;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 52px;
+            background-color: #5E51F6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .oauth-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .oauth-button {
+            width: 100%;
+            height: 52px;
+            background-color: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .oauth-button img {
+            margin-right: 12px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .wave-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-container">
+        <svg width="100%" viewBox="0 0 375 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="375" height="100" fill="#5E51F6" />
+            <path d="M0 80C62.5 120 125 140 187.5 140C250 140 312.5 120 375 80V0H0V80Z" fill="#5E51F6" />
+        </svg>
+    </div>
+
+    <div class="login-container">
+        <div class="greeting">
+            안녕하세요:)<br>
+            오늘도 나의 맛집을 찾아볼까요?
+        </div>
+
+        <div class="login-form">
+            <div class="form-group">
+                <label class="form-label">아이디</label>
+                <input type="text" class="form-input" placeholder="아이디를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">비밀번호</label>
+                <input type="password" class="form-input" placeholder="비밀번호를 입력해주세요">
+            </div>
+            <button class="login-button">로그인</button>
+        </div>
+
+        <div class="oauth-buttons">
+            <a href="/oauth2/authorization/google" class="oauth-button" onclick="setRedirectUriCookie()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                Google로 로그인
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 리디렉션 URL을 쿠키에 저장하는 함수
+        function setRedirectUriCookie() {
+            document.cookie = "redirect_uri=/mobile/main;path=/;max-age=180";
+        }
+
+        // 토큰이 있으면 메인 페이지로 리다이렉트
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = '/mobile/main';
+        }
+    </script>
+</body>
+</html>

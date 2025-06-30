@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빅테이터 - 메인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        /* 상단 배너 */
+        .banner {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+        }
+
+        /* 검색창 */
+        .search-container {
+            padding: 16px;
+            position: relative;
+            margin-top: -30px;
+            z-index: 1;
+        }
+
+        .search-box {
+            width: 100%;
+            height: 52px;
+            background-color: #F7F7F7;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .search-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .search-input::placeholder {
+            color: #9E9E9E;
+        }
+
+        /* 카테고리 그리드 */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: #F7F7F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .category-icon img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* 섹션 타이틀 */
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 16px 16px 12px 16px;
+        }
+
+        /* 레스토랑 카드 */
+        .restaurant-list {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 8px 16px;
+        }
+
+        .restaurant-card {
+            display: inline-block;
+            width: 280px;
+            margin-right: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            vertical-align: top;
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 160px;
+            background-color: #F0F0F0;
+            object-fit: cover;
+        }
+
+        .restaurant-details {
+            padding: 12px;
+        }
+
+        .restaurant-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            white-space: normal;
+        }
+
+        .restaurant-location {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .distance {
+            font-size: 14px;
+            color: #5E51F6;
+            margin-right: 8px;
+        }
+
+        .address {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .restaurant-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+        }
+
+        .rating-value {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .min-order {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        /* 하단 네비게이션 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: #FFFFFF;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            color: #9E9E9E;
+        }
+
+        .nav-text.active {
+            color: #5E51F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 상단 배너 -->
+        <div class="banner">
+            <img src="/icons/wave.svg" alt="Wave" class="wave">
+        </div>
+
+        <!-- 검색창 -->
+        <div class="search-container">
+            <div class="search-box">
+                <img src="/icons/search.svg" alt="Search" class="search-icon">
+                <input type="text" class="search-input" placeholder="먹고 싶은 메뉴나 가게를 검색해 주세요">
+            </div>
+        </div>
+
+        <!-- 카테고리 그리드 -->
+        <div class="categories">
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/bento-box_1f371.png" alt="도시락">
+                </div>
+                <span class="category-name">도시락</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/birthday-cake_1f382.png" alt="디저트">
+                </div>
+                <span class="category-name">디저트</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/cooked-rice_1f35a.png" alt="한식">
+                </div>
+                <span class="category-name">한식</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/steaming-bowl_1f35c.png" alt="일식">
+                </div>
+                <span class="category-name">일식</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/spaghetti_1f35d.png" alt="양식">
+                </div>
+                <span class="category-name">양식</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/sushi_1f363.png" alt="초밥, 회">
+                </div>
+                <span class="category-name">초밥, 회</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/takeout-box_1f961.png" alt="아시안">
+                </div>
+                <span class="category-name">아시안</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/sandwich_1f96a.png" alt="샌드위치">
+                </div>
+                <span class="category-name">샌드위치</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/green-salad_1f957.png" alt="샐러드">
+                </div>
+                <span class="category-name">샐러드</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/hot-beverage_2615.png" alt="카페">
+                </div>
+                <span class="category-name">카페</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/pizza_1f355.png" alt="피자">
+                </div>
+                <span class="category-name">피자</span>
+            </a>
+            <a href="#" class="category">
+                <div class="category-icon">
+                    <img src="https://em-content.zobj.net/thumbs/120/apple/354/poultry-leg_1f357.png" alt="치킨">
+                </div>
+                <span class="category-name">치킨</span>
+            </a>
+        </div>
+
+        <!-- 오늘의 우리동네 추천 -->
+        <h2 class="section-title">오늘의 우리동네 추천</h2>
+        <div class="restaurant-list" id="local-recommendations">
+            <!-- 레스토랑 카드는 JavaScript로 동적 생성 -->
+        </div>
+
+        <!-- 나의 또간집 -->
+        <h2 class="section-title">나의 또간집</h2>
+        <div class="restaurant-list" id="my-favorites">
+            <!-- 레스토랑 카드는 JavaScript로 동적 생성 -->
+        </div>
+
+        <!-- 오늘의 블루리본 추천 -->
+        <h2 class="section-title">오늘의 블루리본 추천</h2>
+        <div class="restaurant-list" id="blueribbon-recommendations">
+            <!-- 레스토랑 카드는 JavaScript로 동적 생성 -->
+        </div>
+    </div>
+
+    <!-- 하단 네비게이션 -->
+    <div class="bottom-nav">
+        <a href="/mobile/map" class="nav-item">
+            <img src="/icons/map.svg" alt="Map" class="nav-icon">
+            <span class="nav-text">맛집지도</span>
+        </a>
+        <a href="/mobile/main" class="nav-item">
+            <img src="/icons/home.svg" alt="Home" class="nav-icon">
+            <span class="nav-text active">홈</span>
+        </a>
+        <a href="/mobile/mypage" class="nav-item">
+            <img src="/icons/user.svg" alt="User" class="nav-icon">
+            <span class="nav-text">마이페이지</span>
+        </a>
+    </div>
+
+    <script>
+        // URL에서 토큰 가져오기
+        function getTokenFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+
+        // 토큰 처리
+        const tokenFromUrl = getTokenFromUrl();
+        if (tokenFromUrl) {
+            // URL의 토큰을 로컬 스토리지에 저장
+            localStorage.setItem('token', tokenFromUrl);
+            // 토큰을 URL에서 제거 (보안상 이유)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // 토큰이 없으면 로그인 페이지로 리다이렉트
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/mobile/login';
+        }
+
+        // 샘플 데이터
+        const localRestaurants = [
+            {
+                id: 1,
+                name: '짬뽕관 광주송정선운점',
+                distance: '450m',
+                address: '광주 광산구 소촌동',
+                rating: 4.9,
+                reviewCount: 600,
+                minOrder: '13,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            },
+            {
+                id: 2,
+                name: '홍콩반점 광주첨단점',
+                distance: '620m',
+                address: '광주 광산구 월계동',
+                rating: 4.7,
+                reviewCount: 450,
+                minOrder: '15,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            },
+            {
+                id: 3,
+                name: '옛날통닭 광주하남점',
+                distance: '780m',
+                address: '광주 광산구 하남동',
+                rating: 4.8,
+                reviewCount: 320,
+                minOrder: '16,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            }
+        ];
+
+        const favoriteRestaurants = [
+            {
+                id: 4,
+                name: '청춘핫도그 하남점',
+                distance: '350m',
+                address: '광주 광산구 하남동',
+                rating: 4.6,
+                reviewCount: 210,
+                minOrder: '8,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            },
+            {
+                id: 5,
+                name: '광주불고기백반',
+                distance: '520m',
+                address: '광주 광산구 송정동',
+                rating: 4.9,
+                reviewCount: 780,
+                minOrder: '10,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            },
+            {
+                id: 6,
+                name: '수완지구햄버거',
+                distance: '1.2km',
+                address: '광주 광산구 수완동',
+                rating: 4.5,
+                reviewCount: 320,
+                minOrder: '12,000원',
+                image: 'https://via.placeholder.com/280x160?text=Restaurant'
+            }
+        ];
+
+        const blueRibbonRestaurants = [
+            {
+                id: 7,
+                name: '송정떡갈비1호점',
+                distance: '454m',
+                address: '광주 광산구 송정동',
+                rating: 5.0,
+                reviewCount: 2263,
+                minOrder: '20,000원',
+                image: 'https://via.placeholder.com/280x160?text=BlueRibbon'
+            },
+            {
+                id: 8,
+                name: '무등산보리밥',
+                distance: '2.5km',
+                address: '광주 동구 지산동',
+                rating: 5.0,
+                reviewCount: 1845,
+                minOrder: '15,000원',
+                image: 'https://via.placeholder.com/280x160?text=BlueRibbon'
+            },
+            {
+                id: 9,
+                name: '광주상무정식',
+                distance: '3.8km',
+                address: '광주 서구 치평동',
+                rating: 5.0,
+                reviewCount: 1560,
+                minOrder: '12,000원',
+                image: 'https://via.placeholder.com/280x160?text=BlueRibbon'
+            }
+        ];
+
+        // 레스토랑 카드 생성 함수
+        function createRestaurantCard(restaurant, isBlueRibbon = false) {
+            const card = document.createElement('div');
+            card.className = 'restaurant-card';
+            
+            card.innerHTML = `
+                <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image">
+                <div class="restaurant-details">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <div class="restaurant-location">
+                        <span class="distance">${restaurant.distance}</span>
+                        <span class="address">${restaurant.address}</span>
+                    </div>
+                    <div class="restaurant-info">
+                        <div class="rating">
+                            <img src="/icons/${isBlueRibbon ? 'star_yellow.svg' : 'star.svg'}" alt="Rating" class="rating-icon">
+                            <span class="rating-value">${restaurant.rating} (${restaurant.reviewCount})</span>
+                        </div>
+                        <span class="min-order">최소 주문: ${restaurant.minOrder}</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 레스토랑 카드 렌더링
+        const localRecommendationsContainer = document.getElementById('local-recommendations');
+        localRestaurants.forEach(restaurant => {
+            localRecommendationsContainer.appendChild(createRestaurantCard(restaurant));
+        });
+
+        const myFavoritesContainer = document.getElementById('my-favorites');
+        favoriteRestaurants.forEach(restaurant => {
+            myFavoritesContainer.appendChild(createRestaurantCard(restaurant));
+        });
+
+        const blueRibbonContainer = document.getElementById('blueribbon-recommendations');
+        blueRibbonRestaurants.forEach(restaurant => {
+            blueRibbonContainer.appendChild(createRestaurantCard(restaurant, true));
+        });
+    </script>
+</body>
+</html>

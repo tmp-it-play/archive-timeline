@@ -1,0 +1,122 @@
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // URL에서 토큰 가져오기
+        function getTokenFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+
+        // 토큰 처리
+        const tokenFromUrl = getTokenFromUrl();
+        if (tokenFromUrl) {
+            // URL의 토큰을 로컬 스토리지에 저장
+            localStorage.setItem('token', tokenFromUrl);
+            // 토큰을 URL에서 제거 (보안상 이유)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // 토큰이 없으면 로그인 페이지로 리다이렉트
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/mobile/login';
+        }
+
+        // 광주 좌표 (임시)
+        const gwangjuCoords = [35.1595, 126.8526];
+
+        // 지도 초기화
+        const map = L.map('map').setView(gwangjuCoords, 15);
+
+        // OpenStreetMap 타일 레이어 추가
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // 현재 위치 가져오기
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const userCoords = [position.coords.latitude, position.coords.longitude];
+                    map.setView(userCoords, 15);
+                    
+                    // 현재 위치 마커 추가
+                    const userMarker = L.marker(userCoords).addTo(map);
+                    userMarker.bindPopup("현재 위치").openPopup();
+                },
+                error => {
+                    console.error('위치 정보를 가져오는데 실패했습니다:', error);
+                }
+            );
+        }
+
+        // 샘플 레스토랑 데이터
+        const restaurants = [
+            {
+                id: 1,
+                name: '짬뽕관 광주송정선운점',
+                coords: [35.1605, 126.8546],
+                rating: 4.9,
+                reviewCount: 600,
+                type: '중식',
+                image: 'https://via.placeholder.com/220x120?text=Restaurant'
+            },
+            {
+                id: 2,
+                name: '홍콩반점 광주첨단점',
+                coords: [35.1585, 126.8506],
+                rating: 4.7,
+                reviewCount: 450,
+                type: '중식',
+                image: 'https://via.placeholder.com/220x120?text=Restaurant'
+            },
+            {
+                id: 3,
+                name: '옛날통닭 광주하남점',
+                coords: [35.1615, 126.8586],
+                rating: 4.8,
+                reviewCount: 320,
+                type: '치킨',
+                image: 'https://via.placeholder.com/220x120?text=Restaurant'
+            },
+            {
+                id: 7,
+                name: '송정떡갈비1호점',
+                coords: [35.1575, 126.8476],
+                rating: 5.0,
+                reviewCount: 2263,
+                type: '한식',
+                image: 'https://via.placeholder.com/220x120?text=BlueRibbon',
+                isBlueRibbon: true
+            }
+        ];
+
+        // 레스토랑 마커 추가
+        restaurants.forEach(restaurant => {
+            const marker = L.marker(restaurant.coords).addTo(map);
+            
+            // 팝업 내용 생성
+            const popupContent = document.createElement('div');
+            popupContent.className = 'popup-content';
+            
+            popupContent.innerHTML = `
+                <img src="${restaurant.image}" alt="${restaurant.name}" class="popup-image">
+                <div class="popup-details">
+                    <h3 class="popup-name">${restaurant.name}</h3>
+                    <div class="popup-info">
+                        <div class="popup-rating">
+                            <img src="/icons/${restaurant.isBlueRibbon ? 'star_yellow.svg' : 'star.svg'}" alt="Rating" class="popup-rating-icon">
+                            <span>${restaurant.rating} (${restaurant.reviewCount})</span>
+                        </div>
+                        <span>${restaurant.type}</span>
+                    </div>
+                    <a href="/mobile/restaurant/${restaurant.id}" class="popup-button">상세보기</a>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent, {
+                className: 'restaurant-popup',
+                closeButton: true,
+                maxWidth: 220
+            });
+        });
+    </script>

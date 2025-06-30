@@ -1,0 +1,41 @@
+    <script>
+        // URL에서 토큰 가져오기
+        function getTokenFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+
+        // 토큰 처리
+        const tokenFromUrl = getTokenFromUrl();
+        if (tokenFromUrl) {
+            // URL의 토큰을 로컬 스토리지에 저장
+            localStorage.setItem('token', tokenFromUrl);
+            // 토큰을 URL에서 제거 (보안상 이유)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        // 토큰이 없으면 로그인 페이지로 리다이렉트
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/mobile/login';
+        }
+
+        // 프로필 정보 가져오기 (실제로는 API 호출)
+        // 여기서는 샘플 데이터 사용
+        const userProfile = {
+            name: '홍길동',
+            email: 'hong@example.com',
+            profileImage: 'https://via.placeholder.com/80x80'
+        };
+
+        // 프로필 정보 표시
+        document.getElementById('profile-name').textContent = userProfile.name;
+        document.getElementById('profile-email').textContent = userProfile.email;
+        document.getElementById('profile-image').src = userProfile.profileImage;
+
+        // 로그아웃 기능
+        document.getElementById('logout-button').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            window.location.href = '/mobile/login';
+        });
+    </script>
