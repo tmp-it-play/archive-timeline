@@ -98,6 +98,9 @@ app:
   location:
     default-radius: 3.0
     max-radius: 10.0
+  auth:
+    tokenSecret: ${JWT_SECRET:this_is_a_very_secure_jwt_secret_key_123456789}
+    tokenExpirationMsec: ${JWT_EXPIRATION:86400000}
 
 # 메트릭 및 모니터링
 management:

@@ -37,7 +37,7 @@ class AIRecommender:
             'charset': 'utf8mb4',
             'cursorclass': pymysql.cursors.DictCursor
         }
-        
+
         try:
             self.redis_client = redis.StrictRedis(
                 host=os.getenv('REDIS_HOST', 'amond-server.kro.kr'),
@@ -67,12 +67,12 @@ class AIRecommender:
         """OpenAI를 사용한 키워드 생성 (폴백 포함)"""
         if not client:
             return self._get_fallback_keywords(limit)
-            
+
         prompt = (
             "맛집 추천 키워드를 한국어로 쉼표(,)로 구분하여 "
             f"총 {limit}개만 반환해주세요. 예: 한식,일식,양식,카페,디저트"
         )
-        
+
         try:
             resp = client.chat.completions.create(
                 model="gpt-3.5-turbo",  # 비용 최적화
@@ -105,14 +105,14 @@ class AIRecommender:
             with conn.cursor() as cur:
                 # 필요한 컬럼만 선택하여 성능 향상
                 cur.execute("""
-                    SELECT 
+                    SELECT
                         biz_name AS title,
                         road_addr AS address,
                         jibun_addr AS readAddress,
                         food_type,
                         naver_rating
-                    FROM data 
-                    WHERE biz_name IS NOT NULL 
+                    FROM data
+                    WHERE biz_name IS NOT NULL
                     AND road_addr IS NOT NULL
                     LIMIT 5000
                 """)
@@ -129,12 +129,12 @@ class AIRecommender:
         """사용자 히스토리 기반 키워드 생성"""
         if not client or not history:
             return self._get_fallback_keywords(limit)
-            
+
         prompt = (
             f"사용자가 이전에 검색한 키워드: {', '.join(history[:5])}\n"
             f"이 사용자가 좋아할 만한 맛집 키워드를 {limit}개 추천해주세요."
         )
-        
+
         try:
             resp = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -155,17 +155,17 @@ class AIRecommender:
         if not keyword or keyword.strip() == "":
             logger.warning("빈 키워드로 추천 요청됨")
             return []
-            
+
         keyword = keyword.strip()
         rows = self._fetch_all_restaurants()
-        
+
         if not rows:
             logger.warning("DB에 맛집 데이터가 없습니다")
             return []
 
         # 단순 필터링으로 폴백 (성능 최적화)
         filtered = self._simple_filter_restaurants(rows, keyword)
-        
+
         if len(filtered) >= 5:
             return filtered[:5]
 
@@ -184,26 +184,26 @@ class AIRecommender:
         """단순 키워드 매칭으로 맛집 필터링"""
         filtered = []
         keyword_lower = keyword.lower()
-        
+
         for row in rows:
             title = (row.get("title") or "").lower()
             food_type = (row.get("food_type") or "").lower()
             address = (row.get("address") or "").lower()
-            
-            if (keyword_lower in title or 
-                keyword_lower in food_type or 
+
+            if (keyword_lower in title or
+                keyword_lower in food_type or
                 any(word in title or word in food_type for word in keyword_lower.split())):
-                
+
                 filtered.append({
                     "title": row.get("title", ""),
                     "address": row.get("address", ""),
                     "readAddress": row.get("readAddress", ""),
                     "imageLinks": []
                 })
-                
+
                 if len(filtered) >= 10:  # 충분한 결과 확보
                     break
-                    
+
         return filtered
 
     def _ai_recommend_restaurants(self, rows: List[Dict], keyword: str) -> List[Dict]:
@@ -211,15 +211,15 @@ class AIRecommender:
         # 데이터 샘플링으로 API 비용 절약
         sample_size = min(100, len(rows))
         sampled_rows = rows[:sample_size]
-        
+
         system_prompt = (
             f"키워드 '{keyword}'와 관련된 맛집 5곳을 JSON 형태로 추천해주세요.\n"
             "형식: [{\"title\":\"맛집명\",\"address\":\"주소\",\"readAddress\":\"지번주소\"}]\n"
             "반드시 5개를 선택해야 합니다."
         )
-        
+
         user_prompt = json.dumps(sampled_rows, ensure_ascii=False)
-        
+
         resp = client.chat.completions.create(
             model="gpt-3.5-turbo",  # 비용 최적화
             messages=[
@@ -230,10 +230,10 @@ class AIRecommender:
             max_tokens=1000,
             timeout=15
         )
-        
+
         text = resp.choices[0].message.content
         match = re.search(r"\[.*\]", text, re.DOTALL)
-        
+
         if match:
             try:
                 result = json.loads(match.group(0))
@@ -242,7 +242,7 @@ class AIRecommender:
                 return result[:5]
             except json.JSONDecodeError:
                 pass
-                
+
         return []
 
     def _get_random_restaurants(self, rows: List[Dict], count: int) -> List[Dict]:
@@ -310,7 +310,7 @@ async def get_keywords(
     try:
         user_key = f"user:{x_user_id or request.client.host}"
         history = []
-        
+
         # Redis에서 히스토리 조회
         if recommender.redis_client:
             try:
@@ -329,7 +329,7 @@ async def get_keywords(
         # 일반 키워드 생성
         kws = recommender.generate_keywords(limit)
         return KeywordResponse(keywords=kws)
-        
+
     except Exception as e:
         logger.error(f"키워드 생성 실패: {e}")
         return KeywordResponse(keywords=recommender._get_fallback_keywords(limit))
@@ -345,7 +345,7 @@ async def recommend(
         # 키워드 검증
         if not req.keyword or not req.keyword.strip():
             raise HTTPException(status_code=400, detail="키워드가 비어있습니다")
-            
+
         keyword = req.keyword.strip()
         ip = request.headers.get("X-Forwarded-For", str(request.client.host))
         user_key = f"user:{x_user_id or ip}"
@@ -362,7 +362,7 @@ async def recommend(
         # 맛집 추천
         result = recommender.recommend_restaurants(keyword)
         return [RecommendItem(**item) for item in result]
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -371,8 +371,8 @@ async def recommend(
 
 if __name__ == "__main__":
     uvicorn.run(
-        "generate:app", 
-        host="0.0.0.0", 
+        "generate:app",
+        host="0.0.0.0",
         port=8001,
         reload=False,  # 프로덕션에서는 False
         log_level="info"
