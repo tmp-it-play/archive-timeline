@@ -1,6 +1,7 @@
 package com.snowykte0426.minsole.domain.search.controller;
 
 import com.snowykte0426.minsole.domain.restaurant.dto.RestaurantDto;
+import com.snowykte0426.minsole.domain.restaurant.dto.RestaurantResponseDto;
 import com.snowykte0426.minsole.domain.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +33,19 @@ public class FigmaSearchController {
             log.info("Figma 앱 검색 요청: {}", query);
 
             // 실제 데이터베이스에서 검색
-            List<RestaurantDto> results = restaurantService.searchRestaurants(query.trim());
+            // userId는 현재 컨트롤러에서는 사용하지 않으므로 null로 전달
+            List<RestaurantResponseDto> results = restaurantService.searchRestaurants(query.trim(), null);
+            
+            // RestaurantResponseDto를 RestaurantDto로 변환
+            List<RestaurantDto> dtoResults = results.stream()
+                .map(this::convertToRestaurantDto)
+                .toList();
 
             log.info("검색 결과: {}개 맛집 발견", results.size());
 
             return ResponseEntity.ok(Map.of(
-                "results", results,
-                "total", results.size(),
+                "results", dtoResults,
+                "total", dtoResults.size(),
                 "query", query,
                 "success", true
             ));
@@ -78,6 +85,7 @@ public class FigmaSearchController {
 
     @GetMapping("/popular")
     public ResponseEntity<Map<String, Object>> getPopularKeywords() {
+        
         List<String> popularKeywords = List.of(
             "짬뽕", "떡갈비", "치킨", "피자", "한식", 
             "일식", "중식", "카페", "디저트", "양식"
@@ -87,5 +95,28 @@ public class FigmaSearchController {
             "keywords", popularKeywords,
             "success", true
         ));
+    }
+    
+    /**
+     * RestaurantResponseDto를 RestaurantDto로 변환
+     */
+    private RestaurantDto convertToRestaurantDto(RestaurantResponseDto responseDto) {
+        return RestaurantDto.builder()
+                .id(responseDto.getId())
+                .name(responseDto.getName())
+                .distance(responseDto.getDistance())
+                .location(responseDto.getAddress())
+                .rating(responseDto.getRating())
+                .reviews(responseDto.getReviewCount())
+                .minOrder(responseDto.getMinOrderPrice() != null ? responseDto.getMinOrderPrice() + "원" : null)
+                .image(responseDto.getImageUrl())
+                .category(responseDto.getCategory())
+                .phone(responseDto.getPhoneNumber())
+                .address(responseDto.getRoadAddress() != null ? responseDto.getRoadAddress() : responseDto.getAddress())
+                .latitude(responseDto.getLatitude())
+                .longitude(responseDto.getLongitude())
+                .isFavorite(responseDto.getIsFavorite())
+                .isBlueRibbon(responseDto.getIsBlueRibbon())
+                .build();
     }
 }

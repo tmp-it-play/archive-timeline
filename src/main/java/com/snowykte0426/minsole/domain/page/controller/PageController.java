@@ -11,14 +11,16 @@ public class PageController {
         return "index";
     }
 
-    @GetMapping("/mobile")
-    public String mobile() {
-        return "mobile";
-    }
+    // 최신 모바일 페이지는 MobileController에서 처리함
+    // @GetMapping("/mobile")
+    // public String mobile() {
+    //     return "mobile";
+    // }
 
+    // 예전 모바일 페이지 - 이제 새로운 모바일 페이지로 리디렉션
     @GetMapping("/app")
     public String app() {
-        return "mobile";
+        return "redirect:/mobile";
     }
 
     @GetMapping("/figma")
