@@ -1,0 +1,277 @@
+/* AuthCallback 스타일 */
+.auth-callback-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.callback-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.callback-content {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+/* 공통 상태 스타일 */
+.processing-state,
+.success-state,
+.error-state {
+  margin-bottom: 30px;
+}
+
+.processing-state h2,
+.success-state h2,
+.error-state h2 {
+  margin: 20px 0 12px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.processing-state p,
+.success-state p,
+.error-state p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 처리 중 상태 */
+.processing-state h2 {
+  color: #667eea;
+}
+
+.spinner {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border: 4px solid transparent;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-ring:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.spinner-ring:nth-child(2) {
+  animation-delay: -0.3s;
+  border-top-color: #764ba2;
+  width: 48px;
+  height: 48px;
+  top: 8px;
+  left: 8px;
+}
+
+.spinner-ring:nth-child(3) {
+  animation-delay: -0.6s;
+  border-top-color: #667eea;
+  width: 32px;
+  height: 32px;
+  top: 16px;
+  left: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 성공 상태 */
+.success-state h2 {
+  color: #4CAF50;
+}
+
+.success-icon {
+  margin: 0 auto 20px;
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 에러 상태 */
+.error-state h2 {
+  color: #F44336;
+}
+
+.error-icon {
+  margin: 0 auto 20px;
+  animation: errorShake 0.6s ease-out;
+}
+
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-8px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(8px);
+  }
+}
+
+/* 에러 상태 액션 버튼들 */
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.retry-btn,
+.home-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn {
+  background: #667eea;
+  color: white;
+}
+
+.retry-btn:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.home-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.home-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+  transform: translateY(-1px);
+}
+
+/* 앱 정보 */
+.app-info {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 30px;
+  margin-top: 30px;
+}
+
+.app-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.app-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .auth-callback-page {
+    padding: 10px;
+  }
+  
+  .callback-container {
+    border-radius: 16px;
+  }
+  
+  .callback-content {
+    padding: 30px 20px;
+  }
+  
+  .processing-state h2,
+  .success-state h2,
+  .error-state h2 {
+    font-size: 20px;
+  }
+  
+  .processing-state p,
+  .success-state p,
+  .error-state p {
+    font-size: 14px;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+  }
+  
+  .retry-btn,
+  .home-btn {
+    width: 100%;
+  }
+}
+
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: dark) {
+  .callback-container {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  .processing-state h2,
+  .success-state h2,
+  .error-state h2 {
+    color: inherit;
+  }
+  
+  .processing-state p,
+  .success-state p,
+  .error-state p {
+    color: #b0b0b0;
+  }
+  
+  .app-info {
+    border-top-color: #404040;
+  }
+  
+  .app-info p {
+    color: #808080;
+  }
+  
+  .home-btn {
+    background: #2d2d2d;
+    color: #b0b0b0;
+  }
+  
+  .home-btn:hover {
+    background: #404040;
+    color: #e0e0e0;
+  }
+}

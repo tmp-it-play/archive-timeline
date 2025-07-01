@@ -1,0 +1,159 @@
+/* BottomNavigation 스타일 */
+.bottom-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+  padding: 16px 0 20px 0; /* 상하 패딩 증가 */
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  min-height: 80px; /* 최소 높이 설정 */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px; /* 아이콘과 텍스트 간격 증가 */
+  padding: 12px 10px; /* 좌우 패딩 약간 증가 */
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 90px; /* 최소 너비 더 증가하여 텍스트 공간 확보 */
+  min-height: 60px; /* 최소 높이 추가 */
+  color: #333; /* 기본 색상을 더 진한 회색으로 */
+  background-color: transparent; /* 배경을 투명으로 */
+}
+
+.nav-item:hover {
+  background: transparent; /* 호버 시 배경 제거 */
+  color: #E53B45; /* 호버 시 빨간색 */
+}
+
+.nav-item.active {
+  background: #E53B45; /* 활성 상태 빨간색 배경 */
+  color: white;
+}
+
+.nav-item.active:hover {
+  background: #d32f2f; /* 활성 상태 호버 시 더 진한 빨간색 */
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; /* 아이콘 크기 증가 */
+  height: 28px;
+}
+
+.nav-label {
+  font-size: 12px; /* 폰트 크기 */
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  margin-top: 2px; /* 상단 마진 추가 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: visible; /* 텍스트 표시 */
+  text-overflow: clip; /* 자르지 않음 */
+  max-width: none; /* 최대 너비 제한 해제 */
+}
+
+/* 사용자 아바타 */
+.user-avatar {
+  width: 28px; /* 아바타 크기 증가 */
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #667eea;
+  color: white;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initial {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 인증된 사용자 스타일 */
+.nav-item.authenticated {
+  position: relative;
+}
+
+.nav-item.authenticated::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #4CAF50;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .bottom-navigation {
+    padding: 12px 0 16px 0; /* 모바일에서도 충분한 패딩 */
+    min-height: 70px; /* 모바일 최소 높이 */
+  }
+  
+  .nav-item {
+    padding: 10px 8px; /* 모바일 패딩 */
+    min-width: 80px; /* 모바일 최소 너비 */
+    min-height: 55px; /* 모바일 최소 높이 */
+    gap: 4px; /* 모바일 간격 조정 */
+  }
+  
+  .nav-label {
+    font-size: 11px; /* 모바일 폰트 크기 */
+  }
+  
+  .nav-icon {
+    width: 24px; /* 모바일 아이콘 크기 */
+    height: 24px;
+  }
+  
+  .user-avatar {
+    width: 24px; /* 모바일 아바타 크기 */
+    height: 24px;
+  }
+  
+  .avatar-initial {
+    font-size: 11px; /* 모바일 아바타 텍스트 크기 */
+  }
+}
+
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: dark) {
+  .bottom-navigation {
+    background: #1a1a1a;
+    border-top-color: #404040;
+  }
+  
+  .nav-item {
+    color: #e0e0e0; /* 다크 모드에서 더 밝은 기본 색상 */
+  }
+  
+  .nav-item:hover {
+    background: transparent;
+    color: #E53B45; /* 다크 모드에서도 빨간색 호버 */
+  }
+  
+  .nav-item.active {
+    background: #E53B45; /* 다크 모드에서도 빨간색 활성 상태 */
+    color: white;
+  }
+}

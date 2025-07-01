@@ -1,0 +1,208 @@
+/* RestaurantSection 스타일 */
+.restaurant-section {
+  margin-bottom: 32px;
+  padding: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0 0;
+  font-weight: 400;
+}
+
+.section-count {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 레스토랑 그리드 */
+.restaurant-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+/* 로딩 상태 */
+.section-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.section-loading .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f0f0f0;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.section-loading p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 에러 상태 */
+.section-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: #ffebee;
+  border-radius: 12px;
+  border: 1px solid #ffcdd2;
+}
+
+.error-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.section-error p {
+  color: #d32f2f;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.error-detail {
+  color: #666 !important;
+  font-size: 14px !important;
+}
+
+/* 빈 상태 */
+.section-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.empty-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.section-empty p {
+  color: #666;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.empty-detail {
+  color: #999 !important;
+  font-size: 14px !important;
+}
+
+/* 섹션 푸터 (더보기 버튼 등) */
+.section-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.view-more-button {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.view-more-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.view-more-button:disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 640px) {
+  .restaurant-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .section-header {
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .restaurant-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .section-title {
+    font-size: 22px;
+  }
+  
+  .restaurant-section {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .section-count {
+    align-self: flex-start;
+  }
+  
+  .section-title {
+    font-size: 18px;
+  }
+  
+  .restaurant-grid {
+    gap: 12px;
+  }
+}

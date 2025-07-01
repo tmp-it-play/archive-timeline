@@ -1,0 +1,56 @@
+@import './styles/reset.css';
+@import './styles/variables.css';
+@import './styles/fonts.css';
+
+html, body {
+  background-color: #F5F5F5;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--color-background);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 모바일 환경에서 스크롤바 숨기기 */
+@media (max-width: 768px) {
+  .app-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .app-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* 추가적인 공통 스타일 */
+.empty-message, .error-message {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.error-message {
+  color: var(--color-error);
+  background-color: rgba(255, 59, 48, 0.05);
+}
