@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/search")
+@CrossOrigin
 public class SearchController {
 
     private final SearchService searchService;

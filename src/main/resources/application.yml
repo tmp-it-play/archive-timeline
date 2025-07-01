@@ -39,4 +39,4 @@ app:
     tokenSecret: ${JWT_SECRET}
     tokenExpirationMsec: ${JWT_EXPIRATION:86400000}
   oauth2:
-    authorizedRedirectUris: /mobile/main
+    authorizedRedirectUris: http://localhost:3000/auth/callback

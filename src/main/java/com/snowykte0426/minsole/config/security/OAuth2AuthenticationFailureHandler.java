@@ -25,13 +25,18 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        // 실패 시에도 프론트엔드 콜백 페이지로 리다이렉트
         String targetUrl = cookieUtils.getCookie(request, "redirect_uri")
                 .map(Cookie::getValue)
-                .orElse("/");
+                .orElse("http://localhost:3000/auth/callback");
 
+        // 에러 메시지와 함께 프론트엔드로 리다이렉트
         targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("error", exception.getLocalizedMessage())
                 .build().toUriString();
+
+        logger.error("OAuth 인증 실패: " + exception.getMessage());
+        logger.info("에러와 함께 리다이렉트: " + targetUrl);
 
         cookieUtils.deleteCookie(request, response, "redirect_uri");
 

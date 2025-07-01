@@ -31,9 +31,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         this.tokenProvider = tokenProvider;
         this.cookieUtils = cookieUtils;
         
-        // OAuth 로그인 성공 후 기본 리디렉션 URL 설정 - 절대 경로로 설정
-        setDefaultTargetUrl("/mobile/main");
-        logger.info("기본 리디렉션 URL 설정: /mobile/main");
+        // OAuth 로그인 성공 후 프론트엔드 콜백 페이지로 리디렉션
+        setDefaultTargetUrl("http://localhost:3000/auth/callback");
+        logger.info("기본 리디렉션 URL 설정: http://localhost:3000/auth/callback");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         
         logger.info("Cookie에서 가져온 redirect_uri: " + redirectUri.orElse("(empty)"));
 
-        // 리디렉션 URI가 없으면 기본 URL 사용
+        // 리디렉션 URI가 없으면 기본 URL 사용 (프론트엔드 콜백 페이지)
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         logger.info("Target URL (인증 전): " + targetUrl);
         
@@ -71,6 +71,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String token = tokenProvider.createToken(authentication);
         logger.info("JWT 토큰 생성 완료");
 
+        // 프론트엔드 콜백 페이지로 JWT 토큰과 함께 리다이렉트
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
                 .build().toUriString();
@@ -96,14 +97,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             return authorizedRedirectUris
                     .stream()
                     .anyMatch(authorizedRedirectUri -> {
-                        // 경로 부분만 비교 (프로토콜, 호스트, 포트 무시)
-                        URI authorizedURI = URI.create(authorizedRedirectUri);
-                        String authorizedPath = authorizedURI.getPath();
-                        String redirectPath = clientRedirectUri.getPath();
+                        // URL 전체 비교
+                        logger.info("Comparing URIs: authorized='" + authorizedRedirectUri + "', redirect='" + uri + "'");
                         
-                        logger.info("Comparing paths: authorized='" + authorizedPath + "', redirect='" + redirectPath + "'");
-                        
-                        return redirectPath.startsWith(authorizedPath);
+                        return uri.startsWith(authorizedRedirectUri);
                     });
         } catch (Exception e) {
             logger.error("Error parsing redirect URI: " + uri, e);
