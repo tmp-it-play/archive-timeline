@@ -19,8 +19,12 @@ from ..models.schemas import (
 class BaseAgent(ABC):
     """모든 에이전트의 기본 클래스"""
     
-    def __init__(self, api_key: str, model: str = "gpt-4"):
-        self.client = openai.AsyncOpenAI(api_key=api_key)
+    def __init__(self, api_key: str = None, model: str = "gpt-4"):
+        self.api_key = api_key
+        if api_key:
+            self.client = openai.AsyncOpenAI(api_key=api_key)
+        else:
+            self.client = None
         self.model = model
         self.logger = logging.getLogger(self.__class__.__name__)
         
@@ -44,6 +48,10 @@ class BaseAgent(ABC):
         max_tokens: int = 1000
     ) -> str:
         """OpenAI API를 사용하여 응답 생성"""
+        # API 키가 없는 경우 테스트용 응답 반환
+        if not self.client:
+            return self._generate_mock_response(messages)
+        
         try:
             response = await self.client.chat.completions.create(
                 model=self.model,
@@ -55,6 +63,26 @@ class BaseAgent(ABC):
         except Exception as e:
             self.logger.error(f"OpenAI API 호출 실패: {e}")
             return "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+    
+    def _generate_mock_response(self, messages: List[Dict[str, str]]) -> str:
+        """테스트용 모의 응답 생성"""
+        user_message = messages[-1]['content'] if messages else ""
+        
+        # 키워드 기반 간단한 응답 생성
+        if any(keyword in user_message.lower() for keyword in ['안녕', 'hello', '안녕하세요']):
+            return "안녕하세요! 저는 DevMentor AI입니다. 🤖\n\n개발 관련 질문이나 학습 계획에 대해 도움을 드릴 수 있습니다. 무엇을 도와드릴까요?\n\n• 📚 학습 로드맵 작성\n• 🔍 코드 리뷰 및 개선\n• 🐛 문제 해결 지원\n• 💼 커리어 조언"
+        
+        elif any(keyword in user_message.lower() for keyword in ['로드맵', 'roadmap', '학습', '계획']):
+            return "학습 로드맵을 도와드리겠습니다! 📚\n\n현재 어떤 기술 스택에 관심이 있으신가요?\n\n**추천 학습 경로:**\n1. **백엔드 개발:** Java/Spring Boot → JPA → AWS\n2. **프론트엔드:** JavaScript → React → TypeScript\n3. **풀스택:** Python/FastAPI + React\n4. **모바일:** Flutter/Dart 또는 React Native\n\n구체적인 목표나 현재 수준을 알려주시면 더 맞춤형 조언을 드릴 수 있습니다!"
+        
+        elif any(keyword in user_message.lower() for keyword in ['에러', 'error', '문제', '오류']):
+            return "문제 해결을 도와드리겠습니다! 🔧\n\n더 정확한 도움을 위해 다음 정보를 알려주세요:\n\n1. **에러 메시지:** 정확한 오류 내용\n2. **환경 정보:** 사용 중인 언어, 프레임워크, 버전\n3. **상황 설명:** 언제, 어떤 상황에서 발생했는지\n4. **시도한 해결 방법:** 이미 시도해본 것들\n\n에러 로그나 코드를 공유해주시면 더 구체적인 해결책을 제시해드릴 수 있습니다."
+        
+        elif any(keyword in user_message.lower() for keyword in ['코드', 'code', '리뷰', 'review']):
+            return "코드 리뷰를 도와드리겠습니다! 👨‍💻\n\n다음 항목들을 중점적으로 검토해드릴 수 있습니다:\n\n**🔍 검토 항목:**\n• 코드 품질 및 가독성\n• 성능 최적화 포인트\n• 보안 취약점 체크\n• 베스트 프랙티스 적용\n• 리팩토링 제안\n\n코드를 공유해주시면 자세한 피드백을 드리겠습니다. 어떤 부분에 특히 집중해서 리뷰받고 싶으신가요?"
+        
+        else:
+            return f"질문해주셨군요! 🤔\n\n'{user_message}'에 대해 도움을 드리고 싶은데, 좀 더 구체적으로 설명해주실 수 있을까요?\n\n**도움을 드릴 수 있는 영역:**\n• 📖 학습 계획 및 로드맵\n• 🛠️ 기술 문제 해결\n• 📝 코드 리뷰 및 개선\n• 🎯 커리어 조언\n\n어떤 도움이 필요하신지 알려주세요!"
     
     def build_conversation_context(
         self, 

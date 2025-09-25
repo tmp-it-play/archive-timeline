@@ -142,46 +142,95 @@ async def get_chat_interface():
         <script>
             let ws;
             let sessionId = generateSessionId();
+            let isConnecting = false;
+            let reconnectAttempts = 0;
+            let maxReconnectAttempts = 5;
             
             function generateSessionId() {
                 return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             }
             
             function connectWebSocket() {
+                if (isConnecting) return;
+                isConnecting = true;
+                
+                document.getElementById('connection-status').textContent = '연결 중...';
+                
                 ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
                 
                 ws.onopen = function(event) {
+                    console.log('WebSocket 연결됨:', sessionId);
                     document.getElementById('connection-status').textContent = '연결됨';
                     document.getElementById('session-id').textContent = sessionId;
+                    isConnecting = false;
+                    reconnectAttempts = 0;
                 };
                 
                 ws.onmessage = function(event) {
-                    const data = JSON.parse(event.data);
-                    addBotMessage(data.response);
-                    updateSuggestedActions(data.suggested_actions);
+                    try {
+                        const data = JSON.parse(event.data);
+                        console.log('메시지 수신:', data);
+                        addBotMessage(data.response);
+                        updateSuggestedActions(data.suggested_actions);
+                    } catch (error) {
+                        console.error('메시지 파싱 오류:', error);
+                        addBotMessage('응답을 처리하는 중 오류가 발생했습니다.');
+                    }
                 };
                 
                 ws.onclose = function(event) {
+                    console.log('WebSocket 연결 종료:', event.code, event.reason);
                     document.getElementById('connection-status').textContent = '연결 끊김';
+                    isConnecting = false;
+                    
+                    if (reconnectAttempts < maxReconnectAttempts) {
+                        reconnectAttempts++;
+                        console.log(`재연결 시도 ${reconnectAttempts}/${maxReconnectAttempts}`);
+                        setTimeout(() => {
+                            connectWebSocket();
+                        }, 2000 * reconnectAttempts);
+                    } else {
+                        document.getElementById('connection-status').textContent = '연결 실패';
+                        addBotMessage('연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
+                    }
                 };
                 
                 ws.onerror = function(error) {
                     console.error('WebSocket 오류:', error);
                     document.getElementById('connection-status').textContent = '오류';
+                    isConnecting = false;
                 };
             }
             
-            function sendMessage() {
+            function sendMessage(customMessage) {
                 const input = document.getElementById('message-input');
-                const message = input.value.trim();
+                const message = customMessage || input.value.trim();
                 
-                if (message && ws.readyState === WebSocket.OPEN) {
+                if (!message) {
+                    alert('메시지를 입력해주세요.');
+                    return;
+                }
+                
+                if (ws.readyState === WebSocket.OPEN) {
                     addUserMessage(message);
-                    ws.send(JSON.stringify({
-                        message: message,
-                        session_id: sessionId
-                    }));
-                    input.value = '';
+                    
+                    try {
+                        ws.send(JSON.stringify({
+                            message: message,
+                            session_id: sessionId
+                        }));
+                        if (!customMessage) {
+                            input.value = '';
+                        }
+                    } catch (error) {
+                        console.error('메시지 전송 오류:', error);
+                        addBotMessage('메시지 전송 중 오류가 발생했습니다.');
+                    }
+                } else if (ws.readyState === WebSocket.CONNECTING) {
+                    addBotMessage('연결 중입니다. 잠시 후 다시 시도해주세요.');
+                } else {
+                    addBotMessage('연결이 끊어졌습니다. 재연결을 시도합니다...');
+                    connectWebSocket();
                 }
             }
             
@@ -207,10 +256,18 @@ async def get_chat_interface():
                 const actionsDiv = document.getElementById('suggested-actions');
                 if (actions && actions.length > 0) {
                     actionsDiv.innerHTML = '💡 제안된 액션: ' + 
-                        actions.map(action => `<button class="action-btn" onclick="sendMessage('${action}')">${action}</button>`).join('');
+                        actions.map(action => `<button class="action-btn" onclick="sendMessage('${action.replace(/'/g, "\\'")}')">${action}</button>`).join('');
                 } else {
                     actionsDiv.innerHTML = '';
                 }
+            }
+            
+            function reconnectWebSocket() {
+                if (ws) {
+                    ws.close();
+                }
+                reconnectAttempts = 0;
+                connectWebSocket();
             }
             
             function handleKeyPress(event) {
@@ -223,6 +280,21 @@ async def get_chat_interface():
             window.onload = function() {
                 connectWebSocket();
             };
+            
+            // 페이지 언로드 시 연결 정리
+            window.onbeforeunload = function() {
+                if (ws) {
+                    ws.close();
+                }
+            };
+            
+            // 연결 상태 모니터링
+            setInterval(function() {
+                if (ws && ws.readyState === WebSocket.CLOSED && !isConnecting) {
+                    console.log('연결 상태 확인: 끊어짐 감지, 재연결 시도');
+                    connectWebSocket();
+                }
+            }, 5000);
         </script>
     </body>
     </html>

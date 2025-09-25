@@ -19,6 +19,8 @@ class MentorService:
     
     def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
+        if not self.api_key:
+            print("⚠️ WARNING: OPENAI_API_KEY not found. Using mock responses for testing.")
         self.agents: Dict[str, BaseAgent] = {}
         self._initialize_agents()
         self.sessions: Dict[str, SessionContext] = {}
@@ -76,8 +78,7 @@ class MentorService:
             "코드", "리뷰", "분석", "최적화", "개선", "품질",
             "code", "review", "analyze", "optimize", "improve", "quality", "```"
         ]
-        
-        # 학습/커리어 관련 키워드 검사  
+
         mentor_keywords = [
             "로드맵", "학습", "커리어", "계획", "공부", "추천", "진로",
             "roadmap", "learning", "career", "study", "recommend", "guide"
