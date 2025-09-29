@@ -1,8 +1,3 @@
-"""
-DevMentor Agent - 기본 에이전트 클래스
-모든 전문 에이전트들의 기본 클래스 정의
-"""
-
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List, Optional
 import openai
@@ -17,7 +12,6 @@ from ..models.schemas import (
 
 
 class BaseAgent(ABC):
-    """모든 에이전트의 기본 클래스"""
     
     def __init__(self, api_key: str = None, model: str = "gpt-4"):
         self.api_key = api_key
@@ -34,12 +28,10 @@ class BaseAgent(ABC):
         message: str, 
         context: SessionContext
     ) -> MentorResponse:
-        """요청을 처리하고 응답을 생성"""
         pass
     
     @abstractmethod
     def get_system_prompt(self, context: SessionContext) -> str:
-        """시스템 프롬프트 생성"""
         pass
     
     async def generate_response(
@@ -47,8 +39,6 @@ class BaseAgent(ABC):
         messages: List[Dict[str, str]], 
         max_tokens: int = 1000
     ) -> str:
-        """OpenAI API를 사용하여 응답 생성"""
-        # API 키가 없는 경우 테스트용 응답 반환
         if not self.client:
             return self._generate_mock_response(messages)
         
@@ -65,10 +55,8 @@ class BaseAgent(ABC):
             return "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
     
     def _generate_mock_response(self, messages: List[Dict[str, str]]) -> str:
-        """테스트용 모의 응답 생성"""
         user_message = messages[-1]['content'] if messages else ""
-        
-        # 키워드 기반 간단한 응답 생성
+
         if any(keyword in user_message.lower() for keyword in ['안녕', 'hello', '안녕하세요']):
             return "안녕하세요! 저는 DevMentor AI입니다. 🤖\n\n개발 관련 질문이나 학습 계획에 대해 도움을 드릴 수 있습니다. 무엇을 도와드릴까요?\n\n• 📚 학습 로드맵 작성\n• 🔍 코드 리뷰 및 개선\n• 🐛 문제 해결 지원\n• 💼 커리어 조언"
         
@@ -89,24 +77,20 @@ class BaseAgent(ABC):
         context: SessionContext, 
         current_message: str
     ) -> List[Dict[str, str]]:
-        """대화 컨텍스트 구성"""
         messages = [
             {"role": "system", "content": self.get_system_prompt(context)}
         ]
-        
-        # 최근 대화 히스토리 추가 (최대 10개)
+
         recent_history = context.conversation_history[-10:]
         for msg in recent_history:
             role = "user" if msg.is_user else "assistant"
             messages.append({"role": role, "content": msg.content})
-        
-        # 현재 메시지 추가
+
         messages.append({"role": "user", "content": current_message})
         
         return messages
     
     def extract_user_skill_context(self, user_profile: UserProfile) -> str:
-        """사용자 기술 정보를 텍스트로 변환"""
         skills_text = []
         for skill, level in user_profile.skills.items():
             skills_text.append(f"{skill}: {level.value}")
@@ -121,8 +105,6 @@ class BaseAgent(ABC):
 
 
 class MentorAgent(BaseAgent):
-    """학습 로드맵 및 커리어 가이드 전담 에이전트"""
-    
     def get_system_prompt(self, context: SessionContext) -> str:
         user_context = self.extract_user_skill_context(context.user_profile)
         
@@ -153,12 +135,9 @@ class MentorAgent(BaseAgent):
         message: str, 
         context: SessionContext
     ) -> MentorResponse:
-        """멘토링 요청 처리"""
         messages = self.build_conversation_context(context, message)
         
         response_content = await self.generate_response(messages)
-        
-        # 응답 분석 및 메타데이터 추출
         metadata = self._analyze_response_metadata(message, response_content)
         suggested_actions = self._extract_suggested_actions(response_content)
         
@@ -174,7 +153,6 @@ class MentorAgent(BaseAgent):
         user_message: str, 
         response: str
     ) -> Dict[str, Any]:
-        """응답에서 메타데이터 추출"""
         metadata = {
             "topic_detected": self._detect_topic(user_message),
             "skill_level_mentioned": self._detect_skill_level(response),
@@ -183,7 +161,6 @@ class MentorAgent(BaseAgent):
         return metadata
     
     def _detect_topic(self, message: str) -> str:
-        """메시지에서 주제 감지"""
         keywords = {
             "roadmap": ["로드맵", "학습", "계획", "roadmap", "learning"],
             "career": ["커리어", "취업", "이직", "career", "job"],
@@ -198,7 +175,6 @@ class MentorAgent(BaseAgent):
         return "general"
     
     def _detect_skill_level(self, response: str) -> Optional[str]:
-        """응답에서 언급된 스킬 레벨 감지"""
         levels = ["초급", "중급", "고급", "전문가", "beginner", "intermediate", "advanced", "expert"]
         for level in levels:
             if level in response.lower():
@@ -206,7 +182,6 @@ class MentorAgent(BaseAgent):
         return None
     
     def _extract_technologies(self, response: str) -> List[str]:
-        """응답에서 언급된 기술들 추출"""
         technologies = [
             "Java", "Kotlin", "Python", "JavaScript", "TypeScript", 
             "React", "SpringBoot", "Flask", "FastAPI", "AWS", "Docker"
@@ -220,8 +195,6 @@ class MentorAgent(BaseAgent):
         return mentioned
     
     def _extract_suggested_actions(self, response: str) -> List[str]:
-        """응답에서 제안된 액션들 추출"""
-        # 간단한 패턴 매칭으로 행동 제안 추출
         action_patterns = [
             "추천", "시작해보세요", "학습하세요", "연습해보세요", 
             "프로젝트를 만들어보세요", "공부해보세요"
@@ -236,4 +209,4 @@ class MentorAgent(BaseAgent):
                     actions.append(sentence.strip())
                     break
         
-        return actions[:3]  # 최대 3개까지
+        return actions[:3]

@@ -1,8 +1,3 @@
-"""
-DevMentor Agent - 코드 리뷰 전담 에이전트
-코드 분석, 품질 개선, 베스트 프랙티스 제안
-"""
-
 import re
 import ast
 from typing import Dict, Any, List, Optional
@@ -14,8 +9,6 @@ from .base_agent import BaseAgent
 
 
 class CodeReviewAgent(BaseAgent):
-    """코드 리뷰 및 분석 전담 에이전트"""
-    
     def __init__(self, api_key: str, model: str = "gpt-4"):
         super().__init__(api_key, model)
         self.code_patterns = self._load_code_patterns()
@@ -134,8 +127,7 @@ class CodeReviewAgent(BaseAgent):
                 r'INSERT\s+INTO', r'UPDATE\s+\w+'
             ]
         }
-        
-        # 메시지에서 언어 명시적 언급 확인
+
         for lang in ProgrammingLanguage:
             if lang.value.lower() in message.lower():
                 return lang

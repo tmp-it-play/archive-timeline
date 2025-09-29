@@ -80,11 +80,8 @@ class RoadmapRequest(BaseModel):
     target_skills: List[str]
     timeline_weeks: int = 12
 
-# 라우트 정의
-
 @app.get("/", response_class=HTMLResponse)
 async def get_chat_interface():
-    """메인 채팅 인터페이스 페이지"""
     html_content = """
     <!DOCTYPE html>
     <html>
@@ -276,19 +273,16 @@ async def get_chat_interface():
                 }
             }
             
-            // 페이지 로드 시 WebSocket 연결
             window.onload = function() {
                 connectWebSocket();
             };
             
-            // 페이지 언로드 시 연결 정리
             window.onbeforeunload = function() {
                 if (ws) {
                     ws.close();
                 }
             };
             
-            // 연결 상태 모니터링
             setInterval(function() {
                 if (ws && ws.readyState === WebSocket.CLOSED && !isConnecting) {
                     console.log('연결 상태 확인: 끊어짐 감지, 재연결 시도');
@@ -303,22 +297,18 @@ async def get_chat_interface():
 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
-    """WebSocket 연결 처리"""
     await manager.connect(websocket, session_id)
     try:
         while True:
-            # 클라이언트로부터 메시지 수신
             data = await websocket.receive_text()
             message_data = json.loads(data)
-            
-            # 멘토링 서비스로 메시지 처리
+
             response = await mentor_service.process_message(
                 session_id=session_id,
                 message=message_data["message"],
                 user_profile=message_data.get("user_profile")
             )
-            
-            # 응답 전송
+
             await manager.send_message(session_id, {
                 "response": response.content,
                 "response_type": response.response_type,
@@ -331,13 +321,10 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
-    """REST API 채팅 엔드포인트"""
     try:
-        # 세션 ID 생성 (없는 경우)
         if not request.session_id:
             request.session_id = f"session_{uuid.uuid4().hex[:8]}"
-        
-        # 멘토링 서비스로 메시지 처리
+
         response = await mentor_service.process_message(
             session_id=request.session_id,
             message=request.message,
@@ -358,7 +345,6 @@ async def chat_endpoint(request: ChatRequest):
 
 @app.get("/api/session/{session_id}")
 async def get_session_info(session_id: str):
-    """세션 정보 조회"""
     session_info = mentor_service.get_session_info(session_id)
     if session_info:
         return session_info
@@ -367,7 +353,6 @@ async def get_session_info(session_id: str):
 
 @app.put("/api/profile/{session_id}")
 async def update_profile(session_id: str, profile_updates: ProfileUpdateRequest):
-    """사용자 프로필 업데이트"""
     success = mentor_service.update_user_profile(
         session_id=session_id,
         profile_updates=profile_updates.dict(exclude_unset=True)
@@ -380,7 +365,6 @@ async def update_profile(session_id: str, profile_updates: ProfileUpdateRequest)
 
 @app.post("/api/roadmap/{session_id}")
 async def generate_roadmap(session_id: str, request: RoadmapRequest):
-    """학습 로드맵 생성"""
     roadmap = mentor_service.generate_learning_roadmap(
         session_id=session_id,
         target_skills=request.target_skills,
@@ -394,7 +378,6 @@ async def generate_roadmap(session_id: str, request: RoadmapRequest):
 
 @app.get("/api/health")
 async def health_check():
-    """헬스 체크 엔드포인트"""
     return {
         "status": "healthy",
         "service": "DevMentor Agent",

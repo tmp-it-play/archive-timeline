@@ -1,8 +1,3 @@
-"""
-DevMentor Agent - 데이터 모델 정의
-개발자 멘토링을 위한 핵심 데이터 구조들
-"""
-
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from enum import Enum
@@ -10,7 +5,6 @@ import datetime
 
 
 class SkillLevel(str, Enum):
-    """기술 숙련도 레벨"""
     BEGINNER = "beginner"
     INTERMEDIATE = "intermediate"
     ADVANCED = "advanced"
@@ -18,7 +12,6 @@ class SkillLevel(str, Enum):
 
 
 class ProgrammingLanguage(str, Enum):
-    """지원하는 프로그래밍 언어"""
     JAVA = "java"
     KOTLIN = "kotlin"
     PYTHON = "python"
@@ -33,7 +26,6 @@ class ProgrammingLanguage(str, Enum):
 
 
 class TechStack(str, Enum):
-    """지원하는 기술 스택"""
     SPRING_BOOT = "springboot"
     FLASK = "flask"
     FASTAPI = "fastapi"
@@ -43,7 +35,6 @@ class TechStack(str, Enum):
 
 
 class TheoryArea(str, Enum):
-    """이론 분야"""
     RDB_BASICS = "rdb_basics"
     NOSQL_REDIS = "nosql_redis"
     NOSQL_MONGODB = "nosql_mongodb"
@@ -67,7 +58,6 @@ class CodeAnalysisRequest(BaseModel):
 
 
 class CodeAnalysisResult(BaseModel):
-    """코드 분석 결과 모델"""
     issues: List[Dict[str, Any]]
     suggestions: List[str]
     quality_score: float
@@ -75,7 +65,6 @@ class CodeAnalysisResult(BaseModel):
 
 
 class UserProfile(BaseModel):
-    """사용자 프로필 모델"""
     user_id: str
     name: Optional[str] = None
     skills: Dict[str, SkillLevel] = {}
@@ -85,19 +74,17 @@ class UserProfile(BaseModel):
 
 
 class LearningRoadmap(BaseModel):
-    """학습 로드맵 모델"""
     roadmap_id: str
     user_id: str
     title: str
     description: str
     milestones: List[Dict[str, Any]]
-    estimated_duration: int  # weeks
+    estimated_duration: int
     difficulty: SkillLevel
     tech_stack: List[str]
 
 
 class SessionContext(BaseModel):
-    """세션 컨텍스트 모델"""
     session_id: str
     user_profile: UserProfile
     conversation_history: List[ChatMessage] = []
@@ -106,15 +93,13 @@ class SessionContext(BaseModel):
 
 
 class MentorResponse(BaseModel):
-    """멘토 응답 모델"""
     content: str
-    response_type: str  # advice, roadmap, code_review, troubleshooting
+    response_type: str
     metadata: Dict[str, Any] = {}
     suggested_actions: List[str] = []
 
 
 class TroubleshootingCase(BaseModel):
-    """트러블슈팅 케이스 모델"""
     error_type: str
     error_message: str
     language: ProgrammingLanguage

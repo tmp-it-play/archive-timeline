@@ -1,8 +1,3 @@
-"""
-DevMentor Agent - 트러블슈팅 전담 에이전트
-에러 디버깅 및 문제 해결 지원
-"""
-
 import re
 from typing import Dict, Any, List, Optional
 from ..models.schemas import (
@@ -54,16 +49,12 @@ class TroubleshootingAgent(BaseAgent):
         message: str, 
         context: SessionContext
     ) -> MentorResponse:
-        """트러블슈팅 요청 처리"""
-
         error_info = self._extract_error_info(message)
         
         if error_info:
-            # 알려진 에러 패턴 매칭
             known_solution = self._match_known_errors(error_info)
             
             if known_solution:
-                # 알려진 해결책이 있는 경우
                 response_content = self._format_known_solution(known_solution, error_info)
                 metadata = {
                     "error_detected": True,
@@ -72,7 +63,6 @@ class TroubleshootingAgent(BaseAgent):
                     "solution_found": True
                 }
             else:
-                # AI로 분석 필요한 경우
                 messages = self.build_conversation_context(context, message)
                 response_content = await self.generate_response(messages, max_tokens=1500)
                 metadata = {
@@ -82,7 +72,6 @@ class TroubleshootingAgent(BaseAgent):
                     "solution_found": False
                 }
         else:
-            # 일반적인 트러블슈팅 질문
             messages = self.build_conversation_context(context, message)
             response_content = await self.generate_response(messages)
             metadata = {"error_detected": False}
@@ -97,10 +86,8 @@ class TroubleshootingAgent(BaseAgent):
         )
     
     def _extract_error_info(self, message: str) -> Optional[Dict[str, Any]]:
-        """메시지에서 에러 정보 추출"""
         error_info = {}
-        
-        # 에러 메시지 패턴 검색
+
         error_patterns = [
             r'(Error|Exception|에러|오류):\s*(.+)',
             r'Traceback.*?(\w+Error):\s*(.+)',
@@ -122,8 +109,7 @@ class TroubleshootingAgent(BaseAgent):
                 else:
                     error_info["message"] = match.group(1).strip()
                 break
-        
-        # 언어 감지
+
         language_keywords = {
             "python": ["python", "py", "pip", "conda", "django", "flask"],
             "java": ["java", "javac", "maven", "gradle", "springframework"],
@@ -138,8 +124,6 @@ class TroubleshootingAgent(BaseAgent):
             if any(keyword in message_lower for keyword in keywords):
                 error_info["language"] = lang
                 break
-        
-        # 스택 트레이스 추출
         stack_trace_pattern = r'(Traceback.*?(?=\n\n|\n[A-Za-z]|\Z))'
         stack_match = re.search(stack_trace_pattern, message, re.DOTALL)
         if stack_match:
@@ -148,11 +132,9 @@ class TroubleshootingAgent(BaseAgent):
         return error_info if error_info else None
     
     def _match_known_errors(self, error_info: Dict[str, Any]) -> Optional[TroubleshootingCase]:
-        """알려진 에러 패턴과 매칭"""
         error_message = error_info.get("message", "").lower()
         error_type = error_info.get("type", "").lower()
-        
-        # 일반적인 Python 에러들
+
         if "python" in error_info.get("language", ""):
             if "modulenotfounderror" in error_type or "no module named" in error_message:
                 return TroubleshootingCase(
@@ -190,8 +172,7 @@ class TroubleshootingAgent(BaseAgent):
                         "https://docs.python.org/3/reference/lexical_analysis.html#indentation"
                     ]
                 )
-        
-        # JavaScript/Node.js 에러들
+
         elif "javascript" in error_info.get("language", "") or "node" in error_info.get("language", ""):
             if "cannot find module" in error_message:
                 return TroubleshootingCase(
@@ -219,7 +200,6 @@ class TroubleshootingAgent(BaseAgent):
         solution: TroubleshootingCase, 
         error_info: Dict[str, Any]
     ) -> str:
-        """알려진 해결책 포맷팅"""
         response = f"""🔍 **에러 분석**
 에러 타입: {solution.error_type}
 언어: {solution.language.value}
@@ -254,14 +234,12 @@ class TroubleshootingAgent(BaseAgent):
         self, 
         error_info: Optional[Dict[str, Any]]
     ) -> List[str]:
-        """트러블슈팅 액션 제안"""
         actions = []
         
         if error_info:
             language = error_info.get("language", "")
             error_type = error_info.get("type", "").lower()
-            
-            # 언어별 기본 액션
+
             if "python" in language:
                 actions.extend([
                     "pip list로 설치된 패키지 확인",
@@ -274,16 +252,14 @@ class TroubleshootingAgent(BaseAgent):
                     "Node.js 버전 확인",
                     "package.json 의존성 확인"
                 ])
-            
-            # 에러 타입별 액션
+
             if "module" in error_type or "import" in error_type:
                 actions.append("패키지 재설치 시도")
             elif "syntax" in error_type:
                 actions.append("문법 검사 도구 실행")
             elif "type" in error_type:
                 actions.append("변수 타입 확인")
-        
-        # 일반적인 디버깅 액션
+
         actions.extend([
             "로그 레벨 상세히 설정",
             "단계별 디버깅 수행",
@@ -293,7 +269,6 @@ class TroubleshootingAgent(BaseAgent):
         return actions[:5]  # 최대 5개까지
     
     def _load_error_patterns(self) -> Dict[str, List[str]]:
-        """에러 패턴 데이터베이스 로드"""
         return {
             "python": [
                 r"ModuleNotFoundError: No module named '(.+)'",
@@ -318,7 +293,6 @@ class TroubleshootingAgent(BaseAgent):
         }
     
     def _load_solution_database(self) -> Dict[str, Any]:
-        """해결책 데이터베이스 로드"""
         return {
             "common_solutions": {
                 "module_not_found": {
