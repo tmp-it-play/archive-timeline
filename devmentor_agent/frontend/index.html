@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevMentor Agent</title>
+
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- DOMPurify for XSS protection -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🤖</span>
+                    <h1>DevMentor Agent</h1>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="connection-status">연결 중...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <span>🤖</span>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender-name">DevMentor</span>
+                                <span class="timestamp" id="welcome-time"></span>
+                            </div>
+                            <div class="message-body markdown-content">
+                                <h3>안녕하세요! 저는 개발자 멘토링 AI입니다. 🚀</h3>
+                                <p>다음과 같은 도움을 드릴 수 있어요:</p>
+                                <ul>
+                                    <li>📚 <strong>맞춤형 학습 로드맵</strong> 제공</li>
+                                    <li>🔍 <strong>코드 리뷰 및 품질 개선</strong></li>
+                                    <li>🐛 <strong>에러 디버깅 및 트러블슈팅</strong></li>
+                                    <li>💼 <strong>커리어 가이드 및 기술 상담</strong></li>
+                                </ul>
+                                <p>무엇을 도와드릴까요?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Actions -->
+                <div class="suggested-actions" id="suggested-actions"></div>
+
+                <!-- Input Area -->
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea
+                            id="message-input"
+                            placeholder="질문을 입력하세요... (Shift + Enter로 줄바꿈, Enter로 전송)"
+                            rows="1"
+                        ></textarea>
+                        <button id="send-button" class="send-button" onclick="sendMessage()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22,2 15,22 11,13 2,9 22,2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <span class="session-info">세션 ID: <span id="session-id">생성 중...</span></span>
+                        <div class="input-actions">
+                            <button class="clear-button" onclick="clearChat()">대화 지우기</button>
+                            <button class="reconnect-button" onclick="reconnectWebSocket()">재연결</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+        <span>응답을 생성 중입니다...</span>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
