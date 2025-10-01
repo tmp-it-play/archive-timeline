@@ -291,7 +291,8 @@ class DevMentorChat {
             const agentEmojis = {
                 'mentor': '🎓',
                 'code_review': '🔍',
-                'troubleshooting': '🔧'
+                'troubleshooting': '🔧',
+                'general': '💬'  // 새로 추가
             };
             avatar.innerHTML = agentEmojis[metadata.selected_agent] || '🤖';
         } else {
@@ -314,7 +315,8 @@ class DevMentorChat {
             const agentNames = {
                 'mentor': '멘토 에이전트',
                 'code_review': '코드 리뷰 에이전트',
-                'troubleshooting': '트러블슈팅 에이전트'
+                'troubleshooting': '트러블슈팅 에이전트',
+                'general': '일반 에이전트'  // 새로 추가
             };
             senderName.textContent = agentNames[metadata.selected_agent] || 'DevMentor';
         } else {

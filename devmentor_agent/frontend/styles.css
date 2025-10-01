@@ -570,3 +570,7 @@ body {
 .message.bot-message[data-agent="troubleshooting"] .message-avatar {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
+
+.message.bot-message[data-agent="general"] .message-avatar {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
