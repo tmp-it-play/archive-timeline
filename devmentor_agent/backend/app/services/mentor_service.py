@@ -1,15 +1,16 @@
+import datetime
 import os
 import re
-import datetime
 from typing import Dict, Any, Optional
+
 from ..agents.base_agent import MentorAgent, BaseAgent
 from ..agents.code_review_agent import CodeReviewAgent
-from ..agents.troubleshooting_agent import TroubleshootingAgent
 from ..agents.general_agent import GeneralAgent
 from ..agents.router_agent import RouterAgent
+from ..agents.troubleshooting_agent import TroubleshootingAgent
 from ..models.schemas import (
-    SessionContext, MentorResponse, UserProfile, 
-    ChatMessage, ProgrammingLanguage
+    SessionContext, MentorResponse, UserProfile,
+    ChatMessage
 )
 
 
@@ -18,7 +19,7 @@ class MentorService:
     def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            print("⚠️ WARNING: OPENAI_API_KEY not found. Using mock responses for testing.")
+            print("WARNING: OPENAI_API_KEY not found. Using mock responses for testing.")
         self.agents: Dict[str, BaseAgent] = {}
         self.router: RouterAgent = RouterAgent(self.api_key)
         self._initialize_agents()
@@ -28,7 +29,7 @@ class MentorService:
         self.agents["mentor"] = MentorAgent(self.api_key)
         self.agents["code_review"] = CodeReviewAgent(self.api_key)
         self.agents["troubleshooting"] = TroubleshootingAgent(self.api_key)
-        self.agents["general"] = GeneralAgent(self.api_key)  # 새로 추가
+        self.agents["general"] = GeneralAgent(self.api_key)
 
     async def process_message(
         self, 
@@ -38,20 +39,17 @@ class MentorService:
     ) -> MentorResponse:
         context = self._get_or_create_session(session_id, user_profile)
 
-        # AI 기반 라우터로 에이전트 선택
         router_decision = await self.router.route_query(message, context.conversation_history)
 
-        print(f"🤖 라우터 결정: {router_decision.agent_type} (신뢰도: {router_decision.confidence:.2f})")
-        print(f"📝 선택 이유: {router_decision.reasoning}")
+        print(f"라우터 결정: {router_decision.agent_type} (신뢰도: {router_decision.confidence:.2f})")
+        print(f"선택 이유: {router_decision.reasoning}")
 
         agent = self.agents[router_decision.agent_type]
         response = await agent.process_request(message, context)
 
-        # 라우터의 제안 액션을 응답에 추가
         if router_decision.suggested_actions:
-            response.suggested_actions.extend(router_decision.suggested_actions[:3])  # 최대 3개
+            response.suggested_actions.extend(router_decision.suggested_actions[:3])
 
-        # 라우터 정보를 메타데이터에 추가
         response.metadata.update({
             "selected_agent": router_decision.agent_type,
             "agent_confidence": router_decision.confidence,

@@ -6,9 +6,7 @@ from pydantic import BaseModel
 from typing import Dict, List, Optional
 import json
 import uuid
-import asyncio
 import logging
-import os
 
 import sys
 import os
@@ -34,7 +32,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static files for frontend
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 if os.path.exists(frontend_path):
     app.mount("/static", StaticFiles(directory=frontend_path), name="static")
@@ -86,14 +83,13 @@ class RoadmapRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def get_chat_interface():
-    """새로운 모던한 DevMentor 인터페이스 제공"""
     frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
     index_file = os.path.join(frontend_path, "index.html")
 
     if os.path.exists(index_file):
         return FileResponse(index_file)
     else:
-        # Fallback to embedded HTML if frontend files don't exist
+
         return HTMLResponse(content="""
         <!DOCTYPE html>
         <html>
@@ -106,7 +102,7 @@ async def get_chat_interface():
             </style>
         </head>
         <body>
-            <h1>🤖 DevMentor Agent</h1>
+            <h1>DevMentor Agent</h1>
             <div class="error">
                 <p>프론트엔드 파일을 찾을 수 없습니다.</p>
                 <p>다음 경로를 확인해주세요: {}</p>
@@ -117,7 +113,6 @@ async def get_chat_interface():
 
 @app.get("/styles.css")
 async def get_styles():
-    """CSS 파일 제공"""
     frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
     css_file = os.path.join(frontend_path, "styles.css")
 
@@ -128,7 +123,6 @@ async def get_styles():
 
 @app.get("/script.js")
 async def get_script():
-    """JavaScript 파일 제공"""
     frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
     js_file = os.path.join(frontend_path, "script.js")
 
@@ -140,15 +134,14 @@ async def get_script():
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
     client_host = websocket.client.host if websocket.client else "unknown"
-    logger.info(f"🔌 WebSocket 연결 요청: {session_id} from {client_host}")
+    logger.info(f"WebSocket 연결 요청: {session_id} from {client_host}")
 
     try:
         await manager.connect(websocket, session_id)
-        logger.info(f"✅ WebSocket 연결 성공: {session_id}")
+        logger.info(f"WebSocket 연결 성공: {session_id}")
 
-        # 연결 성공 확인 메시지 전송
         await manager.send_message(session_id, {
-            "response": "서버에 성공적으로 연결되었습니다! 🎉",
+            "response": "서버에 성공적으로 연결되었습니다!",
             "response_type": "system",
             "metadata": {"connection_status": "connected"},
             "suggested_actions": []
@@ -156,29 +149,26 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
         while True:
             try:
-                # 메시지 수신 대기
                 data = await websocket.receive_text()
-                logger.info(f"📨 메시지 수신 from {session_id}: {data[:100]}...")
+                logger.info(f"메시지 수신 from {session_id}: {data[:100]}...")
 
                 message_data = json.loads(data)
                 user_message = message_data.get("message", "").strip()
 
                 if not user_message:
-                    logger.warning(f"⚠️ 빈 메시지 수신: {session_id}")
+                    logger.warning(f"빈 메시지 수신: {session_id}")
                     continue
 
-                logger.info(f"🤖 처리 시작: {session_id} - {user_message[:50]}...")
+                logger.info(f"처리 시작: {session_id} - {user_message[:50]}...")
 
-                # 메시지 처리
                 response = await mentor_service.process_message(
                     session_id=session_id,
                     message=user_message,
                     user_profile=message_data.get("user_profile")
                 )
 
-                logger.info(f"📤 응답 전송 to {session_id}: {response.content[:50]}...")
+                logger.info(f"응답 전송 to {session_id}: {response.content[:50]}...")
 
-                # 응답 전송
                 await manager.send_message(session_id, {
                     "response": response.content,
                     "response_type": response.response_type,
@@ -187,7 +177,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                 })
 
             except json.JSONDecodeError as e:
-                logger.error(f"❌ JSON 파싱 오류 {session_id}: {e}")
+                logger.error(f"JSON 파싱 오류 {session_id}: {e}")
                 await manager.send_message(session_id, {
                     "response": "메시지 형식이 올바르지 않습니다.",
                     "response_type": "error",
@@ -195,7 +185,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                     "suggested_actions": []
                 })
             except Exception as e:
-                logger.error(f"❌ 메시지 처리 오류 {session_id}: {e}", exc_info=True)
+                logger.error(f"메시지 처리 오류 {session_id}: {e}", exc_info=True)
                 await manager.send_message(session_id, {
                     "response": f"처리 중 오류가 발생했습니다: {str(e)}",
                     "response_type": "error",
@@ -204,10 +194,10 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                 })
 
     except WebSocketDisconnect:
-        logger.info(f"🔌 WebSocket 정상 연결 해제: {session_id}")
+        logger.info(f"WebSocket 정상 연결 해제: {session_id}")
         manager.disconnect(session_id)
     except Exception as e:
-        logger.error(f"❌ WebSocket 연결 오류 {session_id}: {e}", exc_info=True)
+        logger.error(f"WebSocket 연결 오류 {session_id}: {e}", exc_info=True)
         manager.disconnect(session_id)
 
 @app.post("/api/chat", response_model=ChatResponse)

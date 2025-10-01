@@ -51,38 +51,36 @@ class TroubleshootingAgent(BaseAgent):
     ) -> MentorResponse:
         error_info = self._extract_error_info(message)
         
-        if error_info:
-            known_solution = self._match_known_errors(error_info)
-            
-            if known_solution:
-                response_content = self._format_known_solution(known_solution, error_info)
-                metadata = {
-                    "error_detected": True,
-                    "error_type": error_info.get("type", "unknown"),
-                    "language": error_info.get("language", "unknown"),
-                    "solution_found": True
-                }
-            else:
-                messages = self.build_conversation_context(context, message)
-                response_content = await self.generate_response(messages, max_tokens=1500)
-                metadata = {
-                    "error_detected": True,
-                    "error_type": error_info.get("type", "unknown"),
-                    "language": error_info.get("language", "unknown"),
-                    "solution_found": False
-                }
-        else:
-            messages = self.build_conversation_context(context, message)
-            response_content = await self.generate_response(messages)
-            metadata = {"error_detected": False}
-        
-        suggested_actions = self._generate_troubleshooting_actions(error_info)
-        
+        if not error_info:
+            return MentorResponse(
+                content=self._generate_general_troubleshooting_response(message),
+                response_type="troubleshooting_general",
+                metadata={"has_error": False},
+                suggested_actions=[
+                    "구체적인 에러 메시지를 포함해서 질문해보세요",
+                    "실행 환경 정보를 알려주세요",
+                    "문제 발생 단계를 설명해주세요"
+                ]
+            )
+
+        troubleshooting_case = TroubleshootingCase(
+            error_message=error_info["message"],
+            language=error_info["language"],
+            context_info=error_info["context"]
+        )
+
+        analysis_result = await self._analyze_error(troubleshooting_case, context)
+        response_content = self._format_troubleshooting_response(analysis_result)
+
         return MentorResponse(
             content=response_content,
             response_type="troubleshooting",
-            metadata=metadata,
-            suggested_actions=suggested_actions
+            metadata={
+                "error_type": error_info.get("type", "unknown"),
+                "language": error_info["language"].value if error_info["language"] else None,
+                "confidence": analysis_result.get("confidence", 0.8)
+            },
+            suggested_actions=self._generate_troubleshooting_actions(analysis_result)
         )
     
     def _extract_error_info(self, message: str) -> Optional[Dict[str, Any]]:

@@ -1,5 +1,3 @@
-// DevMentor Agent - Modern JavaScript with Markdown Support
-
 class DevMentorChat {
     constructor() {
         this.ws = null;
@@ -30,10 +28,8 @@ class DevMentorChat {
     }
 
     setupEventListeners() {
-        // Send button click
         this.elements.sendButton.addEventListener('click', () => this.sendMessage());
 
-        // Enter key handling
         this.elements.messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -41,19 +37,16 @@ class DevMentorChat {
             }
         });
 
-        // Auto-resize textarea
         this.elements.messageInput.addEventListener('input', () => {
             this.autoResizeTextarea();
         });
 
-        // Window unload
         window.addEventListener('beforeunload', () => {
             if (this.ws) {
                 this.ws.close();
             }
         });
 
-        // Periodic connection check
         setInterval(() => {
             if (this.ws && this.ws.readyState === WebSocket.CLOSED && !this.isConnecting) {
                 console.log('연결 상태 확인: 끊어짐 감지, 재연결 시도');
@@ -63,7 +56,6 @@ class DevMentorChat {
     }
 
     setupMarkdown() {
-        // Configure marked for better rendering
         marked.setOptions({
             highlight: function(code, lang) {
                 if (lang && hljs.getLanguage(lang)) {
@@ -102,7 +94,6 @@ class DevMentorChat {
 
         this.updateConnectionStatus('연결 중...', 'connecting');
 
-        // WebSocket URL 생성 개선
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host || 'localhost:8000';
         const wsUrl = `${protocol}//${host}/ws/${this.sessionId}`;
@@ -112,22 +103,20 @@ class DevMentorChat {
         this.ws = new WebSocket(wsUrl);
 
         this.ws.onopen = (event) => {
-            console.log('✅ WebSocket 연결 성공:', this.sessionId);
+            console.log('WebSocket 연결 성공:', this.sessionId);
             this.updateConnectionStatus('연결됨', 'connected');
             this.elements.sessionId.textContent = this.sessionId;
             this.isConnecting = false;
             this.reconnectAttempts = 0;
 
-            // 연결 성공 메시지 추가
-            this.addBotMessage('🔗 서버에 연결되었습니다. 무엇을 도와드릴까요?');
+            this.addBotMessage('서버에 연결되었습니다. 무엇을 도와드릴까요?');
         };
 
         this.ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                console.log('📨 메시지 수신:', data);
+                console.log('메시지 수신:', data);
 
-                // 라우터 정보가 있으면 함께 표시
                 if (data.metadata && data.metadata.selected_agent) {
                     this.addBotMessageWithRouterInfo(data.response, data.metadata);
                 } else {
@@ -137,14 +126,14 @@ class DevMentorChat {
                 this.updateSuggestedActions(data.suggested_actions || []);
                 this.hideLoading();
             } catch (error) {
-                console.error('❌ 메시지 파싱 오류:', error, '원본 데이터:', event.data);
+                console.error('메시지 파싱 오류:', error, '원본 데이터:', event.data);
                 this.addBotMessage('응답을 처리하는 중 오류가 발생했습니다.');
                 this.hideLoading();
             }
         };
 
         this.ws.onclose = (event) => {
-            console.log('🔌 WebSocket 연결 종료:', {
+            console.log('WebSocket 연결 종료:', {
                 code: event.code,
                 reason: event.reason,
                 wasClean: event.wasClean
@@ -153,15 +142,14 @@ class DevMentorChat {
             this.isConnecting = false;
             this.hideLoading();
 
-            // 연결 종료 이유별 처리
             if (event.code === 1006) {
                 console.log('서버가 예상치 못하게 종료되었습니다.');
             }
 
             if (this.reconnectAttempts < this.maxReconnectAttempts) {
                 this.reconnectAttempts++;
-                const delay = Math.min(2000 * this.reconnectAttempts, 10000); // 최대 10초
-                console.log(`🔄 재연결 시도 ${this.reconnectAttempts}/${this.maxReconnectAttempts} (${delay}ms 후)`);
+                const delay = Math.min(2000 * this.reconnectAttempts, 10000);
+                console.log(`재연결 시도 ${this.reconnectAttempts}/${this.maxReconnectAttempts} (${delay}ms 후)`);
 
                 setTimeout(() => {
                     if (this.ws && this.ws.readyState === WebSocket.CLOSED) {
@@ -170,25 +158,23 @@ class DevMentorChat {
                 }, delay);
             } else {
                 this.updateConnectionStatus('연결 실패', 'disconnected');
-                this.addBotMessage('❌ 연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
+                this.addBotMessage('연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
             }
         };
 
         this.ws.onerror = (error) => {
-            console.error('❌ WebSocket 오류:', error);
+            console.error('WebSocket 오류:', error);
             console.log('연결 시도한 URL:', wsUrl);
             this.updateConnectionStatus('연결 오류', 'disconnected');
             this.isConnecting = false;
             this.hideLoading();
 
-            // 에러 상세 정보 표시
-            this.addBotMessage('⚠️ 서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도됩니다.');
+            this.addBotMessage('서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도됩니다.');
         };
 
-        // 연결 타임아웃 설정 (10초)
         setTimeout(() => {
             if (this.ws && this.ws.readyState === WebSocket.CONNECTING) {
-                console.log('⏰ WebSocket 연결 타임아웃');
+                console.log('WebSocket 연결 타임아웃');
                 this.ws.close();
                 this.updateConnectionStatus('연결 타임아웃', 'disconnected');
                 this.isConnecting = false;
@@ -224,7 +210,6 @@ class DevMentorChat {
                     this.autoResizeTextarea();
                 }
 
-                // Store message in history
                 this.messageHistory.push({
                     type: 'user',
                     content: message,
@@ -255,7 +240,6 @@ class DevMentorChat {
         this.elements.chatMessages.appendChild(messageElement);
         this.scrollToBottom();
 
-        // Store message in history
         this.messageHistory.push({
             type: 'bot',
             content: message,
@@ -268,7 +252,6 @@ class DevMentorChat {
         this.elements.chatMessages.appendChild(messageElement);
         this.scrollToBottom();
 
-        // Store message in history
         this.messageHistory.push({
             type: 'bot',
             content: message,
@@ -284,15 +267,14 @@ class DevMentorChat {
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
 
-        // 에이전트 타입에 따른 아바타 설정
         if (type === 'user') {
             avatar.innerHTML = '👤';
         } else if (metadata && metadata.selected_agent) {
             const agentEmojis = {
                 'mentor': '🎓',
-                'code_review': '🔍',
+                'code_review': '🔍', 
                 'troubleshooting': '🔧',
-                'general': '💬'  // 새로 추가
+                'general': '💬'
             };
             avatar.innerHTML = agentEmojis[metadata.selected_agent] || '🤖';
         } else {
@@ -308,7 +290,6 @@ class DevMentorChat {
         const senderName = document.createElement('span');
         senderName.className = 'sender-name';
 
-        // 에이전트 타입에 따른 이름 설정
         if (type === 'user') {
             senderName.textContent = '사용자';
         } else if (metadata && metadata.selected_agent) {
@@ -316,7 +297,7 @@ class DevMentorChat {
                 'mentor': '멘토 에이전트',
                 'code_review': '코드 리뷰 에이전트',
                 'troubleshooting': '트러블슈팅 에이전트',
-                'general': '일반 에이전트'  // 새로 추가
+                'general': '일반 에이전트'
             };
             senderName.textContent = agentNames[metadata.selected_agent] || 'DevMentor';
         } else {
@@ -330,7 +311,6 @@ class DevMentorChat {
         messageHeader.appendChild(senderName);
         messageHeader.appendChild(timestamp);
 
-        // 라우터 정보 표시 (봇 메시지에만)
         if (type === 'bot' && metadata && metadata.selected_agent) {
             const routerInfo = document.createElement('div');
             routerInfo.className = 'router-info';
@@ -340,7 +320,7 @@ class DevMentorChat {
 
             routerInfo.innerHTML = `
                 <div class="router-details">
-                    <span class="router-label">🎯 AI 라우터:</span>
+                    <span class="router-label">AI 라우터:</span>
                     <span class="confidence-text">신뢰도 ${Math.round(metadata.agent_confidence * 100)}%</span>
                     ${confidenceBar}
                 </div>
@@ -354,15 +334,12 @@ class DevMentorChat {
         messageBody.className = 'message-body';
 
         if (type === 'bot') {
-            // Render markdown for bot messages
             messageBody.className += ' markdown-content';
             const sanitizedContent = DOMPurify.sanitize(marked.parse(content));
             messageBody.innerHTML = sanitizedContent;
 
-            // Add copy buttons to code blocks
             this.addCopyButtonsToCodeBlocks(messageBody);
         } else {
-            // Plain text for user messages
             messageBody.textContent = content;
         }
 
@@ -432,7 +409,7 @@ class DevMentorChat {
         }
 
         const actionsHtml = `
-            <span class="actions-label">💡 제안된 액션:</span>
+            <span class="actions-label">제안된 액션:</span>
             ${actions.map(action => 
                 `<button class="action-button" onclick="chat.sendMessage('${action.replace(/'/g, "\\'")}')">${action}</button>`
             ).join('')}
@@ -479,7 +456,6 @@ class DevMentorChat {
     }
 }
 
-// Global functions for HTML onclick handlers
 let chat;
 
 function sendMessage(message) {
@@ -500,13 +476,11 @@ function reconnectWebSocket() {
     }
 }
 
-// Initialize chat when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     chat = new DevMentorChat();
     console.log('DevMentor Chat initialized');
 });
 
-// Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = DevMentorChat;
 }

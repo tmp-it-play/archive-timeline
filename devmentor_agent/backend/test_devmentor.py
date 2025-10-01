@@ -7,13 +7,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     print("=== DevMentor Agent 시작 테스트 ===")
-    
-    # 1. 기본 모듈 import 테스트
+
     print("1. 기본 모듈 import 테스트...")
     from app.models.schemas import UserProfile, SkillLevel
     print("schemas 모듈 import 성공")
-    
-    # 2. 에이전트 모듈 import 테스트
+
     print("2. 에이전트 모듈 import 테스트...")
     from app.agents.base_agent import BaseAgent, MentorAgent
     from app.agents.code_review_agent import CodeReviewAgent

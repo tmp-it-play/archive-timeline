@@ -29,54 +29,53 @@ class CodeReviewAgent(BaseAgent):
         
         지원 언어: Java, Kotlin, Python, JavaScript, TypeScript, C, Lua, HCL, Go, Dart, SQL
         
-        코드 리뷰 기준:
-        - 가독성과 유지보수성
-        - 성능과 효율성
-        - 보안과 안정성
-        - 설계 패턴과 아키텍처
-        - 테스트 가능성
+        리뷰 원칙:
+        - 실용적이고 실현 가능한 조언 제공
+        - 코드 품질과 유지보수성 중시
+        - 성능과 보안을 고려한 개선안 제시
+        - 구체적인 예시 코드 포함
         
-        응답 형식:
-        1. 전체적인 코드 평가
-        2. 구체적인 이슈 및 개선점
-        3. 수정된 코드 예시 (필요시)
-        4. 학습 자료 추천
-        """
-    
+        마크다운 형식으로 구조화된 리뷰 결과를 제공하세요."""
+
     async def process_request(
         self, 
         message: str, 
         context: SessionContext
     ) -> MentorResponse:
-        code_block = self._extract_code_from_message(message)
-        language = self._detect_programming_language(code_block, message)
-        
-        if code_block:
-            analysis_result = await self._analyze_code(code_block, language)
+        code_blocks = self.extract_code_blocks(message)
 
-            messages = self.build_conversation_context(context, message)
-            response_content = await self.generate_response(messages)
-            
-            metadata = {
-                "code_detected": True,
-                "language": language.value if language else "unknown",
-                "analysis_result": analysis_result.dict() if analysis_result else None
-            }
-            
-            suggested_actions = self._generate_code_improvement_actions(analysis_result)
-            
-        else:
-            messages = self.build_conversation_context(context, message)
-            response_content = await self.generate_response(messages)
-            
-            metadata = {"code_detected": False}
-            suggested_actions = []
-        
+        if not code_blocks:
+            return MentorResponse(
+                content="코드가 포함된 메시지를 보내주세요. 마크다운 코드 블록을 사용해주세요.",
+                response_type="code_review_request",
+                metadata={"needs_code": True},
+                suggested_actions=[
+                    "코드를 ```언어명 ... ``` 형식으로 보내주세요",
+                    "특정 부분만 리뷰 요청하기",
+                    "전체 파일 업로드하기"
+                ]
+            )
+
+        analysis_results = []
+        for i, code_block in enumerate(code_blocks):
+            analysis = await self.analyze_code(
+                code_block["code"],
+                code_block["language"],
+                context
+            )
+            analysis_results.append(analysis)
+
+        response_content = self.format_review_response(analysis_results)
+
         return MentorResponse(
             content=response_content,
             response_type="code_review",
-            metadata=metadata,
-            suggested_actions=suggested_actions
+            metadata={
+                "code_blocks_analyzed": len(code_blocks),
+                "languages": [block["language"] for block in code_blocks],
+                "analysis_results": analysis_results
+            },
+            suggested_actions=self.generate_followup_suggestions(analysis_results)
         )
     
     def _extract_code_from_message(self, message: str) -> Optional[str]:
@@ -274,7 +273,7 @@ class CodeReviewAgent(BaseAgent):
         if "style" in issue_types:
             actions.append("코딩 스타일 가이드를 적용해보세요.")
         
-        return actions[:3]  # 최대 3개까지
+        return actions[:3]
     
     def _load_code_patterns(self) -> Dict[str, List[str]]:
         return {

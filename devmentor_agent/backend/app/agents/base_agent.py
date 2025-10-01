@@ -13,7 +13,7 @@ from ..models.schemas import (
 
 class BaseAgent(ABC):
     
-    def __init__(self, api_key: str = None, model: str = "gpt-4"):
+    def __init__(self, api_key: str = None, model: str = "gpt-4o-mini"):
         self.api_key = api_key
         if api_key:
             self.client = openai.AsyncOpenAI(api_key=api_key)
