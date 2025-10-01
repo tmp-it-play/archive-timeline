@@ -25,20 +25,29 @@ class RouterAgent(BaseAgent):
     def __init__(self, api_key: Optional[str] = None):
         super().__init__(api_key)
         self.agent_descriptions = {
-            "mentor": {
-                "name": "멘토 에이전트",
-                "description": "학습 로드맵, 커리어 가이드, 기술 추천, 진로 상담",
-                "keywords": ["로드맵", "학습", "커리어", "진로", "공부", "추천", "계획", "목표"]
+            "troubleshooting": {
+                "name": "트러블슈팅 에이전트",
+                "description": "에러 해결, 디버깅, 문제 진단, 오류 수정",
+                "keywords": ["에러", "오류", "문제", "해결", "디버깅", "버그", "수정", "exception", "error", "traceback", "fix", "debug"],
+                "priority": 3  # 가장 높은 우선순위
             },
             "code_review": {
                 "name": "코드 리뷰 에이전트",
                 "description": "코드 분석, 품질 개선, 최적화, 리팩토링, 베스트 프랙티스",
-                "keywords": ["코드", "리뷰", "분석", "최적화", "개선", "품질", "리팩토링"]
+                "keywords": ["코드", "리뷰", "분석", "최적화", "개선", "품질", "리팩토링", "code", "review", "analyze", "optimize", "refactor"],
+                "priority": 2
             },
-            "troubleshooting": {
-                "name": "트러블슈팅 에이전트",
-                "description": "에러 해결, 디버깅, 문제 진단, 오류 수정",
-                "keywords": ["에러", "오류", "문제", "해결", "디버깅", "버그", "수정"]
+            "mentor": {
+                "name": "멘토 에이전트",
+                "description": "학습 로드맵, 커리어 가이드, 기술 추천, 진로 상담",
+                "keywords": ["로드맵", "학습", "커리어", "진로", "공부", "추천", "계획", "목표", "roadmap", "learning", "career", "study"],
+                "priority": 2
+            },
+            "general": {
+                "name": "일반 에이전트",
+                "description": "일반적인 개발 질문, 기술 정보, 설명, 조언",
+                "keywords": ["설명", "알려", "뭐야", "무엇", "어떻게", "왜", "차이", "비교", "추천"],
+                "priority": 1  # 가장 낮은 우선순위 (폴백용)
             }
         }
 
@@ -81,62 +90,80 @@ class RouterAgent(BaseAgent):
             return quick_decision
 
     def _quick_rule_based_routing(self, query: str) -> RouterDecision:
-        """빠른 규칙 기반 라우팅"""
+        """빠른 규칙 기반 라우팅 - 개선된 버전"""
         query_lower = query.lower()
-        scores = {}
 
-        # 1. 에러/문제 패턴 우선 검사
+        # 1. 에러/문제 패턴 우선 검사 (최고 우선순위)
         error_patterns = [
             r'error[:\s]', r'exception[:\s]', r'traceback[:\s]',
             r'오류[:\s]', r'에러[:\s]', r'문제[:\s]',
-            r'안\s*돼', r'안\s*되', r'작동\s*안', r'실행\s*안'
+            r'안\s*돼', r'안\s*되', r'작동\s*안', r'실행\s*안',
+            r'버그', r'bug', r'crash', r'fail'
         ]
 
         if any(re.search(pattern, query_lower) for pattern in error_patterns):
             return RouterDecision(
                 agent_type="troubleshooting",
-                confidence=0.9,
-                reasoning="에러/문제 해결 패턴이 감지되어 트러블슈팅 에이전트를 선택했습니다.",
+                confidence=0.95,
+                reasoning="에러/문제 해결 패턴이 명확히 감지되어 트러블슈팅 에이전트를 선택했습니다.",
                 suggested_actions=["에러 로그 분석", "단계별 디버깅", "해결책 제시"]
             )
 
-        # 2. 코드 블록 검사
-        if '```' in query or 'code' in query_lower:
+        # 2. 코드 블록 및 명확한 코드 리뷰 요청 검사
+        code_review_indicators = [
+            '```', 'code', '코드',
+            '리뷰', 'review', '분석', 'analyze',
+            '최적화', 'optimize', '개선', 'improve',
+            '리팩토링', 'refactor'
+        ]
+
+        code_score = sum(1 for indicator in code_review_indicators if indicator in query_lower)
+        if code_score >= 2 or '```' in query:  # 코드 블록이 있거나 관련 키워드가 2개 이상
             return RouterDecision(
                 agent_type="code_review",
-                confidence=0.85,
-                reasoning="코드 블록이나 코드 관련 키워드가 감지되어 코드 리뷰 에이전트를 선택했습니다.",
+                confidence=0.9,
+                reasoning="코드 리뷰 관련 요청이 명확히 감지되어 코드 리뷰 에이전트를 선택했습니다.",
                 suggested_actions=["코드 분석", "품질 개선 제안", "최적화 방안"]
             )
 
-        # 3. 키워드 스코어링
-        for agent_type, info in self.agent_descriptions.items():
-            score = 0
-            for keyword in info["keywords"]:
-                if keyword in query_lower:
-                    score += 1
-            scores[agent_type] = score
+        # 3. 멘토링/학습 관련 명확한 요청 검사
+        mentor_indicators = [
+            '로드맵', 'roadmap', '학습', 'learning',
+            '커리어', 'career', '진로', '공부', 'study',
+            '계획', 'plan', '목표', 'goal'
+        ]
 
-        # 최고 점수 에이전트 선택
-        if scores:
-            best_agent = max(scores.keys(), key=lambda k: scores[k])
-            max_score = scores[best_agent]
+        mentor_score = sum(1 for indicator in mentor_indicators if indicator in query_lower)
+        if mentor_score >= 2:  # 멘토링 키워드가 2개 이상
+            return RouterDecision(
+                agent_type="mentor",
+                confidence=0.85,
+                reasoning="학습/커리어 멘토링 요청이 감지되어 멘토 에이전트를 선택했습니다.",
+                suggested_actions=["맞춤형 가이드 제공", "학습 방향 제시", "전문가 조언"]
+            )
 
-            if max_score > 0:
-                confidence = min(0.8, 0.5 + (max_score * 0.1))
-                return RouterDecision(
-                    agent_type=best_agent,
-                    confidence=confidence,
-                    reasoning=f"키워드 분석 결과 {self.agent_descriptions[best_agent]['name']}가 적합합니다.",
-                    suggested_actions=self._get_suggested_actions(best_agent)
-                )
+        # 4. 일반적인 질문 패턴 검사 (새로 추가)
+        general_indicators = [
+            '뭐야', '무엇', 'what', '어떻게', 'how',
+            '왜', 'why', '차이', 'difference', '비교', 'compare',
+            '설명', 'explain', '알려', 'tell me', '추천', 'recommend'
+        ]
 
-        # 기본값: 멘토 에이전트
+        general_score = sum(1 for indicator in general_indicators if indicator in query_lower)
+        if general_score >= 1:  # 일반적인 질문 패턴
+            return RouterDecision(
+                agent_type="general",
+                confidence=0.75,
+                reasoning="일반적인 개발 질문으로 판단하여 일반 에이전트를 선택했습니다.",
+                suggested_actions=["상세한 설명 요청", "관련 예제 문의", "추가 정보 요청"]
+            )
+
+        # 5. 기본 폴백: 일반 에이전트 (기존 mentor에서 변경)
         return RouterDecision(
-            agent_type="mentor",
+            agent_type="general",
             confidence=0.6,
-            reasoning="일반적인 개발 상담으로 판단하여 멘토 에이전트를 선택했습니다.",
-            suggested_actions=["맞춤형 가이드 제공", "학습 방향 제시", "전문가 조언"]
+            reasoning="특정 전문 영역으로 분류되지 않아 일반 에이전트를 선택했습니다.",
+            suggested_actions=["더 구체적인 질문", "관련 정보 제공", "전문 에이전트 추천"]
         )
 
     async def _ai_based_routing(self, query: str, conversation_history: List = None) -> RouterDecision:
@@ -211,6 +238,12 @@ class RouterAgent(BaseAgent):
                 "단계별 디버깅",
                 "해결책 제시",
                 "예방법 안내"
+            ],
+            "general": [
+                "기술 문서 검색",
+                "개발 블로그 추천",
+                "Q&A 포럼 안내",
+                "기타 일반 정보 제공"
             ]
         }
         return actions.get(agent_type, [])

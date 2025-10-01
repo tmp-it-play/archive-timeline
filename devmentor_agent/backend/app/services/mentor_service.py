@@ -5,6 +5,7 @@ from typing import Dict, Any, Optional
 from ..agents.base_agent import MentorAgent, BaseAgent
 from ..agents.code_review_agent import CodeReviewAgent
 from ..agents.troubleshooting_agent import TroubleshootingAgent
+from ..agents.general_agent import GeneralAgent
 from ..agents.router_agent import RouterAgent
 from ..models.schemas import (
     SessionContext, MentorResponse, UserProfile, 
@@ -27,7 +28,8 @@ class MentorService:
         self.agents["mentor"] = MentorAgent(self.api_key)
         self.agents["code_review"] = CodeReviewAgent(self.api_key)
         self.agents["troubleshooting"] = TroubleshootingAgent(self.api_key)
-    
+        self.agents["general"] = GeneralAgent(self.api_key)  # 새로 추가
+
     async def process_message(
         self, 
         session_id: str, 
