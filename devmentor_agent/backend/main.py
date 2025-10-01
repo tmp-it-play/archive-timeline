@@ -1,15 +1,14 @@
-
-
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 from typing import Dict, List, Optional
 import json
 import uuid
 import asyncio
 import logging
+import os
 
 import sys
 import os
@@ -34,6 +33,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Static files for frontend
+frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+if os.path.exists(frontend_path):
+    app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 mentor_service = MentorService()
 
@@ -82,241 +86,128 @@ class RoadmapRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def get_chat_interface():
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>DevMentor Agent</title>
-        <meta charset="utf-8">
-        <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-            .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-            .chat-area { height: 400px; overflow-y: auto; padding: 20px; border-bottom: 1px solid #eee; }
-            .message { margin: 10px 0; padding: 10px; border-radius: 5px; }
-            .user-message { background: #e3f2fd; margin-left: 50px; }
-            .bot-message { background: #f5f5f5; margin-right: 50px; }
-            .input-area { padding: 20px; display: flex; gap: 10px; }
-            .input-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-            .input-area button { padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 5px; cursor: pointer; }
-            .status { padding: 10px; background: #f8f9fa; font-size: 12px; color: #666; }
-            .actions { padding: 10px; }
-            .action-btn { background: #3498db; color: white; border: none; padding: 5px 10px; margin: 2px; border-radius: 3px; cursor: pointer; font-size: 12px; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>🤖 DevMentor Agent</h1>
-                <p>개발자를 위한 AI 멘토링 서비스</p>
-            </div>
-            
-            <div class="status" id="status">
-                연결 상태: <span id="connection-status">연결 중...</span> | 
-                세션 ID: <span id="session-id">생성 중...</span>
-            </div>
-            
-            <div class="chat-area" id="chat-area">
-                <div class="bot-message">
-                    <strong>DevMentor:</strong> 안녕하세요! 저는 개발자 멘토링 AI입니다. 🚀<br>
-                    다음과 같은 도움을 드릴 수 있어요:<br>
-                    • 📚 맞춤형 학습 로드맵 제공<br>
-                    • 🔍 코드 리뷰 및 품질 개선<br>
-                    • 🐛 에러 디버깅 및 트러블슈팅<br>
-                    • 💼 커리어 가이드 및 기술 상담<br><br>
-                    무엇을 도와드릴까요?
-                </div>
-            </div>
-            
-            <div class="actions" id="suggested-actions"></div>
-            
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="질문을 입력하세요..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()">전송</button>
-            </div>
-        </div>
+    """새로운 모던한 DevMentor 인터페이스 제공"""
+    frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+    index_file = os.path.join(frontend_path, "index.html")
 
-        <script>
-            let ws;
-            let sessionId = generateSessionId();
-            let isConnecting = false;
-            let reconnectAttempts = 0;
-            let maxReconnectAttempts = 5;
-            
-            function generateSessionId() {
-                return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            }
-            
-            function connectWebSocket() {
-                if (isConnecting) return;
-                isConnecting = true;
-                
-                document.getElementById('connection-status').textContent = '연결 중...';
-                
-                ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
-                
-                ws.onopen = function(event) {
-                    console.log('WebSocket 연결됨:', sessionId);
-                    document.getElementById('connection-status').textContent = '연결됨';
-                    document.getElementById('session-id').textContent = sessionId;
-                    isConnecting = false;
-                    reconnectAttempts = 0;
-                };
-                
-                ws.onmessage = function(event) {
-                    try {
-                        const data = JSON.parse(event.data);
-                        console.log('메시지 수신:', data);
-                        addBotMessage(data.response);
-                        updateSuggestedActions(data.suggested_actions);
-                    } catch (error) {
-                        console.error('메시지 파싱 오류:', error);
-                        addBotMessage('응답을 처리하는 중 오류가 발생했습니다.');
-                    }
-                };
-                
-                ws.onclose = function(event) {
-                    console.log('WebSocket 연결 종료:', event.code, event.reason);
-                    document.getElementById('connection-status').textContent = '연결 끊김';
-                    isConnecting = false;
-                    
-                    if (reconnectAttempts < maxReconnectAttempts) {
-                        reconnectAttempts++;
-                        console.log(`재연결 시도 ${reconnectAttempts}/${maxReconnectAttempts}`);
-                        setTimeout(() => {
-                            connectWebSocket();
-                        }, 2000 * reconnectAttempts);
-                    } else {
-                        document.getElementById('connection-status').textContent = '연결 실패';
-                        addBotMessage('연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
-                    }
-                };
-                
-                ws.onerror = function(error) {
-                    console.error('WebSocket 오류:', error);
-                    document.getElementById('connection-status').textContent = '오류';
-                    isConnecting = false;
-                };
-            }
-            
-            function sendMessage(customMessage) {
-                const input = document.getElementById('message-input');
-                const message = customMessage || input.value.trim();
-                
-                if (!message) {
-                    alert('메시지를 입력해주세요.');
-                    return;
-                }
-                
-                if (ws.readyState === WebSocket.OPEN) {
-                    addUserMessage(message);
-                    
-                    try {
-                        ws.send(JSON.stringify({
-                            message: message,
-                            session_id: sessionId
-                        }));
-                        if (!customMessage) {
-                            input.value = '';
-                        }
-                    } catch (error) {
-                        console.error('메시지 전송 오류:', error);
-                        addBotMessage('메시지 전송 중 오류가 발생했습니다.');
-                    }
-                } else if (ws.readyState === WebSocket.CONNECTING) {
-                    addBotMessage('연결 중입니다. 잠시 후 다시 시도해주세요.');
-                } else {
-                    addBotMessage('연결이 끊어졌습니다. 재연결을 시도합니다...');
-                    connectWebSocket();
-                }
-            }
-            
-            function addUserMessage(message) {
-                const chatArea = document.getElementById('chat-area');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message user-message';
-                messageDiv.innerHTML = `<strong>사용자:</strong> ${message}`;
-                chatArea.appendChild(messageDiv);
-                chatArea.scrollTop = chatArea.scrollHeight;
-            }
-            
-            function addBotMessage(message) {
-                const chatArea = document.getElementById('chat-area');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message bot-message';
-                messageDiv.innerHTML = `<strong>DevMentor:</strong> ${message.replace(/\\n/g, '<br>')}`;
-                chatArea.appendChild(messageDiv);
-                chatArea.scrollTop = chatArea.scrollHeight;
-            }
-            
-            function updateSuggestedActions(actions) {
-                const actionsDiv = document.getElementById('suggested-actions');
-                if (actions && actions.length > 0) {
-                    actionsDiv.innerHTML = '💡 제안된 액션: ' + 
-                        actions.map(action => `<button class="action-btn" onclick="sendMessage('${action.replace(/'/g, "\\'")}')">${action}</button>`).join('');
-                } else {
-                    actionsDiv.innerHTML = '';
-                }
-            }
-            
-            function reconnectWebSocket() {
-                if (ws) {
-                    ws.close();
-                }
-                reconnectAttempts = 0;
-                connectWebSocket();
-            }
-            
-            function handleKeyPress(event) {
-                if (event.key === 'Enter') {
-                    sendMessage();
-                }
-            }
-            
-            window.onload = function() {
-                connectWebSocket();
-            };
-            
-            window.onbeforeunload = function() {
-                if (ws) {
-                    ws.close();
-                }
-            };
-            
-            setInterval(function() {
-                if (ws && ws.readyState === WebSocket.CLOSED && !isConnecting) {
-                    console.log('연결 상태 확인: 끊어짐 감지, 재연결 시도');
-                    connectWebSocket();
-                }
-            }, 5000);
-        </script>
-    </body>
-    </html>
-    """
-    return HTMLResponse(content=html_content)
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    else:
+        # Fallback to embedded HTML if frontend files don't exist
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>DevMentor Agent</title>
+            <meta charset="utf-8">
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+                .error { color: #e74c3c; }
+            </style>
+        </head>
+        <body>
+            <h1>🤖 DevMentor Agent</h1>
+            <div class="error">
+                <p>프론트엔드 파일을 찾을 수 없습니다.</p>
+                <p>다음 경로를 확인해주세요: {}</p>
+            </div>
+        </body>
+        </html>
+        """.format(frontend_path))
+
+@app.get("/styles.css")
+async def get_styles():
+    """CSS 파일 제공"""
+    frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+    css_file = os.path.join(frontend_path, "styles.css")
+
+    if os.path.exists(css_file):
+        return FileResponse(css_file, media_type="text/css")
+    else:
+        raise HTTPException(status_code=404, detail="CSS 파일을 찾을 수 없습니다.")
+
+@app.get("/script.js")
+async def get_script():
+    """JavaScript 파일 제공"""
+    frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+    js_file = os.path.join(frontend_path, "script.js")
+
+    if os.path.exists(js_file):
+        return FileResponse(js_file, media_type="application/javascript")
+    else:
+        raise HTTPException(status_code=404, detail="JavaScript 파일을 찾을 수 없습니다.")
 
 @app.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
-    await manager.connect(websocket, session_id)
+    client_host = websocket.client.host if websocket.client else "unknown"
+    logger.info(f"🔌 WebSocket 연결 요청: {session_id} from {client_host}")
+
     try:
+        await manager.connect(websocket, session_id)
+        logger.info(f"✅ WebSocket 연결 성공: {session_id}")
+
+        # 연결 성공 확인 메시지 전송
+        await manager.send_message(session_id, {
+            "response": "서버에 성공적으로 연결되었습니다! 🎉",
+            "response_type": "system",
+            "metadata": {"connection_status": "connected"},
+            "suggested_actions": []
+        })
+
         while True:
-            data = await websocket.receive_text()
-            message_data = json.loads(data)
+            try:
+                # 메시지 수신 대기
+                data = await websocket.receive_text()
+                logger.info(f"📨 메시지 수신 from {session_id}: {data[:100]}...")
 
-            response = await mentor_service.process_message(
-                session_id=session_id,
-                message=message_data["message"],
-                user_profile=message_data.get("user_profile")
-            )
+                message_data = json.loads(data)
+                user_message = message_data.get("message", "").strip()
 
-            await manager.send_message(session_id, {
-                "response": response.content,
-                "response_type": response.response_type,
-                "metadata": response.metadata,
-                "suggested_actions": response.suggested_actions
-            })
-            
+                if not user_message:
+                    logger.warning(f"⚠️ 빈 메시지 수신: {session_id}")
+                    continue
+
+                logger.info(f"🤖 처리 시작: {session_id} - {user_message[:50]}...")
+
+                # 메시지 처리
+                response = await mentor_service.process_message(
+                    session_id=session_id,
+                    message=user_message,
+                    user_profile=message_data.get("user_profile")
+                )
+
+                logger.info(f"📤 응답 전송 to {session_id}: {response.content[:50]}...")
+
+                # 응답 전송
+                await manager.send_message(session_id, {
+                    "response": response.content,
+                    "response_type": response.response_type,
+                    "metadata": response.metadata,
+                    "suggested_actions": response.suggested_actions
+                })
+
+            except json.JSONDecodeError as e:
+                logger.error(f"❌ JSON 파싱 오류 {session_id}: {e}")
+                await manager.send_message(session_id, {
+                    "response": "메시지 형식이 올바르지 않습니다.",
+                    "response_type": "error",
+                    "metadata": {},
+                    "suggested_actions": []
+                })
+            except Exception as e:
+                logger.error(f"❌ 메시지 처리 오류 {session_id}: {e}", exc_info=True)
+                await manager.send_message(session_id, {
+                    "response": f"처리 중 오류가 발생했습니다: {str(e)}",
+                    "response_type": "error",
+                    "metadata": {},
+                    "suggested_actions": ["다시 시도해주세요"]
+                })
+
     except WebSocketDisconnect:
+        logger.info(f"🔌 WebSocket 정상 연결 해제: {session_id}")
+        manager.disconnect(session_id)
+    except Exception as e:
+        logger.error(f"❌ WebSocket 연결 오류 {session_id}: {e}", exc_info=True)
         manager.disconnect(session_id)
 
 @app.post("/api/chat", response_model=ChatResponse)
