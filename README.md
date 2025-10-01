@@ -1,96 +1,233 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=20567321&assignment_repo_type=AssignmentRepo)
-NVIDIA ACE
---------
+# DevMentor Agent 프로젝트 보고서
 
-NVIDIA ACE is a suite of technologies that help developers bring digital humans to life with generative AI. ACE NIMs are microservices designed to run in the cloud or on PC.
+## 프로젝트 개요
+- **프로젝트명**: DevMentor Agent
+- **분류**: AI 기반 개발자 멘토링 시스템
 
-![](https://lh7-us.googleusercontent.com/FJKnZYOQX34lHQ_OccHOvSXFfsFg3RyY1LWgg9_s5NA1RrQr4XH8cA5T3CvuQmysig74EpxQFbOwN4OP-CpQgYNGbjIpC6ior7YlhYPdqMI95fP-_Kv5dkZB_RSegAQ-m6-yzN2n-uwFjDAZB1rlPKQ)
+---
 
-On this Git repo, you will find samples and reference applications using ACE NIMs and microservices.  However, these microservices can be obtained through an evaluation license of NV AI Enterprise(NVAIE) through NGC.
+## 서론 (Introduction)
 
-1. [Try NIM For Digital Human](https://build.nvidia.com/explore/gaming)
-2. [Get NVIDIA AI Enterprise](https://docs.nvidia.com/ai-enterprise/latest/quick-start-guide/index.html#getting-your-nvidia-grid-software)
-3. [Download ACE Microservices](https://catalog.ngc.nvidia.com/?filters=&orderBy=scoreDESC&query=ace&page=&pageSize=)
+### 1. 문제의 이해
 
+현대 소프트웨어 개발 환경에서 개발자들은 다음과 같은 주요 문제들에 직면하고 있습니다:
 
-ACE Technologies
-------
-|                    Technology                   |                                Description                              |          Software   Support        |     Cloud   Deployment    |     Windows   Deployment    |
-|:-----------------------------------------------:|:-----------------------------------------------------------------------:|:----------------------------------:|:-------------------------:|:---------------------------:|
-|     Riva      Automatic Speech   Recognition    |                            Speech   -&gt; Text                          |        NVIDIA   AI Enterprise      |              X            |         Coming   Soon       |
-|      Riva      Neural Machine   Translation     |                            Text   Translation                           |        NVIDIA   AI Enterprise      |              X            |                             |
-|             Riva      Text-to-Speech            |                            Text   -&gt; Speech                          |        NVIDIA   AI Enterprise      |              X            |         Coming   Soon       |
-|                    Audio2Face                   |           Audio   -&gt; Blendshapes      for   Facial Lip-sync          |        NVIDIA   AI Enterprise      |              X            |         Coming   Soon       |
-|                     AnimGraph                   |                          Animation   controller                         |        NVIDIA   AI Enterprise      |              X            |                             |
-|             Omniverse RTX Rendering Microservice           |                     Omniverse   Based Pixel Streamer                    |        NVIDIA   AI Enterprise      |              X            |                             |
-|                     ACE Agent                   |                Conversational   Controller, RAG Workflows               |        NVIDIA   AI Enterprise      |              X            |                             |
-|           Maxine Speech   Live Portrait         |                    2D   Picture Lipsync and Animation                   |     Early   Access   Evaluation    |              X            |                             |
-|                Nemotron-3 4.5B SLM              |                          Small   Language Model                         |      Early   Access Evaluation     |        Coming   Soon      |               X             |
-|             Gaming Reference Workflow           |                    Audio2Face   Unreal Engine Examples                  |          Example   Workflow        |              X            |         Coming   Soon       |
-|       Customer Service Reference   Workflow     |     Full   reference workflow of customer service and kiosk usecases    |       Example   Workflow           |              X            |                             |
+1. **학습 경로의 불명확성**: 빠르게 변화하는 기술 스택 속에서 체계적인 학습 로드맵의 부재
+2. **코드 품질 관리의 어려움**: 경험 부족으로 인한 코드 리뷰 및 품질 개선 방법의 한계
+3. **디버깅 및 문제해결 능력 부족**: 복잡한 에러 상황에서의 체계적인 트러블슈팅 접근법 부재
+4. **개인화된 멘토링의 부족**: 개별 개발자의 수준과 목표에 맞춘 맞춤형 가이드의 필요성
 
+### 2. 프로젝트 목표
 
-The Key Benefits of ACE
---------
+DevMentor Agent는 AI 기술을 활용하여 개발자 개개인에게 **맞춤형 멘토링 서비스**를 제공하는 것을 목표로 합니다. 이를 통해:
 
-### State-of-the-Art Models and Microservices
+- 개발자의 스킬 레벨과 관심 영역에 맞는 **개인화된 학습 로드맵** 제공
+- 실시간 **코드 분석 및 리뷰** 서비스 제공
+- **에러 디버깅 및 트러블슈팅** 지원
+- **커리어 개발** 및 기술 상담 서비스 제공
 
-NVIDIA pre-trained models provide industry-leading quality and real-time performance.
+---
 
-### Safe and Consistent Results
+## 본론 (Main Content)
 
-AI models  trained on commercially safe, responsibly licensed data. Fine-tuning and guardrails enable accurate, appropriate, and on-topic results no matter the user's input.
+### 1. 기술 아키텍처 분석
 
-### Flexible Deployment Options
+#### 1.1 시스템 구조
+```
+DevMentor Agent
+├── Backend (Python/FastAPI)
+│   ├── 에이전트 시스템 (Agent-based Architecture)
+│   ├── 멘토링 서비스
+│   ├── WebSocket 기반 실시간 통신
+│   └── RESTful API
+├── Frontend (React - 계획됨)
+└── AI 통합 (OpenAI GPT-4)
+```
 
-Handle inference through any public or private cloud, Windows PC, or a mix of both.
+#### 1.2 핵심 컴포넌트
 
-## Digital Human Workflows
+**Agent 시스템**
+- `BaseAgent`: 모든 에이전트의 추상 기본 클래스
+- `CodeReviewAgent`: 코드 분석 및 리뷰 전담 에이전트  
+- `TroubleshootingAgent`: 디버깅 및 문제해결 전담 에이전트
+- `MentorAgent`: 일반 멘토링 및 학습 가이드 에이전트
 
-Developers can leverage ACE to build their own digital human solutions from the ground up, or use NVIDIA's suite of domain-specific AI workflows for next-generation non-playable game characters (NPCs), interactive digital assistants for customer service, and digital avatars for real-time communication.
+**핵심 서비스**
+- `MentorService`: 에이전트 조정 및 세션 관리
+- `ConnectionManager`: WebSocket 연결 관리
+- 실시간 채팅 인터페이스
 
-### Gaming Characters
+### 2. 지원 기술 스택
 
-NVIDIA Kairos Sample showcases an easy to use Unreal Engine project using the Audio2Face microservice. This sample shows how to connect Audio2Face to Metahuman and configure the Audio2Face microserivce. 
+#### 2.1 프로그래밍 언어 (11개)
+- **백엔드**: Java, Python, JavaScript, TypeScript, Go
+- **모바일**: Kotlin, Dart
+- **시스템**: C, Lua
+- **데이터**: SQL
+- **인프라**: HCL (Terraform)
 
-[Learn More About ACE NIMs for Gaming](https://build.nvidia.com/explore/gaming)
+#### 2.2 프레임워크 및 기술 (6개)
+- **백엔드**: SpringBoot, Flask, FastAPI, NestJS
+- **프론트엔드**: React
+- **모바일**: Flutter
 
-### Customer Service
+#### 2.3 인프라 및 이론
+- **데이터베이스**: RDB, NoSQL (Redis, MongoDB)
+- **네트워크**: 네트워크 기초, 브라우저 렌더링
+- **클라우드**: AWS 인프라, Terraform
 
-NVIDIA Tokkio is a digital assistant workflow built with ACE, bringing AI-powered customer service capabilities to healthcare, financial services, and retail. It comes to life using state-of-the-art real-time language, speech, and animation generative AI models alongside retrieval augmented generation (RAG) to convey specific and up-to-date information to customers.
+### 3. 주요 기능 구현
 
-[Learn More Tokkio Customer Service Workflow](https://developer.nvidia.com/nvidia-omniverse-platform/ace/tokkio-showcase)
+#### 3.1 메인 기능
+1. **학습 로드맵 생성**
+   ```python
+   class RoadmapRequest(BaseModel):
+       target_skills: List[str]
+       timeline_weeks: int = 12
+   ```
 
-Documentation and Tutorials
--------------
-Full ACE [developer documenation](https://docs.nvidia.com/ace/latest/index.html)
+2. **사용자 프로필 관리**
+   ```python
+   class UserProfile(BaseModel):
+       skills: Dict[str, SkillLevel]
+       interested_areas: List[str]
+       current_goals: List[str]
+       experience_years: int
+   ```
 
-| Component | Documentation | Video/Tutorial |
-| ------ | ------ | ------ |
-|      Getting Started  |        | [NVIDIA Docker Setup](https://youtu.be/2uWXeIol468), [Install Kubernetes](https://www.youtube.com/watch?v=ACIkyiWglW4) |
-|     NVIDIA UCS   | [Documentation](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ucs-ms/resources/ucs_tools/version) ||
-|NVIDIA Audio2Face| [Documentation](https://docs.nvidia.com/ace/latest/modules/a2f-docs/index.html) | Coming soon! |
-|NVIDIA Riva ASR| [Documentation](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/asr/asr-overview.html)|Coming soon! |
-|NVIDIA Riva TTS| [Documentation](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/tts/tts-overview.html)|Coming soon! |
-|NVIDIA Riva NMT|[Documentation](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/translation/translation-overview.html) |Coming soon! |
-|NVIDIA ACE Agent Microservices|[Documentation](https://docs.nvidia.com/ace/latest/modules/ace_agent/index.html)|Coming soon! |
-|NVIDIA Maxine Live Portrait|[Documentation](https://registry.ngc.nvidia.com/orgs/eevaigoeixww/teams/live-portrait-ms/resources/live_portrait_user_guide)|Coming soon! |
-|NVIDIA Avatar Configurator & Avatar Customization|[Documentation](https://docs.nvidia.com/ace/latest/modules/avatar_customization/Avatar_Configurator.html)|Coming soon! |
-|NVIDIA Animation Graph Microservice|[Documentation](https://docs.nvidia.com/ace/latest/modules/animation_graph_microservice/index.html)|Coming soon! |
-|NVIDIA Omniverse Renderer Microservice|[Documentation](https://docs.nvidia.com/ace/latest/modules/omniverse_renderer_microservice/index.html)|Coming soon! |
+#### 3.2 부가 기능
+1. **실시간 코드 분석**: 업로드된 코드의 품질 평가 및 개선 제안
+2. **에러 디버깅**: 에러 메시지 분석 및 해결 방법 제시
+3. **트러블슈팅**: 체계적인 문제해결 가이드 제공
 
-### Example Workflows
+### 4. 기술적 구현 특징
 
-| Example | Description | Video |
-| ------ | ------ | ------ |
-|     Text-to-Gesture   |   Text-to-Gesture using A2X & Animation Graph Microservices     | [Creation of Basic Sentiment Analysis Utility](https://www.youtube.com/watch?v=g3Vb7EhlEUA),  [Connecting all Microservices in UCF](https://www.youtube.com/watch?v=TP4RD-T0GOI),  [Deployment & App Execution](https://www.youtube.com/watch?v=EHyga9smaSA)|
-|    Reallusion Character    |   Exporting Character in Reallusion Character Creator + Audio2Face     | [Exporting Character from Reallusion Character Creator & Preparing Character in Audio2Face](https://www.youtube.com/watch?v=_Vkiup06lYQ), [Setup, streaming through a Reference App & Fine Tuning](https://www.youtube.com/watch?v=3xBhOKHbrFU)|
-|      Stylised Avatar  |    Building Stylised Avatar Pipeline with ACE Components    | [Making & Animating a Stylised 3D Avatar From Text Inputs](https://www.youtube.com/watch?v=cnyy0mlL8C0), [Make Vincent Rig Compatible for UE5 & A2X LiveLink](https://www.youtube.com/watch?v=2MgzVluShtc), [Make Vincent Blueprint Receive A2X Animation Data](https://www.youtube.com/watch?v=fpthK6WHjX8), [Create Python App to Generate Audio from Text & Animate Vincent](https://www.youtube.com/watch?v=g14c2gcbowM)|
+#### 4.1 Agent-based 아키텍처
+- 각 기능별로 전문화된 에이전트 분리
+- 확장 가능한 모듈러 구조
+- 책임 분리를 통한 유지보수성 향상
 
+#### 4.2 실시간 통신
+- WebSocket을 통한 실시간 채팅
+- 세션 기반 대화 컨텍스트 유지
+- 연결 끊김 시 자동 재연결 메커니즘
 
-License
--------
+#### 4.3 AI 통합
+- OpenAI GPT-4 모델 활용
+- API 키 없이도 동작하는 Mock 응답 시스템
+- 비동기 처리를 통한 성능 최적화
 
-Github - [Apache 2](https://www.apache.org/licenses/LICENSE-2.0.txt)
+### 5. 웹 인터페이스
 
-ACE NIMs and NGC Microservices - [NVIDIA AI Product License](https://www.nvidia.com/en-us/data-center/products/nvidia-ai-enterprise/eula/)
+프로젝트는 사용자 친화적인 웹 기반 채팅 인터페이스를 제공합니다:
+
+- **반응형 디자인**: 모바일 및 데스크톱 지원
+- **실시간 채팅**: WebSocket 기반 즉시 응답
+- **연결 상태 표시**: 실시간 연결 상태 모니터링
+- **제안 액션**: AI가 제안하는 다음 단계 버튼
+
+---
+
+## 결론 (Conclusion)
+
+### 1. 프로젝트 성과 분석
+
+#### 1.1 성공 요소
+- **포괄적인 기술 지원**: 11개 언어, 6개 프레임워크 지원으로 광범위한 개발자 커버
+- **모듈러 아키텍처**: Agent 기반 설계로 확장성과 유지보수성 확보
+- **실용적 기능**: 실제 개발 현장에서 필요한 기능들(코드리뷰, 디버깅, 학습가이드) 집중
+- **사용자 경험**: 직관적인 웹 인터페이스와 실시간 상호작용
+- **AI 통합**: GPT-4를 활용한 고품질 멘토링 서비스
+
+### 2. 기술적 혁신성
+
+#### 2.1 AI 멘토링의 새로운 접근
+- 전통적인 문서 기반 학습에서 **대화형 AI 멘토링**으로의 패러다임 전환
+- **개인화된 학습 경험** 제공을 통한 학습 효율성 극대화
+- **실시간 피드백** 시스템으로 즉각적인 문제해결 지원
+
+#### 2.2 확장 가능한 에이전트 생태계
+- 새로운 기술 스택이나 도메인 추가 시 **새로운 에이전트만 구현**하면 되는 확장성
+- **마이크로서비스** 아키텍처와 유사한 분산 처리 구조
+- **플러그인 방식**의 기능 추가 가능
+
+### 3. 시장 가치 및 활용 전망
+
+#### 3.1 대상 사용자
+- **주니어 개발자**: 체계적인 학습 로드맵과 실무 가이드 필요
+- **시니어 개발자**: 새로운 기술 스택 학습 및 코드 품질 개선
+- **개발 팀**: 코드 리뷰 프로세스 자동화 및 표준화
+- **교육 기관**: 개인화된 프로그래밍 교육 도구
+
+#### 3.2 비즈니스 모델
+- **SaaS 구독 모델**: 개인 및 팀 단위 구독 서비스
+- **Enterprise 솔루션**: 대기업 맞춤형 멘토링 시스템
+- **교육 기관 라이선스**: 대학 및 부트캠프 교육용 라이선스
+
+### 4. 프로젝트 분석 요약
+
+#### 4.1 주요 성과
+**기술적 성취**
+- **포괄적인 기술 지원**: 11개 프로그래밍 언어, 6개 프레임워크 지원
+- **모듈러 아키텍처**: Agent 기반 설계로 확장성과 유지보수성 확보
+- **실용적 기능**: 실제 개발 현장에서 필요한 기능들 집중 구현
+- **사용자 경험**: 직관적인 웹 인터페이스와 실시간 상호작용
+- **AI 통합**: GPT-4를 활용한 고품질 멘토링 서비스
+
+**아키텍처적 장점**
+- 각 기능별로 전문화된 에이전트 분리
+- 확장 가능한 모듈러 구조
+- WebSocket을 통한 실시간 통신
+- 비동기 처리를 통한 성능 최적화
+
+#### 4.2 개선 필요 영역
+- **프론트엔드 미완성**: React 기반 전용 클라이언트 개발 필요
+- **데이터베이스 부재**: 사용자 데이터 영속성 및 학습 이력 관리 시스템 필요
+- **인증 시스템 부족**: 사용자 관리 및 보안 체계 구축 필요
+- **테스트 커버리지**: 종합적인 테스트 시나리오 및 자동화 테스트 부족
+
+#### 4.3 개선 권고사항
+**단기 개발 과제**
+- **프론트엔드 완성**: React 기반 전용 클라이언트 개발
+- **데이터 영속성**: 사용자 데이터 및 학습 이력 관리 시스템 구축
+- **보안 체계**: 사용자 인증 및 권한 관리 시스템 도입
+- **테스트 자동화**: 종합적인 테스트 시나리오 및 CI/CD 파이프라인 구축
+
+**중장기 확장 방안**
+- 지원 기술 스택 확대 (더 많은 언어 및 프레임워크)
+- 고급 분석 기능 (성능, 보안 분석)
+- 팀 협업 기능 및 엔터프라이즈 기능 추가
+- 멀티모달 AI 지원 및 커뮤니티 플랫폼 구축
+
+#### 4.4 개발 로드맵
+1. **1단계** (1-3개월): 기본 인프라 완성
+   - React 프론트엔드 개발
+   - 사용자 인증 시스템
+   - 데이터베이스 연동
+
+2. **2단계** (3-6개월): 기능 확장
+   - 지원 기술 스택 확대
+   - 고급 코드 분석 기능
+   - 팀 협업 도구
+
+3. **3단계** (6-12개월): 플랫폼 고도화
+   - 멀티모달 AI 지원
+   - 개발자 커뮤니티
+   - 엔터프라이즈 솔루션
+
+### 5. 종합 분석
+
+DevMentor Agent 프로젝트는 **AI 기술을 활용한 개발자 멘토링 서비스**라는 명확한 비전 하에 체계적으로 설계되고 구현된 프로젝트입니다. 
+
+#### 5.1 핵심 가치
+- **Agent 기반 아키텍처**를 통한 모듈러 설계로 확장성과 유지보수성 확보
+- **실시간 상호작용**을 지원하는 사용자 경험으로 기존 정적 도구와의 차별화
+- **개인화된 멘토링 접근**으로 개발자별 맞춤형 서비스 제공
+
+#### 5.2 기술적 기여도
+본 프로젝트는 전통적인 문서 기반 학습에서 **대화형 AI 멘토링**으로의 패러다임 전환을 시도하며, 개발자 교육 분야에서 새로운 접근 방법을 제시합니다. 특히 Agent 기반 모듈러 설계는 향후 기능 확장 시 높은 유연성을 제공할 것으로 분석됩니다.
+
+#### 5.3 향후 발전 방향
+제시된 개발 로드맵에 따라 단계적 개발이 진행된다면, 개발자 교육 및 멘토링 분야에서 실질적인 가치를 제공하는 플랫폼으로 발전할 가능성을 보여줍니다. 
+
+특히 현재 구현된 핵심 아키텍처는 향후 확장 개발의 견고한 기반이 될 것으로 판단되며, 교육 기관 및 기업 환경에서의 활용도가 높을 것으로 예상됩니다.
