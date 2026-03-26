@@ -21,6 +21,7 @@ export const categoryEnum = pgEnum('category', [
   'db',
   'java',
   'typescript',
+  'ai_dev',
 ])
 export const questionTypeEnum = pgEnum('question_type', ['concept', 'mcq'])
 
