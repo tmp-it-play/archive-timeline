@@ -1,5 +1,5 @@
 import { getDb, schema } from '../../db'
-import { desc, eq, inArray, sql } from 'drizzle-orm'
+import { and, desc, eq, inArray, sql } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -92,6 +92,46 @@ export default defineEventHandler(async (event) => {
           .select({ rank: sql<number>`count(*) + 1` })
           .from(schema.userRankings)
           .where(sql`${schema.userRankings.totalScore} > ${myRanking.totalScore}`)
+        myRank = Number(myRankRes?.rank ?? null) || null
+      }
+    }
+    else if (type === 'category' && category) {
+      const [myRanking] = await db
+        .select({ accuracy: schema.userCategoryRankings.accuracy })
+        .from(schema.userCategoryRankings)
+        .where(and(
+          eq(schema.userCategoryRankings.userId, user.sub),
+          eq(schema.userCategoryRankings.category, category as any),
+        ))
+
+      if (myRanking) {
+        const [myRankRes] = await db
+          .select({ rank: sql<number>`count(*) + 1` })
+          .from(schema.userCategoryRankings)
+          .where(and(
+            eq(schema.userCategoryRankings.category, category as any),
+            sql`${schema.userCategoryRankings.accuracy} > ${myRanking.accuracy}`,
+          ))
+        myRank = Number(myRankRes?.rank ?? null) || null
+      }
+    }
+    else if (type === 'difficulty' && difficulty) {
+      const [myRanking] = await db
+        .select({ accuracy: schema.userDifficultyRankings.accuracy })
+        .from(schema.userDifficultyRankings)
+        .where(and(
+          eq(schema.userDifficultyRankings.userId, user.sub),
+          eq(schema.userDifficultyRankings.difficulty, difficulty as any),
+        ))
+
+      if (myRanking) {
+        const [myRankRes] = await db
+          .select({ rank: sql<number>`count(*) + 1` })
+          .from(schema.userDifficultyRankings)
+          .where(and(
+            eq(schema.userDifficultyRankings.difficulty, difficulty as any),
+            sql`${schema.userDifficultyRankings.accuracy} > ${myRanking.accuracy}`,
+          ))
         myRank = Number(myRankRes?.rank ?? null) || null
       }
     }
