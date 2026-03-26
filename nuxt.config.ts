@@ -17,7 +17,9 @@ export default defineNuxtConfig({
     oauthRedirectUri: process.env.NUXT_OAUTH_REDIRECT_URI ?? 'http://localhost:3000/api/auth/callback',
     sessionSecret: process.env.NUXT_SESSION_SECRET ?? '',
     databaseUrl: process.env.DATABASE_URL ?? '',
-    public: {},
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://backgsm.vercel.app',
+    },
   },
   nitro: {
     experimental: {
