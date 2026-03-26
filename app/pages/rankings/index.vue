@@ -27,9 +27,7 @@
         v-for="c in CATEGORIES"
         :key="c.value"
         class="px-3 py-1.5 text-sm rounded-md border transition-all"
-        :class="selectedCategory === c.value
-          ? 'border-ink-light dark:border-ink-dark bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark'
-          : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-400'"
+        :class="getCategoryClass(c.value, selectedCategory === c.value)"
         @click="selectedCategory = c.value"
       >
         {{ c.label }}
@@ -41,9 +39,7 @@
         v-for="d in DIFFICULTIES"
         :key="d.value"
         class="px-3 py-1.5 text-sm rounded-md border transition-all"
-        :class="selectedDifficulty === d.value
-          ? 'border-ink-light dark:border-ink-dark bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark'
-          : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-400'"
+        :class="getDifficultyClass(d.value, selectedDifficulty === d.value)"
         @click="selectedDifficulty = d.value"
       >
         {{ d.label }}
@@ -145,12 +141,78 @@ const DIFFICULTIES = [
   { value: 'senior', label: '고급' },
 ]
 
+const DIFFICULTY_CLASSES: Record<string, { active: string; inactive: string }> = {
+  junior: {
+    active: 'border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20',
+    inactive: 'border-emerald-100 dark:border-emerald-900/70 text-emerald-500 dark:text-emerald-400 bg-white dark:bg-transparent hover:border-emerald-200 dark:hover:border-emerald-800',
+  },
+  mid: {
+    active: 'border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20',
+    inactive: 'border-amber-100 dark:border-amber-900/70 text-amber-500 dark:text-amber-400 bg-white dark:bg-transparent hover:border-amber-200 dark:hover:border-amber-800',
+  },
+  senior: {
+    active: 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20',
+    inactive: 'border-red-100 dark:border-red-900/70 text-red-500 dark:text-red-400 bg-white dark:bg-transparent hover:border-red-200 dark:hover:border-red-800',
+  },
+}
+
+const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
+  network: {
+    active: 'border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20',
+    inactive: 'border-blue-100 dark:border-blue-900/70 text-blue-500 dark:text-blue-400 bg-white dark:bg-transparent hover:border-blue-200 dark:hover:border-blue-800',
+  },
+  os: {
+    active: 'border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/20',
+    inactive: 'border-purple-100 dark:border-purple-900/70 text-purple-500 dark:text-purple-400 bg-white dark:bg-transparent hover:border-purple-200 dark:hover:border-purple-800',
+  },
+  db: {
+    active: 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20',
+    inactive: 'border-green-100 dark:border-green-900/70 text-green-500 dark:text-green-400 bg-white dark:bg-transparent hover:border-green-200 dark:hover:border-green-800',
+  },
+  java: {
+    active: 'border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-900/20',
+    inactive: 'border-orange-100 dark:border-orange-900/70 text-orange-500 dark:text-orange-400 bg-white dark:bg-transparent hover:border-orange-200 dark:hover:border-orange-800',
+  },
+  typescript: {
+    active: 'border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-900/20',
+    inactive: 'border-sky-100 dark:border-sky-900/70 text-sky-500 dark:text-sky-400 bg-white dark:bg-transparent hover:border-sky-200 dark:hover:border-sky-800',
+  },
+  data_structure: {
+    active: 'border-pink-200 dark:border-pink-800 text-pink-700 dark:text-pink-300 bg-pink-50 dark:bg-pink-900/20',
+    inactive: 'border-pink-100 dark:border-pink-900/70 text-pink-500 dark:text-pink-400 bg-white dark:bg-transparent hover:border-pink-200 dark:hover:border-pink-800',
+  },
+  cloud_devops: {
+    active: 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800',
+    inactive: 'border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 bg-white dark:bg-transparent hover:border-neutral-300 dark:hover:border-neutral-700',
+  },
+}
+
 const { isLoggedIn } = useAuth()
 
 const activeTab = ref('overall')
 const selectedCategory = ref('network')
 const selectedDifficulty = ref('junior')
 const page = ref(1)
+
+const getDifficultyClass = (difficulty: string, selected: boolean) => {
+  const colors = DIFFICULTY_CLASSES[difficulty]
+  if (!colors) {
+    return selected
+      ? 'border-ink-light dark:border-ink-dark bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark'
+      : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-400'
+  }
+  return selected ? colors.active : colors.inactive
+}
+
+const getCategoryClass = (category: string, selected: boolean) => {
+  const colors = CATEGORY_CLASSES[category]
+  if (!colors) {
+    return selected
+      ? 'border-ink-light dark:border-ink-dark bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark'
+      : 'border-neutral-200 dark:border-neutral-700 text-neutral-500 dark:text-neutral-400 hover:border-neutral-400'
+  }
+  return selected ? colors.active : colors.inactive
+}
 
 const apiParams = computed(() => {
   const params: Record<string, string> = { type: activeTab.value, page: String(page.value) }
