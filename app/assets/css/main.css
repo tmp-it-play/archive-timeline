@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-gold: #D4A96A;
@@ -15,6 +16,24 @@
 @layer base {
   html {
     font-family: var(--font-family-sans);
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html:not(.dark) {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-surface-light);
+    color: var(--color-ink-light);
+  }
+
+  html.dark body {
+    background-color: var(--color-surface-dark);
+    color: var(--color-ink-dark);
   }
 }
 
