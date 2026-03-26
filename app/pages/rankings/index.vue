@@ -145,7 +145,7 @@ const CATEGORIES = [
   { value: 'typescript', label: 'TypeScript' },
   { value: 'data_structure', label: '자료구조' },
   { value: 'cloud_devops', label: '클라우드·DevOps' },
-  { value: 'ai_dev', label: 'AI' },
+  { value: 'ai_dev', label: 'LLM·AI 개발' },
 ]
 
 const DIFFICULTIES = [

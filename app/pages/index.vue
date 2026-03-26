@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-const CATEGORIES = ['network', 'os', 'db', 'java', 'typescript', 'data_structure', 'cloud_devops']
+const CATEGORIES = ['network', 'os', 'db', 'java', 'typescript', 'data_structure', 'cloud_devops', 'ai_dev']
 
 const { isLoggedIn, login } = useAuth()
 
