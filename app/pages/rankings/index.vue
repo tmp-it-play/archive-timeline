@@ -47,9 +47,20 @@
     </div>
 
     <!-- 내 순위 배너 -->
-    <div v-if="myRank && isLoggedIn" class="flex items-center gap-3 px-5 py-3.5 border border-gold/40 bg-gold/5 rounded-lg">
-      <span class="text-gold font-mono font-bold text-lg">#{{ myRank }}</span>
-      <span class="text-sm">현재 내 순위</span>
+    <div
+      v-if="isLoggedIn && !pending"
+      class="flex items-center gap-3 px-5 py-3.5 border rounded-lg"
+      :class="myRank ? myRankBannerClass : 'border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50'"
+    >
+      <span
+        class="font-mono font-bold text-lg"
+        :class="myRank ? myRankTextClass : 'text-neutral-400 dark:text-neutral-500'"
+      >
+        {{ myRank ? `#${myRank}` : 'Unranked' }}
+      </span>
+      <span class="text-sm text-neutral-600 dark:text-neutral-300">
+        {{ myRank ? myRankMessage : '아직 랭킹에 등재되지 않았습니다. 문제를 풀고 첫 랭킹을 만들어보세요.' }}
+      </span>
     </div>
 
     <!-- 랭킹 테이블 -->
@@ -79,8 +90,9 @@
                 class="font-mono font-bold"
                 :class="{
                   'text-gold text-lg': row.rank === 1,
+                  'text-slate-500 dark:text-slate-300 text-lg': row.rank === 2,
+                  'text-amber-700 dark:text-amber-400 text-lg': row.rank === 3,
                   'text-neutral-400 dark:text-neutral-500': row.rank > 3,
-                  'text-neutral-600 dark:text-neutral-300': row.rank === 2 || row.rank === 3,
                 }"
               >
                 {{ row.rank <= 3 ? ['🥇', '🥈', '🥉'][row.rank - 1] : `#${row.rank}` }}
@@ -227,6 +239,24 @@ const { data: rankingData, pending } = await useLazyFetch('/api/rankings', {
 })
 
 const myRank = computed(() => rankingData.value?.myRank ?? null)
+const myRankBannerClass = computed(() => {
+  if (myRank.value === 1) return 'border-gold/40 bg-gold/5'
+  if (myRank.value === 2) return 'border-slate-300/70 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40'
+  if (myRank.value === 3) return 'border-amber-300/70 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30'
+  return 'border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50'
+})
+const myRankTextClass = computed(() => {
+  if (myRank.value === 1) return 'text-gold'
+  if (myRank.value === 2) return 'text-slate-600 dark:text-slate-300'
+  if (myRank.value === 3) return 'text-amber-700 dark:text-amber-400'
+  return 'text-neutral-600 dark:text-neutral-300'
+})
+const myRankMessage = computed(() => {
+  if (myRank.value === 1) return '현재 전체 1위입니다.'
+  if (myRank.value === 2) return '현재 실버권 순위입니다.'
+  if (myRank.value === 3) return '현재 브론즈권 순위입니다.'
+  return '현재 내 순위'
+})
 
 watch([activeTab, selectedCategory, selectedDifficulty], () => { page.value = 1 })
 
