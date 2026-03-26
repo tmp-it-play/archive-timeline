@@ -10,6 +10,9 @@
 
         <!-- Nav -->
         <nav class="hidden sm:flex items-center gap-6 text-sm text-neutral-500 dark:text-neutral-400">
+          <NuxtLink to="/" class="hover:text-ink-light dark:hover:text-ink-dark transition-colors" active-class="text-ink-light dark:text-ink-dark font-medium">
+            홈
+          </NuxtLink>
           <NuxtLink to="/quiz/mcq" class="hover:text-ink-light dark:hover:text-ink-dark transition-colors" active-class="text-ink-light dark:text-ink-dark font-medium">
             사지선다
           </NuxtLink>
