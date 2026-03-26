@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
     // 카테고리별 랭킹 업데이트
     const [catTotals] = await db
       .select({
-        correct: sql<number>`sum(case when l.is_correct then 1 else 0 end)`,
+        correct: sql<number>`sum(case when ${schema.userMcqLogs.isCorrect} then 1 else 0 end)`,
         attempts: sql<number>`count(*)`,
       })
       .from(schema.userMcqLogs)
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
     // 난이도별 랭킹 업데이트
     const [diffTotals] = await db
       .select({
-        correct: sql<number>`sum(case when l.is_correct then 1 else 0 end)`,
+        correct: sql<number>`sum(case when ${schema.userMcqLogs.isCorrect} then 1 else 0 end)`,
         attempts: sql<number>`count(*)`,
       })
       .from(schema.userMcqLogs)
