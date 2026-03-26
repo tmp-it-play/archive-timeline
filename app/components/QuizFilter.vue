@@ -65,13 +65,13 @@
         </p>
       </div>
       <button
-        class="relative w-10 h-6 rounded-full transition-colors"
+        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
         :class="allowDuplicate ? 'bg-gold' : 'bg-neutral-200 dark:bg-neutral-700'"
         @click="allowDuplicate = !allowDuplicate"
       >
         <span
-          class="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform"
-          :class="allowDuplicate ? 'translate-x-4' : 'translate-x-0.5'"
+          class="block h-5 w-5 rounded-full bg-white shadow transition-transform"
+          :class="allowDuplicate ? 'translate-x-[1.375rem]' : 'translate-x-0.5'"
         />
       </button>
     </div>
