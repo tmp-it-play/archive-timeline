@@ -129,7 +129,7 @@ const CATEGORIES = [
   { value: 'network', label: '네트워크' },
   { value: 'os', label: 'OS' },
   { value: 'db', label: 'DB' },
-  { value: 'java', label: 'Java' },
+  { value: 'java', label: 'JVM·Spring' },
   { value: 'typescript', label: 'TypeScript' },
   { value: 'data_structure', label: '자료구조' },
   { value: 'cloud_devops', label: '클라우드·DevOps' },

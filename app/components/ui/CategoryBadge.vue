@@ -12,7 +12,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   network: '네트워크',
   os: 'OS',
   db: 'DB',
-  java: 'Java',
+  java: 'JVM·Spring',
   typescript: 'TypeScript',
   data_structure: '자료구조',
   cloud_devops: '클라우드·DevOps',
