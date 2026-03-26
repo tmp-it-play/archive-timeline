@@ -145,6 +145,7 @@ const CATEGORIES = [
   { value: 'typescript', label: 'TypeScript' },
   { value: 'data_structure', label: '자료구조' },
   { value: 'cloud_devops', label: '클라우드·DevOps' },
+  { value: 'ai_dev', label: 'AI' },
 ]
 
 const DIFFICULTIES = [
@@ -196,6 +197,10 @@ const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
   cloud_devops: {
     active: 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800',
     inactive: 'border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 bg-white dark:bg-transparent hover:border-neutral-300 dark:hover:border-neutral-700',
+  },
+  ai_dev: {
+    active: 'border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20',
+    inactive: 'border-violet-100 dark:border-violet-900/70 text-violet-500 dark:text-violet-400 bg-white dark:bg-transparent hover:border-violet-200 dark:hover:border-violet-800',
   },
 }
 
@@ -252,10 +257,8 @@ const myRankTextClass = computed(() => {
   return 'text-neutral-600 dark:text-neutral-300'
 })
 const myRankMessage = computed(() => {
-  if (myRank.value === 1) return '현재 전체 1위입니다.'
-  if (myRank.value === 2) return '현재 실버권 순위입니다.'
-  if (myRank.value === 3) return '현재 브론즈권 순위입니다.'
-  return '현재 내 순위'
+  if (!myRank.value) return ''
+  return `현재 ${myRank.value}위입니다.`
 })
 
 watch([activeTab, selectedCategory, selectedDifficulty], () => { page.value = 1 })
