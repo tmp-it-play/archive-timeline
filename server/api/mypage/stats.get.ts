@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
   const correctCount = Number(mcqStats?.correctCount ?? 0)
   const incorrectCount = totalAttempts - correctCount
   const accuracy = totalAttempts > 0 ? correctCount / totalAttempts : 0
+  const incorrectRate = totalAttempts > 0 ? incorrectCount / totalAttempts : 0
 
   // 전체 MCQ 수
   const [mcqTotal] = await db
@@ -84,7 +85,7 @@ export default defineEventHandler(async (event) => {
       incorrectCount,
       unsolvedCount: Math.max(0, totalMcq - correctCount),
       accuracy: Number(accuracy.toFixed(4)),
-      incorrectRate: Number((1 - accuracy).toFixed(4)),
+      incorrectRate: Number(incorrectRate.toFixed(4)),
     },
     concept: {
       totalConcepts,
