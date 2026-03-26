@@ -1,19 +1,25 @@
 ---
 id: "ai-mcq-016"
-title: "MiniMax M2.7이 Claude Opus 4.6 대비 가장 두드러지는 장점은?"
+title: "2026년 3월 기준, SWE-bench Verified(실제 GitHub 이슈 해결) 점수가 가장 높은 모델은?"
 difficulty: "mid"
 category: "ai_dev"
 type: "mcq"
 options:
-  - text: "10B의 경량 활성 파라미터로 입력 토큰 비용이 약 16.7배 저렴하다."
+  - text: "Claude Opus 4.6 (80.9)"
     correct: true
-  - text: "컨텍스트 윈도우가 1M 토큰으로 압도적으로 크다."
+  - text: "GPT-5.4 Pro (71.7)"
     correct: false
-  - text: "NVIDIA GPU 없이 AMD CPU만으로 실행된다."
+  - text: "Gemini 3.1 Pro (63.8)"
     correct: false
-  - text: "한국어 성능이 Claude보다 월등히 높다."
+  - text: "MiniMax M2.7 (80.2, 중국 오픈소스 1위)"
     correct: false
 ---
 
-MiniMax M2.7(2026년 3월 출시)은 **경량 고효율** 모델로, 단 10B의 활성 파라미터만 사용함에도 SWE-bench Verified 80.2를 기록해 중국 오픈소스 모델 1위를 달성했습니다.
-비용은 Claude Opus 4.6 대비 입력 16.7배, 출력 22.7배 저렴해, 빠른 속도가 필요하거나 비용 최적화가 중요한 반복 작업에 적합합니다.
+SWE-bench Verified는 AI 모델이 실제 GitHub 이슈를 얼마나 올바르게 해결하는지 측정하는 코딩 벤치마크입니다.
+
+2026년 3월 기준 주요 점수:
+- **Claude Opus 4.6**: 80.9 (전체 최고)
+- **MiniMax M2.7**: 80.2 (중국 오픈소스 1위, 비용 16~22배 저렴)
+- **GLM-5**: 77.8 (Huawei 칩 독자 학습)
+- **GPT-5.4 Pro**: 71.7
+- **Gemini 3.1 Pro**: 63.8 (컨텍스트 2M, Intelligence Index는 GPT-5.4와 동점)
