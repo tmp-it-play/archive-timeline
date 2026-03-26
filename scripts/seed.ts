@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import { join, relative, extname, basename } from 'node:path'
 import matter from 'gray-matter'
@@ -6,9 +7,38 @@ import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import * as schema from '../server/db/schema'
 
+async function loadEnvFile() {
+  const envPath = join(process.cwd(), '.env')
+  if (!existsSync(envPath)) return
+
+  const raw = await readFile(envPath, 'utf-8')
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('#')) continue
+
+    const separatorIndex = trimmed.indexOf('=')
+    if (separatorIndex < 0) continue
+
+    const key = trimmed.slice(0, separatorIndex).trim()
+    if (!key || process.env[key] !== undefined) continue
+
+    let value = trimmed.slice(separatorIndex + 1).trim()
+    if (
+      (value.startsWith('"') && value.endsWith('"'))
+      || (value.startsWith('\'') && value.endsWith('\''))
+    ) {
+      value = value.slice(1, -1)
+    }
+
+    process.env[key] = value
+  }
+}
+
+await loadEnvFile()
+
 const DATABASE_URL = process.env.DATABASE_URL
 if (!DATABASE_URL) {
-  console.error('DATABASE_URL 환경변수가 필요합니다.')
+  console.error('DATABASE_URL 환경변수가 필요합니다. 프로젝트 루트의 .env 또는 셸 환경변수에 설정하세요.')
   process.exit(1)
 }
 
