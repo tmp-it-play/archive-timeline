@@ -57,6 +57,8 @@ const CATEGORY_MAP: Record<string, string> = {
   'db': 'db',
   'java': 'java',
   'typescript': 'typescript',
+  'ai-dev': 'ai_dev',
+  'ai_dev': 'ai_dev',
 }
 
 async function findMdFiles(dir: string): Promise<string[]> {
