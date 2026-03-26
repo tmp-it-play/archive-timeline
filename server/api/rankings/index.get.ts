@@ -82,17 +82,18 @@ export default defineEventHandler(async (event) => {
   let myRank: number | null = null
   if (user) {
     if (type === 'overall') {
-      const [myRankRes] = await db
-        .select({ rank: sql<number>`count(*) + 1` })
+      const [myRanking] = await db
+        .select({ totalScore: schema.userRankings.totalScore })
         .from(schema.userRankings)
-        .where(
-          sql`${schema.userRankings.totalScore} > (
-            select ${schema.userRankings.totalScore}
-            from ${schema.userRankings}
-            where ${schema.userRankings.userId} = ${user.sub}
-          )`,
-        )
-      myRank = Number(myRankRes?.rank ?? null) || null
+        .where(eq(schema.userRankings.userId, user.sub))
+
+      if (myRanking) {
+        const [myRankRes] = await db
+          .select({ rank: sql<number>`count(*) + 1` })
+          .from(schema.userRankings)
+          .where(sql`${schema.userRankings.totalScore} > ${myRanking.totalScore}`)
+        myRank = Number(myRankRes?.rank ?? null) || null
+      }
     }
   }
 
