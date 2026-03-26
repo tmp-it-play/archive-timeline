@@ -104,6 +104,7 @@ const CATEGORIES = [
   { value: 'typescript', label: 'TypeScript' },
   { value: 'data_structure', label: '자료구조' },
   { value: 'cloud_devops', label: '클라우드·DevOps' },
+  { value: 'ai_dev', label: 'LLM·AI 개발' },
 ]
 
 const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
@@ -134,6 +135,10 @@ const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
   cloud_devops: {
     active: 'border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/20',
     inactive: 'border-teal-100 dark:border-teal-900/70 text-teal-500 dark:text-teal-400 bg-white dark:bg-transparent hover:border-teal-200 dark:hover:border-teal-800',
+  },
+  ai_dev: {
+    active: 'border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20',
+    inactive: 'border-violet-100 dark:border-violet-900/70 text-violet-500 dark:text-violet-400 bg-white dark:bg-transparent hover:border-violet-200 dark:hover:border-violet-800',
   },
 }
 

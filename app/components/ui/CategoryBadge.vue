@@ -16,6 +16,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   typescript: 'TypeScript',
   data_structure: '자료구조',
   cloud_devops: '클라우드·DevOps',
+  ai_dev: 'LLM·AI 개발',
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -26,6 +27,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   typescript: 'border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-900/20',
   data_structure: 'border-pink-200 dark:border-pink-800 text-pink-700 dark:text-pink-300 bg-pink-50 dark:bg-pink-900/20',
   cloud_devops: 'border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/20',
+  ai_dev: 'border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20',
 }
 
 const props = defineProps<{ category: string }>()
