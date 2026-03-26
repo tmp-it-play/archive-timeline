@@ -62,9 +62,34 @@
     </header>
 
     <!-- Main -->
-    <main class="max-w-5xl mx-auto px-6 py-10">
+    <main class="max-w-5xl mx-auto px-6 py-10 min-h-[calc(100vh-3.5rem-3rem)]">
       <slot />
     </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-neutral-200 dark:border-neutral-800 mt-auto">
+      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-center gap-4 text-xs text-neutral-400 dark:text-neutral-600">
+        <a
+          href="https://github.com/snowykte0426/BackGSM"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+        >
+          GitHub
+        </a>
+        <span>·</span>
+        <a
+          href="https://github.com/snowykte0426"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+        >
+          @snowykte0426
+        </a>
+        <span>·</span>
+        <span>MIT License</span>
+      </div>
+    </footer>
   </div>
 </template>
 
