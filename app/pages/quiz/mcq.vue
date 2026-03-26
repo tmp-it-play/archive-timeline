@@ -214,15 +214,25 @@ async function selectOption(optionId: string) {
   if (answered.value) return
   selectedOptionId.value = optionId
   answered.value = true
+  error.value = ''
 
-  const res = await $fetch<{ isCorrect: boolean; correctOptionId: string; explanation: string }>('/api/quiz/mcq/answer', {
-    method: 'POST',
-    body: { questionId: currentQ.value.id, selectedOptionId: optionId },
-  })
+  try {
+    const res = await $fetch<{ isCorrect: boolean; correctOptionId: string; explanation: string }>('/api/quiz/mcq/answer', {
+      method: 'POST',
+      body: { questionId: currentQ.value.id, selectedOptionId: optionId },
+    })
 
-  correctOptionId.value = res.correctOptionId
-  explanation.value = res.explanation
-  answers.value[currentQ.value.id] = res.isCorrect
+    correctOptionId.value = res.correctOptionId
+    explanation.value = res.explanation
+    answers.value[currentQ.value.id] = res.isCorrect
+  }
+  catch (e: any) {
+    answered.value = false
+    selectedOptionId.value = null
+    correctOptionId.value = null
+    explanation.value = ''
+    error.value = e?.data?.statusMessage ?? '답안을 제출하지 못했습니다.'
+  }
 }
 
 function nextQuestion() {
