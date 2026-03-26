@@ -48,8 +48,8 @@ export default defineEventHandler(async (event) => {
   const categoryStats = await db
     .select({
       category: schema.questions.category,
-      correct: sql<number>`sum(case when l.is_correct then 1 else 0 end)`,
-      attempts: sql<number>`count(l.id)`,
+      correct: sql<number>`sum(case when ${schema.userMcqLogs.isCorrect} then 1 else 0 end)`,
+      attempts: sql<number>`count(${schema.userMcqLogs.id})`,
     })
     .from(schema.questions)
     .leftJoin(
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
     .select({
       category: schema.questions.category,
       total: sql<number>`count(*)`,
-      viewed: sql<number>`count(l.id)`,
+      viewed: sql<number>`count(${schema.userConceptLogs.id})`,
     })
     .from(schema.questions)
     .leftJoin(
