@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "deploy:build": "npm run seed && npm run build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "seed": "tsx scripts/seed.ts",
