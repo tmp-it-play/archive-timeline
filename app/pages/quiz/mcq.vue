@@ -63,12 +63,16 @@
             :key="opt.id"
             class="w-full text-left px-5 py-3.5 rounded-lg border text-sm transition-all"
             :class="optionClass(opt.id)"
-            :disabled="answered"
+            :disabled="answered || submittingAnswer"
             @click="selectOption(opt.id)"
           >
             {{ opt.text }}
           </button>
         </div>
+
+        <p v-if="submittingAnswer" class="text-sm text-neutral-500 dark:text-neutral-400">
+          정답을 확인하는 중...
+        </p>
 
         <!-- 해설 (정답 후) -->
         <Transition name="fade-down">
@@ -163,6 +167,7 @@ const error = ref('')
 const questions = ref<Question[]>([])
 const currentIndex = ref(0)
 const answered = ref(false)
+const submittingAnswer = ref(false)
 const selectedOptionId = ref<string | null>(null)
 const correctOptionId = ref<string | null>(null)
 const explanation = ref('')
@@ -211,9 +216,9 @@ async function startQuiz() {
 }
 
 async function selectOption(optionId: string) {
-  if (answered.value) return
+  if (answered.value || submittingAnswer.value) return
   selectedOptionId.value = optionId
-  answered.value = true
+  submittingAnswer.value = true
   error.value = ''
 
   try {
@@ -225,13 +230,16 @@ async function selectOption(optionId: string) {
     correctOptionId.value = res.correctOptionId
     explanation.value = res.explanation
     answers.value[currentQ.value.id] = res.isCorrect
+    answered.value = true
   }
   catch (e: any) {
-    answered.value = false
     selectedOptionId.value = null
     correctOptionId.value = null
     explanation.value = ''
     error.value = e?.data?.statusMessage ?? '답안을 제출하지 못했습니다.'
+  }
+  finally {
+    submittingAnswer.value = false
   }
 }
 
@@ -242,12 +250,19 @@ function nextQuestion() {
   }
   currentIndex.value++
   answered.value = false
+  submittingAnswer.value = false
   selectedOptionId.value = null
   correctOptionId.value = null
   explanation.value = ''
 }
 
 function optionClass(optId: string) {
+  if (submittingAnswer.value) {
+    if (optId === selectedOptionId.value) {
+      return 'border-gold bg-gold/10 text-ink-light dark:text-ink-dark'
+    }
+    return 'border-neutral-200 dark:border-neutral-700 text-neutral-400 dark:text-neutral-500'
+  }
   if (!answered.value) {
     return 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500'
   }
@@ -265,6 +280,7 @@ function reset() {
   questions.value = []
   currentIndex.value = 0
   answered.value = false
+  submittingAnswer.value = false
   selectedOptionId.value = null
   correctOptionId.value = null
   explanation.value = ''
