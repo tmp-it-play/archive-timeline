@@ -17,10 +17,10 @@
 
       <button
         class="w-full py-3 bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark rounded-lg font-medium hover:opacity-80 transition-opacity disabled:opacity-40"
-        :disabled="loading"
+        :disabled="loading || categories.length === 0 || difficulties.length === 0"
         @click="loadConcepts"
       >
-        {{ loading ? '불러오는 중...' : '시작하기' }}
+        {{ loading ? '불러오는 중...' : difficulties.length === 0 ? '난이도를 1개 이상 선택하세요' : categories.length === 0 ? '카테고리를 1개 이상 선택하세요' : '시작하기' }}
       </button>
 
       <p v-if="error" class="text-sm text-red-500 text-center">{{ error }}</p>
@@ -124,8 +124,8 @@ interface Concept {
 
 type Phase = 'filter' | 'play' | 'done'
 
-const difficulties = ref(['junior', 'mid', 'senior'])
-const categories = ref(['network', 'os', 'db', 'java', 'typescript', 'data_structure', 'cloud_devops'])
+const difficulties = ref<string[]>([])
+const categories = ref<string[]>([])
 const allowDuplicate = ref(false)
 
 const phase = ref<Phase>('filter')

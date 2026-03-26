@@ -18,10 +18,10 @@
 
       <button
         class="w-full py-3 bg-ink-light dark:bg-ink-dark text-surface-light dark:text-surface-dark rounded-lg font-medium hover:opacity-80 transition-opacity disabled:opacity-40"
-        :disabled="loading"
+        :disabled="loading || categories.length === 0 || difficulties.length === 0"
         @click="startQuiz"
       >
-        {{ loading ? '불러오는 중...' : '시작하기' }}
+        {{ loading ? '불러오는 중...' : difficulties.length === 0 ? '난이도를 1개 이상 선택하세요' : categories.length === 0 ? '카테고리를 1개 이상 선택하세요' : '시작하기' }}
       </button>
 
       <p v-if="error" class="text-sm text-red-500 text-center">{{ error }}</p>
@@ -156,8 +156,8 @@ interface Question { id: string; title: string; difficulty: string; category: st
 
 type Phase = 'filter' | 'quiz' | 'result'
 
-const difficulties = ref(['junior', 'mid', 'senior'])
-const categories = ref(['network', 'os', 'db', 'java', 'typescript', 'data_structure', 'cloud_devops'])
+const difficulties = ref<string[]>([])
+const categories = ref<string[]>([])
 const count = ref(10)
 const allowDuplicate = ref(false)
 
@@ -257,22 +257,22 @@ function nextQuestion() {
 }
 
 function optionClass(optId: string) {
+  if (answered.value) {
+    if (optId === correctOptionId.value) {
+      return 'border-emerald-400 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300'
+    }
+    if (optId === selectedOptionId.value) {
+      return 'border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+    }
+    return 'border-neutral-100 dark:border-neutral-800 text-neutral-400 dark:text-neutral-600'
+  }
   if (submittingAnswer.value) {
     if (optId === selectedOptionId.value) {
       return 'border-gold bg-gold/10 text-ink-light dark:text-ink-dark'
     }
     return 'border-neutral-200 dark:border-neutral-700 text-neutral-400 dark:text-neutral-500'
   }
-  if (!answered.value) {
-    return 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500'
-  }
-  if (optId === correctOptionId.value) {
-    return 'border-emerald-400 dark:border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300'
-  }
-  if (optId === selectedOptionId.value) {
-    return 'border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
-  }
-  return 'border-neutral-100 dark:border-neutral-800 text-neutral-400 dark:text-neutral-600'
+  return 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500'
 }
 
 function reset() {

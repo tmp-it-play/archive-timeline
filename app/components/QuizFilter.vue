@@ -132,8 +132,8 @@ const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
     inactive: 'border-pink-100 dark:border-pink-900/70 text-pink-500 dark:text-pink-400 bg-white dark:bg-transparent hover:border-pink-200 dark:hover:border-pink-800',
   },
   cloud_devops: {
-    active: 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800',
-    inactive: 'border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 bg-white dark:bg-transparent hover:border-neutral-300 dark:hover:border-neutral-700',
+    active: 'border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/20',
+    inactive: 'border-teal-100 dark:border-teal-900/70 text-teal-500 dark:text-teal-400 bg-white dark:bg-transparent hover:border-teal-200 dark:hover:border-teal-800',
   },
 }
 
@@ -144,10 +144,10 @@ defineProps<{
 const { isLoggedIn } = useAuth()
 
 const selectedDifficulties = defineModel<string[]>('difficulties', {
-  default: () => ['junior', 'mid', 'senior'],
+  default: () => [],
 })
 const selectedCategories = defineModel<string[]>('categories', {
-  default: () => ['network', 'os', 'db', 'java', 'typescript', 'data_structure', 'cloud_devops'],
+  default: () => [],
 })
 const count = defineModel<number>('count', { default: 10 })
 const allowDuplicate = defineModel<boolean>('allowDuplicate', { default: false })
@@ -175,9 +175,7 @@ const getCategoryClass = (category: string, selected: boolean) => {
 const toggleDifficulty = (val: string) => {
   const idx = selectedDifficulties.value.indexOf(val)
   if (idx >= 0) {
-    if (selectedDifficulties.value.length > 1) {
-      selectedDifficulties.value = selectedDifficulties.value.filter(d => d !== val)
-    }
+    selectedDifficulties.value = selectedDifficulties.value.filter(d => d !== val)
   }
   else {
     selectedDifficulties.value = [...selectedDifficulties.value, val]
@@ -187,9 +185,7 @@ const toggleDifficulty = (val: string) => {
 const toggleCategory = (val: string) => {
   const idx = selectedCategories.value.indexOf(val)
   if (idx >= 0) {
-    if (selectedCategories.value.length > 1) {
-      selectedCategories.value = selectedCategories.value.filter(c => c !== val)
-    }
+    selectedCategories.value = selectedCategories.value.filter(c => c !== val)
   }
   else {
     selectedCategories.value = [...selectedCategories.value, val]
