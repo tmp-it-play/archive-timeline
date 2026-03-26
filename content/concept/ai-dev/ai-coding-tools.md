@@ -8,13 +8,13 @@ type: "concept"
 
 ## 주요 AI 코딩 도구 한눈에 보기
 
-| 도구 | 제공사 | 방식 | 주력 기능 |
-|------|-------|------|---------|
-| **GitHub Copilot** | GitHub / Microsoft | IDE 플러그인 | 인라인 코드 자동완성 |
-| **Claude Code** | Anthropic | CLI / IDE 확장 | 에이전트 기반 코딩 |
-| **Gemini CLI** | Google | CLI | 터미널 AI 어시스턴트 |
-| **Codex** | OpenAI | API | 코드 생성 기반 모델 |
-| **Cursor** | Anysphere | IDE (VS Code 포크) | 코드베이스 이해 + 편집 |
+| 도구                 | 제공사                | 방식               | 주력 기능         |
+|--------------------|--------------------|------------------|---------------|
+| **GitHub Copilot** | GitHub / Microsoft | IDE 플러그인         | 인라인 코드 자동완성   |
+| **Claude Code**    | Anthropic          | CLI / IDE 확장     | 에이전트 기반 코딩    |
+| **Gemini CLI**     | Google             | CLI              | 터미널 AI 어시스턴트  |
+| **Codex**          | OpenAI             | API              | 코드 생성 기반 모델   |
+| **Cursor**         | Anysphere          | IDE (VS Code 포크) | 코드베이스 이해 + 편집 |
 
 ## GitHub Copilot
 
