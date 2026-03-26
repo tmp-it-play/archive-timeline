@@ -1,5 +1,5 @@
 import { getDb, schema } from '../../db'
-import { eq, desc, sql, and } from 'drizzle-orm'
+import { desc, eq, inArray, sql } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
   const usersData = userIds.length
     ? await db.select({ id: schema.users.id, name: schema.users.name, studentNumber: schema.users.studentNumber })
         .from(schema.users)
-        .where(sql`${schema.users.id} = ANY(${userIds})`)
+        .where(inArray(schema.users.id, userIds))
     : []
 
   const userMap = Object.fromEntries(usersData.map(u => [u.id, u]))
@@ -83,9 +83,15 @@ export default defineEventHandler(async (event) => {
   if (user) {
     if (type === 'overall') {
       const [myRankRes] = await db
-        .select({ rank: sql<number>`rank() over (order by total_score desc)` })
+        .select({ rank: sql<number>`count(*) + 1` })
         .from(schema.userRankings)
-        .where(eq(schema.userRankings.userId, user.sub))
+        .where(
+          sql`${schema.userRankings.totalScore} > (
+            select ${schema.userRankings.totalScore}
+            from ${schema.userRankings}
+            where ${schema.userRankings.userId} = ${user.sub}
+          )`,
+        )
       myRank = Number(myRankRes?.rank ?? null) || null
     }
   }
