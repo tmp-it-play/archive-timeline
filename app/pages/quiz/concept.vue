@@ -54,7 +54,10 @@
           <!-- 뒷면: 해설 -->
           <div class="card-back absolute inset-0 border border-neutral-200 dark:border-neutral-800 rounded-xl p-8 flex flex-col bg-surface-light dark:bg-surface-dark overflow-y-auto">
             <p class="text-xs font-mono text-gold uppercase tracking-[0.2em] mb-4">해설</p>
-            <div class="prose prose-sm dark:prose-invert max-w-none flex-1" v-html="renderedContent" />
+            <div v-if="isContentLoading" class="flex-1 flex items-center justify-center text-sm text-neutral-500 dark:text-neutral-400">
+              해설을 불러오는 중...
+            </div>
+            <div v-else class="prose prose-sm dark:prose-invert max-w-none flex-1" v-html="renderedContent" />
           </div>
         </div>
       </div>
@@ -132,6 +135,7 @@ const concepts = ref<Concept[]>([])
 const currentIndex = ref(0)
 const isFlipped = ref(false)
 const viewedSet = ref(new Set<string>())
+const isContentLoading = ref(false)
 
 const currentConcept = computed(() => concepts.value[currentIndex.value])
 
@@ -157,7 +161,10 @@ async function loadConcepts() {
     }
     // 셔플
     concepts.value = [...res.questions].sort(() => Math.random() - 0.5)
+    currentIndex.value = 0
+    isFlipped.value = false
     phase.value = 'play'
+    await loadConceptDetail(concepts.value[0].id)
   }
   catch {
     error.value = '개념을 불러오지 못했습니다.'
@@ -172,14 +179,25 @@ async function loadConceptDetail(id: string) {
   const idx = concepts.value.findIndex(c => c.id === id)
   if (idx < 0 || concepts.value[idx].content) return
   try {
+    if (idx === currentIndex.value) {
+      isContentLoading.value = true
+    }
     const res = await $fetch<{ content: string }>(`/api/questions/concept/${id}`)
     concepts.value[idx] = { ...concepts.value[idx], content: res.content }
   }
   catch {}
+  finally {
+    if (idx === currentIndex.value) {
+      isContentLoading.value = false
+    }
+  }
 }
 
 function flip() {
   isFlipped.value = !isFlipped.value
+  if (isFlipped.value && !currentConcept.value.content) {
+    loadConceptDetail(currentConcept.value.id)
+  }
   if (isFlipped.value && !viewedSet.value.has(currentConcept.value.id)) {
     viewedSet.value.add(currentConcept.value.id)
     // 서버에 열람 기록
@@ -204,6 +222,9 @@ function prev() {
   if (currentIndex.value > 0) {
     currentIndex.value--
     isFlipped.value = false
+    if (!concepts.value[currentIndex.value].content) {
+      loadConceptDetail(concepts.value[currentIndex.value].id)
+    }
   }
 }
 
@@ -212,18 +233,13 @@ function reset() {
   concepts.value = []
   currentIndex.value = 0
   isFlipped.value = false
+  isContentLoading.value = false
   viewedSet.value = new Set()
 }
 
 watch(currentIndex, async (newIdx) => {
   if (newIdx + 1 < concepts.value.length) {
     await loadConceptDetail(concepts.value[newIdx + 1].id)
-  }
-})
-
-onMounted(async () => {
-  if (concepts.value.length > 0) {
-    await loadConceptDetail(concepts.value[0].id)
   }
 })
 
