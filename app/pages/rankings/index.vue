@@ -76,7 +76,16 @@
             <th class="px-5 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">이름</th>
             <th class="px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">정답률</th>
             <th class="px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider hidden sm:table-cell">풀이 수</th>
-            <th v-if="activeTab === 'overall'" class="px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider hidden sm:table-cell">점수</th>
+            <th v-if="activeTab === 'overall'" class="px-5 py-3 text-right text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider hidden sm:table-cell">
+              <span class="inline-flex items-center gap-1.5">
+                점수
+                <button
+                  class="inline-flex items-center justify-center w-4 h-4 rounded-full border border-neutral-300 dark:border-neutral-600 text-neutral-400 dark:text-neutral-500 hover:border-neutral-400 dark:hover:border-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors normal-case tracking-normal font-normal text-[10px] leading-none"
+                  @click.stop="showScoreInfo = true"
+                  title="점수 산출 방식 보기"
+                >?</button>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +115,58 @@
         </tbody>
       </table>
     </div>
+
+    <!-- 점수 산출 방식 모달 -->
+    <Teleport to="body">
+      <div
+        v-if="showScoreInfo"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        @click.self="showScoreInfo = false"
+      >
+        <div class="absolute inset-0 bg-black/40 dark:bg-black/60" @click="showScoreInfo = false" />
+        <div class="relative bg-surface-light dark:bg-surface-dark border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl w-full max-w-sm p-6 space-y-5">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-mono text-gold uppercase tracking-[0.15em] mb-1">Score</p>
+              <h2 class="text-lg font-semibold tracking-tight">점수 산출 방식</h2>
+            </div>
+            <button
+              class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors mt-0.5"
+              @click="showScoreInfo = false"
+            >✕</button>
+          </div>
+
+          <div class="rounded-lg bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-4 py-3 font-mono text-sm text-center leading-relaxed">
+            <span class="text-gold font-semibold">점수</span>
+            <span class="text-neutral-500 dark:text-neutral-400"> = </span>
+            <span class="text-ink-light dark:text-ink-dark">정답률 × 70</span>
+            <span class="text-neutral-500 dark:text-neutral-400"> + </span>
+            <span class="text-ink-light dark:text-ink-dark">풀이 점수 × 30</span>
+          </div>
+
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start gap-3">
+              <span class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xs font-medium text-neutral-500 dark:text-neutral-400">1</span>
+              <div>
+                <p class="font-medium text-ink-light dark:text-ink-dark">정답률</p>
+                <p class="text-neutral-500 dark:text-neutral-400 text-xs mt-0.5">맞은 문제 수 ÷ 총 시도 수 (0 ~ 1)</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xs font-medium text-neutral-500 dark:text-neutral-400">2</span>
+              <div>
+                <p class="font-medium text-ink-light dark:text-ink-dark">풀이 점수</p>
+                <p class="text-neutral-500 dark:text-neutral-400 text-xs mt-0.5">min(시도 수, 300) ÷ 300 — 최대 300문제 기준</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-xs text-neutral-400 dark:text-neutral-500 border-t border-neutral-100 dark:border-neutral-800 pt-4">
+            최종 점수는 <span class="font-mono">0 ~ 100</span> 범위이며, 정확도와 학습량을 모두 반영합니다.
+          </p>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- 페이지네이션 -->
     <div v-if="rankingData && rankingData.total > 10" class="flex justify-center gap-2">
@@ -205,6 +266,8 @@ const CATEGORY_CLASSES: Record<string, { active: string; inactive: string }> = {
 }
 
 const { isLoggedIn } = useAuth()
+
+const showScoreInfo = ref(false)
 
 const activeTab = ref('overall')
 const selectedCategory = ref('network')
