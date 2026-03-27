@@ -127,7 +127,17 @@
       <div class="absolute inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm" @click="resetTarget = null" />
       <div class="relative bg-surface-light dark:bg-surface-dark border border-neutral-200 dark:border-neutral-800 rounded-xl p-8 max-w-sm w-full mx-4 shadow-xl">
         <h3 class="font-semibold mb-2">{{ RESET_OPTIONS.find(o => o.type === resetTarget)?.label }}</h3>
-        <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-6">이 작업은 되돌릴 수 없습니다. 정말 초기화하시겠습니까?</p>
+        <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-3">이 작업은 되돌릴 수 없습니다. 정말 초기화하시겠습니까?</p>
+        <div
+          v-if="resetTarget === 'mcq' || resetTarget === 'all'"
+          class="flex items-start gap-2 px-3 py-2.5 mb-6 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800"
+        >
+          <span class="text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0">⚠</span>
+          <p class="text-xs text-red-600 dark:text-red-400 leading-relaxed">
+            사지선다 기록이 초기화되면 <strong>랭킹 점수와 순위도 함께 삭제</strong>됩니다.
+          </p>
+        </div>
+        <div v-else class="mb-6" />
         <div class="flex gap-3">
           <button
             class="flex-1 py-2.5 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
