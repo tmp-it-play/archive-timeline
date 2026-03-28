@@ -42,7 +42,7 @@
         <div
           class="card-inner w-full h-full cursor-pointer"
           :class="{ flipped: isFlipped }"
-          @click="flip"
+          @click="onCardClick"
         >
           <!-- 앞면: 개념 제목 -->
           <div class="card-front absolute inset-0 border border-neutral-200 dark:border-neutral-800 rounded-xl p-8 flex flex-col justify-center items-center text-center bg-surface-light dark:bg-surface-dark">
@@ -138,6 +138,11 @@ const viewedSet = ref(new Set<string>())
 const isContentLoading = ref(false)
 
 const currentConcept = computed(() => concepts.value[currentIndex.value])
+
+function onCardClick() {
+  if (window.getSelection()?.toString()) return
+  flip()
+}
 
 const renderedContent = computed(() => {
   if (!currentConcept.value?.content) return ''
