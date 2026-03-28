@@ -1,7 +1,7 @@
 ---
 id: "os-con-009"
 title: "프로세스 메모리 구조"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

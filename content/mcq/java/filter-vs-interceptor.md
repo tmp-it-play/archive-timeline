@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-005"
 title: "Filter와 Interceptor의 차이로 가장 적절한 것은?"
-difficulty: "junior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

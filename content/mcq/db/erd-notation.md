@@ -1,7 +1,7 @@
 ---
 id: "db-mcq-006"
 title: "ERD 표기법에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "mcq"
 options:

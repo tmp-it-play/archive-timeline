@@ -1,7 +1,7 @@
 ---
 id: "net-con-034"
 title: "TCP 윈도우와 ACK 기본"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-013"
 title: "Presigned URL은 왜 주의해서 써야 할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

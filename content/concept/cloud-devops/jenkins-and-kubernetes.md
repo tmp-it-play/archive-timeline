@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-023"
 title: "Jenkins와 Kubernetes를 함께 쓸 때의 관점"
-difficulty: "senior"
+difficulty: "mid"
 category: "cloud_devops"
 type: "concept"
 ---

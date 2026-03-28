@@ -1,7 +1,7 @@
 ---
 id: "net-con-011"
 title: "DNS 동작 과정과 Load Balancer의 역할"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

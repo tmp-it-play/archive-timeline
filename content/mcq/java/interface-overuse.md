@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-027"
 title: "실무에서 인터페이스 남발이 문제인 이유로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

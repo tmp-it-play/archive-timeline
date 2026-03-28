@@ -1,7 +1,7 @@
 ---
 id: "os-mcq-016"
 title: "프로그램 카운터(PC)에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "mcq"
 options:

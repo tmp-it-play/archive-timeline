@@ -1,7 +1,7 @@
 ---
 id: "net-mcq-027"
 title: "네트워크 패킷 구성 요소에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "mcq"
 options:

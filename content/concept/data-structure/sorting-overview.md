@@ -1,7 +1,7 @@
 ---
 id: "ds-con-015"
 title: "정렬 알고리즘을 비교할 때 무엇을 봐야 할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "data_structure"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-028"
 title: "Docker 외 컨테이너 런타임과 기술들"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

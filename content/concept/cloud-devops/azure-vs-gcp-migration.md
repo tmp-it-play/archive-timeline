@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-007"
 title: "Azure를 쓰다가 GCP로 갈 때 생각할 점"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "ds-con-014"
 title: "시간 복잡도와 Big-O, Big-Theta, Big-Omega"
-difficulty: "mid"
+difficulty: "junior"
 category: "data_structure"
 type: "concept"
 ---

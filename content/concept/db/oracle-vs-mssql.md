@@ -1,7 +1,7 @@
 ---
 id: "db-con-010"
 title: "Oracle vs MSSQL"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "concept"
 ---

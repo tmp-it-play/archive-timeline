@@ -1,7 +1,7 @@
 ---
 id: "java-con-059"
 title: "아키텍처는 왜 항상 복잡하게 가져가면 안 될까"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

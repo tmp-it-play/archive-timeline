@@ -1,7 +1,7 @@
 ---
 id: "java-con-027"
 title: "AOP 기반 로깅이 인증 실패 요청을 못 잡을 수 있는 이유"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "net-con-017"
 title: "API 요청은 보통 어떤 순서로 흘러갈까"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

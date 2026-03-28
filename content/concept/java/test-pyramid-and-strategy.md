@@ -1,7 +1,7 @@
 ---
 id: "java-con-050"
 title: "테스트 피라미드와 테스트 전략"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

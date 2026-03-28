@@ -1,7 +1,7 @@
 ---
 id: "db-con-028"
 title: "HikariCP 튜닝을 어떻게 생각할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

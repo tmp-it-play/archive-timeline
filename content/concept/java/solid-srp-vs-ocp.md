@@ -1,7 +1,7 @@
 ---
 id: "java-con-039"
 title: "SRP와 OCP가 충돌하는 것처럼 보일 때"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

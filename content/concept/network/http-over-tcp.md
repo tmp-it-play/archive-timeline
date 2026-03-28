@@ -1,7 +1,7 @@
 ---
 id: "net-con-014"
 title: "HTTP가 왜 TCP 위에서 동작할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "ai-con-014"
 title: "MCP 심화 — Lazy MCP · 2026 로드맵 · 생태계"
-difficulty: "senior"
+difficulty: "mid"
 category: "ai_dev"
 type: "concept"
 ---

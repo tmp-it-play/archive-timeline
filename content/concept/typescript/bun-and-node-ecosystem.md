@@ -1,7 +1,7 @@
 ---
 id: "ts-con-005"
 title: "Bun.js는 무엇이고 Node.js와 어떻게 다를까"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

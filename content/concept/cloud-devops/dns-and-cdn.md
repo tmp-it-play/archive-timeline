@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-014"
 title: "DNS와 CDN을 클라우드 관점에서 이해하기"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

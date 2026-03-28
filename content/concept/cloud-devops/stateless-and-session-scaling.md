@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-012"
 title: "Stateless 서버와 Scale Out 환경의 세션 처리"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

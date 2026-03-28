@@ -1,7 +1,7 @@
 ---
 id: "net-con-012"
 title: "PUT과 PATCH, 그리고 GET 요청 바디"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

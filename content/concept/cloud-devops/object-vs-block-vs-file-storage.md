@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-017"
 title: "객체 스토리지, 블록 스토리지, 파일 스토리지"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

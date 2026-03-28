@@ -1,7 +1,7 @@
 ---
 id: "os-con-018"
 title: "컨텍스트 스위칭 때 왜 레지스터를 저장할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "net-con-021"
 title: "CSRF란 무엇인가"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

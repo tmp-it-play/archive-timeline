@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-033"
 title: "테스트 피라미드에 대한 설명으로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

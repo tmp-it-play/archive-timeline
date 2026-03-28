@@ -1,7 +1,7 @@
 ---
 id: "java-con-058"
 title: "DDD 기초: Entity, Value Object, Aggregate"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

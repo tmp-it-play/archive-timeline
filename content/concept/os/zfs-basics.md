@@ -1,7 +1,7 @@
 ---
 id: "os-con-012"
 title: "ZFS를 왜 특별하게 보는가"
-difficulty: "senior"
+difficulty: "mid"
 category: "os"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "java-con-038"
 title: "SOLID를 실무 코드에 적용할 때의 현실"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

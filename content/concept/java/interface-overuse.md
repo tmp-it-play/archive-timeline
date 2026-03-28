@@ -1,7 +1,7 @@
 ---
 id: "java-con-042"
 title: "실무에서 인터페이스 남발이 왜 문제일까"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

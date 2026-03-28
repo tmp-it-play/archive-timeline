@@ -1,7 +1,7 @@
 ---
 id: "java-con-023"
 title: "AOP란 무엇인가"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

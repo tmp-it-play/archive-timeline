@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-044"
 title: "커맨드 패턴과 상태 패턴에 대한 설명으로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

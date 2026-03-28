@@ -1,7 +1,7 @@
 ---
 id: "os-mcq-010"
 title: "리눅스 권한/소유자 관련 명령어에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "mcq"
 options:

@@ -1,7 +1,7 @@
 ---
 id: "db-con-001"
 title: "사람·회사·이메일·전화번호를 어떻게 테이블 설계할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

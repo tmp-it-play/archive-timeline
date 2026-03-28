@@ -1,7 +1,7 @@
 ---
 id: "db-con-013"
 title: "낙관적 락과 비관적 락"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

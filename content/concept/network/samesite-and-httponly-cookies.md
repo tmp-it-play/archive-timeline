@@ -1,7 +1,7 @@
 ---
 id: "net-con-022"
 title: "SameSite 쿠키와 HttpOnly 쿠키"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

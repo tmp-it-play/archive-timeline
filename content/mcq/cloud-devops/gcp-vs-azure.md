@@ -1,7 +1,7 @@
 ---
 id: "cloud-mcq-009"
 title: "GCP와 Azure에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "mcq"
 options:

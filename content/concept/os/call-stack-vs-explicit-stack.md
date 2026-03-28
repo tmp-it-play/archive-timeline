@@ -1,7 +1,7 @@
 ---
 id: "os-con-004"
 title: "콜 스택과 명시적 스택의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

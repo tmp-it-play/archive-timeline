@@ -1,7 +1,7 @@
 ---
 id: "db-con-024"
 title: "Redis 클러스터링을 왜 고려할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

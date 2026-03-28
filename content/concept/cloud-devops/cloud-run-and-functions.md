@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-027"
 title: "서버리스: Cloud Run, Functions 같은 서비스는 어떻게 볼까"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

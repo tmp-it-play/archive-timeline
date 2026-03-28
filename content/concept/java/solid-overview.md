@@ -1,7 +1,7 @@
 ---
 id: "java-con-031"
 title: "SOLID 원칙 전체 개요"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

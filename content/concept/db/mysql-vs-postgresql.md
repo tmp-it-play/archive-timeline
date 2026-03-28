@@ -1,7 +1,7 @@
 ---
 id: "db-con-008"
 title: "MySQL vs PostgreSQL"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "concept"
 ---

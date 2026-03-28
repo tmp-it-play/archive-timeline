@@ -1,7 +1,7 @@
 ---
 id: "ts-con-015"
 title: "any, unknown, never 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

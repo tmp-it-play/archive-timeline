@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-045"
 title: "책임 연쇄 패턴과 컴포지트 패턴에 대한 설명으로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

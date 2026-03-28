@@ -1,7 +1,7 @@
 ---
 id: "ds-con-010"
 title: "2-3 트리와 2-3-4 트리"
-difficulty: "senior"
+difficulty: "mid"
 category: "data_structure"
 type: "concept"
 ---

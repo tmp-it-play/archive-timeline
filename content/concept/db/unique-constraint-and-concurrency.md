@@ -1,7 +1,7 @@
 ---
 id: "db-con-012"
 title: "UNIQUE 제약과 동시성 문제"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

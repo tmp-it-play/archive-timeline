@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-016"
 title: "Retry와 Circuit Breaker를 왜 함께 생각해야 할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "cloud_devops"
 type: "concept"
 ---

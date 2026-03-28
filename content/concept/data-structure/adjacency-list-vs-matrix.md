@@ -1,7 +1,7 @@
 ---
 id: "ds-con-019"
 title: "인접 리스트와 인접 행렬의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "data_structure"
 type: "concept"
 ---

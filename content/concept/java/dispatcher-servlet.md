@@ -1,7 +1,7 @@
 ---
 id: "java-con-021"
 title: "DispatcherServlet은 왜 중요한가"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

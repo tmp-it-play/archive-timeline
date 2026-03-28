@@ -1,7 +1,7 @@
 ---
 id: "ts-con-016"
 title: "TypeScript에서 async/await와 이벤트 루프"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

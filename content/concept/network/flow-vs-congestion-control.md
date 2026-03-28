@@ -1,7 +1,7 @@
 ---
 id: "net-con-004"
 title: "TCP의 흐름 제어와 혼잡 제어"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

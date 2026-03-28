@@ -1,7 +1,7 @@
 ---
 id: "ai-con-002"
 title: "Context Window & Token"
-difficulty: "junior"
+difficulty: "mid"
 category: "ai_dev"
 type: "concept"
 ---

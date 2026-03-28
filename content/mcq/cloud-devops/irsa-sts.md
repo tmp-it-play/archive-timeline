@@ -1,7 +1,7 @@
 ---
 id: "cloud-mcq-002"
 title: "AWS EKS의 IRSA에서 STS가 하는 역할은 무엇인가?"
-difficulty: "mid"
+difficulty: "senior"
 category: "cloud_devops"
 type: "mcq"
 options:

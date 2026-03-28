@@ -1,7 +1,7 @@
 ---
 id: "db-con-009"
 title: "ERD 표기법과 Barker 표기법"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "concept"
 ---

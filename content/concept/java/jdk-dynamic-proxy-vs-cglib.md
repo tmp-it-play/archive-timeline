@@ -1,7 +1,7 @@
 ---
 id: "java-con-029"
 title: "JDK Dynamic Proxy와 CGLIB 차이"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

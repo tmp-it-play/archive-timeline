@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-015"
 title: "메시지 브로커를 왜 사용할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

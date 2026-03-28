@@ -1,7 +1,7 @@
 ---
 id: "ai-con-008"
 title: "프롬프트 엔지니어링 핵심 기법"
-difficulty: "junior"
+difficulty: "mid"
 category: "ai_dev"
 type: "concept"
 ---

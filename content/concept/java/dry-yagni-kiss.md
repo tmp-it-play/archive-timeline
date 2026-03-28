@@ -1,7 +1,7 @@
 ---
 id: "java-con-043"
 title: "DRY, YAGNI, KISS를 어떻게 이해할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

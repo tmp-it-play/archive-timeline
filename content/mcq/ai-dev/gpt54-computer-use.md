@@ -1,7 +1,7 @@
 ---
 id: "ai-mcq-020"
 title: "GPT-5.4 Pro의 OSWorld 75.0% 점수가 의미하는 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "ai_dev"
 type: "mcq"
 options:

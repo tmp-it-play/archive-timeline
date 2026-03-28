@@ -1,7 +1,7 @@
 ---
 id: "os-con-015"
 title: "프로그램 카운터와 스택 포인터"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

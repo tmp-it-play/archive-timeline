@@ -1,7 +1,7 @@
 ---
 id: "java-con-077"
 title: "String Pool이란?"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

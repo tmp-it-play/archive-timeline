@@ -1,7 +1,7 @@
 ---
 id: "net-con-035"
 title: "프록시와 VPN의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

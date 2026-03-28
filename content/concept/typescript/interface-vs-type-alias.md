@@ -1,7 +1,7 @@
 ---
 id: "ts-con-013"
 title: "interface와 type alias의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

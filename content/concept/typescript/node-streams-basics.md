@@ -1,7 +1,7 @@
 ---
 id: "ts-con-021"
 title: "Node.js 스트림 기본"
-difficulty: "senior"
+difficulty: "mid"
 category: "typescript"
 type: "concept"
 ---

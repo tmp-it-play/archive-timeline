@@ -1,7 +1,7 @@
 ---
 id: "db-con-025"
 title: "RDB의 JSON 함수는 왜 중요할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "concept"
 ---

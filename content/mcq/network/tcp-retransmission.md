@@ -1,7 +1,7 @@
 ---
 id: "net-mcq-025"
 title: "TCP 재전송에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "mcq"
 options:

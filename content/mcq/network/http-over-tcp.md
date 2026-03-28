@@ -1,7 +1,7 @@
 ---
 id: "net-mcq-012"
 title: "HTTP가 TCP 위에서 동작하는 이유로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "mcq"
 options:

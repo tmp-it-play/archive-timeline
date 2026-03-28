@@ -1,7 +1,7 @@
 ---
 id: "db-con-022"
 title: "수직 분할, 수평 분할, 샤딩의 차이"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

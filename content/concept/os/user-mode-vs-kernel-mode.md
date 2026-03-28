@@ -1,7 +1,7 @@
 ---
 id: "os-con-016"
 title: "사용자 모드와 커널 모드"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

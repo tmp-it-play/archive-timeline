@@ -1,7 +1,7 @@
 ---
 id: "net-con-006"
 title: "TCP 3-way handshake와 4-way handshake"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

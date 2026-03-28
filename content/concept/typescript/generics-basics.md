@@ -1,7 +1,7 @@
 ---
 id: "ts-con-012"
 title: "TypeScript 제네릭 기본"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

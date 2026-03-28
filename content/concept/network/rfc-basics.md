@@ -1,7 +1,7 @@
 ---
 id: "net-con-024"
 title: "RFC란 무엇인가"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

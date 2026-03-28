@@ -1,7 +1,7 @@
 ---
 id: "net-con-033"
 title: "TCP 재전송은 어떻게 동작할까"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

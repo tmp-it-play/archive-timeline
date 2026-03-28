@@ -1,7 +1,7 @@
 ---
 id: "net-con-018"
 title: "HTTP 캐시와 캐시 관련 헤더"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

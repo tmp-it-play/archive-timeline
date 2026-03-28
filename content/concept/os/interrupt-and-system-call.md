@@ -1,7 +1,7 @@
 ---
 id: "os-con-017"
 title: "인터럽트와 시스템 콜"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---

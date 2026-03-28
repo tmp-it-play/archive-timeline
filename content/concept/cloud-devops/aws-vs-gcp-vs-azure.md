@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-026"
 title: "AWS, GCP, Azure를 비교할 때의 관점"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

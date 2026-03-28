@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-022"
 title: "Jenkins와 GitHub Actions 비교"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

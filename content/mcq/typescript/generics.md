@@ -1,7 +1,7 @@
 ---
 id: "ts-mcq-006"
 title: "TypeScript 제네릭에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "mcq"
 options:

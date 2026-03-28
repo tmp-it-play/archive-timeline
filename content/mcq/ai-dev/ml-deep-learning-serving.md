@@ -1,7 +1,7 @@
 ---
 id: "ai-mcq-031"
 title: "백엔드 개발자가 딥러닝 모델을 서비스에 연동할 때 주로 담당하는 영역은?"
-difficulty: "junior"
+difficulty: "mid"
 category: "ai_dev"
 type: "mcq"
 options:

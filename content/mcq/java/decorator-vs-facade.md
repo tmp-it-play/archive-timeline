@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-041"
 title: "데코레이터와 퍼사드의 차이로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

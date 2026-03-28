@@ -1,7 +1,7 @@
 ---
 id: "net-con-036"
 title: "네트워크 패킷에는 무엇이 들어 있을까"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

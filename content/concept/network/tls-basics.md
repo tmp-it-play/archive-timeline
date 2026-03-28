@@ -1,7 +1,7 @@
 ---
 id: "net-con-027"
 title: "TLS는 왜 중요한 표준인가"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

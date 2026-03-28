@@ -1,7 +1,7 @@
 ---
 id: "db-con-026"
 title: "MariaDB와 MySQL의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "db"
 type: "concept"
 ---

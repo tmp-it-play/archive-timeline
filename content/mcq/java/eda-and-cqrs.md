@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-036"
 title: "EDA와 CQRS에 대한 설명으로 가장 적절한 것은?"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "mcq"
 options:

@@ -1,7 +1,7 @@
 ---
 id: "java-con-037"
 title: "SOLID 위반 사례를 어떻게 설명할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

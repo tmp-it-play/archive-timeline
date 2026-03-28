@@ -1,7 +1,7 @@
 ---
 id: "cloud-con-029"
 title: "가상화와 컨테이너를 더 넓게 보기"
-difficulty: "mid"
+difficulty: "junior"
 category: "cloud_devops"
 type: "concept"
 ---

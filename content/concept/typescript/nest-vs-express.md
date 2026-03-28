@@ -1,7 +1,7 @@
 ---
 id: "ts-con-006"
 title: "NestJS와 Express의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "typescript"
 type: "concept"
 ---

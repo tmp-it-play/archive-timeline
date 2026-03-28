@@ -1,7 +1,7 @@
 ---
 id: "java-mcq-013"
 title: "AOP에 대한 설명으로 가장 적절한 것은?"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "mcq"
 options:

@@ -1,7 +1,7 @@
 ---
 id: "net-con-028"
 title: "IP와 서브넷 기본 개념"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

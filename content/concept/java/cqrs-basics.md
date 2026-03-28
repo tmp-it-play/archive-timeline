@@ -1,7 +1,7 @@
 ---
 id: "java-con-057"
 title: "CQRS를 왜 사용할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "java"
 type: "concept"
 ---

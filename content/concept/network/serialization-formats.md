@@ -1,7 +1,7 @@
 ---
 id: "net-con-008"
 title: "JSON, ProtoBuf 등 직렬화 형식"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

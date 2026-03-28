@@ -1,7 +1,7 @@
 ---
 id: "db-con-023"
 title: "다중 DB 환경에서 무엇을 고민해야 할까"
-difficulty: "senior"
+difficulty: "mid"
 category: "db"
 type: "concept"
 ---

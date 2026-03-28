@@ -1,7 +1,7 @@
 ---
 id: "ds-con-002"
 title: "플로이드-워셜과 다익스트라의 차이"
-difficulty: "senior"
+difficulty: "mid"
 category: "data_structure"
 type: "concept"
 ---

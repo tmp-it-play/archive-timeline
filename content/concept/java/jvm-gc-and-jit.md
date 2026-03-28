@@ -1,7 +1,7 @@
 ---
 id: "java-con-015"
 title: "JVM 구조, GC, 그리고 JIT 컴파일러"
-difficulty: "mid"
+difficulty: "junior"
 category: "java"
 type: "concept"
 ---

@@ -1,7 +1,7 @@
 ---
 id: "net-con-019"
 title: "API Gateway와 Reverse Proxy의 차이"
-difficulty: "mid"
+difficulty: "junior"
 category: "network"
 type: "concept"
 ---

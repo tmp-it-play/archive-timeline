@@ -1,7 +1,7 @@
 ---
 id: "os-con-013"
 title: "NTFS, ext4, ZFS를 비교할 때의 관점"
-difficulty: "mid"
+difficulty: "junior"
 category: "os"
 type: "concept"
 ---
