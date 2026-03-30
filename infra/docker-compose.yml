@@ -86,7 +86,7 @@ services:
       - gogo-network
 
   kafka:
-    image: bitnami/kafka:3.6
+    image: bitnami/kafka:latest
     container_name: gogo-kafka
     restart: always
     ports:
