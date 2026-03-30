@@ -4,7 +4,7 @@ COPY build.gradle.kts settings.gradle.kts ./
 COPY src src
 RUN gradle build --no-daemon -x test
 
-FROM openjdk:17-jdk
+FROM eclipse-temurin:17-jdk
 EXPOSE 8888
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
