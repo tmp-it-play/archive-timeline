@@ -35,14 +35,13 @@ jobs:
       - name: Deploy to Server C
         uses: appleboy/ssh-action@v1.0.3
         env:
-          INFRA_HOST: ${{ secrets.INFRA_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
+          INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
-          host: ${{ secrets.APP_SERVER_C_HOST }}
+          host: ${{ secrets.APP_SERVER_C_DOMAIN }}
           username: ubuntu
           password: ${{ secrets.APP_SERVER_C_PASSWORD }}
-          envs: INFRA_HOST,DB_USER,DB_PASSWORD
+          envs: INFRA_DOMAIN,DB_PASSWORD
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -59,10 +58,10 @@ jobs:
             docker stop gogo-sp-stage || true
             docker rm gogo-sp-stage || true
             docker run -d -p 8085:8085 \
-              -e "EUREKA_HOSTNAME=${INFRA_HOST}" \
-              -e "DB_URL=${INFRA_HOST}:3306" \
+              -e "EUREKA_HOSTNAME=${INFRA_DOMAIN}" \
+              -e "DB_URL=${INFRA_DOMAIN}:3306" \
               -e "DB_NAME=gogo-sp" \
-              -e "DB_USER=${DB_USER}" \
+              -e "DB_USER=root" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               -e "DDL_AUTO=validate" \
               --name gogo-sp-stage gogo-sp-stage

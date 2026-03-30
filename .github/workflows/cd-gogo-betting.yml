@@ -35,13 +35,13 @@ jobs:
       - name: Deploy to Server B
         uses: appleboy/ssh-action@v1.0.3
         env:
-          INFRA_HOST: ${{ secrets.INFRA_HOST }}
+          INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
-          host: ${{ secrets.APP_SERVER_B_HOST }}
+          host: ${{ secrets.APP_SERVER_B_DOMAIN }}
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_HOST,DB_PASSWORD
+          envs: INFRA_DOMAIN,DB_PASSWORD
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -58,7 +58,7 @@ jobs:
             docker stop gogo-betting-stage || true
             docker rm gogo-betting-stage || true
             docker run -d -p 8083:8083 \
-              --add-host host.docker.internal:${INFRA_HOST} \
+              -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               --name gogo-betting-stage gogo-betting-stage
 
