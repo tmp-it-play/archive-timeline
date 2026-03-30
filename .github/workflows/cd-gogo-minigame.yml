@@ -30,7 +30,7 @@ jobs:
               git pull origin develop
             fi
             cd gogo-minigame
-            docker build -t gogo-minigame-stage .
+            docker build --network=host -t gogo-minigame-stage .
             docker stop gogo-minigame-stage || true
             docker rm gogo-minigame-stage || true
             docker run -d -p 8086:8086 \
