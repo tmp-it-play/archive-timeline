@@ -4,7 +4,7 @@ EXPOSE 8085
 
 WORKDIR /home/ubuntu/gogo-sp
 
-COPY build/libs/gogo-sp-0.0.1-SNAPSHOT.jar stage-sp.jar
+COPY build/libs/gogosp-0.0.1-SNAPSHOT.jar stage-sp.jar
 
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
