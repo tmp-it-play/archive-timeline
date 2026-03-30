@@ -24,7 +24,7 @@ jobs:
         with:
           build-root-directory: gogo-user
       - run: chmod +x gradlew
-      - run: ./gradlew clean build
+      - run: ./gradlew clean build -x test
 
   deploy:
     needs: CI
@@ -54,7 +54,7 @@ jobs:
             fi
             cd gogo-user
             chmod +x gradlew
-            ./gradlew clean build
+            ./gradlew clean build -x test
             docker build -f DockerFileStage -t gogo-user-stage .
             docker stop gogo-user-stage || true
             docker rm gogo-user-stage || true

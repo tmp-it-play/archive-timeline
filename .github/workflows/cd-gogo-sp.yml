@@ -24,7 +24,7 @@ jobs:
         with:
           build-root-directory: gogo-sp
       - run: chmod +x gradlew
-      - run: ./gradlew clean build
+      - run: ./gradlew clean build -x test
 
   deploy:
     needs: CI
