@@ -28,7 +28,7 @@ services:
   # 데이터베이스
   # ──────────────────────────────────────────
   mysql:
-    image: mysql:8.0
+    image: mysql:8.0.28
     container_name: gogo-mysql
     restart: always
     ports:
@@ -200,6 +200,7 @@ services:
   loki:
     image: grafana/loki:2.9.0
     container_name: gogo-loki
+    user: "0"
     restart: always
     ports:
       - "3100:3100"
