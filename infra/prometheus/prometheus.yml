@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'gogo-user'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['${GOGO_USER_HOST}:8081']
+        labels:
+          service: 'gogo-user'
+
+  - job_name: 'gogo-stage'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['${GOGO_STAGE_HOST}:8082']
+        labels:
+          service: 'gogo-stage'
+
+  - job_name: 'gogo-betting'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['${GOGO_BETTING_HOST}:8083']
+        labels:
+          service: 'gogo-betting'
+
+  - job_name: 'gogo-shop'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['${GOGO_SHOP_HOST}:8084']
+        labels:
+          service: 'gogo-shop'
+
+  - job_name: 'gogo-sp'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['${GOGO_SP_HOST}:8085']
+        labels:
+          service: 'gogo-sp'
+
+  - job_name: 'gogo-minigame'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['${GOGO_MINIGAME_HOST}:8086']
+        labels:
+          service: 'gogo-minigame'

@@ -1,0 +1,91 @@
+name: CD - gogo-user
+
+on:
+  push:
+    branches: ['develop']
+    paths:
+      - 'gogo-user/**'
+  workflow_dispatch:
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gogo-user
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: gogo-user
+
+      - name: Setup Gradle permissions
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
+  deploy:
+    needs: CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFRA_HOST: ${{ secrets.INFRA_HOST }}
+        with:
+          host: ${{ secrets.GOGO_USER_ONPRE_HOST }}
+          username: ubuntu
+          password: ${{ secrets.GOGO_USER_ONPRE_PASSWORD }}
+          envs: INFRA_HOST
+          script: |
+            set -e
+            mkdir -p /home/ubuntu/gogo
+            cd /home/ubuntu/gogo
+
+            if [ ! -d ".git" ]; then
+              git clone -b develop https://github.com/team-gogo/gogo.git .
+            else
+              git pull origin develop
+            fi
+
+            cd gogo-user
+            chmod +x gradlew
+            ./gradlew clean build
+
+            docker build -f DockerFileStage -t gogo-user-stage .
+            docker stop gogo-user-stage || true
+            docker rm gogo-user-stage || true
+            docker run -d -p 8081:8081 \
+              --add-host host.docker.internal:${INFRA_HOST} \
+              --name gogo-user-stage gogo-user-stage
+
+      - name: Success Notification
+        if: success()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0x4CAF50
+          title: "배포 성공"
+          message: "gogo-user On-premise stage 배포가 완료되었습니다."
+
+      - name: Failure Notification
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0xFF4C4C
+          title: "배포 실패"
+          message: "gogo-user On-premise stage 배포에 실패했습니다."

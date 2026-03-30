@@ -1,0 +1,63 @@
+name: CD - gogo-minigame
+
+on:
+  push:
+    branches: ['develop']
+    paths:
+      - 'gogo-minigame/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INFRA_HOST: ${{ secrets.INFRA_HOST }}
+        with:
+          host: ${{ secrets.GOGO_MINIGAME_ONPRE_HOST }}
+          username: ubuntu
+          password: ${{ secrets.GOGO_MINIGAME_ONPRE_PASSWORD }}
+          envs: INFRA_HOST
+          script: |
+            set -e
+            mkdir -p /home/ubuntu/gogo
+            cd /home/ubuntu/gogo
+
+            if [ ! -d ".git" ]; then
+              git clone -b develop https://github.com/team-gogo/gogo.git .
+            else
+              git pull origin develop
+            fi
+
+            cd gogo-minigame
+
+            docker build -t gogo-minigame-stage .
+            docker stop gogo-minigame-stage || true
+            docker rm gogo-minigame-stage || true
+            docker run -d -p 8086:8086 \
+              --add-host host.docker.internal:${INFRA_HOST} \
+              --env-file .env \
+              --name gogo-minigame-stage gogo-minigame-stage
+
+      - name: Success Notification
+        if: success()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0x4CAF50
+          title: "배포 성공"
+          message: "gogo-minigame On-premise stage 배포가 완료되었습니다."
+
+      - name: Failure Notification
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0xFF4C4C
+          title: "배포 실패"
+          message: "gogo-minigame On-premise stage 배포에 실패했습니다."

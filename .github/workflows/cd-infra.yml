@@ -1,0 +1,56 @@
+name: CD - infra
+
+on:
+  push:
+    branches: ['develop']
+    paths:
+      - 'infra/**'
+      - 'gogo-eureka/**'
+      - 'gogo-config/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy infra via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.INFRA_ONPRE_HOST }}
+          username: ubuntu
+          password: ${{ secrets.INFRA_ONPRE_PASSWORD }}
+          script: |
+            set -e
+            mkdir -p /home/ubuntu/gogo
+            cd /home/ubuntu/gogo
+
+            if [ ! -d ".git" ]; then
+              git clone -b develop https://github.com/team-gogo/gogo.git .
+            else
+              git pull origin develop
+            fi
+
+            cd infra
+            docker compose build eureka config
+            docker compose up -d
+
+      - name: Success Notification
+        if: success()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0x4CAF50
+          title: "인프라 배포 성공"
+          message: "인프라 스택(Eureka, Config, MySQL, Kafka, Grafana 등)이 업데이트되었습니다."
+
+      - name: Failure Notification
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          color: 0xFF4C4C
+          title: "인프라 배포 실패"
+          message: "인프라 배포에 실패했습니다. 로그를 확인하세요."
