@@ -47,6 +47,10 @@ eureka:
     service-url:
       defaultZone: http://${INFRA_DOMAIN}:8761/eureka/
 
+oauth:
+  google:
+    info-url: https://www.googleapis.com
+
 security:
   jwt:
     token:
