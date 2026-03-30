@@ -39,6 +39,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
           host: ${{ secrets.APP_SERVER_B_DOMAIN }}
+          port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
           envs: INFRA_DOMAIN,DB_PASSWORD
