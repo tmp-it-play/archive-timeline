@@ -62,7 +62,7 @@ jobs:
               -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
-              -e "SPRING_CLOUD_CONFIG_URI=http://${INFRA_DOMAIN}:8888" \
+              -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-stage-stage gogo-stage-stage
 
       - name: Success Notification
