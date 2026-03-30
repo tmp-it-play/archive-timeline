@@ -19,7 +19,8 @@ jobs:
       - name: Deploy infra via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.INFRA_ONPRE_HOST }}
+          host: ${{ secrets.INFRA_ONPRE_DOMAIN }}
+          port: 27108
           username: ubuntu
           password: ${{ secrets.INFRA_ONPRE_PASSWORD }}
           script: |
@@ -28,7 +29,7 @@ jobs:
             cd /home/ubuntu/gogo
 
             if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/team-gogo/gogo.git .
+              git clone -b develop https://github.com/snowykte0426/gogo.git .
             else
               git pull origin develop
             fi
