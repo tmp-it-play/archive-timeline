@@ -36,11 +36,12 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           INFRA_HOST: ${{ secrets.INFRA_HOST }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
           host: ${{ secrets.APP_SERVER_B_HOST }}
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_HOST
+          envs: INFRA_HOST,DB_PASSWORD
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -58,6 +59,7 @@ jobs:
             docker rm gogo-stage-stage || true
             docker run -d -p 8082:8082 \
               --add-host host.docker.internal:${INFRA_HOST} \
+              -e "DB_PASSWORD=${DB_PASSWORD}" \
               --name gogo-stage-stage gogo-stage-stage
 
       - name: Success Notification

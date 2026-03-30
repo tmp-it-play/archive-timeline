@@ -138,9 +138,9 @@ services:
       - "8888:8888"
     environment:
       TZ: Asia/Seoul
-      DB_USER: root
+      # DB_PASSWORD를 Config Server 환경변수로 주입
+      # → infra/configs/*.yml 의 ${DB_PASSWORD} 가 이 값으로 해석됨
       DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      DDL_AUTO: validate
     volumes:
       - ./configs:/config:ro
     networks:
