@@ -74,7 +74,7 @@ services:
   # 메시지 브로커
   # ──────────────────────────────────────────
   zookeeper:
-    image: bitnami/zookeeper:3.9
+    image: bitnami/zookeeper:latest
     container_name: gogo-zookeeper
     restart: always
     ports:
