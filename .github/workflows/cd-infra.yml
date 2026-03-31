@@ -28,6 +28,9 @@ jobs:
             mkdir -p /home/ubuntu/gogo
             cd /home/ubuntu/gogo
 
+            export GIT_TERMINAL_PROMPT=0
+            git config --global credential.helper ''
+
             if [ ! -d ".git" ]; then
               git clone -b develop https://github.com/snowykte0426/gogo.git .
             else

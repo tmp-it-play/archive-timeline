@@ -28,10 +28,14 @@ jobs:
             set -e
             mkdir -p /home/ubuntu/gogo
             cd /home/ubuntu/gogo
+            export GIT_TERMINAL_PROMPT=0
+            git config --global credential.helper ''
+
             if [ ! -d ".git" ]; then
               git clone -b develop https://github.com/snowykte0426/gogo.git .
             else
-              git pull origin develop
+              git fetch origin develop
+              git reset --hard origin/develop
             fi
             cd gogo-stage
             chmod +x gradlew
