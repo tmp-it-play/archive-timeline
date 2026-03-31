@@ -50,6 +50,19 @@ jobs:
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-user-stage gogo-user-stage
+            # Promtail 시작/갱신 (로그 → Loki)
+            docker stop gogo-promtail 2>/dev/null || true
+            docker rm gogo-promtail 2>/dev/null || true
+            docker run -d \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
+              -v /tmp/promtail-positions:/tmp \
+              -v /home/ubuntu/gogo/infra/promtail/promtail-config.yml:/etc/promtail/config.yml:ro \
+              -e "LOKI_ADDR=${INFRA_DOMAIN}" \
+              --name gogo-promtail \
+              grafana/promtail:2.9.0 \
+              -config.file=/etc/promtail/config.yml \
+              -config.expand-env=true
 
       - name: Success Notification
         if: success()

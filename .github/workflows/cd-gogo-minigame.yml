@@ -41,6 +41,19 @@ jobs:
             docker run -d -p 8086:8086 \
               --env-file /home/ubuntu/.env.minigame \
               --name gogo-minigame-stage gogo-minigame-stage
+            # Promtail 시작/갱신 (로그 → Loki)
+            docker stop gogo-promtail 2>/dev/null || true
+            docker rm gogo-promtail 2>/dev/null || true
+            docker run -d \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
+              -v /tmp/promtail-positions:/tmp \
+              -v /home/ubuntu/gogo/infra/promtail/promtail-config.yml:/etc/promtail/config.yml:ro \
+              -e "LOKI_ADDR=${INFRA_DOMAIN}" \
+              --name gogo-promtail \
+              grafana/promtail:2.9.0 \
+              -config.file=/etc/promtail/config.yml \
+              -config.expand-env=true
 
       - name: Success Notification
         if: success()
