@@ -32,3 +32,5 @@ scrape_configs:
         target_label: service
     pipeline_stages:
       - docker: {}
+      - static_labels:
+          job: gogo-docker
