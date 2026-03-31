@@ -45,7 +45,7 @@ jobs:
               -e "DB_NAME=gogo-sp" \
               -e "DB_USER=root" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
-              -e "DDL_AUTO=validate" \
+              -e "DDL_AUTO=update" \
               --name gogo-sp-stage gogo-sp-stage
 
       - name: Success Notification
