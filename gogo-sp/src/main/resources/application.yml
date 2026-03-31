@@ -26,6 +26,11 @@ spring:
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:1029384756}
     driver-class-name: com.mysql.cj.jdbc.Driver
+security:
+  jwt:
+    token:
+      accessSecret: ${JWT_ACCESS_SECRET}
+
 management:
   endpoints:
     web:

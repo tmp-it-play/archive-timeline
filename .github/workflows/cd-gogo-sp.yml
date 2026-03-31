@@ -19,12 +19,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
         with:
           host: ${{ secrets.APP_SERVER_C_DOMAIN }}
           port: 27110
           username: ubuntu
           password: ${{ secrets.APP_SERVER_C_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -50,6 +51,7 @@ jobs:
               -e "DB_NAME=gogo-sp" \
               -e "DB_USER=root" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
+              -e "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}" \
               -e "DDL_AUTO=update" \
               --name gogo-sp-stage gogo-sp-stage
             # Promtail 시작/갱신 (로그 → Loki)

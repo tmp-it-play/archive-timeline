@@ -38,6 +38,11 @@ eureka:
     service-url:
       defaultZone: http://${INFRA_DOMAIN}:8761/eureka/
 
+security:
+  jwt:
+    token:
+      accessSecret: ${JWT_ACCESS_SECRET}
+
 management:
   endpoints:
     web:

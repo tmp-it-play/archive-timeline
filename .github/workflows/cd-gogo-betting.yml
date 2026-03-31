@@ -19,12 +19,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
         with:
           host: ${{ secrets.APP_SERVER_B_DOMAIN }}
           port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -47,6 +48,7 @@ jobs:
             docker run -d -p 8083:8083 \
               -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
+              -e "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-betting-stage gogo-betting-stage
