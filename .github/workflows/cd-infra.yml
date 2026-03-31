@@ -20,12 +20,23 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_ACCESS_EXP: ${{ secrets.JWT_ACCESS_EXP }}
+          JWT_REFRESH_EXP: ${{ secrets.JWT_REFRESH_EXP }}
+          SERVER_TO_SERVER_IP: ${{ secrets.SERVER_TO_SERVER_IP }}
+          SERVER_TO_SERVER_SUBNET: ${{ secrets.SERVER_TO_SERVER_SUBNET }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         with:
           host: ${{ secrets.INFRA_ONPRE_DOMAIN }}
           port: 27108
           username: ubuntu
           password: ${{ secrets.INFRA_ONPRE_PASSWORD }}
-          envs: GITHUB_TOKEN
+          envs: GITHUB_TOKEN,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,JWT_ACCESS_SECRET,JWT_REFRESH_SECRET,JWT_ACCESS_EXP,JWT_REFRESH_EXP,SERVER_TO_SERVER_IP,SERVER_TO_SERVER_SUBNET,AWS_ACCESS_KEY,AWS_SECRET_KEY,AWS_S3_BUCKET
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -40,6 +51,28 @@ jobs:
               git fetch https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git develop
               git reset --hard FETCH_HEAD
             fi
+
+            # .env에 시크릿 주입 (기존 값 유지하면서 추가/갱신)
+            ENV_FILE=/home/ubuntu/gogo/infra/.env
+            update_env() {
+              local key=$1 val=$2
+              if grep -q "^${key}=" "$ENV_FILE" 2>/dev/null; then
+                sed -i "s|^${key}=.*|${key}=${val}|" "$ENV_FILE"
+              else
+                echo "${key}=${val}" >> "$ENV_FILE"
+              fi
+            }
+            update_env GOOGLE_CLIENT_ID     "$GOOGLE_CLIENT_ID"
+            update_env GOOGLE_CLIENT_SECRET "$GOOGLE_CLIENT_SECRET"
+            update_env JWT_ACCESS_SECRET    "$JWT_ACCESS_SECRET"
+            update_env JWT_REFRESH_SECRET   "$JWT_REFRESH_SECRET"
+            update_env JWT_ACCESS_EXP       "$JWT_ACCESS_EXP"
+            update_env JWT_REFRESH_EXP      "$JWT_REFRESH_EXP"
+            update_env SERVER_TO_SERVER_IP  "$SERVER_TO_SERVER_IP"
+            update_env SERVER_TO_SERVER_SUBNET "$SERVER_TO_SERVER_SUBNET"
+            update_env AWS_ACCESS_KEY       "$AWS_ACCESS_KEY"
+            update_env AWS_SECRET_KEY       "$AWS_SECRET_KEY"
+            update_env AWS_S3_BUCKET        "$AWS_S3_BUCKET"
 
             # Nginx 설정 적용
             sudo cp infra/nginx/infra.conf /etc/nginx/sites-available/gogo.conf

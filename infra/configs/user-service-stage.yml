@@ -34,8 +34,8 @@ spring:
       client:
         registration:
           google:
-            client-id: CHANGE_ME
-            client-secret: CHANGE_ME
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: email, profile
 
 eureka:
@@ -54,13 +54,13 @@ oauth:
 security:
   jwt:
     token:
-      accessSecret: CHANGE_ME
-      refreshSecret: CHANGE_ME
-      accessExp: CHANGE_ME
-      refreshExp: CHANGE_ME
+      accessSecret: ${JWT_ACCESS_SECRET}
+      refreshSecret: ${JWT_REFRESH_SECRET}
+      accessExp: ${JWT_ACCESS_EXP}
+      refreshExp: ${JWT_REFRESH_EXP}
   internal:
-    serverToServerIp: CHANGE_ME
-    serverToServerSubnet: CHANGE_ME
+    serverToServerIp: ${SERVER_TO_SERVER_IP}
+    serverToServerSubnet: ${SERVER_TO_SERVER_SUBNET}
 
 management:
   endpoints:
