@@ -17,6 +17,12 @@ scrape_configs:
           - name: name
             values: ["gogo-"]
     relabel_configs:
+      - target_label: job
+        replacement: gogo-docker
+      - source_labels: [__meta_docker_container_name]
+        regex: /(.+)
+        replacement: $1
+        target_label: container
       - source_labels: [__meta_docker_container_name]
         regex: /gogo-promtail
         action: drop
