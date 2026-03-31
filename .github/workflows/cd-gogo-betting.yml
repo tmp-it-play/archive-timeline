@@ -20,12 +20,14 @@ jobs:
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          SERVER_TO_SERVER_IP: ${{ secrets.SERVER_TO_SERVER_IP }}
+          SERVER_TO_SERVER_SUBNET: ${{ secrets.SERVER_TO_SERVER_SUBNET }}
         with:
           host: ${{ secrets.APP_SERVER_B_DOMAIN }}
           port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET,SERVER_TO_SERVER_IP,SERVER_TO_SERVER_SUBNET
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -49,6 +51,8 @@ jobs:
               -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               -e "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}" \
+              -e "SERVER_TO_SERVER_IP=${SERVER_TO_SERVER_IP}" \
+              -e "SERVER_TO_SERVER_SUBNET=${SERVER_TO_SERVER_SUBNET}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-betting-stage gogo-betting-stage

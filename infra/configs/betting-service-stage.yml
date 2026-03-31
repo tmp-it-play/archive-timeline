@@ -42,6 +42,9 @@ security:
   jwt:
     token:
       accessSecret: ${JWT_ACCESS_SECRET}
+  internal:
+    serverToServerIp: ${SERVER_TO_SERVER_IP}
+    serverToServerSubnet: ${SERVER_TO_SERVER_SUBNET}
 
 management:
   endpoints:
