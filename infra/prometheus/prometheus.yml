@@ -2,46 +2,38 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
-# 앱 서버 도메인을 직접 입력하세요 (infra/.env의 GOGO_SERVER_*_DOMAIN 값)
 scrape_configs:
   - job_name: 'gogo-user'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['CHANGE_ME_SERVER_A_DOMAIN:8081']
+      - targets: ['10.0.0.130:8081']
         labels:
           service: 'gogo-user'
 
   - job_name: 'gogo-shop'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['CHANGE_ME_SERVER_A_DOMAIN:8084']
+      - targets: ['10.0.0.130:8084']
         labels:
           service: 'gogo-shop'
 
   - job_name: 'gogo-stage'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['CHANGE_ME_SERVER_B_DOMAIN:8082']
+      - targets: ['10.0.0.132:8082']
         labels:
           service: 'gogo-stage'
 
   - job_name: 'gogo-betting'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['CHANGE_ME_SERVER_B_DOMAIN:8083']
+      - targets: ['10.0.0.132:8083']
         labels:
           service: 'gogo-betting'
 
   - job_name: 'gogo-sp'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['CHANGE_ME_SERVER_C_DOMAIN:8085']
+      - targets: ['10.0.0.133:8085']
         labels:
           service: 'gogo-sp'
-
-  - job_name: 'gogo-minigame'
-    metrics_path: /metrics
-    static_configs:
-      - targets: ['CHANGE_ME_SERVER_C_DOMAIN:8086']
-        labels:
-          service: 'gogo-minigame'
