@@ -6,6 +6,7 @@ import gogo.gogosp.global.handler.CustomAccessDeniedHandler
 import gogo.gogosp.global.handler.CustomAuthenticationEntryPointHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -24,6 +25,16 @@ class SecurityConfig(
 ) {
 
     @Bean
+    @Order(1)
+    fun actuatorFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http.securityMatcher(AntPathRequestMatcher("/actuator/**"))
+        http.authorizeHttpRequests { it.anyRequest().permitAll() }
+        http.csrf { it.disable() }
+        return http.build()
+    }
+
+    @Bean
+    @Order(2)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.formLogin { it.disable() }
             .httpBasic { it.disable() }
