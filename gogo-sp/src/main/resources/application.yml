@@ -26,3 +26,12 @@ spring:
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:1029384756}
     driver-class-name: com.mysql.cj.jdbc.Driver
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
