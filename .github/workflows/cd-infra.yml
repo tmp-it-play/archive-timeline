@@ -42,7 +42,7 @@ jobs:
             fi
 
             # Nginx 설정 적용
-            sudo cp nginx/infra.conf /etc/nginx/sites-available/gogo.conf
+            sudo cp infra/nginx/infra.conf /etc/nginx/sites-available/gogo.conf
             sudo ln -sf /etc/nginx/sites-available/gogo.conf /etc/nginx/sites-enabled/gogo.conf
             sudo nginx -t && sudo systemctl reload nginx
 
