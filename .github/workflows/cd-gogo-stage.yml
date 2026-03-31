@@ -19,12 +19,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          SERVER_TO_SERVER_IP: ${{ secrets.SERVER_TO_SERVER_IP }}
+          SERVER_TO_SERVER_SUBNET: ${{ secrets.SERVER_TO_SERVER_SUBNET }}
         with:
           host: ${{ secrets.APP_SERVER_B_DOMAIN }}
           port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,AWS_ACCESS_KEY,AWS_SECRET_KEY,AWS_S3_BUCKET,SERVER_TO_SERVER_IP,SERVER_TO_SERVER_SUBNET
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -47,9 +52,15 @@ jobs:
             docker run -d -p 8082:8082 \
               -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
+              -e "AWS_ACCESS_KEY=${AWS_ACCESS_KEY}" \
+              -e "AWS_SECRET_KEY=${AWS_SECRET_KEY}" \
+              -e "AWS_S3_BUCKET=${AWS_S3_BUCKET}" \
+              -e "SERVER_TO_SERVER_IP=${SERVER_TO_SERVER_IP}" \
+              -e "SERVER_TO_SERVER_SUBNET=${SERVER_TO_SERVER_SUBNET}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-stage-stage gogo-stage-stage
+
             # Promtail 시작/갱신 (로그 → Loki)
             docker stop gogo-promtail 2>/dev/null || true
             docker rm gogo-promtail 2>/dev/null || true
