@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -42,7 +43,7 @@ class SecurityConfig(
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         http.authorizeHttpRequests { httpRequests ->
-            httpRequests.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+            httpRequests.requestMatchers(AntPathRequestMatcher("/actuator/**")).permitAll()
             httpRequests.requestMatchers(HttpMethod.GET, "/sp/health").permitAll()
             httpRequests.anyRequest().denyAll()
         }
