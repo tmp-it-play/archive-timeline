@@ -44,11 +44,6 @@ cloud:
     s3:
       bucket: ${AWS_S3_BUCKET}
 
-security:
-  internal:
-    serverToServerIp: ${SERVER_TO_SERVER_IP}
-    serverToServerSubnet: ${SERVER_TO_SERVER_SUBNET}
-
 eureka:
   instance:
     prefer-ip-address: true
@@ -59,6 +54,9 @@ eureka:
       defaultZone: http://${INFRA_DOMAIN}:8761/eureka/
 
 security:
+  internal:
+    serverToServerIp: ${SERVER_TO_SERVER_IP}
+    serverToServerSubnet: ${SERVER_TO_SERVER_SUBNET}
   jwt:
     token:
       accessSecret: ${JWT_ACCESS_SECRET}
