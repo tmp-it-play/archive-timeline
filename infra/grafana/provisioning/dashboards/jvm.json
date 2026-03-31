@@ -12,7 +12,7 @@
         "name": "service",
         "label": "서비스",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "gogo-prometheus" },
         "query": "label_values(jvm_memory_used_bytes, job)",
         "multi": false,
         "includeAll": false
@@ -40,7 +40,7 @@
         {
           "expr": "sum(jvm_memory_used_bytes{job=\"$service\", area=\"heap\"}) / sum(jvm_memory_max_bytes{job=\"$service\", area=\"heap\"})",
           "legendFormat": "힙 사용률",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -61,7 +61,7 @@
         {
           "expr": "sum(jvm_memory_used_bytes{job=\"$service\", area=\"nonheap\"}) / sum(jvm_memory_max_bytes{job=\"$service\", area=\"nonheap\"} > 0)",
           "legendFormat": "Non-Heap 사용률",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -82,7 +82,7 @@
         {
           "expr": "jvm_threads_live_threads{job=\"$service\"}",
           "legendFormat": "Live",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -103,7 +103,7 @@
         {
           "expr": "sum(rate(jvm_gc_pause_seconds_count{job=\"$service\"}[1m])) * 60",
           "legendFormat": "GC/min",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -120,7 +120,7 @@
         {
           "expr": "jvm_memory_used_bytes{job=\"$service\"}",
           "legendFormat": "{{id}}",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -137,7 +137,7 @@
         {
           "expr": "rate(jvm_gc_pause_seconds_sum{job=\"$service\"}[1m])",
           "legendFormat": "{{action}} {{cause}}",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -154,7 +154,7 @@
         {
           "expr": "jvm_threads_states_threads{job=\"$service\"}",
           "legendFormat": "{{state}}",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     },
@@ -171,12 +171,12 @@
         {
           "expr": "jvm_classes_loaded_classes{job=\"$service\"}",
           "legendFormat": "loaded",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         },
         {
           "expr": "rate(jvm_classes_unloaded_classes_total{job=\"$service\"}[1m])",
           "legendFormat": "unloaded rate",
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
     }

@@ -42,6 +42,7 @@ class SecurityConfig(
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         http.authorizeHttpRequests { httpRequests ->
+            httpRequests.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
             httpRequests.requestMatchers(HttpMethod.GET, "/sp/health").permitAll()
             httpRequests.anyRequest().denyAll()
         }
