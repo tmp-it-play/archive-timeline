@@ -20,6 +20,7 @@ jobs:
           port: 27110
           username: ubuntu
           password: ${{ secrets.APP_SERVER_C_PASSWORD }}
+          envs: GITHUB_TOKEN
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -28,10 +29,10 @@ jobs:
             git config --global credential.helper ''
 
             if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/snowykte0426/gogo.git .
+              git clone -b develop https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git .
             else
-              git fetch origin develop
-              git reset --hard origin/develop
+              git fetch https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git develop
+              git reset --hard FETCH_HEAD
             fi
             cd gogo-minigame
             docker build --network=host -t gogo-minigame-stage .

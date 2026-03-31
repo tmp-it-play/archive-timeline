@@ -18,11 +18,14 @@ jobs:
 
       - name: Deploy infra via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.INFRA_ONPRE_DOMAIN }}
           port: 27108
           username: ubuntu
           password: ${{ secrets.INFRA_ONPRE_PASSWORD }}
+          envs: GITHUB_TOKEN
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -32,10 +35,10 @@ jobs:
             git config --global credential.helper ''
 
             if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/snowykte0426/gogo.git .
+              git clone -b develop https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git .
             else
-              git fetch origin develop
-              git reset --hard origin/develop
+              git fetch https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git develop
+              git reset --hard FETCH_HEAD
             fi
 
             cd infra

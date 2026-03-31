@@ -16,6 +16,7 @@ jobs:
       - name: Deploy to Server B
         uses: appleboy/ssh-action@v1.0.3
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
@@ -23,7 +24,7 @@ jobs:
           port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
@@ -32,10 +33,10 @@ jobs:
             git config --global credential.helper ''
 
             if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/snowykte0426/gogo.git .
+              git clone -b develop https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git .
             else
-              git fetch origin develop
-              git reset --hard origin/develop
+              git fetch https://x-access-token:${GITHUB_TOKEN}@github.com/snowykte0426/gogo.git develop
+              git reset --hard FETCH_HEAD
             fi
             cd gogo-stage
             chmod +x gradlew
