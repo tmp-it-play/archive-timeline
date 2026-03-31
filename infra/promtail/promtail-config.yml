@@ -18,7 +18,10 @@ scrape_configs:
             values: ["gogo-"]
     relabel_configs:
       - source_labels: [__meta_docker_container_name]
-        regex: /(.*)
+        regex: /gogo-promtail
+        action: drop
+      - source_labels: [__meta_docker_container_name]
+        regex: /(.+?)(?:-stage)?$
         replacement: $1
         target_label: service
     pipeline_stages:
