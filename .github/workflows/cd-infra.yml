@@ -83,6 +83,36 @@ jobs:
             docker compose build eureka config
             docker compose up -d
 
+      - name: Restart app containers on Server A
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.APP_SERVER_A_DOMAIN }}
+          port: 27107
+          username: ubuntu
+          password: ${{ secrets.APP_SERVER_A_PASSWORD }}
+          script: |
+            docker restart gogo-user-stage gogo-shop-stage 2>/dev/null || true
+
+      - name: Restart app containers on Server B
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.APP_SERVER_B_DOMAIN }}
+          port: 27109
+          username: ubuntu
+          password: ${{ secrets.APP_SERVER_B_PASSWORD }}
+          script: |
+            docker restart gogo-stage-stage gogo-betting-stage 2>/dev/null || true
+
+      - name: Restart app containers on Server C
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.APP_SERVER_C_DOMAIN }}
+          port: 27110
+          username: ubuntu
+          password: ${{ secrets.APP_SERVER_C_PASSWORD }}
+          script: |
+            docker restart gogo-sp-stage 2>/dev/null || true
+
       - name: Success Notification
         if: success()
         uses: sarisia/actions-status-discord@v1

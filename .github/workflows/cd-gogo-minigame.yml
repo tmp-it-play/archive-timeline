@@ -15,12 +15,15 @@ jobs:
 
       - name: Deploy to Server C
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
         with:
           host: ${{ secrets.APP_SERVER_C_DOMAIN }}
           port: 27110
           username: ubuntu
           password: ${{ secrets.APP_SERVER_C_PASSWORD }}
-          envs: GITHUB_TOKEN
+          envs: GITHUB_TOKEN,INFRA_DOMAIN
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo
