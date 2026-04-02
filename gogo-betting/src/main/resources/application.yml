@@ -2,7 +2,7 @@
 
 spring:
   application:
-    name: betting-service
+    name: gogo-betting
   config:
     activate:
       on-profile: local
@@ -12,7 +12,7 @@ spring:
 
 spring:
   application:
-    name: betting-service
+    name: gogo-betting
   config:
     activate:
       on-profile: stage
@@ -22,7 +22,7 @@ spring:
 
 spring:
   application:
-    name: betting-service
+    name: gogo-betting
   config:
     activate:
       on-profile: prod
