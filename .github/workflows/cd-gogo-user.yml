@@ -63,6 +63,7 @@ jobs:
               -e "JWT_REFRESH_EXP=${JWT_REFRESH_EXP}" \
               -e "SERVER_TO_SERVER_IP=${SERVER_TO_SERVER_IP}" \
               -e "SERVER_TO_SERVER_SUBNET=${SERVER_TO_SERVER_SUBNET}" \
+              -e "INSTANCE_IP=${APP_SERVER_A_IP}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-user-stage gogo-user-stage

@@ -49,6 +49,7 @@ jobs:
               -e "INFRA_DOMAIN=${INFRA_DOMAIN}" \
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               -e "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}" \
+              -e "INSTANCE_IP=${APP_SERVER_A_IP}" \
               -e "SPRING_PROFILES_ACTIVE=stage" \
               -e "SPRING_CONFIG_IMPORT=optional:configserver:http://${INFRA_DOMAIN}:8888/" \
               --name gogo-shop-stage gogo-shop-stage
