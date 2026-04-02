@@ -78,8 +78,11 @@ class SecurityConfig(
     }
 
     private fun hasIpAddress(context: RequestAuthorizationContext): AuthorizationDecision {
-        val ALLOWED_IP_ADDRESS_MATCHER = IpAddressMatcher("${securityProperties.serverToServerIp}${securityProperties.serverToServerSubnet}")
-        return AuthorizationDecision(ALLOWED_IP_ADDRESS_MATCHER.matches(context.request))
+        val serverMatcher = IpAddressMatcher("${securityProperties.serverToServerIp}${securityProperties.serverToServerSubnet}")
+        val dockerBridgeMatcher = IpAddressMatcher("172.17.0.0/16")
+        return AuthorizationDecision(
+            serverMatcher.matches(context.request) || dockerBridgeMatcher.matches(context.request)
+        )
     }
 
     @Bean
