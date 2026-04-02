@@ -112,7 +112,7 @@
       },
       "targets": [
         {
-          "expr": "{service=~\"$service\"}",
+          "expr": "{service=~\"$service\"} |~ \"$level\"",
           "legendFormat": "",
           "datasource": { "type": "loki", "uid": "gogo-loki" }
         }
