@@ -53,6 +53,7 @@ jobs:
               -e "DB_PASSWORD=${DB_PASSWORD}" \
               -e "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}" \
               -e "DDL_AUTO=update" \
+              -e "INSTANCE_IP=${APP_SERVER_C_IP}" \
               --name gogo-sp-stage gogo-sp-stage
             # Promtail 시작/갱신 (로그 → Loki)
             docker stop gogo-promtail 2>/dev/null || true
