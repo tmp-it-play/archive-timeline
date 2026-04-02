@@ -25,12 +25,13 @@ jobs:
           SERVER_TO_SERVER_IP: ${{ secrets.SERVER_TO_SERVER_IP }}
           SERVER_TO_SERVER_SUBNET: ${{ secrets.SERVER_TO_SERVER_SUBNET }}
           JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          APP_SERVER_B_IP: ${{ secrets.APP_SERVER_B_IP }}
         with:
           host: ${{ secrets.APP_SERVER_B_DOMAIN }}
           port: 27109
           username: ubuntu
           password: ${{ secrets.APP_SERVER_B_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,AWS_ACCESS_KEY,AWS_SECRET_KEY,AWS_S3_BUCKET,SERVER_TO_SERVER_IP,SERVER_TO_SERVER_SUBNET,JWT_ACCESS_SECRET
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,AWS_ACCESS_KEY,AWS_SECRET_KEY,AWS_S3_BUCKET,SERVER_TO_SERVER_IP,SERVER_TO_SERVER_SUBNET,JWT_ACCESS_SECRET,APP_SERVER_B_IP
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo

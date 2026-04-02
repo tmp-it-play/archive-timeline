@@ -20,12 +20,13 @@ jobs:
           INFRA_DOMAIN: ${{ secrets.INFRA_DOMAIN }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          APP_SERVER_C_IP: ${{ secrets.APP_SERVER_C_IP }}
         with:
           host: ${{ secrets.APP_SERVER_C_DOMAIN }}
           port: 27110
           username: ubuntu
           password: ${{ secrets.APP_SERVER_C_PASSWORD }}
-          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET
+          envs: INFRA_DOMAIN,DB_PASSWORD,GITHUB_TOKEN,JWT_ACCESS_SECRET,APP_SERVER_C_IP
           script: |
             set -e
             mkdir -p /home/ubuntu/gogo

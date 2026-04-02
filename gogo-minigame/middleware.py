@@ -2,9 +2,31 @@ import json
 import uuid
 import time
 
+import jwt
 from fastapi import Request
 from starlette.concurrency import iterate_in_threadpool
+from starlette.datastructures import MutableHeaders
 from starlette.middleware.base import BaseHTTPMiddleware
+
+import config
+
+
+class JWTAuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        authorization = request.headers.get('authorization', '')
+        if authorization.startswith('Bearer ') and config.JWT_ACCESS_SECRET:
+            token = authorization[7:]
+            try:
+                payload = jwt.decode(token, config.JWT_ACCESS_SECRET, algorithms=['HS256'])
+                user_id = payload.get('sub')
+                authority = payload.get('authority')
+                if user_id and authority:
+                    headers = MutableHeaders(scope=request.scope)
+                    headers['request-user-id'] = str(user_id)
+                    headers['request-user-authority'] = str(authority)
+            except jwt.PyJWTError:
+                pass
+        return await call_next(request)
 
 
 no_logging_path = ['/minigame/health', '/favicon.ico', '/actuator/prometheus']

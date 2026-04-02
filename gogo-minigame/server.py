@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from db import create_db
 from eureka import init_eureka
 from loki import loki_handler
-from middleware import LoggingMiddleware
+from middleware import JWTAuthMiddleware, LoggingMiddleware
 from src.cointoss.presentation.controller.cointoss import router as coin_toss_router
 from src.plinko.presentation.controller.plinko import router as plinko_router
 from src.yavarwee.presentation.controller.yavarwee import router as yavarwee_router
@@ -29,6 +29,7 @@ logger.setLevel(logging.INFO)
 # logger.addHandler(loki_handler)
 
 app.add_middleware(LoggingMiddleware)
+app.add_middleware(JWTAuthMiddleware)
 
 app.include_router(coin_toss_router)
 app.include_router(plinko_router)

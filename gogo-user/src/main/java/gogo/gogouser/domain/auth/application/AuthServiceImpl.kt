@@ -31,9 +31,8 @@ class AuthServiceImpl(
     private val studentRepository: StudentRepository,
     private val studentValidator: StudentValidator,
     private val authMapper: AuthMapper,
-    private val authValidator: AuthValidator
+    private val authValidator: AuthValidator,
 ) : AuthService {
-
     @Transactional
     override fun login(dto: AuthLoginReqDto): AuthLoginDto {
         val email = oauthService.login(dto.oauthToken).email
@@ -65,15 +64,15 @@ class AuthServiceImpl(
     }
 
     private fun generateToken(user: User): AuthTokenDto {
-        val token = jwtGenerator.generateToken(
-            userId = user.id.toString(),
-            authority = user.authority,
-        )
+        val token =
+            jwtGenerator.generateToken(
+                userId = user.id.toString(),
+                authority = user.authority,
+            )
         authProcessor.saveRefreshToken(
             userId = user.id,
-            token = token.refreshToken
+            token = token.refreshToken,
         )
         return userMapper.map(token)
     }
-
 }
