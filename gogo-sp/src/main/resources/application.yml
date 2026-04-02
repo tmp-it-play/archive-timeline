@@ -3,6 +3,7 @@ server:
 eureka:
   instance:
     preferIpAddress: true
+    ipAddress: ${INSTANCE_IP:}
   client:
     registerWithEureka: true
     fetchRegistry: true
