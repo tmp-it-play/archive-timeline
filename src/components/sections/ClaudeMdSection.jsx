@@ -148,7 +148,7 @@ export default function ClaudeMdSection() {
       {/* Template */}
       <FadeInSection delay={0.18}>
         <ExpandableCard title="권장 CLAUDE.md 구조 템플릿" defaultOpen={false}>
-          <CodeBlock code={CLAUDE_MD_TEMPLATE} language="markdown" filename="CLAUDE.md" />
+          <CodeBlock code={CLAUDE_MD_TEMPLATE} language="markdown" filename="CLAUDE.md" seamless />
         </ExpandableCard>
       </FadeInSection>
     </section>

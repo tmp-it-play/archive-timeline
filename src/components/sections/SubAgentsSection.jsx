@@ -267,17 +267,23 @@ function AgentSimulator() {
               초기화
             </button>
           )}
-          <button onClick={done ? reset : runDemo} disabled={running}
-            className="text-xs px-3 py-1.5 rounded-lg cursor-pointer"
-            style={{
-              background: running ? 'rgba(217,119,87,0.1)' : '#d97757',
-              color: running ? '#d97757' : '#0b0d0e',
-              border: running ? '1px solid rgba(217,119,87,0.3)' : 'none',
-              opacity: running ? 0.7 : 1,
-            }}
-          >
-            {running ? '실행 중...' : done ? '다시 실행' : '▶ 실행'}
-          </button>
+          <div className="relative">
+            {stepIdx < 0 && !running && (
+              <span className="absolute inset-0 rounded-lg animate-ping"
+                style={{ background: 'rgba(217,119,87,0.35)', animationDuration: '2s' }} />
+            )}
+            <button onClick={done ? reset : runDemo} disabled={running}
+              className="relative text-xs px-3 py-1.5 rounded-lg cursor-pointer"
+              style={{
+                background: running ? 'rgba(217,119,87,0.1)' : '#d97757',
+                color: running ? '#d97757' : '#0b0d0e',
+                border: running ? '1px solid rgba(217,119,87,0.3)' : 'none',
+                opacity: running ? 0.7 : 1,
+              }}
+            >
+              {running ? '실행 중...' : done ? '다시 실행' : '▶ 실행'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -339,7 +345,14 @@ export default function SubAgentsSection() {
       {/* Simulator */}
       <FadeInSection delay={0.06}>
         <div className="mb-10">
-          <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f0e8' }}>동작 원리 시뮬레이터</h3>
+          <h3 className="text-base font-semibold mb-2 flex items-center gap-2" style={{ color: '#f5f0e8' }}>
+            동작 원리 시뮬레이터
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(217,119,87,0.10)', color: '#d97757', border: '1px solid rgba(217,119,87,0.2)' }}>
+              <span className="w-1 h-1 rounded-full bg-current animate-pulse" />
+              인터랙티브
+            </span>
+          </h3>
           <p className="text-sm mb-5" style={{ color: '#6b7280' }}>
             사용자 요청 → Claude가 에이전트 선택 → 독립 컨텍스트에서 실행 → 결과 반환의 흐름을 확인하세요.
           </p>
@@ -367,10 +380,10 @@ export default function SubAgentsSection() {
           </p>
           <div className="space-y-3">
             <ExpandableCard title="test-fixer.md — Kotlin 테스트 자동 수정" badge={<Badge variant="green">agents</Badge>} defaultOpen={true}>
-              <CodeBlock code={TEST_FIXER_AGENT} language="markdown" filename=".claude/agents/test-fixer.md" />
+              <CodeBlock code={TEST_FIXER_AGENT} language="markdown" filename=".claude/agents/test-fixer.md" seamless />
             </ExpandableCard>
             <ExpandableCard title="convention-validator.md — 코드 컨벤션 자동 검증" badge={<Badge variant="blue">agents</Badge>}>
-              <CodeBlock code={CONVENTION_VALIDATOR_AGENT} language="markdown" filename=".claude/agents/convention-validator.md" />
+              <CodeBlock code={CONVENTION_VALIDATOR_AGENT} language="markdown" filename=".claude/agents/convention-validator.md" seamless />
             </ExpandableCard>
           </div>
         </div>

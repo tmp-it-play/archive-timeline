@@ -20,13 +20,19 @@ function CopyIcon() {
   )
 }
 
-export default function CodeBlock({ code, language = 'bash', filename }) {
+// seamless=true: ExpandableCard 안에 붙어서 사용할 때 — 테두리/라운딩 제거
+export default function CodeBlock({ code, language = 'bash', filename, seamless = false }) {
   const [copied, copy] = useCopyToClipboard()
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
-      style={{ border: '1px solid rgba(255,255,255,0.08)', background: '#1a1d1f' }}
+      style={{
+        background: '#1a1d1f',
+        overflow: 'hidden',
+        ...(seamless
+          ? {}
+          : { border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px' }),
+      }}
     >
       {/* Header bar */}
       <div
@@ -86,4 +92,5 @@ CodeBlock.propTypes = {
   code: PropTypes.string.isRequired,
   language: PropTypes.string,
   filename: PropTypes.string,
+  seamless: PropTypes.bool,
 }

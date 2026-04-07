@@ -76,7 +76,7 @@ export default function SettingsSection() {
       <FadeInSection delay={0.14}>
         <div className="mb-10">
           <ExpandableCard title="permissions 패턴 예시 — allow / deny 조합" defaultOpen={false}>
-            <CodeBlock code={PERMISSIONS_EXAMPLE} language="javascript" />
+            <CodeBlock code={PERMISSIONS_EXAMPLE} language="javascript" seamless />
           </ExpandableCard>
         </div>
       </FadeInSection>

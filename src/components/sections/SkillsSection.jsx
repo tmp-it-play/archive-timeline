@@ -231,17 +231,23 @@ function SkillVisualizer() {
               초기화
             </button>
           )}
-          <button onClick={phase === 'done' ? reset || runDemo : runDemo} disabled={autoRunning}
-            className="text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all"
-            style={{
-              background: autoRunning ? 'rgba(217,119,87,0.1)' : '#d97757',
-              color: autoRunning ? '#d97757' : '#0b0d0e',
-              border: autoRunning ? '1px solid rgba(217,119,87,0.3)' : 'none',
-              opacity: autoRunning ? 0.7 : 1,
-            }}
-          >
-            {autoRunning ? '실행 중...' : phase === 'done' ? '다시 실행' : '▶ 실행'}
-          </button>
+          <div className="relative">
+            {phase === 'idle' && (
+              <span className="absolute inset-0 rounded-lg animate-ping"
+                style={{ background: 'rgba(217,119,87,0.35)', animationDuration: '2s' }} />
+            )}
+            <button onClick={phase === 'done' ? reset || runDemo : runDemo} disabled={autoRunning}
+              className="relative text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all"
+              style={{
+                background: autoRunning ? 'rgba(217,119,87,0.1)' : '#d97757',
+                color: autoRunning ? '#d97757' : '#0b0d0e',
+                border: autoRunning ? '1px solid rgba(217,119,87,0.3)' : 'none',
+                opacity: autoRunning ? 0.7 : 1,
+              }}
+            >
+              {autoRunning ? '실행 중...' : phase === 'done' ? '다시 실행' : '▶ 실행'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -271,7 +277,14 @@ export default function SkillsSection() {
 
       <FadeInSection delay={0.06}>
         <div className="mb-10">
-          <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f0e8' }}>동작 원리 시뮬레이터</h3>
+          <h3 className="text-base font-semibold mb-2 flex items-center gap-2" style={{ color: '#f5f0e8' }}>
+            동작 원리 시뮬레이터
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(217,119,87,0.10)', color: '#d97757', border: '1px solid rgba(217,119,87,0.2)' }}>
+              <span className="w-1 h-1 rounded-full bg-current animate-pulse" />
+              인터랙티브
+            </span>
+          </h3>
           <p className="text-sm mb-5" style={{ color: '#6b7280' }}>
             트리거 입력 → SKILL.md 파일 탐색 → 컨텍스트 주입 → 단계별 실행의 흐름을 직접 확인해보세요.
           </p>

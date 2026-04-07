@@ -69,10 +69,10 @@ export default function HeroSection() {
         <motion.h1
           variants={item}
           className="font-bold tracking-tight mb-6"
-          style={{ fontSize: 'clamp(36px, 7vw, 72px)', lineHeight: 1.1, color: '#f5f0e8' }}
+          style={{ fontSize: 'clamp(36px, 7vw, 72px)', lineHeight: 1.15, color: '#f5f0e8' }}
         >
-          Claude Code{' '}
-          <span style={{ color: '#d97757' }}>하네스 꾸미기</span>
+          <span className="block">Claude Code</span>
+          <span className="block" style={{ color: '#d97757' }}>하네스 꾸미기</span>
         </motion.h1>
 
         <motion.p

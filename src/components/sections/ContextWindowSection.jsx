@@ -45,14 +45,15 @@ function TokenBudget() {
         />
       </div>
 
-      {/* Legend */}
-      <div className="space-y-2.5">
+      {/* Legend — gap 없이 연속 hover 영역 */}
+      <div>
         {contextBudgetItems.map((item) => (
           <div
             key={item.label}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer transition-all duration-150"
+            className="flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-all duration-150"
             style={{
               background: hovered === item.label ? 'rgba(255,255,255,0.04)' : 'transparent',
+              borderRadius: 8,
             }}
             onMouseEnter={() => setHovered(item.label)}
             onMouseLeave={() => setHovered(null)}
@@ -63,7 +64,7 @@ function TokenBudget() {
             <span className="text-xs font-mono w-8 text-right" style={{ color: item.color }}>{item.pct}%</span>
           </div>
         ))}
-        <div className="flex items-center gap-3 px-3 py-2">
+        <div className="flex items-center gap-3 px-3 py-2.5">
           <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: 'rgba(255,255,255,0.1)', border: '1px dashed rgba(255,255,255,0.2)' }} />
           <span className="text-sm flex-1" style={{ color: '#4b5563' }}>나머지 여유 공간</span>
           <span className="text-xs font-mono" style={{ color: '#4b5563' }}>{(200000 - total).toLocaleString()} tokens</span>
@@ -92,16 +93,18 @@ function TipCard({ tip, delay }) {
   const [expanded, setExpanded] = useState(false)
   return (
     <FadeInSection delay={delay}>
-      <motion.div
-        className="rounded-xl p-4 cursor-pointer transition-all duration-200"
+      <div
+        className="rounded-xl transition-all duration-200"
         style={{
           background: expanded ? 'rgba(255,255,255,0.04)' : '#141618',
           border: `1px solid ${expanded ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)'}`,
         }}
-        onClick={() => setExpanded(!expanded)}
-        whileHover={{ borderColor: 'rgba(255,255,255,0.1)' }}
       >
-        <div className="flex items-center justify-between">
+        {/* 헤더만 클릭 토글 — 내부 텍스트 드래그해도 닫히지 않음 */}
+        <div
+          className="flex items-center justify-between p-4 cursor-pointer select-none"
+          onClick={() => setExpanded(!expanded)}
+        >
           <div className="flex items-center gap-3">
             <span className="text-lg">{tip.icon}</span>
             <div>
@@ -127,7 +130,7 @@ function TipCard({ tip, delay }) {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="mt-4 space-y-3"
+            className="px-4 pb-4 space-y-3"
           >
             <div className="rounded-lg p-3" style={{ background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.12)' }}>
               <p className="text-[10px] font-mono uppercase tracking-wider mb-1.5" style={{ color: '#f87171' }}>문제</p>
@@ -139,7 +142,7 @@ function TipCard({ tip, delay }) {
             </div>
           </motion.div>
         )}
-      </motion.div>
+      </div>
     </FadeInSection>
   )
 }

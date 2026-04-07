@@ -235,17 +235,23 @@ function HookSimulator() {
               초기화
             </button>
           )}
-          <button onClick={stepIdx === sc.steps.length - 1 ? reset : runDemo} disabled={running}
-            className="text-xs px-3 py-1.5 rounded-lg cursor-pointer"
-            style={{
-              background: running ? 'rgba(217,119,87,0.1)' : '#d97757',
-              color: running ? '#d97757' : '#0b0d0e',
-              border: running ? '1px solid rgba(217,119,87,0.3)' : 'none',
-              opacity: running ? 0.7 : 1,
-            }}
-          >
-            {running ? '실행 중...' : stepIdx === sc.steps.length - 1 ? '다시 실행' : '▶ 실행'}
-          </button>
+          <div className="relative">
+            {stepIdx < 0 && !running && (
+              <span className="absolute inset-0 rounded-lg animate-ping"
+                style={{ background: 'rgba(217,119,87,0.35)', animationDuration: '2s' }} />
+            )}
+            <button onClick={stepIdx === sc.steps.length - 1 ? reset : runDemo} disabled={running}
+              className="relative text-xs px-3 py-1.5 rounded-lg cursor-pointer"
+              style={{
+                background: running ? 'rgba(217,119,87,0.1)' : '#d97757',
+                color: running ? '#d97757' : '#0b0d0e',
+                border: running ? '1px solid rgba(217,119,87,0.3)' : 'none',
+                opacity: running ? 0.7 : 1,
+              }}
+            >
+              {running ? '실행 중...' : stepIdx === sc.steps.length - 1 ? '다시 실행' : '▶ 실행'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -332,7 +338,14 @@ export default function HooksSection() {
       {/* Simulator */}
       <FadeInSection delay={0.06}>
         <div className="mb-10">
-          <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f0e8' }}>동작 원리 시뮬레이터</h3>
+          <h3 className="text-base font-semibold mb-2 flex items-center gap-2" style={{ color: '#f5f0e8' }}>
+            동작 원리 시뮬레이터
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(217,119,87,0.10)', color: '#d97757', border: '1px solid rgba(217,119,87,0.2)' }}>
+              <span className="w-1 h-1 rounded-full bg-current animate-pulse" />
+              인터랙티브
+            </span>
+          </h3>
           <p className="text-sm mb-5" style={{ color: '#6b7280' }}>
             위험한 명령어 차단 또는 파일 수정 후 자동 포맷팅 시나리오를 선택해 Hook의 실행 흐름을 확인하세요.
           </p>
@@ -357,10 +370,10 @@ export default function HooksSection() {
           </h3>
           <div className="space-y-3">
             <ExpandableCard title="preToolUse.sh — 위험한 명령어 차단 + 감사 로그" badge={<Badge variant="blue">PreToolUse</Badge>} defaultOpen={true}>
-              <CodeBlock code={PRE_TOOL_USE_SH} language="bash" filename=".claude/hooks/preToolUse.sh" />
+              <CodeBlock code={PRE_TOOL_USE_SH} language="bash" filename=".claude/hooks/preToolUse.sh" seamless />
             </ExpandableCard>
             <ExpandableCard title="postToolUse.sh — 자동 포맷팅 및 테스트 실행" badge={<Badge variant="green">PostToolUse</Badge>}>
-              <CodeBlock code={POST_TOOL_USE_SH} language="bash" filename=".claude/hooks/postToolUse.sh" />
+              <CodeBlock code={POST_TOOL_USE_SH} language="bash" filename=".claude/hooks/postToolUse.sh" seamless />
             </ExpandableCard>
           </div>
         </div>
