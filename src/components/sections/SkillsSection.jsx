@@ -5,7 +5,6 @@ import FadeInSection from '../ui/FadeInSection'
 import CodeBlock from '../ui/CodeBlock'
 import ExpandableCard from '../ui/ExpandableCard'
 import TabSwitcher from '../ui/TabSwitcher'
-import Badge from '../ui/Badge'
 import { SKILL_FOLDER_STRUCTURE, skillExamples, skillBenefits } from '../../data/content'
 
 // ─── Interactive skill demo ────────────────────────────────────────────────
@@ -29,15 +28,17 @@ When the user runs /commit:
 5. git commit 실행`
 
 const EXEC_STEPS = [
-  '$ git diff --staged',
-  '→ 변경 파일: src/auth/AuthService.kt',
-  '→ 타입: fix (버그 수정)',
-  '→ 브랜치: fix/auth-token-refresh',
-  '$ git commit -m "fix(auth): 토큰 갱신 누락 수정"',
-  '✓ 커밋 완료',
+  { text: '$ git diff --staged', color: '#f5f0e8' },
+  { text: '→ 변경 파일: src/auth/AuthService.kt', color: '#9ca3af' },
+  { text: '→ 타입: fix (버그 수정 감지)', color: '#9ca3af' },
+  { text: '→ 브랜치: fix/auth-token-refresh', color: '#9ca3af' },
+  { text: '$ git commit -m "fix(auth): 토큰 갱신 누락 수정"', color: '#f5f0e8' },
+  { text: '✓ 커밋 완료', color: '#86efac' },
 ]
 
-function TerminalLine({ text, delay, color = '#f5f0e8' }) {
+const STEP_DELAY = 850 // ms per step
+
+function TerminalLine({ text, delay, color }) {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), delay)
@@ -48,7 +49,7 @@ function TerminalLine({ text, delay, color = '#f5f0e8' }) {
     <motion.div
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25 }}
       className="font-mono text-xs leading-relaxed"
       style={{ color }}
     >
@@ -60,29 +61,35 @@ function TerminalLine({ text, delay, color = '#f5f0e8' }) {
 function SkillVisualizer() {
   const [phase, setPhase] = useState('idle')
   const [autoRunning, setAutoRunning] = useState(false)
-  const timerRef = useRef(null)
+  const timers = useRef([])
+
+  const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = [] }
 
   const runDemo = () => {
     if (autoRunning) return
     setAutoRunning(true)
     setPhase('trigger')
+
+    const lastStepMs = 2600 + (EXEC_STEPS.length - 1) * STEP_DELAY
     const schedule = [
-      [700,  'lookup'],
-      [1500, 'inject'],
-      [2500, 'execute'],
-      [4800, 'done'],
+      [700,             'lookup'],
+      [1600,            'inject'],
+      [2600,            'execute'],
+      [lastStepMs + 600,'done'],
     ]
     schedule.forEach(([ms, p]) => {
-      timerRef.current = setTimeout(() => setPhase(p), ms)
+      timers.current.push(setTimeout(() => setPhase(p), ms))
     })
-    setTimeout(() => setAutoRunning(false), 5200)
+    timers.current.push(setTimeout(() => setAutoRunning(false), lastStepMs + 900))
   }
 
   const reset = () => {
-    clearTimeout(timerRef.current)
+    clearTimers()
     setPhase('idle')
     setAutoRunning(false)
   }
+
+  useEffect(() => () => clearTimers(), [])
 
   const currentIdx = DEMO_PHASES.findIndex(p => p.id === phase)
 
@@ -99,7 +106,7 @@ function SkillVisualizer() {
           return (
             <div
               key={p.id}
-              className="flex-1 flex flex-col items-center justify-center py-2.5 px-1 text-center relative"
+              className="flex-1 flex flex-col items-center justify-center py-2.5 px-1 text-center"
               style={{
                 background: active ? 'rgba(217,119,87,0.08)' : 'transparent',
                 borderRight: i < DEMO_PHASES.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
@@ -114,10 +121,7 @@ function SkillVisualizer() {
               >
                 {done ? '✓' : i + 1}
               </div>
-              <span
-                className="text-[10px] hidden sm:block"
-                style={{ color: active ? '#d97757' : done ? '#9ca3af' : '#4b5563' }}
-              >
+              <span className="text-[10px] hidden sm:block" style={{ color: active ? '#d97757' : done ? '#9ca3af' : '#4b5563' }}>
                 {p.label}
               </span>
             </div>
@@ -131,7 +135,6 @@ function SkillVisualizer() {
         <div className="p-5" style={{ borderRight: '1px solid rgba(255,255,255,0.04)' }}>
           <p className="text-[10px] font-mono uppercase tracking-wider mb-3" style={{ color: '#4b5563' }}>입력 / 파일 탐색</p>
 
-          {/* Terminal input */}
           <div
             className="rounded-lg px-3 py-2.5 mb-4 font-mono text-sm flex items-center gap-2"
             style={{ background: '#141618', border: '1px solid rgba(255,255,255,0.06)' }}
@@ -150,13 +153,12 @@ function SkillVisualizer() {
             </AnimatePresence>
           </div>
 
-          {/* File tree */}
           <div className="font-mono text-xs space-y-1" style={{ color: '#4b5563' }}>
             {[
               { path: '.claude/', indent: 0 },
               { path: 'skills/', indent: 1 },
               { path: 'commit/', indent: 2, highlight: phase !== 'idle' && phase !== 'trigger' },
-              { path: 'SKILL.md', indent: 3, highlight: phase === 'lookup' || phase === 'inject' || phase === 'execute' || phase === 'done', file: true },
+              { path: 'SKILL.md', indent: 3, highlight: ['lookup','inject','execute','done'].includes(phase), file: true },
               { path: 'code-review/', indent: 2 },
               { path: 'review-pr/', indent: 2 },
             ].map((item, i) => (
@@ -171,16 +173,13 @@ function SkillVisualizer() {
               >
                 <span>{item.file ? '📄' : '📁'}</span>
                 <span>{item.path}</span>
-                {item.file && (phase === 'lookup') && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 0.8, repeat: Infinity }}
-                    style={{ color: '#d97757' }}
-                  > ← 로드 중</motion.span>
+                {item.file && phase === 'lookup' && (
+                  <motion.span animate={{ opacity: [0,1,0] }} transition={{ duration: 0.8, repeat: Infinity }} style={{ color: '#d97757' }}>
+                    {' '}← 로드 중
+                  </motion.span>
                 )}
-                {item.file && (phase === 'inject' || phase === 'execute' || phase === 'done') && (
-                  <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#86efac' }}> ✓ 로드됨</motion.span>
+                {item.file && ['inject','execute','done'].includes(phase) && (
+                  <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#86efac' }}>{' '}✓ 로드됨</motion.span>
                 )}
               </div>
             ))}
@@ -190,7 +189,7 @@ function SkillVisualizer() {
         {/* Right: Context / execution */}
         <div className="p-5">
           <p className="text-[10px] font-mono uppercase tracking-wider mb-3" style={{ color: '#4b5563' }}>
-            {phase === 'execute' || phase === 'done' ? '실행 결과' : 'SKILL.md 내용 (컨텍스트에 주입됨)'}
+            {['execute','done'].includes(phase) ? '실행 결과' : 'SKILL.md → 컨텍스트 주입'}
           </p>
           <AnimatePresence mode="wait">
             {(phase === 'idle' || phase === 'trigger') && (
@@ -199,21 +198,16 @@ function SkillVisualizer() {
                 파일을 탐색하는 중...
               </motion.div>
             )}
-            {(phase === 'inject') && (
+            {phase === 'inject' && (
               <motion.div key="inject" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 className="text-xs font-mono leading-relaxed whitespace-pre" style={{ color: '#9ca3af' }}>
                 {SKILL_PREVIEW}
               </motion.div>
             )}
-            {(phase === 'execute' || phase === 'done') && (
+            {['execute','done'].includes(phase) && (
               <motion.div key="exec" className="space-y-1">
-                {EXEC_STEPS.map((line, i) => (
-                  <TerminalLine
-                    key={i}
-                    text={line}
-                    delay={i * 350}
-                    color={line.startsWith('✓') ? '#86efac' : line.startsWith('→') ? '#9ca3af' : '#f5f0e8'}
-                  />
+                {EXEC_STEPS.map((step, i) => (
+                  <TerminalLine key={i} text={step.text} delay={i * STEP_DELAY} color={step.color} />
                 ))}
               </motion.div>
             )}
@@ -222,17 +216,13 @@ function SkillVisualizer() {
       </div>
 
       {/* Controls */}
-      <div
-        className="flex items-center justify-between px-5 py-3"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
-      >
+      <div className="flex items-center justify-between px-5 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <span className="text-xs font-mono" style={{ color: '#4b5563' }}>
           {phase === 'idle' ? '▶ 실행 버튼을 눌러 시뮬레이션 시작' : DEMO_PHASES[currentIdx]?.label}
         </span>
         <div className="flex gap-2">
           {phase !== 'idle' && (
-            <button
-              onClick={reset}
+            <button onClick={reset}
               className="text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
               style={{ color: '#6b7280', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
               onMouseEnter={e => e.currentTarget.style.color = '#9ca3af'}
@@ -241,9 +231,7 @@ function SkillVisualizer() {
               초기화
             </button>
           )}
-          <button
-            onClick={runDemo}
-            disabled={autoRunning}
+          <button onClick={phase === 'done' ? reset || runDemo : runDemo} disabled={autoRunning}
             className="text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all"
             style={{
               background: autoRunning ? 'rgba(217,119,87,0.1)' : '#d97757',
@@ -266,20 +254,11 @@ export default function SkillsSection() {
   const skillTabs = skillExamples.map((skill) => ({
     id: skill.name,
     label: skill.trigger,
-    content: (
-      <CodeBlock
-        code={skill.code}
-        language="markdown"
-        filename={skill.file}
-      />
-    ),
+    content: <CodeBlock code={skill.code} language="markdown" filename={skill.file} />,
   }))
 
   return (
-    <section
-      className="px-8 md:px-12 py-20 max-w-4xl mx-auto"
-      style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
-    >
+    <section className="px-8 md:px-12 py-20 max-w-4xl mx-auto" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
       <FadeInSection>
         <SectionHeader
           id="skills"
@@ -290,7 +269,6 @@ export default function SkillsSection() {
         />
       </FadeInSection>
 
-      {/* Interactive visualizer */}
       <FadeInSection delay={0.06}>
         <div className="mb-10">
           <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f0e8' }}>동작 원리 시뮬레이터</h3>
@@ -301,7 +279,6 @@ export default function SkillsSection() {
         </div>
       </FadeInSection>
 
-      {/* Folder structure */}
       <FadeInSection delay={0.1}>
         <div className="mb-10">
           <h3 className="text-base font-semibold mb-5" style={{ color: '#f5f0e8' }}>폴더 구조</h3>
@@ -309,7 +286,6 @@ export default function SkillsSection() {
         </div>
       </FadeInSection>
 
-      {/* Skill examples */}
       <FadeInSection delay={0.14}>
         <div className="mb-10">
           <h3 className="text-base font-semibold mb-2" style={{ color: '#f5f0e8' }}>
@@ -321,16 +297,12 @@ export default function SkillsSection() {
         </div>
       </FadeInSection>
 
-      {/* Benefits */}
       <FadeInSection delay={0.18}>
         <h3 className="text-base font-semibold mb-5" style={{ color: '#f5f0e8' }}>왜 Skill인가</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {skillBenefits.map((b, i) => (
-            <div
-              key={i}
-              className="rounded-xl p-4 flex gap-3"
-              style={{ background: '#141618', border: '1px solid rgba(255,255,255,0.06)' }}
-            >
+            <div key={i} className="rounded-xl p-4 flex gap-3"
+              style={{ background: '#141618', border: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="w-1.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: '#d97757', minHeight: '100%', alignSelf: 'stretch' }} />
               <div>
                 <p className="text-sm font-medium mb-1" style={{ color: '#f5f0e8' }}>{b.title}</p>
