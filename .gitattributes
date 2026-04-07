@@ -1,0 +1,44 @@
+# ──────────────────────────────────────────────
+# Line ending normalization
+# ──────────────────────────────────────────────
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# ──────────────────────────────────────────────
+# Binary files — no diffs, no line-ending changes
+# ──────────────────────────────────────────────
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+
+# ──────────────────────────────────────────────
+# GitHub Linguist — language statistics
+# Include these file types in language stats
+# (GitHub excludes docs/data files by default)
+# ──────────────────────────────────────────────
+
+# Core source — always count
+*.jsx linguist-detectable=true linguist-language=JSX
+*.js  linguist-detectable=true linguist-language=JavaScript
+*.css linguist-detectable=true linguist-language=CSS
+
+# Include config / data files in stats
+*.json linguist-detectable=true linguist-language=JSON
+*.md   linguist-detectable=true linguist-language=Markdown
+
+# Shell scripts used in Claude hooks
+*.sh linguist-detectable=true linguist-language=Shell
+
+# Don't inflate stats with lock files or generated output
+pnpm-lock.yaml    linguist-generated=true
+package-lock.json linguist-generated=true
+dist/**           linguist-generated=true
