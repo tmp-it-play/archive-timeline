@@ -93,8 +93,9 @@ ${code}
       cur.style.outline = '';
       cur.style.outlineOffset = '';
       cur = null;
+      bar.style.display = 'none';
+      window.parent.postMessage({ type: 'previewLeave' }, '*');
     }
-    bar.style.display = 'none';
   }
 
   document.addEventListener('mouseover', function(e) {
