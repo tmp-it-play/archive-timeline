@@ -3,7 +3,7 @@ import { getProgressSummary } from '../hooks/useProgress.js'
 
 const SUBJECTS = [
   { id: 'subject1', label: '정보시스템 기반 기술', total: 25, desc: '운영체제, 네트워크, 보안, 클라우드' },
-  { id: 'subject2', label: '프로그래밍 언어 활용', total: 25, desc: 'Java, Python, 자료구조, 알고리즘' },
+  { id: 'subject2', label: '프로그래밍 언어 활용', total: 25, desc: 'Java, C언어, 자료구조, 알고리즘' },
   { id: 'subject3', label: '데이터베이스 활용', total: 25, desc: 'SQL, 정규화, 트랜잭션, NoSQL' },
 ]
 
