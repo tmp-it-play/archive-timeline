@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom'
 import { practicalTopics } from '../data/practical/index.js'
 
 const LANG_BADGE = {
+  'html-basic':  'HTML',
+  'css':         'CSS',
   'screen-form': 'JSP',
   'screen-list': 'JSP',
   'dao-impl':    'Java',
   'dto-class':   'Java',
   'sql':         'SQL',
-  'css':         'CSS/HTML',
 }
 
 export default function PracticalHome() {

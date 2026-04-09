@@ -1,13 +1,78 @@
 import { useEffect, useRef, useState } from 'react'
-import { basicSetup } from 'codemirror'
-import { EditorView, keymap } from '@codemirror/view'
-import { EditorState } from '@codemirror/state'
-import { indentWithTab } from '@codemirror/commands'
+import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, drawSelection, dropCursor, Decoration } from '@codemirror/view'
+import { EditorState, StateEffect, StateField, RangeSetBuilder } from '@codemirror/state'
+import { defaultKeymap, indentWithTab, history, historyKeymap } from '@codemirror/commands'
+import { indentOnInput, syntaxHighlighting, bracketMatching, foldGutter, foldKeymap } from '@codemirror/language'
+import { closeBrackets, closeBracketsKeymap, autocompletion, completionKeymap } from '@codemirror/autocomplete'
 import { html } from '@codemirror/lang-html'
 import { sql } from '@codemirror/lang-sql'
 import { java } from '@codemirror/lang-java'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 
+// ── 미리보기 호버 → 에디터 태그 하이라이트 ──────────────────────────
+const setHighlightTag = StateEffect.define()
+
+const tagHighlightMark = Decoration.mark({ class: 'cm-preview-hover' })
+
+function buildTagDecos(doc, tagName) {
+  if (!tagName) return Decoration.none
+  const text = doc.toString()
+  const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const matches = [] // [from, to]
+
+  // 1) HTML 태그명: <tagName 과 </tagName
+  const htmlRe = new RegExp(`</?${escaped}(?=[\\s>/])`, 'gi')
+  let m
+  while ((m = htmlRe.exec(text)) !== null) {
+    const isClose = m[0][1] === '/'
+    const nameStart = m.index + (isClose ? 2 : 1)
+    matches.push([nameStart, nameStart + tagName.length])
+  }
+
+  // 2) CSS 선택자: 단독 태그명 (HTML 태그 컨텍스트 제외)
+  //    예: "table td {", "table th, table td {", "tr:nth-child(even)"
+  const cssRe = new RegExp(`(?<![<\\/a-zA-Z-])(${escaped})(?![a-zA-Z-])`, 'gi')
+  while ((m = cssRe.exec(text)) !== null) {
+    matches.push([m.index, m.index + tagName.length])
+  }
+
+  // 오름차순 정렬 후 중복·겹침 제거
+  matches.sort((a, b) => a[0] - b[0])
+  const builder = new RangeSetBuilder()
+  let prevTo = -1
+  for (const [from, to] of matches) {
+    if (from >= prevTo) {
+      builder.add(from, to, tagHighlightMark)
+      prevTo = to
+    }
+  }
+  return builder.finish()
+}
+
+const highlightTagField = StateField.define({
+  create: () => Decoration.none,
+  update(deco, tr) {
+    deco = deco.map(tr.changes)
+    for (const eff of tr.effects) {
+      if (eff.is(setHighlightTag)) {
+        return buildTagDecos(tr.state.doc, eff.value)
+      }
+    }
+    return deco
+  },
+  provide: f => EditorView.decorations.from(f),
+})
+
+const highlightTagTheme = EditorView.baseTheme({
+  '.cm-preview-hover': {
+    backgroundColor: 'rgba(255, 210, 60, 0.22)',
+    borderRadius: '2px',
+    outline: '1px solid rgba(255, 210, 60, 0.5)',
+  },
+})
+// ────────────────────────────────────────────────────────────────────
+
+// 스크롤바·폰트·크기 커스텀
 const baseTheme = EditorView.theme({
   '&': { fontSize: '13.5px' },
   '.cm-scroller': {
@@ -26,7 +91,7 @@ const baseTheme = EditorView.theme({
 function getLang(lang) {
   if (lang === 'sql')  return sql()
   if (lang === 'java') return java()
-  return html()  // html, jsp 모두 html parser로 처리
+  return html()
 }
 
 const LANG_LABEL = { html: 'HTML/JSP', sql: 'SQL', java: 'Java', jsp: 'JSP' }
@@ -37,6 +102,8 @@ export default function CodeEditor({
   language = 'html',
   readOnly = false,
   minHeight = '320px',
+  extraExtensions = [],
+  highlightTag = null,
 }) {
   const containerRef = useRef(null)
   const viewRef = useRef(null)
@@ -48,13 +115,48 @@ export default function CodeEditor({
 
     try {
       const extensions = [
-        basicSetup,
+        // 언어
         getLang(language),
-        oneDark,
+
+        // 테마
+        oneDarkTheme,
+        syntaxHighlighting(oneDarkHighlightStyle),
+
+        // UI features
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        highlightActiveLine(),
+        drawSelection(),
+        dropCursor(),
+        bracketMatching(),
+        foldGutter(),
+        history(),
+        indentOnInput(),
+        closeBrackets(),
+        autocompletion({ activateOnTyping: false }),
+
+        // 키맵
+        keymap.of([
+          indentWithTab,
+          ...closeBracketsKeymap,
+          ...defaultKeymap,
+          ...historyKeymap,
+          ...foldKeymap,
+          ...completionKeymap,
+        ]),
+
+        // 커스텀 스타일
         baseTheme,
-        keymap.of([indentWithTab]),
+
+        // 미리보기 호버 하이라이트
+        highlightTagField,
+        highlightTagTheme,
+
         EditorView.lineWrapping,
         EditorState.readOnly.of(readOnly),
+
+        // 외부 주입 확장 (툴팁 등)
+        ...extraExtensions,
       ]
 
       if (onChange && !readOnly) {
@@ -73,12 +175,19 @@ export default function CodeEditor({
 
       return () => { view.destroy(); viewRef.current = null }
     } catch (e) {
-      console.error('CodeEditor init:', e)
+      console.error('CodeEditor init error:', e)
       setHasError(true)
     }
-  }, [language, readOnly])
+  }, [language, readOnly]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // readOnly 일 때 외부 value 변경 반영
+  // 미리보기 호버 태그 → 에디터 하이라이트 갱신
+  useEffect(() => {
+    const view = viewRef.current
+    if (!view) return
+    view.dispatch({ effects: setHighlightTag.of(highlightTag) })
+  }, [highlightTag])
+
+  // readOnly 모드: 외부 value 변경 반영
   useEffect(() => {
     const view = viewRef.current
     if (!view || !readOnly) return
@@ -96,7 +205,6 @@ export default function CodeEditor({
     })
   }
 
-  // fallback: 에디터 초기화 실패 시 textarea
   if (hasError) {
     return (
       <div className="rounded-lg overflow-hidden border border-gray-700">
