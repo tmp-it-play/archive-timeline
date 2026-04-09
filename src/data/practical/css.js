@@ -1,26 +1,32 @@
 export default {
   id: 'css',
   title: 'CSS 스타일링',
-  description: '화면 구현에서 사용하는 CSS 핵심 속성을 학습합니다. 선택자, 텍스트/배경 스타일, 레이아웃을 직접 작성해보세요.',
+  description: '화면 구현에서 사용하는 CSS 핵심 속성을 직접 입력하며 실시간으로 결과를 확인합니다. 빈칸(___) 을 채워가며 각 속성이 화면에 미치는 영향을 눈으로 확인하세요.',
   lessons: [
     {
       id: 'css_01',
       title: 'CSS 선택자와 기본 스타일',
+      type: 'live-html',
       description: `CSS 선택자 종류:
-- 태그 선택자: h1 { ... }
-- 클래스 선택자: .myClass { ... }
-- ID 선택자: #myId { ... }
-- 복합 선택자: table td { ... }
+• 태그 선택자:   h1 { ... }
+• 클래스 선택자: .myClass { ... }
+• ID 선택자:     #myId { ... }
+• 자손 선택자:   table td { ... }
 
-기본 속성:
-- color: 글자 색상
-- background-color: 배경 색상
-- font-size: 글자 크기
-- font-weight: 글자 굵기 (bold, normal)
-- text-align: 정렬 (left, center, right)
+자주 쓰는 속성:
+• color               — 글자 색상
+• background-color    — 배경 색상
+• font-size           — 글자 크기 (예: 16px)
+• font-weight         — 굵기 (bold / normal)
+• text-align          — 정렬 (left / center / right)
 
-테이블을 스타일링해보세요.`,
-      type: 'html',
+___ 부분을 채워가며 테이블 스타일 변화를 확인해보세요.`,
+      annotations: [
+        { tag: 'table', color: '#2563eb', label: 'table',   description: 'CSS table { ... } 로 스타일 적용.' },
+        { tag: 'th',    color: '#d97706', label: 'th',      description: 'CSS table th { ... } 로 헤더 스타일.' },
+        { tag: 'td',    color: '#dc2626', label: 'td',      description: 'CSS table td { ... } 로 셀 스타일.' },
+        { tag: 'tr',    color: '#16a34a', label: 'tr:nth-child(even)', description: '짝수 행 배경색 지정에 사용.' },
+      ],
       starterCode: `<style>
   /* 테이블 전체 테두리 */
   table {
@@ -111,16 +117,24 @@ export default {
     {
       id: 'css_02',
       title: '박스 모델 (margin, padding, border)',
-      description: `CSS 박스 모델의 구조:
-- content: 실제 내용 영역
-- padding: 내용과 테두리 사이 안쪽 여백
-- border: 테두리
-- margin: 테두리 바깥 외부 여백
+      type: 'live-html',
+      description: `CSS 박스 모델의 4겹 구조:
+  [ margin ]
+    [ border ]
+      [ padding ]
+        [ content ]
 
-단위: px(픽셀), %(퍼센트), em(부모 기준)
+• padding  — 안쪽 여백 (테두리 ↔ 내용)
+• border   — 테두리 선
+• margin   — 바깥 여백 (다른 요소와의 간격)
 
-네비게이션 메뉴를 박스 모델로 스타일링해보세요.`,
-      type: 'html',
+단위: px(픽셀), %(부모 기준 비율), em(부모 폰트 크기 기준)
+
+___ 를 수치로 채우면서 각 여백이 어떻게 변하는지 확인하세요.`,
+      annotations: [
+        { tag: 'nav', color: '#7c3aed', label: 'nav',       description: 'CSS nav { ... } 로 배경·패딩 적용.' },
+        { tag: 'a',   color: '#db2777', label: 'a',         description: 'CSS nav a { ... } 로 링크 스타일.' },
+      ],
       starterCode: `<style>
   nav {
     background-color: #222;
@@ -148,7 +162,11 @@ export default {
   <a href="#">필기 준비</a>
   <a href="#">실기 준비</a>
   <a href="#">오답 노트</a>
-</nav>`,
+</nav>
+
+<p style="margin-top:20px; color:#555;">
+  nav 위에 마우스를 올려보세요 (hover 효과)
+</p>`,
       solution: `<style>
   nav {
     background-color: #222;
@@ -176,17 +194,19 @@ export default {
     },
     {
       id: 'css_03',
-      title: '버튼 스타일',
-      description: `폼 제출 버튼과 일반 버튼을 CSS로 스타일링합니다.
-화면 구현 과제에서 자주 사용되는 버튼 패턴입니다.
+      title: '버튼 스타일 (cursor, border-radius)',
+      type: 'live-html',
+      description: `폼 버튼 스타일링에서 자주 쓰는 속성:
 
-주요 속성:
-- cursor: pointer: 마우스를 올리면 손가락 모양
-- border: none: 기본 테두리 제거
-- border-radius: 모서리 둥글기
+• cursor: pointer     — 마우스 올리면 손가락 모양
+• border: none        — 기본 테두리 제거
+• border-radius: 4px  — 모서리 둥글게
+• :hover 선택자       — 마우스 올렸을 때 스타일
 
-제출 버튼과 취소 버튼을 스타일링해보세요.`,
-      type: 'html',
+___ 를 채워서 두 버튼을 완성하세요.`,
+      annotations: [
+        { tag: 'button', color: '#2563eb', label: 'button', description: 'CSS .btn { ... } 클래스로 스타일 적용.' },
+      ],
       starterCode: `<style>
   .btn {
     padding: 8px 20px;
@@ -196,6 +216,7 @@ export default {
     border-radius: 4px;
     margin: 4px;
   }
+  /* 주 버튼: 검정 배경, 흰 글자 */
   .btn-primary {
     background-color: #000;
     color: #fff;
@@ -203,7 +224,7 @@ export default {
   .btn-primary:hover {
     background-color: #333;
   }
-  /* 취소 버튼: 흰 배경, 검은 테두리 */
+  /* 보조 버튼: 흰 배경, 검은 테두리·글자 */
   .btn-secondary {
     background-color: ___;
     color: #000;
@@ -215,7 +236,13 @@ export default {
 </style>
 
 <button class="btn btn-primary">저장</button>
-<button class="btn btn-secondary">취소</button>`,
+<button class="btn btn-secondary">취소</button>
+
+<hr style="margin:20px 0;"/>
+
+<p style="font-size:13px; color:#666;">
+  힌트: cursor에는 pointer, btn-secondary 배경에는 #fff 또는 white
+</p>`,
       solution: `<style>
   .btn {
     padding: 8px 20px;
