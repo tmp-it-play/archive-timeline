@@ -13,42 +13,56 @@ import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 const setHighlightTag = StateEffect.define()
 
 const tagHighlightMark = Decoration.mark({ class: 'cm-preview-hover' })
+const cssHighlightMark = Decoration.mark({ class: 'cm-preview-hover-css' })
 
-// index번째 opening/closing 태그만 하이라이트 (< 포함)
+// index번째 HTML 태그 + 모든 CSS 선택자 하이라이트
 function buildTagDecos(doc, tagName, index) {
   if (!tagName) return Decoration.none
   const text = doc.toString()
   const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const matches = []
 
-  // 여는 태그: <tagName — < 포함
+  const htmlMatches = []
+  const cssMatches = []
+
+  // 여는 태그: index번째 <tagName
   const openRe = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
   let m, count = 0
   while ((m = openRe.exec(text)) !== null) {
     if (count === index) {
-      matches.push([m.index, m.index + 1 + tagName.length])
+      htmlMatches.push([m.index, m.index + 1 + tagName.length])
       break
     }
     count++
   }
 
-  // 닫는 태그: </tagName — </ 포함
+  // 닫는 태그: index번째 </tagName
   const closeRe = new RegExp(`<\\/${escaped}(?=[\\s>])`, 'gi')
   count = 0
   while ((m = closeRe.exec(text)) !== null) {
     if (count === index) {
-      matches.push([m.index, m.index + 2 + tagName.length])
+      htmlMatches.push([m.index, m.index + 2 + tagName.length])
       break
     }
     count++
   }
 
-  matches.sort((a, b) => a[0] - b[0])
+  // CSS 선택자: 모든 occurrence (HTML 태그 컨텍스트 제외)
+  const cssRe = new RegExp(`(?<![<\\/a-zA-Z0-9-])(${escaped})(?=[\\s,{:.#>[\\)])`, 'gi')
+  while ((m = cssRe.exec(text)) !== null) {
+    cssMatches.push([m.index, m.index + tagName.length])
+  }
+
+  // HTML과 CSS 범위가 겹치지 않도록 병합 후 정렬
+  const allMatches = [
+    ...htmlMatches.map(r => ({ range: r, mark: tagHighlightMark })),
+    ...cssMatches.map(r => ({ range: r, mark: cssHighlightMark })),
+  ].sort((a, b) => a.range[0] - b.range[0])
+
   const builder = new RangeSetBuilder()
   let prevTo = -1
-  for (const [from, to] of matches) {
+  for (const { range: [from, to], mark } of allMatches) {
     if (from >= prevTo) {
-      builder.add(from, to, tagHighlightMark)
+      builder.add(from, to, mark)
       prevTo = to
     }
   }
@@ -75,6 +89,12 @@ const highlightTagTheme = EditorView.baseTheme({
     backgroundColor: 'rgba(255, 200, 0, 0.30)',
     borderRadius: '3px',
     outline: '2px solid rgba(255, 200, 0, 0.9)',
+    outlineOffset: '1px',
+  },
+  '.cm-preview-hover-css': {
+    backgroundColor: 'rgba(100, 200, 255, 0.22)',
+    borderRadius: '3px',
+    outline: '2px solid rgba(100, 200, 255, 0.8)',
     outlineOffset: '1px',
   },
 })
