@@ -118,7 +118,8 @@ ${code}
           '&ensp;<span style="color:#d1d5db;">' + a.description + '</span>';
         var siblings = document.querySelectorAll(el.tagName.toLowerCase());
         var idx = Array.prototype.indexOf.call(siblings, el);
-        window.parent.postMessage({ type: 'previewHover', tag: a.tag, index: idx }, '*');
+        var classes = Array.prototype.slice.call(el.classList);
+        window.parent.postMessage({ type: 'previewHover', tag: a.tag, index: idx, classes: classes }, '*');
         return;
       }
       el = el.parentElement;
@@ -158,7 +159,7 @@ export default function PracticalLesson() {
   useEffect(() => {
     const handler = (e) => {
       if (!e.data || typeof e.data !== 'object') return
-      if (e.data.type === 'previewHover') setPreviewHoveredTag({ tag: e.data.tag ?? null, index: e.data.index ?? 0 })
+      if (e.data.type === 'previewHover') setPreviewHoveredTag({ tag: e.data.tag ?? null, index: e.data.index ?? 0, classes: e.data.classes ?? [] })
       else if (e.data.type === 'previewLeave') setPreviewHoveredTag(null)
     }
     window.addEventListener('message', handler)

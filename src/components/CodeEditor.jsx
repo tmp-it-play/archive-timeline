@@ -31,12 +31,17 @@ function inAnyRange(pos, ranges) {
 }
 
 // CSS 규칙 블록의 줄 번호 범위 수집 (Decoration.line용)
-function buildCssLineDecos(doc, tagName) {
+function buildCssLineDecos(doc, tagName, classes = []) {
   if (!tagName) return Decoration.none
   const text = doc.toString()
   const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const commentRanges = getCommentRanges(text)
+  // 태그 선택자 또는 클래스 선택자 중 하나라도 매칭되면 해당 규칙 강조
   const tagInSelectorRe = new RegExp(`(?<![a-zA-Z0-9_-])(${escaped})(?![a-zA-Z0-9_-])`)
+  const classPatterns = classes.map(cls => {
+    const ec = cls.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return new RegExp(`\\.${ec}(?![a-zA-Z0-9_-])`)
+  })
 
   const lineFroms = []
 
@@ -70,7 +75,9 @@ function buildCssLineDecos(doc, tagName) {
       const actualFrom = ruleAbsStart + selectorOffset
       const actualTo = ruleAbsEnd - 1 // } 문자 위치
 
-      if (tagInSelectorRe.test(selector.slice(selectorOffset))) {
+      const selectorText = selector.slice(selectorOffset)
+      const matches = tagInSelectorRe.test(selectorText) || classPatterns.some(re => re.test(selectorText))
+      if (matches) {
         const startLine = doc.lineAt(actualFrom).number
         const endLine = doc.lineAt(actualTo).number
         for (let ln = startLine; ln <= endLine; ln++) {
@@ -138,19 +145,19 @@ const highlightTagField = StateField.define({
 })
 
 const cssLineField = StateField.define({
-  create: () => ({ tag: null, decos: Decoration.none }),
+  create: () => ({ tag: null, classes: [], decos: Decoration.none }),
   update(state, tr) {
-    let tag = state.tag
+    let { tag, classes } = state
     let changed = false
     for (const eff of tr.effects) {
       if (eff.is(setHighlightTag)) {
         tag = eff.value?.tag ?? null
+        classes = eff.value?.classes ?? []
         changed = true
       }
     }
-    // tag 변경 또는 doc 편집 시 재계산
     if (changed || tr.docChanged) {
-      return { tag, decos: tag ? buildCssLineDecos(tr.state.doc, tag) : Decoration.none }
+      return { tag, classes, decos: tag ? buildCssLineDecos(tr.state.doc, tag, classes) : Decoration.none }
     }
     return state
   },
