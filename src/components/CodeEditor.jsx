@@ -14,29 +14,35 @@ const setHighlightTag = StateEffect.define()
 
 const tagHighlightMark = Decoration.mark({ class: 'cm-preview-hover' })
 
-function buildTagDecos(doc, tagName) {
+// index번째 opening/closing 태그만 하이라이트 (< 포함)
+function buildTagDecos(doc, tagName, index) {
   if (!tagName) return Decoration.none
   const text = doc.toString()
   const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const matches = [] // [from, to]
+  const matches = []
 
-  // 1) HTML 태그명: <tagName 과 </tagName
-  const htmlRe = new RegExp(`</?${escaped}(?=[\\s>/])`, 'gi')
-  let m
-  while ((m = htmlRe.exec(text)) !== null) {
-    const isClose = m[0][1] === '/'
-    const nameStart = m.index + (isClose ? 2 : 1)
-    matches.push([nameStart, nameStart + tagName.length])
+  // 여는 태그: <tagName — < 포함
+  const openRe = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
+  let m, count = 0
+  while ((m = openRe.exec(text)) !== null) {
+    if (count === index) {
+      matches.push([m.index, m.index + 1 + tagName.length])
+      break
+    }
+    count++
   }
 
-  // 2) CSS 선택자: 단독 태그명 (HTML 태그 컨텍스트 제외)
-  //    예: "table td {", "table th, table td {", "tr:nth-child(even)"
-  const cssRe = new RegExp(`(?<![<\\/a-zA-Z-])(${escaped})(?![a-zA-Z-])`, 'gi')
-  while ((m = cssRe.exec(text)) !== null) {
-    matches.push([m.index, m.index + tagName.length])
+  // 닫는 태그: </tagName — </ 포함
+  const closeRe = new RegExp(`<\\/${escaped}(?=[\\s>])`, 'gi')
+  count = 0
+  while ((m = closeRe.exec(text)) !== null) {
+    if (count === index) {
+      matches.push([m.index, m.index + 2 + tagName.length])
+      break
+    }
+    count++
   }
 
-  // 오름차순 정렬 후 중복·겹침 제거
   matches.sort((a, b) => a[0] - b[0])
   const builder = new RangeSetBuilder()
   let prevTo = -1
@@ -55,7 +61,8 @@ const highlightTagField = StateField.define({
     deco = deco.map(tr.changes)
     for (const eff of tr.effects) {
       if (eff.is(setHighlightTag)) {
-        return buildTagDecos(tr.state.doc, eff.value)
+        if (!eff.value) return Decoration.none
+        return buildTagDecos(tr.state.doc, eff.value.tag, eff.value.index)
       }
     }
     return deco
@@ -65,9 +72,10 @@ const highlightTagField = StateField.define({
 
 const highlightTagTheme = EditorView.baseTheme({
   '.cm-preview-hover': {
-    backgroundColor: 'rgba(255, 210, 60, 0.22)',
-    borderRadius: '2px',
-    outline: '1px solid rgba(255, 210, 60, 0.5)',
+    backgroundColor: 'rgba(255, 200, 0, 0.30)',
+    borderRadius: '3px',
+    outline: '2px solid rgba(255, 200, 0, 0.9)',
+    outlineOffset: '1px',
   },
 })
 // ────────────────────────────────────────────────────────────────────
@@ -180,11 +188,12 @@ export default function CodeEditor({
     }
   }, [language, readOnly]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 미리보기 호버 태그 → 에디터 하이라이트 갱신
+  // 미리보기 호버 태그 → 에디터 하이라이트 + 해당 위치로 스크롤
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
     view.dispatch({ effects: setHighlightTag.of(highlightTag) })
+
   }, [highlightTag])
 
   // readOnly 모드: 외부 value 변경 반영

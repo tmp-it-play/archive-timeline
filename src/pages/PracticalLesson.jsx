@@ -115,7 +115,9 @@ ${code}
         bar.innerHTML =
           '<span style="color:' + a.color + ';font-weight:bold;">&lt;' + a.label + '&gt;</span>' +
           '&ensp;<span style="color:#d1d5db;">' + a.description + '</span>';
-        window.parent.postMessage({ type: 'previewHover', tag: a.tag }, '*');
+        var siblings = document.querySelectorAll(el.tagName.toLowerCase());
+        var idx = Array.prototype.indexOf.call(siblings, el);
+        window.parent.postMessage({ type: 'previewHover', tag: a.tag, index: idx }, '*');
         return;
       }
       el = el.parentElement;
@@ -155,7 +157,7 @@ export default function PracticalLesson() {
   useEffect(() => {
     const handler = (e) => {
       if (!e.data || typeof e.data !== 'object') return
-      if (e.data.type === 'previewHover') setPreviewHoveredTag(e.data.tag ?? null)
+      if (e.data.type === 'previewHover') setPreviewHoveredTag({ tag: e.data.tag ?? null, index: e.data.index ?? 0 })
       else if (e.data.type === 'previewLeave') setPreviewHoveredTag(null)
     }
     window.addEventListener('message', handler)
