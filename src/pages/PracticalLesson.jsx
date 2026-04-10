@@ -154,9 +154,9 @@ body {
   line-height: 1.6;
   overscroll-behavior: contain;
 }
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.35); }
 #__info {
   position: fixed;
@@ -387,9 +387,9 @@ body {
   color: #111;
   overscroll-behavior: contain;
 }
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.35); }
 table { border-collapse: collapse; }
 th, td { padding: 4px 10px; border: 1px solid #ccc; }
