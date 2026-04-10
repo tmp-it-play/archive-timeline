@@ -376,16 +376,36 @@ function canScrollVertically(el) {
   return !!el && el.scrollHeight > el.clientHeight + 1
 }
 
+function canScrollHorizontally(el) {
+  return !!el && el.scrollWidth > el.clientWidth + 1
+}
+
 function scrollEditorPositionIntoView(view, pos) {
   if (!view || pos === null || pos === undefined) return
   const scroller = view.scrollDOM
-  if (!canScrollVertically(scroller)) return
   const coords = view.coordsAtPos(pos)
   if (!coords) return
   const scrollerRect = scroller.getBoundingClientRect()
-  const currentTop = scroller.scrollTop
-  const targetTop = currentTop + (coords.top - scrollerRect.top) - (scroller.clientHeight / 2) + ((coords.bottom - coords.top) / 2)
-  scroller.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+  const next = {}
+
+  if (canScrollVertically(scroller)) {
+    const currentTop = scroller.scrollTop
+    next.top = Math.max(
+      0,
+      currentTop + (coords.top - scrollerRect.top) - (scroller.clientHeight / 2) + ((coords.bottom - coords.top) / 2)
+    )
+  }
+
+  if (canScrollHorizontally(scroller)) {
+    const currentLeft = scroller.scrollLeft
+    next.left = Math.max(
+      0,
+      currentLeft + (coords.left - scrollerRect.left) - (scroller.clientWidth / 2) + ((coords.right - coords.left) / 2)
+    )
+  }
+
+  if (next.top === undefined && next.left === undefined) return
+  scroller.scrollTo({ ...next, behavior: 'smooth' })
 }
 
 export default function CodeEditor({

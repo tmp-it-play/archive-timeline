@@ -212,7 +212,7 @@ ${code}
 
   function canScrollPage() {
     var root = document.scrollingElement || document.documentElement;
-    return !!root && root.scrollHeight > root.clientHeight + 1;
+    return !!root && (root.scrollHeight > root.clientHeight + 1 || root.scrollWidth > root.clientWidth + 1);
   }
 
   function scrollIfScrollable(el) {
@@ -220,8 +220,14 @@ ${code}
     var root = document.scrollingElement || document.documentElement;
     var rect = el.getBoundingClientRect();
     var rootRect = root.getBoundingClientRect();
-    var targetTop = root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2);
-    root.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+    var next = {};
+    if (root.scrollHeight > root.clientHeight + 1) {
+      next.top = Math.max(0, root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2));
+    }
+    if (root.scrollWidth > root.clientWidth + 1) {
+      next.left = Math.max(0, root.scrollLeft + (rect.left - rootRect.left) - (root.clientWidth / 2) + (rect.width / 2));
+    }
+    root.scrollTo(Object.assign({}, next, { behavior: 'smooth' }));
   }
 
   function clearCur() {
@@ -315,6 +321,22 @@ function buildJspPreviewHtml(code, annotations = []) {
   const vars = {}
   const annJson = JSON.stringify(annotations)
 
+  function resolveExprValue(expr) {
+    const key = expr.trim()
+    if (vars[key] !== undefined) return { value: vars[key], known: true }
+
+    const ternaryMatch = key.match(/^(\w+)\s*!=\s*null\s*\?\s*\1\s*:\s*""$/)
+    if (ternaryMatch) {
+      const varName = ternaryMatch[1]
+      return { value: vars[varName] ?? '', known: true }
+    }
+
+    const literalMatch = key.match(/^"([^"]*)"$/)
+    if (literalMatch) return { value: literalMatch[1], known: true }
+
+    return { value: key, known: false, raw: key }
+  }
+
   // 스크립틀릿에서 변수 선언 추출 (위치 무관하게 먼저 수집)
   const scriptletRe = /<%(?!=|@)([\s\S]*?)%>/g
   let m
@@ -341,9 +363,9 @@ function buildJspPreviewHtml(code, annotations = []) {
   const exprRe = /<%=([\s\S]*?)%>/g
   while ((m = exprRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
-    const key = m[1].trim()
-    const val = vars[key] !== undefined ? vars[key] : key
-    const style = vars[key] !== undefined
+    const resolved = resolveExprValue(m[1])
+    const val = resolved.value
+    const style = resolved.known
       ? 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.88em;padding:1px 4px;border-radius:2px;cursor:pointer;'
       : 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.85em;padding:1px 5px;border-radius:3px;border:1px solid #6ee7b7;cursor:pointer;'
     addRegion(m.index, m.index + m[0].length,
@@ -469,7 +491,7 @@ ${html}
 
   function canScrollPage() {
     var root = document.scrollingElement || document.documentElement;
-    return !!root && root.scrollHeight > root.clientHeight + 1;
+    return !!root && (root.scrollHeight > root.clientHeight + 1 || root.scrollWidth > root.clientWidth + 1);
   }
 
   function scrollIfScrollable(el) {
@@ -477,8 +499,14 @@ ${html}
     var root = document.scrollingElement || document.documentElement;
     var rect = el.getBoundingClientRect();
     var rootRect = root.getBoundingClientRect();
-    var targetTop = root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2);
-    root.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+    var next = {};
+    if (root.scrollHeight > root.clientHeight + 1) {
+      next.top = Math.max(0, root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2));
+    }
+    if (root.scrollWidth > root.clientWidth + 1) {
+      next.left = Math.max(0, root.scrollLeft + (rect.left - rootRect.left) - (root.clientWidth / 2) + (rect.width / 2));
+    }
+    root.scrollTo(Object.assign({}, next, { behavior: 'smooth' }));
   }
 
   function clearCur() {
