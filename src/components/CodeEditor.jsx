@@ -10,12 +10,15 @@ import { java } from '@codemirror/lang-java'
 import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 
 // ── 미리보기 호버 → 에디터 태그 하이라이트 ──────────────────────────
-const setHighlightTag   = StateEffect.define()
-const setHighlightRange = StateEffect.define()
+const setHighlightTag     = StateEffect.define()
+const setHighlightRange   = StateEffect.define()
+const setHighlightJspType = StateEffect.define()
+const setHighlightAllTag  = StateEffect.define()
 
-const tagHighlightMark   = Decoration.mark({ class: 'cm-preview-hover' })
-const cssLineMark        = Decoration.line({ class: 'cm-preview-hover-css-line' })
-const rangeHighlightMark = Decoration.mark({ class: 'cm-preview-jsp-hover' })
+const tagHighlightMark    = Decoration.mark({ class: 'cm-preview-hover' })
+const cssLineMark         = Decoration.line({ class: 'cm-preview-hover-css-line' })
+const rangeHighlightMark  = Decoration.mark({ class: 'cm-preview-jsp-hover' })
+const jspTypeSelectedMark = Decoration.mark({ class: 'cm-jsp-type-selected' })
 
 // HTML/CSS 주석 범위 수집
 function getCommentRanges(text) {
@@ -131,6 +134,49 @@ function buildTagDecos(doc, tagName, index) {
   return builder.finish()
 }
 
+// 특정 태그의 모든 opening/closing 태그 하이라이트 (범례 클릭)
+function buildAllTagDecos(doc, tagName) {
+  if (!tagName) return Decoration.none
+  const text = doc.toString()
+  const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const commentRanges = getCommentRanges(text)
+  const marks = []
+  let m
+
+  const openRe = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
+  while ((m = openRe.exec(text)) !== null) {
+    if (!inAnyRange(m.index, commentRanges)) marks.push([m.index, m.index + 1 + tagName.length])
+  }
+  const closeRe = new RegExp(`<\\/${escaped}(?=[\\s>])`, 'gi')
+  while ((m = closeRe.exec(text)) !== null) {
+    if (!inAnyRange(m.index, commentRanges)) marks.push([m.index, m.index + 2 + tagName.length])
+  }
+
+  marks.sort((a, b) => a[0] - b[0])
+  const builder = new RangeSetBuilder()
+  let prevTo = -1
+  for (const [from, to] of marks) {
+    if (from >= prevTo) { builder.add(from, to, jspTypeSelectedMark); prevTo = to }
+  }
+  return builder.finish()
+}
+
+const allTagHighlightField = StateField.define({
+  create: () => ({ tag: null, decos: Decoration.none }),
+  update(state, tr) {
+    let { tag } = state
+    let changed = false
+    for (const eff of tr.effects) {
+      if (eff.is(setHighlightAllTag)) { tag = eff.value ?? null; changed = true }
+    }
+    if (changed || (state.tag && tr.docChanged)) {
+      return { tag, decos: buildAllTagDecos(tr.state.doc, tag) }
+    }
+    return state
+  },
+  provide: f => EditorView.decorations.from(f, s => s.decos),
+})
+
 const highlightTagField = StateField.define({
   create: () => Decoration.none,
   update(deco, tr) {
@@ -188,6 +234,44 @@ const rangeHighlightField = StateField.define({
   provide: f => EditorView.decorations.from(f),
 })
 
+// JSP 타입별 전체 블록 하이라이트 (범례 클릭 시)
+const JSP_TYPE_PATTERNS = {
+  comment:   /<%--[\s\S]*?--%>/g,
+  directive: /<%@[\s\S]*?%>/g,
+  expr:      /<%=[\s\S]*?%>/g,
+  scriptlet: /<%(?![-@=])[\s\S]*?%>/g,
+}
+
+function buildJspTypeDecos(doc, type) {
+  if (!type) return Decoration.none
+  const re = JSP_TYPE_PATTERNS[type]
+  if (!re) return Decoration.none
+  re.lastIndex = 0
+  const text = doc.toString()
+  const builder = new RangeSetBuilder()
+  let m
+  while ((m = re.exec(text)) !== null) {
+    builder.add(m.index, m.index + m[0].length, jspTypeSelectedMark)
+  }
+  return builder.finish()
+}
+
+const jspTypeHighlightField = StateField.define({
+  create: () => ({ type: null, decos: Decoration.none }),
+  update(state, tr) {
+    let { type } = state
+    let changed = false
+    for (const eff of tr.effects) {
+      if (eff.is(setHighlightJspType)) { type = eff.value ?? null; changed = true }
+    }
+    if (changed || (state.type && tr.docChanged)) {
+      return { type, decos: buildJspTypeDecos(tr.state.doc, type) }
+    }
+    return state
+  },
+  provide: f => EditorView.decorations.from(f, s => s.decos),
+})
+
 const highlightTagTheme = EditorView.baseTheme({
   '.cm-preview-hover': {
     backgroundColor: 'rgba(255, 200, 0, 0.30)',
@@ -204,6 +288,11 @@ const highlightTagTheme = EditorView.baseTheme({
     borderRadius: '3px',
     outline: '2px solid rgba(251, 191, 36, 0.9)',
     outlineOffset: '1px',
+  },
+  '.cm-jsp-type-selected': {
+    backgroundColor: 'rgba(251, 191, 36, 0.22)',
+    borderRadius: '2px',
+    boxShadow: '0 0 0 1.5px rgba(251, 191, 36, 0.85)',
   },
 })
 // ────────────────────────────────────────────────────────────────────
@@ -291,6 +380,8 @@ export default function CodeEditor({
   extraExtensions = [],
   highlightTag = null,
   highlightRange = null,
+  highlightJspType = null,
+  highlightAllTag = null,
 }) {
   const containerRef = useRef(null)
   const viewRef = useRef(null)
@@ -339,10 +430,11 @@ export default function CodeEditor({
         highlightTagField,
         cssLineField,
         rangeHighlightField,
+        allTagHighlightField,
         highlightTagTheme,
 
-        // JSP 블록 컬러링 (html 언어일 때만 의미 있음, 없으면 Decoration.none 반환)
-        ...(language === 'html' ? [jspColorField, jspColorTheme] : []),
+        // JSP 블록 컬러링 + 타입 선택 하이라이트 (html 언어일 때만)
+        ...(language === 'html' ? [jspColorField, jspColorTheme, jspTypeHighlightField] : []),
 
         EditorView.lineWrapping,
         EditorState.readOnly.of(readOnly),
@@ -385,6 +477,20 @@ export default function CodeEditor({
     if (!view) return
     view.dispatch({ effects: setHighlightRange.of(highlightRange) })
   }, [highlightRange])
+
+  // 범례 클릭 → JSP 타입 전체 하이라이트
+  useEffect(() => {
+    const view = viewRef.current
+    if (!view) return
+    view.dispatch({ effects: setHighlightJspType.of(highlightJspType) })
+  }, [highlightJspType])
+
+  // 범례 클릭 → HTML 태그 전체 하이라이트
+  useEffect(() => {
+    const view = viewRef.current
+    if (!view) return
+    view.dispatch({ effects: setHighlightAllTag.of(highlightAllTag) })
+  }, [highlightAllTag])
 
   // readOnly 모드: 외부 value 변경 반영
   useEffect(() => {
