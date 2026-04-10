@@ -96,7 +96,7 @@ DAO에서 전체 회원 목록을 조회하여 HTML 테이블로 출력합니다
 custno(int), custname, grade, total(int)
 
 ( A ) ~ ( C ) 빈칸을 채우세요.`,
-      type: 'code',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.MemberDAO, test.TotalDTO, java.util.List, java.text.DecimalFormat" %>
@@ -170,7 +170,7 @@ custno(int), custname, grade, total(int)
 - list가 비어있으면 "해당 과목코드에 대한 성적 정보가 없습니다." 출력
 
 ( A ) ~ ( D ) 빈칸을 채우세요.`,
-      type: 'code',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.StudentDAO, test.ScoreDTO, java.util.List" %>
