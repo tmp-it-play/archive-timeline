@@ -321,6 +321,25 @@ function buildJspPreviewHtml(code, annotations = []) {
   const vars = {}
   const annJson = JSON.stringify(annotations)
 
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+  }
+
+  function isInsideHtmlAttribute(text, pos) {
+    const tagStart = text.lastIndexOf('<', pos - 1)
+    const tagEnd = text.lastIndexOf('>', pos - 1)
+    if (tagStart === -1 || tagStart < tagEnd) return false
+    const segment = text.slice(tagStart, pos)
+    const doubleQuotes = (segment.match(/"/g) || []).length
+    const singleQuotes = (segment.match(/'/g) || []).length
+    return doubleQuotes % 2 === 1 || singleQuotes % 2 === 1
+  }
+
   function resolveExprValue(expr) {
     const key = expr.trim()
     if (vars[key] !== undefined) return { value: vars[key], known: true }
@@ -365,6 +384,10 @@ function buildJspPreviewHtml(code, annotations = []) {
     if (isInRegion(m.index)) continue
     const resolved = resolveExprValue(m[1])
     const val = resolved.value
+    if (isInsideHtmlAttribute(code, m.index)) {
+      addRegion(m.index, m.index + m[0].length, escapeHtml(String(resolved.known ? val : '')))
+      continue
+    }
     const style = resolved.known
       ? 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.88em;padding:1px 4px;border-radius:2px;cursor:pointer;'
       : 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.85em;padding:1px 5px;border-radius:3px;border:1px solid #6ee7b7;cursor:pointer;'
@@ -391,6 +414,10 @@ function buildJspPreviewHtml(code, annotations = []) {
   const blankRe = /\(\s*([A-Z])\s*\)/g
   while ((m = blankRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
+    if (isInsideHtmlAttribute(code, m.index)) {
+      addRegion(m.index, m.index + m[0].length, `( ${m[1]} )`)
+      continue
+    }
     addRegion(m.index, m.index + m[0].length,
       `<span style="display:inline-block;background:#dbeafe;color:#1e40af;font-weight:bold;padding:0 8px;border-radius:3px;border:1px dashed #93c5fd;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="blank">( ${m[1]} )</span>`)
   }
@@ -399,6 +426,10 @@ function buildJspPreviewHtml(code, annotations = []) {
   const underlineRe = /___/g
   while ((m = underlineRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
+    if (isInsideHtmlAttribute(code, m.index)) {
+      addRegion(m.index, m.index + m[0].length, '___')
+      continue
+    }
     addRegion(m.index, m.index + m[0].length,
       `<span style="display:inline-block;background:#fef3c7;color:#92400e;padding:0 10px;border-radius:3px;border:1px dashed #fcd34d;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="blank">___</span>`)
   }
