@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getTopicById } from '../data/practical/index.js'
 import CodeEditor from '../components/CodeEditor.jsx'
-import { hoverTooltip } from '@codemirror/view'
+import { hoverTooltip, EditorView } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 
 // CodeMirror 에디터에서 태그명 호버 시 툴팁 표시
@@ -41,6 +41,97 @@ function makeTagHoverTooltip(annotations) {
         return { dom }
       },
     }
+  })
+}
+
+// 커서 위치가 JSP 블록 또는 빈칸 패턴 안에 있으면 그 범위 반환
+function findJspRegion(text, pos) {
+  // JSP 블록: <%--...--%> 또는 <%...%>
+  const jspRe = /<%--[\s\S]*?--%>|<%[\s\S]*?%>/g
+  let m
+  while ((m = jspRe.exec(text)) !== null) {
+    if (m.index > pos) break
+    if (pos < m.index + m[0].length) return { from: m.index, to: m.index + m[0].length }
+  }
+  // 빈칸 패턴: ( A ) 또는 ___
+  const blankRe = /\(\s*[A-Z]\s*\)|___/g
+  while ((m = blankRe.exec(text)) !== null) {
+    if (m.index > pos) break
+    if (pos < m.index + m[0].length) return { from: m.index, to: m.index + m[0].length }
+  }
+  return null
+}
+
+// 에디터 태그/JSP 호버 → 미리보기 iframe 해당 요소 강조
+// (hoverTooltip 대신 mousemove 사용 — 지연 없이 즉각 반응)
+function makeEditorToPreviewSync(onHover, onLeave, onJspHover, onJspLeave) {
+  let lastTag = null
+  let lastIndex = -1
+  let lastJspFrom = -1
+
+  return EditorView.domEventHandlers({
+    mousemove(e, view) {
+      const pos = view.posAtCoords({ x: e.clientX, y: e.clientY })
+      if (pos === null) {
+        if (lastTag !== null)    { onLeave();     lastTag = null; lastIndex = -1 }
+        if (lastJspFrom !== -1)  { onJspLeave?.(); lastJspFrom = -1 }
+        return false
+      }
+
+      const text = view.state.doc.toString()
+
+      // JSP 블록 / 빈칸 패턴 우선 감지
+      const jspRegion = onJspHover ? findJspRegion(text, pos) : null
+      if (jspRegion) {
+        if (lastTag !== null) { onLeave(); lastTag = null; lastIndex = -1 }
+        if (jspRegion.from !== lastJspFrom) {
+          onJspHover(jspRegion.from, jspRegion.to)
+          lastJspFrom = jspRegion.from
+        }
+        return false
+      }
+      if (lastJspFrom !== -1) { onJspLeave?.(); lastJspFrom = -1 }
+
+      // HTML 태그명 감지
+      const node = syntaxTree(view.state).resolveInner(pos, -1)
+      if (node.name !== 'TagName') {
+        if (lastTag !== null) { onLeave(); lastTag = null; lastIndex = -1 }
+        return false
+      }
+
+      const tagName = view.state.sliceDoc(node.from, node.to).toLowerCase()
+      const escaped = tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const isClose = node.parent?.name === 'CloseTag'
+
+      let index = 0
+      if (!isClose) {
+        const re = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
+        let m
+        while ((m = re.exec(text)) !== null) {
+          if (m.index + 1 >= node.from) break
+          index++
+        }
+      } else {
+        const re = new RegExp(`<\\/${escaped}(?=[\\s>])`, 'gi')
+        let m
+        while ((m = re.exec(text)) !== null) {
+          if (m.index + 2 >= node.from) break
+          index++
+        }
+      }
+
+      if (tagName !== lastTag || index !== lastIndex) {
+        onHover(tagName, index)
+        lastTag = tagName
+        lastIndex = index
+      }
+      return false
+    },
+    mouseleave() {
+      if (lastTag !== null)    { onLeave();     lastTag = null; lastIndex = -1 }
+      if (lastJspFrom !== -1)  { onJspLeave?.(); lastJspFrom = -1 }
+      return false
+    },
   })
 }
 
@@ -131,6 +222,250 @@ ${code}
     clearCur();
     window.parent.postMessage({ type: 'previewLeave' }, '*');
   });
+
+  // 에디터 호버 → 미리보기 강조
+  var editorCur = null;
+  window.addEventListener('message', function(e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'editorHover') {
+      if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
+      var els = document.querySelectorAll(e.data.tag);
+      if (els[e.data.index]) {
+        editorCur = els[e.data.index];
+        editorCur.style.outline = '2px solid #3b82f6';
+        editorCur.style.outlineOffset = '3px';
+      }
+    } else if (e.data.type === 'editorLeave') {
+      if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
+    }
+  });
+})();
+<\/script>
+</body>
+</html>`
+}
+
+// JSP 코드를 시뮬레이션 HTML로 변환 (단일 패스 — 오프셋 임베드)
+function buildJspPreviewHtml(code) {
+  const vars = {}
+
+  // 스크립틀릿에서 변수 선언 추출 (위치 무관하게 먼저 수집)
+  const scriptletRe = /<%(?!=|@)([\s\S]*?)%>/g
+  let m
+  while ((m = scriptletRe.exec(code)) !== null) {
+    const body = m[1]
+    let vm
+    const strRe = /\bString\s+(\w+)\s*=\s*"([^"]*)"/g
+    while ((vm = strRe.exec(body)) !== null) vars[vm[1]] = vm[2]
+    const numRe = /\b(?:int|long|double|float)\s+(\w+)\s*=\s*(-?\d+(?:\.\d+)?)/g
+    while ((vm = numRe.exec(body)) !== null) vars[vm[1]] = vm[2]
+  }
+
+  // 원본 코드에서 교체할 영역 수집 { from, to, html }
+  const regions = []
+  const isInRegion = (pos) => regions.some(r => pos >= r.from && pos < r.to)
+
+  const addRegion = (from, to, html) => { if (!isInRegion(from)) regions.push({ from, to, html }) }
+
+  // JSP 주석 → 제거
+  const commentRe = /<%--[\s\S]*?--%>/g
+  while ((m = commentRe.exec(code)) !== null) addRegion(m.index, m.index + m[0].length, '')
+
+  // JSP 표현식 → 초록 배지 (data-jsp-from/to 임베드)
+  const exprRe = /<%=([\s\S]*?)%>/g
+  while ((m = exprRe.exec(code)) !== null) {
+    if (isInRegion(m.index)) continue
+    const key = m[1].trim()
+    const val = vars[key] !== undefined ? vars[key] : key
+    const style = vars[key] !== undefined
+      ? 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.88em;padding:1px 4px;border-radius:2px;cursor:pointer;'
+      : 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.85em;padding:1px 5px;border-radius:3px;border:1px solid #6ee7b7;cursor:pointer;'
+    addRegion(m.index, m.index + m[0].length,
+      `<span style="${style}" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" title="표현식">${val}</span>`)
+  }
+
+  // include 디렉티브 → 보라 배지
+  const includeRe = /<%@\s*include\s+file="([^"]+)"\s*%>/gi
+  while ((m = includeRe.exec(code)) !== null) {
+    if (isInRegion(m.index)) continue
+    addRegion(m.index, m.index + m[0].length,
+      `<span style="display:inline-block;background:#ede9fe;color:#5b21b6;font-size:11px;padding:1px 8px;border-radius:3px;border:1px dashed #a78bfa;font-family:monospace;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">📄 ${m[1]}</span>`)
+  }
+
+  // 나머지 디렉티브·스크립틀릿 → 제거
+  const otherJspRe = /<%[\s\S]*?%>/g
+  while ((m = otherJspRe.exec(code)) !== null) {
+    if (isInRegion(m.index)) continue
+    addRegion(m.index, m.index + m[0].length, '')
+  }
+
+  // ( A ) ~ ( Z ) 빈칸 → 파란 배지
+  const blankRe = /\(\s*([A-Z])\s*\)/g
+  while ((m = blankRe.exec(code)) !== null) {
+    if (isInRegion(m.index)) continue
+    addRegion(m.index, m.index + m[0].length,
+      `<span style="display:inline-block;background:#dbeafe;color:#1e40af;font-weight:bold;padding:0 8px;border-radius:3px;border:1px dashed #93c5fd;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">( ${m[1]} )</span>`)
+  }
+
+  // ___ 빈칸 → 노란 배지
+  const underlineRe = /___/g
+  while ((m = underlineRe.exec(code)) !== null) {
+    if (isInRegion(m.index)) continue
+    addRegion(m.index, m.index + m[0].length,
+      `<span style="display:inline-block;background:#fef3c7;color:#92400e;padding:0 10px;border-radius:3px;border:1px dashed #fcd34d;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">___</span>`)
+  }
+
+  // 정렬 후 겹치는 영역 제거 (먼저 추가된 것 우선)
+  regions.sort((a, b) => a.from - b.from)
+  const filtered = []
+  let prevTo = 0
+  for (const r of regions) {
+    if (r.from >= prevTo) { filtered.push(r); prevTo = r.to }
+  }
+
+  // 단일 패스로 HTML 조립
+  let html = ''
+  let pos = 0
+  for (const r of filtered) {
+    html += code.slice(pos, r.from) + r.html
+    pos = r.to
+  }
+  html += code.slice(pos)
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; }
+body {
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  padding: 16px;
+  padding-bottom: 52px;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.7;
+  color: #111;
+}
+table { border-collapse: collapse; }
+th, td { padding: 4px 10px; border: 1px solid #ccc; }
+th { background: #f3f4f6; font-weight: 600; }
+input[type="text"], input[type="password"], input[type="email"] {
+  border: 1px solid #d1d5db;
+  padding: 3px 7px;
+  border-radius: 3px;
+  font-size: 13px;
+  width: 160px;
+}
+input[type="button"], input[type="submit"], button {
+  padding: 4px 14px;
+  border: 1px solid #9ca3af;
+  background: #f9fafb;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  margin: 2px;
+}
+h2 { margin: 0 0 12px; font-size: 16px; font-weight: 700; }
+select { border: 1px solid #d1d5db; padding: 3px 6px; border-radius: 3px; font-size: 13px; }
+#__info {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 7px 14px;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 12px;
+  font-family: monospace;
+  display: none;
+  border-top: 3px solid #374151;
+  z-index: 9999;
+}
+</style>
+</head>
+<body>
+${html}
+<div id="__info"></div>
+<script>
+(function(){
+  var bar = document.getElementById('__info');
+  var cur = null;
+  var editorCur = null;
+
+  var SKIP = { SCRIPT: 1, STYLE: 1, HTML: 1, HEAD: 1, BODY: 1 };
+
+  function clearCur() {
+    if (cur) {
+      cur.style.outline = '';
+      cur.style.outlineOffset = '';
+      cur = null;
+      bar.style.display = 'none';
+      window.parent.postMessage({ type: 'previewLeave' }, '*');
+    }
+  }
+
+  document.addEventListener('mouseover', function(e) {
+    var el = e.target;
+
+    // JSP 배지 감지 (data-jsp-from 속성)
+    if (el.dataset && el.dataset.jspFrom !== undefined) {
+      if (cur && cur !== el) { cur.style.outline = ''; cur.style.outlineOffset = ''; }
+      cur = el;
+      el.style.outline = '2px solid #fbbf24';
+      el.style.outlineOffset = '2px';
+      bar.style.display = 'block';
+      bar.style.borderTopColor = '#fbbf24';
+      bar.innerHTML = '<span style="color:#fcd34d;font-weight:bold;">JSP 블록</span>';
+      window.parent.postMessage({ type: 'previewJspHover', from: parseInt(el.dataset.jspFrom), to: parseInt(el.dataset.jspTo) }, '*');
+      return;
+    }
+
+    while (el && el.tagName) {
+      if (el.id === '__info') { clearCur(); return; }
+      if (!SKIP[el.tagName]) {
+        if (cur && cur !== el) { cur.style.outline = ''; cur.style.outlineOffset = ''; }
+        cur = el;
+        el.style.outline = '2px solid #f59e0b';
+        el.style.outlineOffset = '2px';
+        bar.style.display = 'block';
+        bar.style.borderTopColor = '#f59e0b';
+        bar.innerHTML = '<span style="color:#fcd34d;font-weight:bold;">&lt;' + el.tagName.toLowerCase() + '&gt;</span>';
+        var tag = el.tagName.toLowerCase();
+        var siblings = document.querySelectorAll(tag);
+        var idx = Array.prototype.indexOf.call(siblings, el);
+        var classes = Array.prototype.slice.call(el.classList);
+        window.parent.postMessage({ type: 'previewHover', tag: tag, index: idx, classes: classes }, '*');
+        return;
+      }
+      el = el.parentElement;
+    }
+    clearCur();
+  });
+
+  document.addEventListener('mouseleave', function() {
+    clearCur();
+  });
+
+  // 에디터 호버 → 미리보기 강조
+  window.addEventListener('message', function(e) {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
+    if (e.data.type === 'editorHover') {
+      var els = document.querySelectorAll(e.data.tag);
+      if (els[e.data.index]) {
+        editorCur = els[e.data.index];
+        editorCur.style.outline = '2px solid #3b82f6';
+        editorCur.style.outlineOffset = '3px';
+      }
+    } else if (e.data.type === 'editorJspHover') {
+      var badge = document.querySelector('[data-jsp-from="' + e.data.from + '"]');
+      if (badge) {
+        editorCur = badge;
+        editorCur.style.outline = '2px solid #3b82f6';
+        editorCur.style.outlineOffset = '3px';
+      }
+    }
+    // editorLeave / editorJspLeave: 이미 위에서 초기화함
+  });
 })();
 <\/script>
 </body>
@@ -153,14 +488,32 @@ export default function PracticalLesson() {
   const [liveHtml, setLiveHtml] = useState('')
   const debounceRef = useRef(null)
 
+  // 미리보기 iframe ref — 에디터 호버 메시지 전달용
+  const iframeRef = useRef(null)
+  const editorToPreviewExt = useMemo(() => [makeEditorToPreviewSync(
+    (tag, index) => iframeRef.current?.contentWindow?.postMessage({ type: 'editorHover', tag, index }, '*'),
+    ()           => iframeRef.current?.contentWindow?.postMessage({ type: 'editorLeave' }, '*'),
+    (from, to)   => iframeRef.current?.contentWindow?.postMessage({ type: 'editorJspHover', from, to }, '*'),
+    ()           => iframeRef.current?.contentWindow?.postMessage({ type: 'editorJspLeave' }, '*'),
+  )], []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // 미리보기 → 에디터 하이라이트 연동
-  const [previewHoveredTag, setPreviewHoveredTag] = useState(null)
+  const [previewHoveredTag,   setPreviewHoveredTag]   = useState(null)
+  const [previewHoveredRange, setPreviewHoveredRange] = useState(null)
 
   useEffect(() => {
     const handler = (e) => {
       if (!e.data || typeof e.data !== 'object') return
-      if (e.data.type === 'previewHover') setPreviewHoveredTag({ tag: e.data.tag ?? null, index: e.data.index ?? 0, classes: e.data.classes ?? [] })
-      else if (e.data.type === 'previewLeave') setPreviewHoveredTag(null)
+      if (e.data.type === 'previewHover') {
+        setPreviewHoveredTag({ tag: e.data.tag ?? null, index: e.data.index ?? 0, classes: e.data.classes ?? [] })
+        setPreviewHoveredRange(null)
+      } else if (e.data.type === 'previewJspHover') {
+        setPreviewHoveredRange({ from: e.data.from, to: e.data.to })
+        setPreviewHoveredTag(null)
+      } else if (e.data.type === 'previewLeave') {
+        setPreviewHoveredTag(null)
+        setPreviewHoveredRange(null)
+      }
     }
     window.addEventListener('message', handler)
     return () => window.removeEventListener('message', handler)
@@ -183,8 +536,9 @@ export default function PracticalLesson() {
   const lesson = topic.lessons[activeLesson]
   const currentCode = codes[lesson.id] ?? lesson.starterCode
   const isLiveHtml = lesson.type === 'live-html'
-  const isCode = !isLiveHtml
-  const lang = lesson.language ?? (isLiveHtml ? 'html' : 'java')
+  const isLiveJsp  = lesson.type === 'live-jsp'
+  const isCode = !isLiveHtml && !isLiveJsp
+  const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
 
   // live-html 전용: 에디터 태그 호버 툴팁
   const tagTooltipExt = useMemo(() => {
@@ -192,15 +546,16 @@ export default function PracticalLesson() {
     return [makeTagHoverTooltip(lesson.annotations)]
   }, [lesson.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // live-html: 코드 변경 시 300ms 디바운스 후 iframe 업데이트
+  // live-html / live-jsp: 코드 변경 시 300ms 디바운스 후 iframe 업데이트
   useEffect(() => {
-    if (!isLiveHtml) return
+    if (!isLiveHtml && !isLiveJsp) return
     clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
-      setLiveHtml(buildAnnotatedHtml(currentCode, lesson.annotations ?? []))
+      if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(currentCode, lesson.annotations ?? []))
+      else            setLiveHtml(buildJspPreviewHtml(currentCode))
     }, 300)
     return () => clearTimeout(debounceRef.current)
-  }, [currentCode, lesson.id, isLiveHtml])
+  }, [currentCode, lesson.id, isLiveHtml, isLiveJsp])
 
   // 탭 변경 시 즉시 미리보기 초기화
   const handleTabChange = (i) => {
@@ -211,6 +566,8 @@ export default function PracticalLesson() {
     const nextCode = codes[nextLesson.id] ?? nextLesson.starterCode
     if (nextLesson.type === 'live-html') {
       setLiveHtml(buildAnnotatedHtml(nextCode, nextLesson.annotations ?? []))
+    } else if (nextLesson.type === 'live-jsp') {
+      setLiveHtml(buildJspPreviewHtml(nextCode))
     }
   }
 
@@ -221,9 +578,8 @@ export default function PracticalLesson() {
   const handleReset = () => {
     setCodes(prev => ({ ...prev, [lesson.id]: lesson.starterCode }))
     setShowSolution(false)
-    if (isLiveHtml) {
-      setLiveHtml(buildAnnotatedHtml(lesson.starterCode, lesson.annotations ?? []))
-    }
+    if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(lesson.starterCode, lesson.annotations ?? []))
+    else if (isLiveJsp) setLiveHtml(buildJspPreviewHtml(lesson.starterCode))
   }
 
   return (
@@ -298,7 +654,7 @@ export default function PracticalLesson() {
                 onChange={handleCodeChange}
                 language={lang}
                 minHeight="460px"
-                extraExtensions={tagTooltipExt}
+                extraExtensions={[...tagTooltipExt, ...editorToPreviewExt]}
                 highlightTag={previewHoveredTag}
               />
             </div>
@@ -316,6 +672,7 @@ export default function PracticalLesson() {
                 style={{ minHeight: '460px' }}
               >
                 <iframe
+                  ref={iframeRef}
                   srcDoc={liveHtml}
                   className="w-full h-full"
                   style={{ minHeight: '460px', border: 'none' }}
@@ -363,6 +720,109 @@ export default function PracticalLesson() {
           </div>
 
           {/* 모범 답안 */}
+          {showSolution && (
+            <div className="mb-4">
+              <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                모범 답안
+              </div>
+              <CodeEditor
+                key={`solution-${lesson.id}`}
+                value={lesson.solution}
+                language={lang}
+                readOnly={true}
+                minHeight="280px"
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── live-jsp: 분할 레이아웃 ── */}
+      {isLiveJsp && (
+        <>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            {/* 왼쪽: 에디터 */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                  코드 편집
+                </span>
+                <button
+                  onClick={handleReset}
+                  className="text-xs text-gray-400 hover:text-gray-700 border border-gray-200 px-2.5 py-1 rounded transition-colors"
+                >
+                  초기화
+                </button>
+              </div>
+              <CodeEditor
+                key={`editor-${lesson.id}`}
+                value={currentCode}
+                onChange={handleCodeChange}
+                language={lang}
+                minHeight="460px"
+                extraExtensions={editorToPreviewExt}
+                highlightTag={previewHoveredTag}
+                highlightRange={previewHoveredRange}
+              />
+            </div>
+
+            {/* 오른쪽: JSP 시뮬레이션 미리보기 */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                  JSP 시뮬레이션
+                </span>
+                <span className="text-xs text-gray-300">— 변수·빈칸을 시각화</span>
+              </div>
+              <div
+                className="rounded-lg overflow-hidden border border-gray-200 flex-1 bg-white"
+                style={{ minHeight: '460px' }}
+              >
+                <iframe
+                  ref={iframeRef}
+                  srcDoc={liveHtml}
+                  className="w-full h-full"
+                  style={{ minHeight: '460px', border: 'none' }}
+                  sandbox="allow-scripts"
+                  title="jsp-preview"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* JSP 블록 색상 범례 */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-gray-400 shrink-0">에디터 블록 색상:</span>
+            {[
+              { color: 'rgba(245,158,11,0.35)', label: '<% %>', desc: '스크립틀릿' },
+              { color: 'rgba(16,185,129,0.35)',  label: '<%= %>', desc: '표현식' },
+              { color: 'rgba(139,92,246,0.35)',  label: '<%@ %>', desc: '디렉티브' },
+              { color: 'rgba(107,114,128,0.35)', label: '<%-- --%>', desc: 'JSP 주석' },
+            ].map(({ color, label, desc }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-mono"
+                style={{ background: color, color: '#374151' }}
+              >
+                {label}
+                <span className="font-sans text-gray-500">{desc}</span>
+              </span>
+            ))}
+            <span className="text-xs text-gray-300 ml-1">
+              · <span style={{ background: '#dbeafe', color: '#1e40af', padding: '0 4px', borderRadius: 3, fontFamily: 'monospace', fontSize: 11 }}>( A )</span> 빈칸
+              &nbsp;· <span style={{ background: '#d1fae5', color: '#065f46', padding: '0 4px', borderRadius: 3, fontFamily: 'monospace', fontSize: 11 }}>expr</span> 표현식
+            </span>
+          </div>
+
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setShowSolution(s => !s)}
+              className="px-4 py-2 border border-gray-300 text-sm rounded hover:border-gray-900 transition-colors"
+            >
+              {showSolution ? '답안 숨기기' : '모범 답안 보기'}
+            </button>
+          </div>
+
           {showSolution && (
             <div className="mb-4">
               <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">

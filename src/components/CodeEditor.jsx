@@ -10,10 +10,12 @@ import { java } from '@codemirror/lang-java'
 import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 
 // ── 미리보기 호버 → 에디터 태그 하이라이트 ──────────────────────────
-const setHighlightTag = StateEffect.define()
+const setHighlightTag   = StateEffect.define()
+const setHighlightRange = StateEffect.define()
 
-const tagHighlightMark = Decoration.mark({ class: 'cm-preview-hover' })
-const cssLineMark = Decoration.line({ class: 'cm-preview-hover-css-line' })
+const tagHighlightMark   = Decoration.mark({ class: 'cm-preview-hover' })
+const cssLineMark        = Decoration.line({ class: 'cm-preview-hover-css-line' })
+const rangeHighlightMark = Decoration.mark({ class: 'cm-preview-jsp-hover' })
 
 // HTML/CSS 주석 범위 수집
 function getCommentRanges(text) {
@@ -164,6 +166,28 @@ const cssLineField = StateField.define({
   provide: f => EditorView.decorations.from(f, s => s.decos),
 })
 
+const rangeHighlightField = StateField.define({
+  create: () => Decoration.none,
+  update(deco, tr) {
+    deco = deco.map(tr.changes)
+    for (const eff of tr.effects) {
+      if (eff.is(setHighlightRange)) {
+        if (!eff.value) return Decoration.none
+        const { from, to } = eff.value
+        const docLen = tr.state.doc.length
+        const clampedFrom = Math.max(0, Math.min(from, docLen))
+        const clampedTo   = Math.max(clampedFrom, Math.min(to, docLen))
+        if (clampedFrom >= clampedTo) return Decoration.none
+        const builder = new RangeSetBuilder()
+        builder.add(clampedFrom, clampedTo, rangeHighlightMark)
+        return builder.finish()
+      }
+    }
+    return deco
+  },
+  provide: f => EditorView.decorations.from(f),
+})
+
 const highlightTagTheme = EditorView.baseTheme({
   '.cm-preview-hover': {
     backgroundColor: 'rgba(255, 200, 0, 0.30)',
@@ -175,6 +199,62 @@ const highlightTagTheme = EditorView.baseTheme({
     backgroundColor: 'rgba(100, 200, 255, 0.13)',
     borderLeft: '3px solid rgba(100, 200, 255, 0.8)',
   },
+  '.cm-preview-jsp-hover': {
+    backgroundColor: 'rgba(251, 191, 36, 0.35)',
+    borderRadius: '3px',
+    outline: '2px solid rgba(251, 191, 36, 0.9)',
+    outlineOffset: '1px',
+  },
+})
+// ────────────────────────────────────────────────────────────────────
+
+// ── JSP 블록 타입별 컬러링 ────────────────────────────────────────────
+const jspCommentMark   = Decoration.mark({ class: 'cm-jsp-comment' })
+const jspDirectiveMark = Decoration.mark({ class: 'cm-jsp-directive' })
+const jspExprMark      = Decoration.mark({ class: 'cm-jsp-expr' })
+const jspScriptletMark = Decoration.mark({ class: 'cm-jsp-scriptlet' })
+
+function buildJspColorDecos(doc) {
+  const text = doc.toString()
+  if (!text.includes('<%')) return Decoration.none
+
+  const marks = []
+  let m
+
+  // 순서 중요: 더 구체적인 패턴부터 (comment → directive → expr → scriptlet)
+  const commentRe   = /<%--[\s\S]*?--%>/g
+  const directiveRe = /<%@[\s\S]*?%>/g
+  const exprRe      = /<%=[\s\S]*?%>/g
+  const scriptletRe = /<%(?![-@=])([\s\S]*?)%>/g
+
+  while ((m = commentRe.exec(text))   !== null) marks.push({ from: m.index, to: m.index + m[0].length, mark: jspCommentMark })
+  while ((m = directiveRe.exec(text)) !== null) marks.push({ from: m.index, to: m.index + m[0].length, mark: jspDirectiveMark })
+  while ((m = exprRe.exec(text))      !== null) marks.push({ from: m.index, to: m.index + m[0].length, mark: jspExprMark })
+  while ((m = scriptletRe.exec(text)) !== null) marks.push({ from: m.index, to: m.index + m[0].length, mark: jspScriptletMark })
+
+  marks.sort((a, b) => a.from - b.from)
+  const builder = new RangeSetBuilder()
+  let prevTo = -1
+  for (const { from, to, mark } of marks) {
+    if (from >= prevTo) { builder.add(from, to, mark); prevTo = to }
+  }
+  return builder.finish()
+}
+
+const jspColorField = StateField.define({
+  create: (state) => buildJspColorDecos(state.doc),
+  update(deco, tr) {
+    if (tr.docChanged) return buildJspColorDecos(tr.state.doc)
+    return deco.map(tr.changes)
+  },
+  provide: f => EditorView.decorations.from(f),
+})
+
+const jspColorTheme = EditorView.baseTheme({
+  '.cm-jsp-comment':   { backgroundColor: 'rgba(107, 114, 128, 0.15)', color: '#9ca3af' },
+  '.cm-jsp-directive': { backgroundColor: 'rgba(139, 92, 246, 0.15)' },
+  '.cm-jsp-expr':      { backgroundColor: 'rgba(16, 185, 129, 0.15)' },
+  '.cm-jsp-scriptlet': { backgroundColor: 'rgba(245, 158, 11, 0.12)' },
 })
 // ────────────────────────────────────────────────────────────────────
 
@@ -210,6 +290,7 @@ export default function CodeEditor({
   minHeight = '320px',
   extraExtensions = [],
   highlightTag = null,
+  highlightRange = null,
 }) {
   const containerRef = useRef(null)
   const viewRef = useRef(null)
@@ -257,7 +338,11 @@ export default function CodeEditor({
         // 미리보기 호버 하이라이트
         highlightTagField,
         cssLineField,
+        rangeHighlightField,
         highlightTagTheme,
+
+        // JSP 블록 컬러링 (html 언어일 때만 의미 있음, 없으면 Decoration.none 반환)
+        ...(language === 'html' ? [jspColorField, jspColorTheme] : []),
 
         EditorView.lineWrapping,
         EditorState.readOnly.of(readOnly),
@@ -287,13 +372,19 @@ export default function CodeEditor({
     }
   }, [language, readOnly]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 미리보기 호버 태그 → 에디터 하이라이트 + 해당 위치로 스크롤
+  // 미리보기 호버 태그 → 에디터 하이라이트
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
     view.dispatch({ effects: setHighlightTag.of(highlightTag) })
-
   }, [highlightTag])
+
+  // 미리보기 JSP 배지 호버 → 에디터 범위 하이라이트
+  useEffect(() => {
+    const view = viewRef.current
+    if (!view) return
+    view.dispatch({ effects: setHighlightRange.of(highlightRange) })
+  }, [highlightRange])
 
   // readOnly 모드: 외부 value 변경 반영
   useEffect(() => {
