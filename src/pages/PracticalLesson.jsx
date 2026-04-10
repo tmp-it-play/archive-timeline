@@ -225,10 +225,26 @@ ${code}
 
   // 에디터 호버 → 미리보기 강조
   var editorCur = null;
+  var allTagSelected = [];
+  function applyAllTagHighlight(tag, color) {
+    allTagSelected.forEach(function(el) { el.style.boxShadow = ''; });
+    allTagSelected = [];
+    if (!tag) return;
+    document.querySelectorAll(tag).forEach(function(el) {
+      if (el.id === '__info') return;
+      el.style.boxShadow = '0 0 0 2px ' + (color || 'rgba(251,191,36,0.9)') + ', 0 0 0 4px rgba(0,0,0,0.08)';
+      allTagSelected.push(el);
+    });
+  }
+
   window.addEventListener('message', function(e) {
     if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'highlightAllTag') {
+      applyAllTagHighlight(e.data.tag, e.data.color);
+      return;
+    }
+    if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
     if (e.data.type === 'editorHover') {
-      if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
       var els = document.querySelectorAll(e.data.tag);
       if (els[e.data.index]) {
         editorCur = els[e.data.index];
@@ -281,7 +297,7 @@ function buildJspPreviewHtml(code) {
       ? 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.88em;padding:1px 4px;border-radius:2px;cursor:pointer;'
       : 'background:#d1fae5;color:#065f46;font-family:monospace;font-size:0.85em;padding:1px 5px;border-radius:3px;border:1px solid #6ee7b7;cursor:pointer;'
     addRegion(m.index, m.index + m[0].length,
-      `<span style="${style}" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" title="표현식">${val}</span>`)
+      `<span style="${style}" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="expr" title="표현식">${val}</span>`)
   }
 
   // include 디렉티브 → 보라 배지
@@ -289,7 +305,7 @@ function buildJspPreviewHtml(code) {
   while ((m = includeRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
     addRegion(m.index, m.index + m[0].length,
-      `<span style="display:inline-block;background:#ede9fe;color:#5b21b6;font-size:11px;padding:1px 8px;border-radius:3px;border:1px dashed #a78bfa;font-family:monospace;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">📄 ${m[1]}</span>`)
+      `<span style="display:inline-block;background:#ede9fe;color:#5b21b6;font-size:11px;padding:1px 8px;border-radius:3px;border:1px dashed #a78bfa;font-family:monospace;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="directive">📄 ${m[1]}</span>`)
   }
 
   // 나머지 디렉티브·스크립틀릿 → 제거
@@ -304,7 +320,7 @@ function buildJspPreviewHtml(code) {
   while ((m = blankRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
     addRegion(m.index, m.index + m[0].length,
-      `<span style="display:inline-block;background:#dbeafe;color:#1e40af;font-weight:bold;padding:0 8px;border-radius:3px;border:1px dashed #93c5fd;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">( ${m[1]} )</span>`)
+      `<span style="display:inline-block;background:#dbeafe;color:#1e40af;font-weight:bold;padding:0 8px;border-radius:3px;border:1px dashed #93c5fd;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="blank">( ${m[1]} )</span>`)
   }
 
   // ___ 빈칸 → 노란 배지
@@ -312,7 +328,7 @@ function buildJspPreviewHtml(code) {
   while ((m = underlineRe.exec(code)) !== null) {
     if (isInRegion(m.index)) continue
     addRegion(m.index, m.index + m[0].length,
-      `<span style="display:inline-block;background:#fef3c7;color:#92400e;padding:0 10px;border-radius:3px;border:1px dashed #fcd34d;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}">___</span>`)
+      `<span style="display:inline-block;background:#fef3c7;color:#92400e;padding:0 10px;border-radius:3px;border:1px dashed #fcd34d;font-family:monospace;font-size:0.85em;cursor:pointer;" data-jsp-from="${m.index}" data-jsp-to="${m.index + m[0].length}" data-jsp-type="blank">___</span>`)
   }
 
   // 정렬 후 겹치는 영역 제거 (먼저 추가된 것 우선)
@@ -445,9 +461,24 @@ ${html}
     clearCur();
   });
 
-  // 에디터 호버 → 미리보기 강조
+  // 에디터 호버 / 범례 클릭 → 미리보기 강조
+  var typeSelected = [];
+  function applyTypeHighlight(jspType) {
+    typeSelected.forEach(function(el) { el.style.boxShadow = ''; });
+    typeSelected = [];
+    if (!jspType) return;
+    document.querySelectorAll('[data-jsp-type="' + jspType + '"]').forEach(function(el) {
+      el.style.boxShadow = '0 0 0 2px rgba(251,191,36,0.9), 0 0 0 4px rgba(251,191,36,0.25)';
+      typeSelected.push(el);
+    });
+  }
+
   window.addEventListener('message', function(e) {
     if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'highlightJspType') {
+      applyTypeHighlight(e.data.jspType);
+      return;
+    }
     if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
     if (e.data.type === 'editorHover') {
       var els = document.querySelectorAll(e.data.tag);
@@ -464,7 +495,6 @@ ${html}
         editorCur.style.outlineOffset = '3px';
       }
     }
-    // editorLeave / editorJspLeave: 이미 위에서 초기화함
   });
 })();
 <\/script>
@@ -500,6 +530,8 @@ export default function PracticalLesson() {
   // 미리보기 → 에디터 하이라이트 연동
   const [previewHoveredTag,   setPreviewHoveredTag]   = useState(null)
   const [previewHoveredRange, setPreviewHoveredRange] = useState(null)
+  const [highlightedJspType,  setHighlightedJspType]  = useState(null)
+  const [highlightedHtmlTag,  setHighlightedHtmlTag]  = useState(null)
 
   useEffect(() => {
     const handler = (e) => {
@@ -562,6 +594,8 @@ export default function PracticalLesson() {
     setActiveLesson(i)
     setShowSolution(false)
     setDescOpen(true)
+    setHighlightedJspType(null)
+    setHighlightedHtmlTag(null)
     const nextLesson = topic.lessons[i]
     const nextCode = codes[nextLesson.id] ?? nextLesson.starterCode
     if (nextLesson.type === 'live-html') {
@@ -656,6 +690,7 @@ export default function PracticalLesson() {
                 minHeight="460px"
                 extraExtensions={[...tagTooltipExt, ...editorToPreviewExt]}
                 highlightTag={previewHoveredTag}
+                highlightAllTag={highlightedHtmlTag}
               />
             </div>
 
@@ -683,29 +718,37 @@ export default function PracticalLesson() {
             </div>
           </div>
 
-          {/* 태그 범례 — 색상 칩 */}
+          {/* 태그 범례 — 클릭하면 해당 태그 전체 하이라이트 */}
           {lesson.annotations?.length > 0 && (
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-gray-400 shrink-0">
-                미리보기에서 마우스를 올리면 태그 정보가 표시됩니다
-              </span>
-              {lesson.annotations.map(ann => (
-                <span
-                  key={ann.tag}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-semibold border"
-                  style={{
-                    borderColor: ann.color,
-                    color: ann.color,
-                    background: ann.color + '14',
-                  }}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{ background: ann.color }}
-                  />
-                  &lt;{ann.label}&gt;
-                </span>
-              ))}
+              <span className="text-xs text-gray-400 shrink-0">태그 선택:</span>
+              {lesson.annotations.map(ann => {
+                const active = highlightedHtmlTag === ann.tag
+                return (
+                  <button
+                    key={ann.tag}
+                    onClick={() => {
+                      const next = active ? null : ann.tag
+                      setHighlightedHtmlTag(next)
+                      iframeRef.current?.contentWindow?.postMessage(
+                        { type: 'highlightAllTag', tag: next, color: ann.color }, '*'
+                      )
+                    }}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-semibold border transition-all"
+                    style={{
+                      borderColor: ann.color,
+                      color: ann.color,
+                      background: active ? ann.color + '30' : ann.color + '14',
+                      outline: active ? `2px solid ${ann.color}` : '2px solid transparent',
+                      outlineOffset: '1px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ann.color }} />
+                    &lt;{ann.label}&gt;
+                  </button>
+                )
+              })}
             </div>
           )}
 
@@ -763,6 +806,7 @@ export default function PracticalLesson() {
                 extraExtensions={editorToPreviewExt}
                 highlightTag={previewHoveredTag}
                 highlightRange={previewHoveredRange}
+                highlightJspType={highlightedJspType}
               />
             </div>
 
@@ -790,24 +834,38 @@ export default function PracticalLesson() {
             </div>
           </div>
 
-          {/* JSP 블록 색상 범례 */}
+          {/* JSP 블록 색상 범례 — 클릭하면 해당 타입 전체 하이라이트 */}
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-gray-400 shrink-0">에디터 블록 색상:</span>
+            <span className="text-xs text-gray-400 shrink-0">블록 타입 선택:</span>
             {[
-              { color: 'rgba(245,158,11,0.35)', label: '<% %>', desc: '스크립틀릿' },
-              { color: 'rgba(16,185,129,0.35)',  label: '<%= %>', desc: '표현식' },
-              { color: 'rgba(139,92,246,0.35)',  label: '<%@ %>', desc: '디렉티브' },
-              { color: 'rgba(107,114,128,0.35)', label: '<%-- --%>', desc: 'JSP 주석' },
-            ].map(({ color, label, desc }) => (
-              <span
-                key={label}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-mono"
-                style={{ background: color, color: '#374151' }}
-              >
-                {label}
-                <span className="font-sans text-gray-500">{desc}</span>
-              </span>
-            ))}
+              { color: 'rgba(245,158,11,0.35)', solidColor: '#f59e0b', label: '<% %>', desc: '스크립틀릿', type: 'scriptlet' },
+              { color: 'rgba(16,185,129,0.35)',  solidColor: '#10b981', label: '<%= %>', desc: '표현식',    type: 'expr' },
+              { color: 'rgba(139,92,246,0.35)',  solidColor: '#8b5cf6', label: '<%@ %>', desc: '디렉티브',  type: 'directive' },
+              { color: 'rgba(107,114,128,0.35)', solidColor: '#6b7280', label: '<%-- --%>', desc: '주석',   type: 'comment' },
+            ].map(({ color, solidColor, label, desc, type }) => {
+              const active = highlightedJspType === type
+              return (
+                <button
+                  key={type}
+                  onClick={() => {
+                    const next = active ? null : type
+                    setHighlightedJspType(next)
+                    iframeRef.current?.contentWindow?.postMessage({ type: 'highlightJspType', jspType: next }, '*')
+                  }}
+                  className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-mono transition-all"
+                  style={{
+                    background: color,
+                    color: '#374151',
+                    outline: active ? `2px solid ${solidColor}` : '2px solid transparent',
+                    outlineOffset: '1px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {label}
+                  <span className="font-sans text-gray-500">{desc}</span>
+                </button>
+              )
+            })}
             <span className="text-xs text-gray-300 ml-1">
               · <span style={{ background: '#dbeafe', color: '#1e40af', padding: '0 4px', borderRadius: 3, fontFamily: 'monospace', fontSize: 11 }}>( A )</span> 빈칸
               &nbsp;· <span style={{ background: '#d1fae5', color: '#065f46', padding: '0 4px', borderRadius: 3, fontFamily: 'monospace', fontSize: 11 }}>expr</span> 표현식
