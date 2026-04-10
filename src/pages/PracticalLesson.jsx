@@ -152,7 +152,12 @@ body {
   font-size: 14px;
   margin: 0;
   line-height: 1.6;
+  overscroll-behavior: contain;
 }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.35); }
 #__info {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -178,6 +183,20 @@ ${code}
   anns.forEach(function(a){ map[a.tag.toUpperCase()] = a; });
   var bar = document.getElementById('__info');
   var cur = null;
+
+  function canScrollPage() {
+    var root = document.scrollingElement || document.documentElement;
+    return !!root && root.scrollHeight > root.clientHeight + 1;
+  }
+
+  function scrollIfScrollable(el) {
+    if (!el || !canScrollPage()) return;
+    var root = document.scrollingElement || document.documentElement;
+    var rect = el.getBoundingClientRect();
+    var rootRect = root.getBoundingClientRect();
+    var targetTop = root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2);
+    root.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  }
 
   function clearCur() {
     if (cur) {
@@ -230,11 +249,14 @@ ${code}
     allTagSelected.forEach(function(el) { el.style.boxShadow = ''; });
     allTagSelected = [];
     if (!tag) return;
+    var first = null;
     document.querySelectorAll(tag).forEach(function(el) {
       if (el.id === '__info') return;
       el.style.boxShadow = '0 0 0 2px ' + (color || 'rgba(251,191,36,0.9)') + ', 0 0 0 4px rgba(0,0,0,0.08)';
       allTagSelected.push(el);
+      if (!first) first = el;
     });
+    scrollIfScrollable(first);
   }
 
   window.addEventListener('message', function(e) {
@@ -250,6 +272,7 @@ ${code}
         editorCur = els[e.data.index];
         editorCur.style.outline = '2px solid #3b82f6';
         editorCur.style.outlineOffset = '3px';
+        scrollIfScrollable(editorCur);
       }
     } else if (e.data.type === 'editorLeave') {
       if (editorCur) { editorCur.style.outline = ''; editorCur.style.outlineOffset = ''; editorCur = null; }
@@ -362,7 +385,12 @@ body {
   margin: 0;
   line-height: 1.7;
   color: #111;
+  overscroll-behavior: contain;
 }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.35); }
 table { border-collapse: collapse; }
 th, td { padding: 4px 10px; border: 1px solid #ccc; }
 th { background: #f3f4f6; font-weight: 600; }
@@ -408,6 +436,20 @@ ${html}
   var editorCur = null;
 
   var SKIP = { SCRIPT: 1, STYLE: 1, HTML: 1, HEAD: 1, BODY: 1 };
+
+  function canScrollPage() {
+    var root = document.scrollingElement || document.documentElement;
+    return !!root && root.scrollHeight > root.clientHeight + 1;
+  }
+
+  function scrollIfScrollable(el) {
+    if (!el || !canScrollPage()) return;
+    var root = document.scrollingElement || document.documentElement;
+    var rect = el.getBoundingClientRect();
+    var rootRect = root.getBoundingClientRect();
+    var targetTop = root.scrollTop + (rect.top - rootRect.top) - (root.clientHeight / 2) + (rect.height / 2);
+    root.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  }
 
   function clearCur() {
     if (cur) {
@@ -467,10 +509,13 @@ ${html}
     typeSelected.forEach(function(el) { el.style.boxShadow = ''; });
     typeSelected = [];
     if (!jspType) return;
+    var first = null;
     document.querySelectorAll('[data-jsp-type="' + jspType + '"]').forEach(function(el) {
       el.style.boxShadow = '0 0 0 2px rgba(251,191,36,0.9), 0 0 0 4px rgba(251,191,36,0.25)';
       typeSelected.push(el);
+      if (!first) first = el;
     });
+    scrollIfScrollable(first);
   }
 
   window.addEventListener('message', function(e) {
@@ -486,6 +531,7 @@ ${html}
         editorCur = els[e.data.index];
         editorCur.style.outline = '2px solid #3b82f6';
         editorCur.style.outlineOffset = '3px';
+        scrollIfScrollable(editorCur);
       }
     } else if (e.data.type === 'editorJspHover') {
       var badge = document.querySelector('[data-jsp-from="' + e.data.from + '"]');
@@ -493,6 +539,7 @@ ${html}
         editorCur = badge;
         editorCur.style.outline = '2px solid #3b82f6';
         editorCur.style.outlineOffset = '3px';
+        scrollIfScrollable(editorCur);
       }
     }
   });
@@ -505,6 +552,7 @@ ${html}
 export default function PracticalLesson() {
   const { topic: topicId } = useParams()
   const topic = getTopicById(topicId)
+  const splitPaneHeight = '460px'
 
   const [activeLesson, setActiveLesson] = useState(0)
   const [codes, setCodes] = useState(() => {
@@ -668,9 +716,9 @@ export default function PracticalLesson() {
       {isLiveHtml && (
         <>
           {/* 에디터 + 미리보기 분할 */}
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-3 min-h-0">
             {/* 왼쪽: 에디터 */}
-            <div>
+            <div className="min-h-0">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   코드 편집
@@ -687,7 +735,8 @@ export default function PracticalLesson() {
                 value={currentCode}
                 onChange={handleCodeChange}
                 language={lang}
-                minHeight="460px"
+                height={splitPaneHeight}
+                minHeight={splitPaneHeight}
                 extraExtensions={[...tagTooltipExt, ...editorToPreviewExt]}
                 highlightTag={previewHoveredTag}
                 highlightAllTag={highlightedHtmlTag}
@@ -695,7 +744,7 @@ export default function PracticalLesson() {
             </div>
 
             {/* 오른쪽: 실시간 미리보기 */}
-            <div className="flex flex-col">
+            <div className="min-h-0">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   실시간 미리보기
@@ -703,14 +752,15 @@ export default function PracticalLesson() {
                 <span className="text-xs text-gray-300">— 입력하면 즉시 반영</span>
               </div>
               <div
-                className="rounded-lg overflow-hidden border border-gray-200 flex-1"
-                style={{ minHeight: '460px' }}
+                className="rounded-lg border border-gray-200 bg-white"
+                style={{ height: splitPaneHeight, minHeight: splitPaneHeight, overflow: 'hidden' }}
               >
                 <iframe
                   ref={iframeRef}
                   srcDoc={liveHtml}
                   className="w-full h-full"
-                  style={{ minHeight: '460px', border: 'none' }}
+                  style={{ border: 'none', display: 'block' }}
+                  scrolling="auto"
                   sandbox="allow-scripts"
                   title="live-preview"
                 />
@@ -783,9 +833,9 @@ export default function PracticalLesson() {
       {/* ── live-jsp: 분할 레이아웃 ── */}
       {isLiveJsp && (
         <>
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-3 min-h-0">
             {/* 왼쪽: 에디터 */}
-            <div>
+            <div className="min-h-0">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   코드 편집
@@ -802,7 +852,8 @@ export default function PracticalLesson() {
                 value={currentCode}
                 onChange={handleCodeChange}
                 language={lang}
-                minHeight="460px"
+                height={splitPaneHeight}
+                minHeight={splitPaneHeight}
                 extraExtensions={editorToPreviewExt}
                 highlightTag={previewHoveredTag}
                 highlightRange={previewHoveredRange}
@@ -811,7 +862,7 @@ export default function PracticalLesson() {
             </div>
 
             {/* 오른쪽: JSP 시뮬레이션 미리보기 */}
-            <div className="flex flex-col">
+            <div className="min-h-0">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   JSP 시뮬레이션
@@ -819,14 +870,15 @@ export default function PracticalLesson() {
                 <span className="text-xs text-gray-300">— 변수·빈칸을 시각화</span>
               </div>
               <div
-                className="rounded-lg overflow-hidden border border-gray-200 flex-1 bg-white"
-                style={{ minHeight: '460px' }}
+                className="rounded-lg border border-gray-200 bg-white"
+                style={{ height: splitPaneHeight, minHeight: splitPaneHeight, overflow: 'hidden' }}
               >
                 <iframe
                   ref={iframeRef}
                   srcDoc={liveHtml}
                   className="w-full h-full"
-                  style={{ minHeight: '460px', border: 'none' }}
+                  style={{ border: 'none', display: 'block' }}
+                  scrolling="auto"
                   sandbox="allow-scripts"
                   title="jsp-preview"
                 />

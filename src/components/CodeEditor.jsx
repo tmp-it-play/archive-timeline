@@ -354,12 +354,13 @@ const baseTheme = EditorView.theme({
     fontFamily: "'JetBrains Mono','Fira Code','Cascadia Code','Consolas','Courier New',monospace",
     lineHeight: '1.7',
     overflow: 'auto',
+    overscrollBehavior: 'contain',
   },
   '.cm-focused': { outline: 'none !important' },
   '.cm-editor': { height: '100%' },
-  '.cm-scroller::-webkit-scrollbar': { width: '8px', height: '8px' },
+  '.cm-scroller::-webkit-scrollbar': { width: '5px', height: '5px' },
   '.cm-scroller::-webkit-scrollbar-track': { background: '#21252b' },
-  '.cm-scroller::-webkit-scrollbar-thumb': { background: '#4a4f5a', borderRadius: '4px' },
+  '.cm-scroller::-webkit-scrollbar-thumb': { background: '#4a4f5a', borderRadius: '999px' },
   '.cm-scroller::-webkit-scrollbar-thumb:hover': { background: '#6a7080' },
 })
 
@@ -371,12 +372,29 @@ function getLang(lang) {
 
 const LANG_LABEL = { html: 'HTML/JSP', sql: 'SQL', java: 'Java', jsp: 'JSP' }
 
+function canScrollVertically(el) {
+  return !!el && el.scrollHeight > el.clientHeight + 1
+}
+
+function scrollEditorPositionIntoView(view, pos) {
+  if (!view || pos === null || pos === undefined) return
+  const scroller = view.scrollDOM
+  if (!canScrollVertically(scroller)) return
+  const coords = view.coordsAtPos(pos)
+  if (!coords) return
+  const scrollerRect = scroller.getBoundingClientRect()
+  const currentTop = scroller.scrollTop
+  const targetTop = currentTop + (coords.top - scrollerRect.top) - (scroller.clientHeight / 2) + ((coords.bottom - coords.top) / 2)
+  scroller.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+}
+
 export default function CodeEditor({
   value,
   onChange,
   language = 'html',
   readOnly = false,
   minHeight = '320px',
+  height = null,        // 고정 높이 (지정 시 내부 스크롤)
   extraExtensions = [],
   highlightTag = null,
   highlightRange = null,
@@ -455,6 +473,10 @@ export default function CodeEditor({
         state: EditorState.create({ doc: value ?? '', extensions }),
         parent: containerRef.current,
       })
+      view.dom.style.height = '100%'
+      view.dom.style.minHeight = '0'
+      view.scrollDOM.style.height = '100%'
+      view.scrollDOM.style.overflow = 'auto'
       viewRef.current = view
 
       return () => { view.destroy(); viewRef.current = null }
@@ -464,32 +486,58 @@ export default function CodeEditor({
     }
   }, [language, readOnly]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // 미리보기 호버 태그 → 에디터 하이라이트
+  // 미리보기 호버 태그 → 에디터 하이라이트 + 해당 위치 스크롤
   useEffect(() => {
     const view = viewRef.current
-    if (!view) return
+    if (!view || !highlightTag?.tag) { view?.dispatch({ effects: setHighlightTag.of(highlightTag) }); return }
+    const text = view.state.doc.toString()
+    const escaped = highlightTag.tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const re = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
+    let count = 0, scrollPos = null
+    let m
+    while ((m = re.exec(text)) !== null) {
+      if (count === highlightTag.index) { scrollPos = m.index; break }
+      count++
+    }
     view.dispatch({ effects: setHighlightTag.of(highlightTag) })
+    scrollEditorPositionIntoView(view, scrollPos)
   }, [highlightTag])
 
-  // 미리보기 JSP 배지 호버 → 에디터 범위 하이라이트
+  // 미리보기 JSP 배지 호버 → 에디터 범위 하이라이트 + 스크롤
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
     view.dispatch({ effects: setHighlightRange.of(highlightRange) })
+    if (highlightRange) scrollEditorPositionIntoView(view, highlightRange.from)
   }, [highlightRange])
 
-  // 범례 클릭 → JSP 타입 전체 하이라이트
+  // 범례 클릭 → JSP 타입 전체 하이라이트 + 첫 번째 블록으로 스크롤
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
     view.dispatch({ effects: setHighlightJspType.of(highlightJspType) })
+    if (highlightJspType) {
+      const re = JSP_TYPE_PATTERNS[highlightJspType]
+      if (re) {
+        re.lastIndex = 0
+        const m = re.exec(view.state.doc.toString())
+        if (m) scrollEditorPositionIntoView(view, m.index)
+      }
+    }
   }, [highlightJspType])
 
-  // 범례 클릭 → HTML 태그 전체 하이라이트
+  // 범례 클릭 → HTML 태그 전체 하이라이트 + 첫 번째 태그로 스크롤
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
     view.dispatch({ effects: setHighlightAllTag.of(highlightAllTag) })
+    if (highlightAllTag) {
+      const text = view.state.doc.toString()
+      const escaped = highlightAllTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const re = new RegExp(`<${escaped}(?=[\\s>/])`, 'gi')
+      const m = re.exec(text)
+      if (m) scrollEditorPositionIntoView(view, m.index)
+    }
   }, [highlightAllTag])
 
   // readOnly 모드: 외부 value 변경 반영
@@ -527,8 +575,10 @@ export default function CodeEditor({
     )
   }
 
+  const sizeStyle = height ? { height } : { minHeight }
+
   return (
-    <div className="rounded-lg overflow-hidden border border-gray-700 flex flex-col" style={{ minHeight }}>
+    <div className="rounded-lg overflow-hidden border border-gray-700 flex flex-col" style={sizeStyle}>
       {/* 툴바 */}
       <div className="flex items-center justify-between px-3 py-1.5 bg-[#21252b] border-b border-gray-700 shrink-0">
         <div className="flex items-center gap-2">
@@ -547,8 +597,8 @@ export default function CodeEditor({
         </button>
       </div>
 
-      {/* 에디터 영역 */}
-      <div ref={containerRef} className="flex-1 overflow-hidden" style={{ minHeight }} />
+      {/* 에디터 영역 — height 지정 시 flex-1로 남은 공간 채움, 내부 스크롤은 CM이 처리 */}
+      <div ref={containerRef} className="flex-1 overflow-hidden" style={height ? {} : { minHeight }} />
     </div>
   )
 }
