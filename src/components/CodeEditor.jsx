@@ -415,6 +415,7 @@ export default function CodeEditor({
   readOnly = false,
   minHeight = '320px',
   height = null,        // 고정 높이 (지정 시 내부 스크롤)
+  showToolbar = true,
   extraExtensions = [],
   highlightTag = null,
   highlightRange = null,
@@ -581,9 +582,11 @@ export default function CodeEditor({
   if (hasError) {
     return (
       <div className="rounded-lg overflow-hidden border border-gray-700">
-        <div className="flex items-center justify-between px-3 py-1.5 bg-gray-800 border-b border-gray-700">
-          <span className="text-xs text-gray-400 font-mono">{LANG_LABEL[language] ?? language}</span>
-        </div>
+        {showToolbar && (
+          <div className="flex items-center justify-between px-3 py-1.5 bg-gray-800 border-b border-gray-700">
+            <span className="text-xs text-gray-400 font-mono">{LANG_LABEL[language] ?? language}</span>
+          </div>
+        )}
         <textarea
           defaultValue={value}
           onChange={(e) => onChange?.(e.target.value)}
@@ -599,23 +602,24 @@ export default function CodeEditor({
 
   return (
     <div className="rounded-lg overflow-hidden border border-gray-700 flex flex-col" style={sizeStyle}>
-      {/* 툴바 */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-[#21252b] border-b border-gray-700 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-400 font-mono">{LANG_LABEL[language] ?? language}</span>
-          {readOnly && (
-            <span className="text-xs text-gray-600 border border-gray-700 px-1.5 py-0.5 rounded">
-              읽기 전용
-            </span>
-          )}
+      {showToolbar && (
+        <div className="flex items-center justify-between px-3 py-1.5 bg-[#21252b] border-b border-gray-700 shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-mono">{LANG_LABEL[language] ?? language}</span>
+            {readOnly && (
+              <span className="text-xs text-gray-600 border border-gray-700 px-1.5 py-0.5 rounded">
+                읽기 전용
+              </span>
+            )}
+          </div>
+          <button
+            onClick={handleCopy}
+            className="text-xs text-gray-400 hover:text-gray-200 transition-colors px-2 py-0.5 rounded hover:bg-gray-700"
+          >
+            {copied ? '복사됨 ✓' : '복사'}
+          </button>
         </div>
-        <button
-          onClick={handleCopy}
-          className="text-xs text-gray-400 hover:text-gray-200 transition-colors px-2 py-0.5 rounded hover:bg-gray-700"
-        >
-          {copied ? '복사됨 ✓' : '복사'}
-        </button>
-      </div>
+      )}
 
       {/* 에디터 영역 — height 지정 시 flex-1로 남은 공간 채움, 내부 스크롤은 CM이 처리 */}
       <div ref={containerRef} className="flex-1 overflow-hidden" style={height ? {} : { minHeight }} />

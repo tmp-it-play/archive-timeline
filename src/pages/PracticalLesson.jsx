@@ -100,8 +100,57 @@ const VALIDATION_CASES = [
   },
 ]
 
+function findSnippetRange(text, snippet) {
+  if (!text || !snippet) return null
+  const from = text.indexOf(snippet)
+  if (from === -1) return null
+  return { from, to: from + snippet.length }
+}
+
+function getCodeHighlightRange(lessonId, code, actionFlowStep, validationCase) {
+  if (!code) return null
+
+  if (lessonId === 'form_02' || lessonId === 'hrd01_02') {
+    return findSnippetRange(code, ACTION_FLOW_STEPS[actionFlowStep]?.code)
+  }
+
+  if (lessonId === 'form_03') {
+    const current = VALIDATION_CASES[validationCase]
+    if (!current) return null
+    if (current.focus) {
+      const fieldLabels = {
+        custname: 'if(frm.custname.value.trim() === "") {',
+        phone: 'if(frm.phone.value.trim() === "") {',
+        address: 'if(frm.address.value.trim() === "") {',
+        grade: 'if(frm.grade.value.trim() === "") {',
+        city: 'if(frm.city.value.trim() === "") {',
+      }
+      return findSnippetRange(code, fieldLabels[current.focus])
+        ?? findSnippetRange(code, `frm.${current.focus}.focus();`)
+    }
+    return findSnippetRange(code, 'frm.submit();') ?? findSnippetRange(code, current.alert)
+  }
+
+  return null
+}
+
 function ActionFlowPanel({ stepIndex, onStepChange }) {
   const step = ACTION_FLOW_STEPS[stepIndex]
+  const [isPlaying, setIsPlaying] = useState(false)
+  const progress = ((stepIndex + 1) / ACTION_FLOW_STEPS.length) * 100
+  const activeStage = step.key
+
+  useEffect(() => {
+    if (!isPlaying) return
+    const timer = window.setTimeout(() => {
+      if (stepIndex >= ACTION_FLOW_STEPS.length - 1) {
+        setIsPlaying(false)
+        return
+      }
+      onStepChange(stepIndex + 1)
+    }, 1800)
+    return () => window.clearTimeout(timer)
+  }, [isPlaying, onStepChange, stepIndex])
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
@@ -110,13 +159,50 @@ function ActionFlowPanel({ stepIndex, onStepChange }) {
         <div className="text-sm text-gray-500 mt-1">폼 데이터가 서버에서 어떤 순서로 처리되는지 단계별로 봅니다.</div>
       </div>
       <div className="p-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-gray-500">
+              {isPlaying ? '재생 중' : '대기 중'} · {stepIndex + 1}/{ACTION_FLOW_STEPS.length}
+            </span>
+            <span className="text-xs font-mono text-gray-400">{Math.round(progress)}%</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div
+              className="h-full bg-gray-900 transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => {
+              if (stepIndex >= ACTION_FLOW_STEPS.length - 1) onStepChange(0)
+              setIsPlaying(prev => !prev)
+            }}
+            className="px-3 py-1.5 rounded text-xs font-semibold border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          >
+            {isPlaying ? '일시정지' : '재생'}
+          </button>
+          <button
+            onClick={() => {
+              setIsPlaying(false)
+              onStepChange(0)
+            }}
+            className="px-3 py-1.5 rounded text-xs border border-gray-300 bg-white hover:border-gray-900 transition-colors"
+          >
+            처음부터
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {ACTION_FLOW_STEPS.map((item, index) => {
             const active = index === stepIndex
             return (
               <button
                 key={item.key}
-                onClick={() => onStepChange(index)}
+                onClick={() => {
+                  setIsPlaying(false)
+                  onStepChange(index)
+                }}
                 className="px-3 py-1.5 rounded-full text-xs border transition-colors"
                 style={{
                   borderColor: active ? '#111827' : '#d1d5db',
@@ -132,10 +218,44 @@ function ActionFlowPanel({ stepIndex, onStepChange }) {
         <div className="rounded-lg border border-gray-200 p-4 mb-4">
           <div className="text-sm font-semibold text-gray-900 mb-1">{step.title}</div>
           <div className="text-sm text-gray-600 mb-3">{step.summary}</div>
-          <pre className="text-xs bg-gray-900 text-gray-100 rounded-lg px-3 py-2 overflow-auto font-mono">{step.code}</pre>
+          <CodeEditor
+            value={step.code}
+            language="java"
+            readOnly={true}
+            showToolbar={false}
+            minHeight="28px"
+          />
         </div>
         <div className="rounded-lg border border-dashed border-gray-300 p-4">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">현재 상태</div>
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">실행 요소 동기화</div>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'encoding' || activeStage === 'params' ? '#2563eb' : '#e5e7eb', background: activeStage === 'encoding' || activeStage === 'params' ? '#eff6ff' : '#f3f4f6', opacity: activeStage === 'encoding' || activeStage === 'params' ? 1 : 0.55 }}>
+              <div className="text-xs text-gray-500 mb-2">request</div>
+              <div className="space-y-1">
+                <div className="text-sm font-mono text-gray-800">custno=1001</div>
+                <div className="text-sm font-mono text-gray-800">custname=홍길동</div>
+                <div className="text-sm font-mono text-gray-800">grade=A</div>
+              </div>
+            </div>
+            <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'dto' ? '#16a34a' : '#e5e7eb', background: activeStage === 'dto' ? '#f0fdf4' : '#f3f4f6', opacity: activeStage === 'dto' ? 1 : 0.55 }}>
+              <div className="text-xs text-gray-500 mb-2">MemberDTO</div>
+              <div className="space-y-1">
+                <div className="text-sm font-mono text-gray-800">dto.custno = 1001</div>
+                <div className="text-sm font-mono text-gray-800">dto.custname = 홍길동</div>
+                <div className="text-sm font-mono text-gray-800">dto.city = 01</div>
+              </div>
+            </div>
+            <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'dao' ? '#d97706' : '#e5e7eb', background: activeStage === 'dao' ? '#fff7ed' : '#f3f4f6', opacity: activeStage === 'dao' ? 1 : 0.55 }}>
+              <div className="text-xs text-gray-500 mb-2">DAO</div>
+              <div className="text-sm font-mono text-gray-800">insertMember(dto)</div>
+              <div className="text-xs text-gray-500 mt-2">DB INSERT 실행</div>
+            </div>
+            <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'redirect' ? '#7c3aed' : '#e5e7eb', background: activeStage === 'redirect' ? '#f5f3ff' : '#f3f4f6', opacity: activeStage === 'redirect' ? 1 : 0.55 }}>
+              <div className="text-xs text-gray-500 mb-2">response</div>
+              <div className="text-sm font-mono text-gray-800">302 Redirect</div>
+              <div className="text-sm font-mono text-gray-800">/sub1.jsp</div>
+            </div>
+          </div>
           <div className="space-y-2">
             {step.state.map((line) => (
               <div key={line} className="text-sm text-gray-700 bg-gray-50 rounded px-3 py-2 font-mono">
@@ -151,6 +271,8 @@ function ActionFlowPanel({ stepIndex, onStepChange }) {
 
 function ValidationFlowPanel({ caseIndex, onCaseChange }) {
   const current = VALIDATION_CASES[caseIndex]
+  const [isPlaying, setIsPlaying] = useState(false)
+  const progress = ((caseIndex + 1) / VALIDATION_CASES.length) * 100
   const orderedFields = [
     ['custname', '이름'],
     ['phone', '연락처'],
@@ -161,6 +283,18 @@ function ValidationFlowPanel({ caseIndex, onCaseChange }) {
   const firstInvalid = orderedFields.find(([key]) => current.values[key].trim() === '')?.[0] ?? null
   const reachesSubmit = firstInvalid === null
 
+  useEffect(() => {
+    if (!isPlaying) return
+    const timer = window.setTimeout(() => {
+      if (caseIndex >= VALIDATION_CASES.length - 1) {
+        setIsPlaying(false)
+        return
+      }
+      onCaseChange(caseIndex + 1)
+    }, 1800)
+    return () => window.clearTimeout(timer)
+  }, [caseIndex, isPlaying, onCaseChange])
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
       <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
@@ -168,13 +302,50 @@ function ValidationFlowPanel({ caseIndex, onCaseChange }) {
         <div className="text-sm text-gray-500 mt-1">입력값에 따라 어느 조건문에서 멈추는지 눈으로 확인합니다.</div>
       </div>
       <div className="p-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-gray-500">
+              {isPlaying ? '재생 중' : '대기 중'} · {caseIndex + 1}/{VALIDATION_CASES.length}
+            </span>
+            <span className="text-xs font-mono text-gray-400">{Math.round(progress)}%</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div
+              className="h-full bg-gray-900 transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => {
+              if (caseIndex >= VALIDATION_CASES.length - 1) onCaseChange(0)
+              setIsPlaying(prev => !prev)
+            }}
+            className="px-3 py-1.5 rounded text-xs font-semibold border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          >
+            {isPlaying ? '일시정지' : '재생'}
+          </button>
+          <button
+            onClick={() => {
+              setIsPlaying(false)
+              onCaseChange(0)
+            }}
+            className="px-3 py-1.5 rounded text-xs border border-gray-300 bg-white hover:border-gray-900 transition-colors"
+          >
+            처음부터
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {VALIDATION_CASES.map((item, index) => {
             const active = index === caseIndex
             return (
               <button
                 key={item.key}
-                onClick={() => onCaseChange(index)}
+                onClick={() => {
+                  setIsPlaying(false)
+                  onCaseChange(index)
+                }}
                 className="px-3 py-1.5 rounded-full text-xs border transition-colors"
                 style={{
                   borderColor: active ? '#111827' : '#d1d5db',
@@ -188,17 +359,49 @@ function ValidationFlowPanel({ caseIndex, onCaseChange }) {
           })}
         </div>
         <div className="rounded-lg border border-gray-200 p-4 mb-4">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">가상 폼 상태</div>
-          <div className="grid grid-cols-2 gap-3">
-            {orderedFields.map(([key, label]) => {
-              const active = firstInvalid === key
-              return (
-                <div key={key} className="rounded-lg border p-3" style={{ borderColor: active ? '#ef4444' : '#e5e7eb', background: active ? '#fef2f2' : '#fff' }}>
-                  <div className="text-xs text-gray-500 mb-1">{label}</div>
-                  <div className="text-sm font-mono text-gray-800 min-h-6">{current.values[key] || '(빈 값)'}</div>
-                </div>
-              )
-            })}
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">실제 폼 요소 동기화</div>
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <div className="text-sm font-semibold text-gray-900 mb-3">회원 등록</div>
+            <div className="space-y-2">
+              {orderedFields.map(([key, label]) => {
+                const active = firstInvalid === key
+                return (
+                  <div key={key} className="grid grid-cols-[80px_1fr] gap-3 items-center">
+                    <label className="text-xs text-gray-600">{label}</label>
+                    <input
+                      readOnly
+                      value={current.values[key]}
+                      placeholder={label}
+                      className="w-full border rounded px-3 py-2 text-sm bg-white outline-none transition-all"
+                      style={{
+                        borderColor: active ? '#ef4444' : '#d1d5db',
+                        boxShadow: active ? '0 0 0 3px rgba(239,68,68,0.12)' : 'none',
+                        background: active ? '#fef2f2' : '#f3f4f6',
+                        opacity: active || reachesSubmit ? 1 : 0.58,
+                      }}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                className="px-4 py-2 text-sm rounded border"
+                style={{
+                  borderColor: reachesSubmit ? '#111827' : '#d1d5db',
+                  background: reachesSubmit ? '#111827' : '#fff',
+                  color: reachesSubmit ? '#fff' : '#9ca3af',
+                  boxShadow: reachesSubmit ? '0 0 0 3px rgba(17,24,39,0.08)' : 'none',
+                  opacity: reachesSubmit ? 1 : 0.6,
+                }}
+              >
+                등록
+              </button>
+              <button type="button" className="px-4 py-2 text-sm rounded border border-gray-300 bg-gray-100 text-gray-400 opacity-60">
+                조회
+              </button>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -212,9 +415,23 @@ function ValidationFlowPanel({ caseIndex, onCaseChange }) {
           </div>
           <div className="rounded-lg border border-dashed border-gray-300 p-4">
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">사용자에게 보이는 반응</div>
-            <div className="text-sm font-mono text-gray-800 mb-2">alert("{current.alert}")</div>
+            <CodeEditor
+              value={`alert("${current.alert}")`}
+              language="html"
+              readOnly={true}
+              showToolbar={false}
+              minHeight="28px"
+            />
             <div className="text-sm text-gray-600">
-              {reachesSubmit ? 'frm.submit() 호출' : `${current.focus} 필드에 focus() 이동`}
+              <div className="mt-2">
+                <CodeEditor
+                  value={reachesSubmit ? 'frm.submit()' : `frm.${current.focus}.focus()`}
+                  language="html"
+                  readOnly={true}
+                  showToolbar={false}
+                  minHeight="28px"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -914,6 +1131,7 @@ export default function PracticalLesson() {
   const showValidationFlow = lesson.id === 'form_03'
   const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
   const lessonAnnotations = getLessonAnnotations(lesson)
+  const codeHighlightRange = getCodeHighlightRange(lesson.id, currentCode, actionFlowStep, validationCase)
 
   useEffect(() => {
     setActionFlowStep(0)
@@ -1273,6 +1491,7 @@ export default function PracticalLesson() {
                 onChange={handleCodeChange}
                 language={lang}
                 minHeight="380px"
+                highlightRange={codeHighlightRange}
               />
             </div>
 
