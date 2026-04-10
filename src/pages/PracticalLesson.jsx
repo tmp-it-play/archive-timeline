@@ -31,6 +31,198 @@ function getLessonAnnotations(lesson) {
   return DEFAULT_HTML_ANNOTATIONS
 }
 
+const ACTION_FLOW_STEPS = [
+  {
+    key: 'encoding',
+    title: '1. 요청 인코딩 설정',
+    summary: 'POST 한글 데이터가 깨지지 않도록 UTF-8을 먼저 지정합니다.',
+    code: 'request.setCharacterEncoding("UTF-8")',
+    state: ['request body', 'custname=홍길동', 'address=서울시', 'grade=A'],
+  },
+  {
+    key: 'params',
+    title: '2. 파라미터 꺼내기',
+    summary: '폼에서 넘어온 값을 request.getParameter()로 변수에 담습니다.',
+    code: 'String custname = request.getParameter("custname")',
+    state: ['custno -> int 변환', 'custname / phone / address', 'joindate / grade / city 수신'],
+  },
+  {
+    key: 'dto',
+    title: '3. DTO 구성',
+    summary: 'MemberDTO에 setter로 데이터를 채워 DAO가 한 번에 전달받게 합니다.',
+    code: 'dto.setCustname(custname)',
+    state: ['dto.custno = 1001', 'dto.custname = 홍길동', 'dto.grade = A', 'dto.city = 01'],
+  },
+  {
+    key: 'dao',
+    title: '4. DAO 저장 호출',
+    summary: 'DAO가 SQL INSERT를 수행하도록 완성된 DTO를 넘깁니다.',
+    code: 'dao.insertMember(dto)',
+    state: ['DAO', 'INSERT member_tbl ...', '입력 데이터가 DB에 저장됨'],
+  },
+  {
+    key: 'redirect',
+    title: '5. 화면 이동',
+    summary: '처리가 끝나면 등록 화면으로 다시 이동시켜 새 입력을 받을 수 있게 합니다.',
+    code: 'response.sendRedirect("sub1.jsp")',
+    state: ['response', '302 Redirect', '브라우저가 sub1.jsp 재요청'],
+  },
+]
+
+const VALIDATION_CASES = [
+  {
+    key: 'name',
+    label: '이름 누락',
+    values: { custname: '', phone: '010-1234-5678', address: '서울시', grade: 'A', city: '01' },
+    alert: '이름을 입력하세요.',
+    focus: 'custname',
+  },
+  {
+    key: 'phone',
+    label: '연락처 누락',
+    values: { custname: '홍길동', phone: '', address: '서울시', grade: 'A', city: '01' },
+    alert: '연락처를 입력하세요.',
+    focus: 'phone',
+  },
+  {
+    key: 'address',
+    label: '주소 누락',
+    values: { custname: '홍길동', phone: '010-1234-5678', address: '', grade: 'A', city: '01' },
+    alert: '주소를 입력하세요.',
+    focus: 'address',
+  },
+  {
+    key: 'success',
+    label: '모두 입력됨',
+    values: { custname: '홍길동', phone: '010-1234-5678', address: '서울시', grade: 'A', city: '01' },
+    alert: '회원등록이 완료 되었습니다!',
+    focus: null,
+  },
+]
+
+function ActionFlowPanel({ stepIndex, onStepChange }) {
+  const step = ACTION_FLOW_STEPS[stepIndex]
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">처리 흐름 시각화</div>
+        <div className="text-sm text-gray-500 mt-1">폼 데이터가 서버에서 어떤 순서로 처리되는지 단계별로 봅니다.</div>
+      </div>
+      <div className="p-4">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {ACTION_FLOW_STEPS.map((item, index) => {
+            const active = index === stepIndex
+            return (
+              <button
+                key={item.key}
+                onClick={() => onStepChange(index)}
+                className="px-3 py-1.5 rounded-full text-xs border transition-colors"
+                style={{
+                  borderColor: active ? '#111827' : '#d1d5db',
+                  background: active ? '#111827' : '#fff',
+                  color: active ? '#fff' : '#4b5563',
+                }}
+              >
+                {index + 1}
+              </button>
+            )
+          })}
+        </div>
+        <div className="rounded-lg border border-gray-200 p-4 mb-4">
+          <div className="text-sm font-semibold text-gray-900 mb-1">{step.title}</div>
+          <div className="text-sm text-gray-600 mb-3">{step.summary}</div>
+          <pre className="text-xs bg-gray-900 text-gray-100 rounded-lg px-3 py-2 overflow-auto font-mono">{step.code}</pre>
+        </div>
+        <div className="rounded-lg border border-dashed border-gray-300 p-4">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">현재 상태</div>
+          <div className="space-y-2">
+            {step.state.map((line) => (
+              <div key={line} className="text-sm text-gray-700 bg-gray-50 rounded px-3 py-2 font-mono">
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ValidationFlowPanel({ caseIndex, onCaseChange }) {
+  const current = VALIDATION_CASES[caseIndex]
+  const orderedFields = [
+    ['custname', '이름'],
+    ['phone', '연락처'],
+    ['address', '주소'],
+    ['grade', '등급'],
+    ['city', '지역'],
+  ]
+  const firstInvalid = orderedFields.find(([key]) => current.values[key].trim() === '')?.[0] ?? null
+  const reachesSubmit = firstInvalid === null
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">검사 순서 시뮬레이터</div>
+        <div className="text-sm text-gray-500 mt-1">입력값에 따라 어느 조건문에서 멈추는지 눈으로 확인합니다.</div>
+      </div>
+      <div className="p-4">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {VALIDATION_CASES.map((item, index) => {
+            const active = index === caseIndex
+            return (
+              <button
+                key={item.key}
+                onClick={() => onCaseChange(index)}
+                className="px-3 py-1.5 rounded-full text-xs border transition-colors"
+                style={{
+                  borderColor: active ? '#111827' : '#d1d5db',
+                  background: active ? '#111827' : '#fff',
+                  color: active ? '#fff' : '#4b5563',
+                }}
+              >
+                {item.label}
+              </button>
+            )
+          })}
+        </div>
+        <div className="rounded-lg border border-gray-200 p-4 mb-4">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">가상 폼 상태</div>
+          <div className="grid grid-cols-2 gap-3">
+            {orderedFields.map(([key, label]) => {
+              const active = firstInvalid === key
+              return (
+                <div key={key} className="rounded-lg border p-3" style={{ borderColor: active ? '#ef4444' : '#e5e7eb', background: active ? '#fef2f2' : '#fff' }}>
+                  <div className="text-xs text-gray-500 mb-1">{label}</div>
+                  <div className="text-sm font-mono text-gray-800 min-h-6">{current.values[key] || '(빈 값)'}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-lg border border-dashed border-gray-300 p-4">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">조건문 결과</div>
+            <div className="text-sm text-gray-700">
+              {firstInvalid
+                ? `${orderedFields.find(([key]) => key === firstInvalid)?.[1]} 검사에서 중단되고 focus()가 이동합니다.`
+                : '모든 검사 통과 후 submit()까지 진행됩니다.'}
+            </div>
+          </div>
+          <div className="rounded-lg border border-dashed border-gray-300 p-4">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">사용자에게 보이는 반응</div>
+            <div className="text-sm font-mono text-gray-800 mb-2">alert("{current.alert}")</div>
+            <div className="text-sm text-gray-600">
+              {reachesSubmit ? 'frm.submit() 호출' : `${current.focus} 필드에 focus() 이동`}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // CodeMirror 에디터에서 태그명 호버 시 툴팁 표시
 function makeTagHoverTooltip(annotations) {
   const map = {}
@@ -659,6 +851,8 @@ export default function PracticalLesson() {
   })
   const [showSolution, setShowSolution] = useState(false)
   const [descOpen, setDescOpen] = useState(true)
+  const [actionFlowStep, setActionFlowStep] = useState(0)
+  const [validationCase, setValidationCase] = useState(0)
 
   // live-html 전용: 디바운스된 미리보기 HTML
   const [liveHtml, setLiveHtml] = useState('')
@@ -716,8 +910,15 @@ export default function PracticalLesson() {
   const isLiveHtml = lesson.type === 'live-html'
   const isLiveJsp  = lesson.type === 'live-jsp'
   const isCode = !isLiveHtml && !isLiveJsp
+  const showActionFlow = lesson.id === 'form_02' || lesson.id === 'hrd01_02'
+  const showValidationFlow = lesson.id === 'form_03'
   const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
   const lessonAnnotations = getLessonAnnotations(lesson)
+
+  useEffect(() => {
+    setActionFlowStep(0)
+    setValidationCase(0)
+  }, [lesson.id])
 
   // live-html / live-jsp: 에디터 태그 호버 툴팁
   const tagTooltipExt = useMemo(() => {
@@ -1053,25 +1254,41 @@ export default function PracticalLesson() {
       {/* ── code / fill-in-blank 타입 ── */}
       {isCode && (
         <>
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                코드 편집
-              </span>
-              <button
-                onClick={handleReset}
-                className="text-xs text-gray-400 hover:text-gray-700 border border-gray-200 px-2.5 py-1 rounded transition-colors"
-              >
-                초기화
-              </button>
+          <div className={`mb-3 ${showActionFlow || showValidationFlow ? 'grid grid-cols-2 gap-3' : ''}`}>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                  코드 편집
+                </span>
+                <button
+                  onClick={handleReset}
+                  className="text-xs text-gray-400 hover:text-gray-700 border border-gray-200 px-2.5 py-1 rounded transition-colors"
+                >
+                  초기화
+                </button>
+              </div>
+              <CodeEditor
+                key={`editor-${lesson.id}`}
+                value={currentCode}
+                onChange={handleCodeChange}
+                language={lang}
+                minHeight="380px"
+              />
             </div>
-            <CodeEditor
-              key={`editor-${lesson.id}`}
-              value={currentCode}
-              onChange={handleCodeChange}
-              language={lang}
-              minHeight="380px"
-            />
+
+            {showActionFlow && (
+              <ActionFlowPanel
+                stepIndex={actionFlowStep}
+                onStepChange={setActionFlowStep}
+              />
+            )}
+
+            {showValidationFlow && (
+              <ValidationFlowPanel
+                caseIndex={validationCase}
+                onCaseChange={setValidationCase}
+              />
+            )}
           </div>
 
           <div className="flex gap-2 mb-4">
