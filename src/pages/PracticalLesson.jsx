@@ -5,6 +5,32 @@ import CodeEditor from '../components/CodeEditor.jsx'
 import { hoverTooltip, EditorView } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 
+const DEFAULT_HTML_ANNOTATIONS = [
+  { tag: 'form', color: '#2563eb', label: 'form', description: '입력값을 서버로 전송하는 폼 영역.' },
+  { tag: 'table', color: '#2563eb', label: 'table', description: '표 전체를 감싸는 컨테이너.' },
+  { tag: 'tr', color: '#16a34a', label: 'tr', description: '표의 가로 행(row).' },
+  { tag: 'th', color: '#d97706', label: 'th', description: '표의 제목 셀(header).' },
+  { tag: 'td', color: '#dc2626', label: 'td', description: '표의 데이터 셀.' },
+  { tag: 'input', color: '#7c3aed', label: 'input', description: '사용자 입력을 받는 입력 필드.' },
+  { tag: 'button', color: '#7c3aed', label: 'button', description: '클릭 가능한 버튼 요소.' },
+  { tag: 'select', color: '#0891b2', label: 'select', description: '여러 항목 중 하나를 고르는 선택 박스.' },
+  { tag: 'option', color: '#0f766e', label: 'option', description: 'select 안의 개별 선택 항목.' },
+  { tag: 'textarea', color: '#9333ea', label: 'textarea', description: '여러 줄 텍스트 입력 영역.' },
+  { tag: 'label', color: '#ea580c', label: 'label', description: '입력 요소의 이름이나 설명.' },
+  { tag: 'a', color: '#0284c7', label: 'a', description: '다른 페이지나 위치로 이동하는 링크.' },
+  { tag: 'div', color: '#6b7280', label: 'div', description: '화면 구획을 나누는 블록 컨테이너.' },
+  { tag: 'span', color: '#6b7280', label: 'span', description: '짧은 인라인 구간을 감싸는 요소.' },
+  { tag: 'h1', color: '#b91c1c', label: 'h1', description: '가장 중요한 제목.' },
+  { tag: 'h2', color: '#b91c1c', label: 'h2', description: '섹션 제목.' },
+  { tag: 'h3', color: '#b91c1c', label: 'h3', description: '하위 섹션 제목.' },
+  { tag: 'p', color: '#475569', label: 'p', description: '문단 텍스트.' },
+]
+
+function getLessonAnnotations(lesson) {
+  if (lesson.annotations?.length) return lesson.annotations
+  return DEFAULT_HTML_ANNOTATIONS
+}
+
 // CodeMirror 에디터에서 태그명 호버 시 툴팁 표시
 function makeTagHoverTooltip(annotations) {
   const map = {}
@@ -285,8 +311,9 @@ ${code}
 }
 
 // JSP 코드를 시뮬레이션 HTML로 변환 (단일 패스 — 오프셋 임베드)
-function buildJspPreviewHtml(code) {
+function buildJspPreviewHtml(code, annotations = []) {
   const vars = {}
+  const annJson = JSON.stringify(annotations)
 
   // 스크립틀릿에서 변수 선언 추출 (위치 무관하게 먼저 수집)
   const scriptletRe = /<%(?!=|@)([\s\S]*?)%>/g
@@ -431,6 +458,9 @@ ${html}
 <div id="__info"></div>
 <script>
 (function(){
+  var anns = ${annJson};
+  var map = {};
+  anns.forEach(function(a){ map[a.tag.toUpperCase()] = a; });
   var bar = document.getElementById('__info');
   var cur = null;
   var editorCur = null;
@@ -472,7 +502,13 @@ ${html}
       el.style.outlineOffset = '2px';
       bar.style.display = 'block';
       bar.style.borderTopColor = '#fbbf24';
-      bar.innerHTML = '<span style="color:#fcd34d;font-weight:bold;">JSP 블록</span>';
+      var jspTypeLabel = el.dataset.jspType === 'expr' ? '표현식'
+        : el.dataset.jspType === 'directive' ? '디렉티브'
+        : el.dataset.jspType === 'blank' ? '빈칸'
+        : 'JSP 블록';
+      bar.innerHTML =
+        '<span style="color:#fcd34d;font-weight:bold;">' + jspTypeLabel + '</span>' +
+        '<span style="color:#d1d5db;margin-left:8px;">JSP 영역</span>';
       window.parent.postMessage({ type: 'previewJspHover', from: parseInt(el.dataset.jspFrom), to: parseInt(el.dataset.jspTo) }, '*');
       return;
     }
@@ -486,8 +522,11 @@ ${html}
         el.style.outlineOffset = '2px';
         bar.style.display = 'block';
         bar.style.borderTopColor = '#f59e0b';
-        bar.innerHTML = '<span style="color:#fcd34d;font-weight:bold;">&lt;' + el.tagName.toLowerCase() + '&gt;</span>';
         var tag = el.tagName.toLowerCase();
+        var ann = map[el.tagName] || map[tag];
+        bar.innerHTML =
+          '<span style="color:' + (ann ? ann.color : '#fcd34d') + ';font-weight:bold;">&lt;' + (ann ? ann.label : tag) + '&gt;</span>' +
+          '<span style="color:#d1d5db;margin-left:8px;">' + (ann ? ann.description : 'HTML 요소') + '</span>';
         var siblings = document.querySelectorAll(tag);
         var idx = Array.prototype.indexOf.call(siblings, el);
         var classes = Array.prototype.slice.call(el.classList);
@@ -619,23 +658,24 @@ export default function PracticalLesson() {
   const isLiveJsp  = lesson.type === 'live-jsp'
   const isCode = !isLiveHtml && !isLiveJsp
   const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
+  const lessonAnnotations = getLessonAnnotations(lesson)
 
-  // live-html 전용: 에디터 태그 호버 툴팁
+  // live-html / live-jsp: 에디터 태그 호버 툴팁
   const tagTooltipExt = useMemo(() => {
-    if (!isLiveHtml || !lesson.annotations?.length) return []
-    return [makeTagHoverTooltip(lesson.annotations)]
-  }, [lesson.id]) // eslint-disable-line react-hooks/exhaustive-deps
+    if ((!isLiveHtml && !isLiveJsp) || !lessonAnnotations.length) return []
+    return [makeTagHoverTooltip(lessonAnnotations)]
+  }, [lesson.id, isLiveHtml, isLiveJsp, lessonAnnotations]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // live-html / live-jsp: 코드 변경 시 300ms 디바운스 후 iframe 업데이트
   useEffect(() => {
     if (!isLiveHtml && !isLiveJsp) return
     clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
-      if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(currentCode, lesson.annotations ?? []))
-      else            setLiveHtml(buildJspPreviewHtml(currentCode))
+      if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(currentCode, lessonAnnotations))
+      else            setLiveHtml(buildJspPreviewHtml(currentCode, lessonAnnotations))
     }, 300)
     return () => clearTimeout(debounceRef.current)
-  }, [currentCode, lesson.id, isLiveHtml, isLiveJsp])
+  }, [currentCode, lesson.id, isLiveHtml, isLiveJsp, lessonAnnotations])
 
   // 탭 변경 시 즉시 미리보기 초기화
   const handleTabChange = (i) => {
@@ -646,10 +686,11 @@ export default function PracticalLesson() {
     setHighlightedHtmlTag(null)
     const nextLesson = topic.lessons[i]
     const nextCode = codes[nextLesson.id] ?? nextLesson.starterCode
+    const nextAnnotations = getLessonAnnotations(nextLesson)
     if (nextLesson.type === 'live-html') {
-      setLiveHtml(buildAnnotatedHtml(nextCode, nextLesson.annotations ?? []))
+      setLiveHtml(buildAnnotatedHtml(nextCode, nextAnnotations))
     } else if (nextLesson.type === 'live-jsp') {
-      setLiveHtml(buildJspPreviewHtml(nextCode))
+      setLiveHtml(buildJspPreviewHtml(nextCode, nextAnnotations))
     }
   }
 
@@ -660,8 +701,8 @@ export default function PracticalLesson() {
   const handleReset = () => {
     setCodes(prev => ({ ...prev, [lesson.id]: lesson.starterCode }))
     setShowSolution(false)
-    if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(lesson.starterCode, lesson.annotations ?? []))
-    else if (isLiveJsp) setLiveHtml(buildJspPreviewHtml(lesson.starterCode))
+    if (isLiveHtml) setLiveHtml(buildAnnotatedHtml(lesson.starterCode, lessonAnnotations))
+    else if (isLiveJsp) setLiveHtml(buildJspPreviewHtml(lesson.starterCode, lessonAnnotations))
   }
 
   return (
@@ -854,7 +895,7 @@ export default function PracticalLesson() {
                 language={lang}
                 height={splitPaneHeight}
                 minHeight={splitPaneHeight}
-                extraExtensions={editorToPreviewExt}
+                extraExtensions={[...tagTooltipExt, ...editorToPreviewExt]}
                 highlightTag={previewHoveredTag}
                 highlightRange={previewHoveredRange}
                 highlightJspType={highlightedJspType}
