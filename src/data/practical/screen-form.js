@@ -21,7 +21,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 - [조회] 클릭 시 sub2.jsp로 이동
 
 ( A ) ~ ( E ) 빈칸을 채우세요.`,
-      type: 'code',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.MemberDAO" %>

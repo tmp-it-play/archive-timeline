@@ -21,7 +21,7 @@ jumin 7번째 자리(index 6) → '3' 또는 '1' = 남자, '4' 또는 '2' = 여�
 substring(0,6) + "-" + substring(6)
 
 아래 ( A ) ~ ( D ) 를 채우세요.`,
-      type: 'html',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.StudentDAO, test.StudentDTO, java.util.List" %>
@@ -106,7 +106,7 @@ midscore, finalscore, attend, report, etc, avg(int), total(double), grade
 [total 출력 포맷] DecimalFormat("0.0")
 
 아래 ( A ) ~ ( D ) 를 채우세요.`,
-      type: 'html',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.StudentDAO, test.ScoreDTO, java.util.List, java.text.DecimalFormat" %>
@@ -202,7 +202,7 @@ midscore, finalscore, attend, report, etc, avg(int), total(double), grade
 ③ list가 비어있으면 안내 메시지 출력
 
 아래 ( A ) ~ ( D ) 를 채우세요.`,
-      type: 'html',
+      type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.StudentDAO, test.ScoreDTO, java.util.List" %>

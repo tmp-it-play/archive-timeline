@@ -14,7 +14,7 @@ export default {
 
 아래는 회원 정보를 출력하는 JSP 예시입니다.
 표현식을 사용하여 변수 값을 출력하는 부분을 완성해보세요.`,
-      type: 'html',
+      type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%
   String custname = "홍길동";
@@ -75,7 +75,7 @@ export default {
 - request.setCharacterEncoding("UTF-8"): 한글 깨짐 방지
 
 화면 구현 과제에서 loginAction.jsp처럼 폼 데이터를 받아 처리하는 패턴입니다.`,
-      type: 'html',
+      type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%
   request.setCharacterEncoding("UTF-8");
@@ -141,7 +141,7 @@ export default {
 - <jsp:include page="파일경로" />: 동적 include (실행 시 포함)
 
 과제 레포처럼 공통 레이아웃을 include하는 구조를 작성해보세요.`,
-      type: 'html',
+      type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
