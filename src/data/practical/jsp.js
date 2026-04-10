@@ -13,7 +13,7 @@ export default {
 - <%-- ... --%>: JSP 주석
 
 아래는 회원 정보를 출력하는 JSP 예시입니다.
-표현식을 사용하여 변수 값을 출력하는 부분을 완성해보세요.`,
+표현식을 사용해 변수 값을 화면에 출력하는 구조를 확인해보세요.`,
       type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%
@@ -31,11 +31,11 @@ export default {
     </tr>
     <tr>
       <th>이름</th>
-      <td><!-- custname 변수를 출력하세요 --></td>
+      <td><%= custname %></td>
     </tr>
     <tr>
       <th>등급</th>
-      <td><!-- grade 변수를 출력하세요 --></td>
+      <td><%= grade %></td>
     </tr>
   </table>
 </body>
@@ -74,15 +74,15 @@ export default {
 - request.getParameter("name"): 폼에서 name 속성으로 전송된 값을 가져옴
 - request.setCharacterEncoding("UTF-8"): 한글 깨짐 방지
 
-화면 구현 과제에서 loginAction.jsp처럼 폼 데이터를 받아 처리하는 패턴입니다.`,
+화면 구현 과제에서 loginAction.jsp처럼 폼 데이터를 받아 처리하는 패턴입니다.
+파라미터를 읽고 조건에 따라 다른 결과를 출력하는 흐름을 확인해보세요.`,
       type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%
   request.setCharacterEncoding("UTF-8");
 
-  // 폼에서 전송된 userId와 userPw를 받아오세요
-  String userId = request.getParameter("___");
-  String userPw = request.getParameter("___");
+  String userId = request.getParameter("userId");
+  String userPw = request.getParameter("userPw");
 %>
 <html>
 <body>
@@ -140,7 +140,7 @@ export default {
 - <%@ include file="파일경로" %>: 정적 include (컴파일 시 포함)
 - <jsp:include page="파일경로" />: 동적 include (실행 시 포함)
 
-과제 레포처럼 공통 레이아웃을 include하는 구조를 작성해보세요.`,
+과제 레포처럼 공통 레이아웃을 include하는 구조를 확인해보세요.`,
       type: 'live-jsp',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
@@ -149,18 +149,15 @@ export default {
   <title>회원 관리 시스템</title>
 </head>
 <body>
-  <!-- header.jsp를 include하세요 (정적 include) -->
-  <%@ include file="___" %>
+  <%@ include file="header.jsp" %>
 
-  <!-- nav.jsp를 include하세요 -->
-  <%@ include file="___" %>
+  <%@ include file="nav.jsp" %>
 
   <div id="content">
     <h2>회원 목록</h2>
     <p>여기에 회원 목록이 표시됩니다.</p>
   </div>
 
-  <!-- footer.jsp를 include하세요 -->
   <%@ include file="footer.jsp" %>
 </body>
 </html>`,

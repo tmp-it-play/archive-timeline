@@ -17,14 +17,14 @@ DAO에서 전체 회원 목록을 조회하여 HTML 테이블로 출력합니다
 2. selectMemberList()로 List<MemberDTO> 반환
 3. for-each 반복문으로 행 출력
 
-( A ) ~ ( D ) 빈칸을 채우세요.`,
+DAO 조회 결과를 테이블 행으로 출력하는 구조를 확인해보세요.`,
       type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.MemberDAO, test.MemberDTO, java.util.List" %>
 <%
   MemberDAO dao = new MemberDAO();
-  List<MemberDTO> list = dao.( A )();
+  List<MemberDTO> list = dao.selectMemberList();
 %>
 <%@ include file="header.jsp" %>
 <%@ include file="nav.jsp" %>
@@ -36,16 +36,16 @@ DAO에서 전체 회원 목록을 조회하여 HTML 테이블로 출력합니다
     <th>주소</th><th>가입일</th><th>등급</th><th>지역</th>
   </tr>
   <%
-    for(MemberDTO dto : ( B )) {
+    for(MemberDTO dto : list) {
   %>
   <tr>
     <td><%= dto.getCustno() %></td>
-    <td><%= dto.( C )() %></td>
+    <td><%= dto.getCustname() %></td>
     <td><%= dto.getPhone() %></td>
     <td><%= dto.getAddress() %></td>
     <td><%= dto.getJoindate() %></td>
     <td><%= dto.getGrade() %></td>
-    <td><%= dto.( D )() %></td>
+    <td><%= dto.getCity() %></td>
   </tr>
   <%
     }
@@ -95,7 +95,7 @@ DAO에서 전체 회원 목록을 조회하여 HTML 테이블로 출력합니다
 [TotalDTO 필드]
 custno(int), custname, grade, total(int)
 
-( A ) ~ ( C ) 빈칸을 채우세요.`,
+금액 형식화와 집계 결과 출력 구조를 확인해보세요.`,
       type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -103,7 +103,7 @@ custno(int), custname, grade, total(int)
 <%
   MemberDAO dao = new MemberDAO();
   List<TotalDTO> list = dao.selectSalesSummary();
-  DecimalFormat df = new DecimalFormat("( A )");
+  DecimalFormat df = new DecimalFormat("￦#,##0");
 %>
 <%@ include file="header.jsp" %>
 <%@ include file="nav.jsp" %>
@@ -120,7 +120,7 @@ custno(int), custname, grade, total(int)
     <td><%= dto.getCustno() %></td>
     <td><%= dto.getCustname() %></td>
     <td><%= dto.getGrade() %></td>
-    <td><%= df.format(dto.( B )()) %></td>
+    <td><%= df.format(dto.getTotal()) %></td>
   </tr>
   <%
     }
@@ -169,15 +169,15 @@ custno(int), custname, grade, total(int)
 - searchSubcode 파라미터가 있을 때만 DAO 조회
 - list가 비어있으면 "해당 과목코드에 대한 성적 정보가 없습니다." 출력
 
-( A ) ~ ( D ) 빈칸을 채우세요.`,
+검색 폼과 조건 분기, 결과 출력 구조를 확인해보세요.`,
       type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.StudentDAO, test.ScoreDTO, java.util.List" %>
 <%
-  String searchSubcode = request.getParameter("( A )");
+  String searchSubcode = request.getParameter("searchSubcode");
   List<ScoreDTO> list = null;
-  if(searchSubcode != null && !searchSubcode.( B )()) {
+  if(searchSubcode != null && !searchSubcode.isEmpty()) {
     StudentDAO dao = new StudentDAO();
     list = dao.selectBySubcode(searchSubcode);
   }
@@ -194,7 +194,7 @@ custno(int), custname, grade, total(int)
 
 <%
   if(list != null) {
-    if(list.( C )() == 0) {
+    if(list.size() == 0) {
 %>
   <p>해당 과목코드에 대한 성적 정보가 없습니다.</p>
 <%
@@ -215,7 +215,7 @@ custno(int), custname, grade, total(int)
       <td><%= dto.getProname() %></td>
       <td><%= dto.getMidscore() %></td>
       <td><%= dto.getFinalscore() %></td>
-      <td><%= dto.( D )() %></td>
+      <td><%= dto.getTotal() %></td>
       <td><%= dto.getGrade() %></td>
     </tr>
     <%

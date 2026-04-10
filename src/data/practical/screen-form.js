@@ -20,7 +20,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 - [등록] 클릭 시 fnCheck() 유효성 검사 후 submit
 - [조회] 클릭 시 sub2.jsp로 이동
 
-( A ) ~ ( E ) 빈칸을 채우세요.`,
+폼 구조와 각 입력 항목의 연결 방식을 확인해보세요.`,
       type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -37,7 +37,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 <%@ include file="nav.jsp" %>
 
 <h2>회원 등록</h2>
-<form action="( A )" method="( B )" name="frm">
+<form action="sub1Action.jsp" method="post" name="frm">
 <table border="1">
   <tr>
     <th>회원번호</th>
@@ -57,7 +57,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
   </tr>
   <tr>
     <th>가입일</th>
-    <td><input type="text" name="joindate" value="( C )" readonly="readonly"/></td>
+    <td><input type="text" name="joindate" value="<%= joindate %>" readonly="readonly"/></td>
   </tr>
   <tr>
     <th>등급</th>
@@ -69,8 +69,8 @@ address(주소), joindate(가입일), grade(등급), city(지역)
   </tr>
   <tr>
     <td colspan="2">
-      <input type="button" value="등록" onclick="( D )"/>
-      <input type="button" value="조회" onclick="location.href='( E )'"/>
+      <input type="button" value="등록" onclick="fnCheck()"/>
+      <input type="button" value="조회" onclick="location.href='sub2.jsp'"/>
     </td>
   </tr>
 </table>
@@ -143,25 +143,25 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 4. dao.insertMember(dto) 호출
 5. sub1.jsp로 리다이렉트
 
-( A ) ~ ( F ) 빈칸을 채우세요.`,
+파라미터 수신부터 DTO 저장, 리다이렉트까지의 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.MemberDAO, test.MemberDTO" %>
 <%
-  request.setCharacterEncoding("( A )");
+  request.setCharacterEncoding("UTF-8");
 
   int custno      = Integer.parseInt(request.getParameter("custno"));
-  String custname = request.getParameter("( B )");
+  String custname = request.getParameter("custname");
   String phone    = request.getParameter("phone");
   String address  = request.getParameter("address");
-  String joindate = request.getParameter("( C )");
+  String joindate = request.getParameter("joindate");
   String grade    = request.getParameter("grade");
   String city     = request.getParameter("city");
 
   MemberDTO dto = new MemberDTO();
   dto.setCustno(custno);
-  dto.setCustname(( D ));
+  dto.setCustname(custname);
   dto.setPhone(phone);
   dto.setAddress(address);
   dto.setJoindate(joindate);
@@ -169,9 +169,9 @@ address(주소), joindate(가입일), grade(등급), city(지역)
   dto.setCity(city);
 
   MemberDAO dao = new MemberDAO();
-  dao.insertMember(( E ));
+  dao.insertMember(dto);
 
-  response.sendRedirect("( F )");
+  response.sendRedirect("sub1.jsp");
 %>`,
       solution: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="test.MemberDAO, test.MemberDTO" %>
@@ -210,16 +210,16 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 
 검사 순서: custname → phone → address → grade → city
 
-( A ) ~ ( E ) 빈칸을 채우세요.`,
+각 필드 검사와 폼 제출 흐름을 확인해보세요.`,
       type: 'code',
       language: 'html',
       starterCode: `<script>
 function fnCheck() {
   var frm = document.frm;
 
-  if(frm.custname.value.( A )() === "") {
+  if(frm.custname.value.trim() === "") {
     alert("이름을 입력하세요.");
-    frm.custname.( B )();
+    frm.custname.focus();
     return;
   }
   if(frm.phone.value.trim() === "") {
@@ -229,7 +229,7 @@ function fnCheck() {
   }
   if(frm.address.value.trim() === "") {
     alert("주소를 입력하세요.");
-    frm.( C ).focus();
+    frm.address.focus();
     return;
   }
   if(frm.grade.value.trim() === "") {
@@ -243,8 +243,8 @@ function fnCheck() {
     return;
   }
 
-  alert("( D )");
-  frm.( E )();
+  alert("회원등록이 완료 되었습니다!");
+  frm.submit();
 }
 </script>`,
       solution: `<script>
