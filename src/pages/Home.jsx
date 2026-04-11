@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom'
 import { getWrongNoteCount } from '../hooks/useWrongNotes.js'
 import { getProgressSummary } from '../hooks/useProgress.js'
-
-const SUBJECTS = ['subject1', 'subject2', 'subject3']
+import { getWrittenSubjectIds, writtenSubjects } from '../data/written/index.js'
 
 export default function Home() {
-  const totalSeen = SUBJECTS.reduce((sum, id) => sum + getProgressSummary(id).total, 0)
-  const totalCorrect = SUBJECTS.reduce((sum, id) => sum + getProgressSummary(id).correct, 0)
+  const subjectIds = getWrittenSubjectIds()
+  const totalSeen = subjectIds.reduce((sum, id) => sum + getProgressSummary(id).total, 0)
+  const totalCorrect = subjectIds.reduce((sum, id) => sum + getProgressSummary(id).correct, 0)
   const wrongCount = getWrongNoteCount()
   const accuracy = totalSeen > 0 ? Math.round((totalCorrect / totalSeen) * 100) : null
+  const totalQuestions = writtenSubjects.reduce((sum, subject) => sum + subject.total, 0)
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-14">
@@ -56,7 +57,8 @@ export default function Home() {
           </div>
           <h2 className="text-lg font-bold text-gray-900 mb-2 group-hover:underline">필기 준비</h2>
           <p className="text-sm text-gray-500 leading-relaxed mb-4">
-            정보시스템 기반 기술, 프로그래밍 언어 활용, 데이터베이스 활용 — 3개 과목 75문제
+            과정평가형 기준 9개 능력단위 구성
+            {' '}— 총 {totalQuestions}문제
           </p>
           <ul className="text-xs text-gray-400 space-y-1">
             <li>· 4지선다 즉시 피드백</li>
