@@ -100,6 +100,201 @@ const VALIDATION_CASES = [
   },
 ]
 
+const DAO_CONNECTION_STEPS = [
+  {
+    key: 'driver',
+    title: '1. JDBC 드라이버 로드',
+    summary: 'Oracle JDBC 클래스를 메모리에 올려 DB 연결 준비를 합니다.',
+    code: 'Class.forName("oracle.jdbc.driver.OracleDriver")',
+    sql: null,
+    active: 'driver',
+  },
+  {
+    key: 'conn',
+    title: '2. Connection 생성',
+    summary: 'URL, 계정, 비밀번호로 실제 DB 연결 객체를 얻습니다.',
+    code: 'DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "system", "1234")',
+    sql: null,
+    active: 'conn',
+  },
+  {
+    key: 'prepare',
+    title: '3. SQL 준비',
+    summary: 'MAX(custno)+1 조회용 PreparedStatement를 만듭니다.',
+    code: 'pstmt = conn.prepareStatement(sql)',
+    sql: 'SELECT MAX(custno)+1 FROM member_tbl',
+    active: 'pstmt',
+  },
+  {
+    key: 'query',
+    title: '4. Query 실행',
+    summary: 'executeQuery()로 ResultSet을 받아 한 줄 결과를 읽습니다.',
+    code: 'rs = pstmt.executeQuery()',
+    sql: 'SELECT MAX(custno)+1 FROM member_tbl',
+    active: 'rs',
+  },
+  {
+    key: 'result',
+    title: '5. 결과 반환',
+    summary: 'rs.next() 후 첫 번째 컬럼 값을 읽어 다음 번호로 반환합니다.',
+    code: 'no = rs.getInt(1)',
+    sql: null,
+    active: 'result',
+  },
+]
+
+const DAO_INSERT_STEPS = [
+  {
+    key: 'conn',
+    title: '1. Connection 생성',
+    summary: 'getConn()으로 DB 연결을 준비합니다.',
+    code: 'conn = getConn()',
+    sql: null,
+    active: 'conn',
+  },
+  {
+    key: 'prepare',
+    title: '2. INSERT SQL 준비',
+    summary: 'PreparedStatement에 INSERT 문을 준비합니다.',
+    code: 'pstmt = conn.prepareStatement(sql)',
+    sql: 'INSERT INTO member_tbl VALUES (?,?,?,?,?,?,?)',
+    active: 'pstmt',
+  },
+  {
+    key: 'bind',
+    title: '3. DTO 값을 바인딩',
+    summary: 'DTO 필드를 순서대로 ? 자리에 채웁니다.',
+    code: 'pstmt.setString(2, dto.getCustname())',
+    sql: '1:custno, 2:custname, 3:phone, 4:address, 5:joindate, 6:grade, 7:city',
+    active: 'dto',
+  },
+  {
+    key: 'execute',
+    title: '4. executeUpdate 실행',
+    summary: 'INSERT/UPDATE/DELETE는 executeUpdate()로 처리 결과 건수를 받습니다.',
+    code: 'result = pstmt.executeUpdate()',
+    sql: 'rows affected = 1',
+    active: 'execute',
+  },
+  {
+    key: 'return',
+    title: '5. 결과 반환',
+    summary: '처리 건수 result를 호출한 쪽으로 돌려줍니다.',
+    code: 'return result',
+    sql: null,
+    active: 'return',
+  },
+]
+
+const DAO_SELECT_STEPS = [
+  {
+    key: 'conn',
+    title: '1. Connection 생성',
+    summary: '조회 전에 DB 연결을 준비합니다.',
+    code: 'conn = getConn()',
+    sql: null,
+    active: 'conn',
+  },
+  {
+    key: 'prepare',
+    title: '2. SELECT SQL 준비',
+    summary: '전체 회원 목록 조회 SQL을 PreparedStatement에 준비합니다.',
+    code: 'pstmt = conn.prepareStatement(sql)',
+    sql: 'SELECT custno,custname,phone,address,joindate,grade,city FROM member_tbl ORDER BY custno',
+    active: 'pstmt',
+  },
+  {
+    key: 'query',
+    title: '3. executeQuery 실행',
+    summary: 'SQL 실행 결과를 ResultSet으로 받습니다.',
+    code: 'rs = pstmt.executeQuery()',
+    sql: 'rows -> ResultSet',
+    active: 'rs',
+  },
+  {
+    key: 'dto',
+    title: '4. DTO 생성 및 매핑',
+    summary: '현재 행의 컬럼값을 MemberDTO에 채웁니다.',
+    code: 'dto.setCustname(rs.getString("custname"))',
+    sql: 'ResultSet row -> MemberDTO',
+    active: 'dto',
+  },
+  {
+    key: 'list',
+    title: '5. List에 추가',
+    summary: '완성된 DTO를 list.add(dto)로 누적합니다.',
+    code: 'list.add(dto)',
+    sql: 'List<MemberDTO>',
+    active: 'list',
+  },
+]
+
+const DAO_SUMMARY_STEPS = [
+  {
+    key: 'prepare',
+    title: '1. JOIN + GROUP BY SQL 준비',
+    summary: '회원과 주문 테이블을 조인하고 합계를 구하는 SQL을 준비합니다.',
+    code: 'pstmt = conn.prepareStatement(sql)',
+    sql: 'SELECT m.custno, m.custname, m.grade, SUM(s.price) AS total ...',
+    active: 'pstmt',
+  },
+  {
+    key: 'query',
+    title: '2. 집계 쿼리 실행',
+    summary: 'executeQuery()로 회원별 합계 결과를 ResultSet으로 받습니다.',
+    code: 'rs = pstmt.executeQuery()',
+    sql: 'ResultSet rows with total',
+    active: 'rs',
+  },
+  {
+    key: 'dto',
+    title: '3. TotalDTO 매핑',
+    summary: 'custno, custname, grade, total 값을 TotalDTO에 담습니다.',
+    code: 'dto.setTotal(rs.getInt("total"))',
+    sql: 'ResultSet row -> TotalDTO',
+    active: 'dto',
+  },
+  {
+    key: 'list',
+    title: '4. 결과 누적',
+    summary: '각 회원의 집계 결과를 List<TotalDTO>에 넣습니다.',
+    code: 'list.add(dto)',
+    sql: 'List<TotalDTO>',
+    active: 'list',
+  },
+]
+
+const DTO_MEMBER_STEPS = [
+  {
+    key: 'fields',
+    title: '1. 필드 선언',
+    summary: 'DTO는 테이블 컬럼에 대응되는 값을 멤버 변수로 보관합니다.',
+    code: 'private int custno;',
+    active: 'fields',
+  },
+  {
+    key: 'setter',
+    title: '2. setter로 값 저장',
+    summary: 'DAO나 컨트롤러가 setter를 호출해 DTO 안에 데이터를 채웁니다.',
+    code: 'dto.setCustname("홍길동")',
+    active: 'setter',
+  },
+  {
+    key: 'getter',
+    title: '3. getter로 값 꺼내기',
+    summary: 'JSP나 다른 계층이 getter로 DTO 값을 읽어 화면에 출력합니다.',
+    code: 'dto.getCustname()',
+    active: 'getter',
+  },
+  {
+    key: 'transfer',
+    title: '4. 계층 간 전달',
+    summary: 'DTO는 화면과 DAO 사이에서 데이터를 안전하게 전달하는 상자 역할을 합니다.',
+    code: 'dao.insertMember(dto)',
+    active: 'transfer',
+  },
+]
+
 function findSnippetRange(text, snippet) {
   if (!text || !snippet) return null
   const from = text.indexOf(snippet)
@@ -131,7 +326,260 @@ function getCodeHighlightRange(lessonId, code, actionFlowStep, validationCase) {
     return findSnippetRange(code, 'frm.submit();') ?? findSnippetRange(code, current.alert)
   }
 
+  if (lessonId === 'dao_01') {
+    return findSnippetRange(code, DAO_CONNECTION_STEPS[actionFlowStep]?.code)
+  }
+
+  if (lessonId === 'dao_02') {
+    return findSnippetRange(code, DAO_INSERT_STEPS[actionFlowStep]?.code)
+  }
+
+  if (lessonId === 'dao_03') {
+    return findSnippetRange(code, DAO_SELECT_STEPS[actionFlowStep]?.code)
+  }
+
+  if (lessonId === 'dao_04') {
+    return findSnippetRange(code, DAO_SUMMARY_STEPS[actionFlowStep]?.code)
+  }
+
+  if (lessonId === 'dto_01') {
+    return findSnippetRange(code, DTO_MEMBER_STEPS[actionFlowStep]?.code)
+      ?? findSnippetRange(code, 'private int custno;')
+  }
+
   return null
+}
+
+function DtoFlowPanel({ stepIndex, onStepChange }) {
+  const step = DTO_MEMBER_STEPS[stepIndex]
+  const [isPlaying, setIsPlaying] = useState(false)
+  const progress = ((stepIndex + 1) / DTO_MEMBER_STEPS.length) * 100
+
+  useEffect(() => {
+    if (!isPlaying) return
+    const timer = window.setTimeout(() => {
+      if (stepIndex >= DTO_MEMBER_STEPS.length - 1) {
+        setIsPlaying(false)
+        return
+      }
+      onStepChange(stepIndex + 1)
+    }, 2200)
+    return () => window.clearTimeout(timer)
+  }, [isPlaying, onStepChange, stepIndex])
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">DTO 역할 시각화</div>
+        <div className="text-sm text-gray-500 mt-1">DTO가 왜 필요한지, 값을 어떻게 담고 전달하는지 단계별로 봅니다.</div>
+      </div>
+      <div className="p-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-gray-500">{isPlaying ? '재생 중' : '대기 중'} · {stepIndex + 1}/{DTO_MEMBER_STEPS.length}</span>
+            <span className="text-xs font-mono text-gray-400">{Math.round(progress)}%</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-full bg-gray-900 transition-all duration-500" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => {
+              if (stepIndex >= DTO_MEMBER_STEPS.length - 1) onStepChange(0)
+              setIsPlaying(prev => !prev)
+            }}
+            className="px-3 py-1.5 rounded text-xs font-semibold border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          >
+            {isPlaying ? '일시정지' : '재생'}
+          </button>
+          <button
+            onClick={() => {
+              setIsPlaying(false)
+              onStepChange(0)
+            }}
+            className="px-3 py-1.5 rounded text-xs border border-gray-300 bg-white hover:border-gray-900 transition-colors"
+          >
+            처음부터
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {DTO_MEMBER_STEPS.map((item, index) => {
+            const active = index === stepIndex
+            return (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setIsPlaying(false)
+                  onStepChange(index)
+                }}
+                className="px-3 py-1.5 rounded-full text-xs border transition-colors"
+                style={{
+                  borderColor: active ? '#111827' : '#d1d5db',
+                  background: active ? '#111827' : '#fff',
+                  color: active ? '#fff' : '#4b5563',
+                }}
+              >
+                {index + 1}
+              </button>
+            )
+          })}
+        </div>
+        <div className="rounded-lg border border-gray-200 p-4 mb-4">
+          <div className="text-sm font-semibold text-gray-900 mb-1">{step.title}</div>
+          <div className="text-sm text-gray-600 mb-3">{step.summary}</div>
+          <CodeEditor
+            value={step.code}
+            language="java"
+            readOnly={true}
+            showToolbar={false}
+            minHeight="28px"
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-3">
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'setter' ? '#2563eb' : '#e5e7eb', background: step.active === 'setter' ? '#eff6ff' : '#f3f4f6', opacity: step.active === 'setter' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">입력 / DAO</div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">custname = "홍길동"</div>
+          </div>
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: ['fields', 'setter', 'getter'].includes(step.active) ? '#16a34a' : '#e5e7eb', background: ['fields', 'setter', 'getter'].includes(step.active) ? '#f0fdf4' : '#f3f4f6', opacity: ['fields', 'setter', 'getter'].includes(step.active) ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">MemberDTO</div>
+            <div className="space-y-1">
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">custno: 1001</div>
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">custname: 홍길동</div>
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">grade: A</div>
+            </div>
+          </div>
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'getter' || step.active === 'transfer' ? '#7c3aed' : '#e5e7eb', background: step.active === 'getter' || step.active === 'transfer' ? '#f5f3ff' : '#f3f4f6', opacity: step.active === 'getter' || step.active === 'transfer' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">JSP / DAO 사용처</div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">{step.active === 'transfer' ? 'dao.insertMember(dto)' : '<%= dto.getCustname() %>'}</div>
+          </div>
+        </div>
+        <div className="rounded-lg border border-dashed border-gray-300 p-4">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">핵심 의미</div>
+          <div className="text-sm text-gray-700">
+            DTO는 SQL도 화면도 직접 처리하지 않고, 데이터를 담아 계층 사이에 전달하는 전용 객체입니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DaoFlowPanel({ title, steps, stepIndex, onStepChange }) {
+  const step = steps[stepIndex]
+  const [isPlaying, setIsPlaying] = useState(false)
+  const progress = ((stepIndex + 1) / steps.length) * 100
+
+  useEffect(() => {
+    if (!isPlaying) return
+    const timer = window.setTimeout(() => {
+      if (stepIndex >= steps.length - 1) {
+        setIsPlaying(false)
+        return
+      }
+      onStepChange(stepIndex + 1)
+    }, 2200)
+    return () => window.clearTimeout(timer)
+  }, [isPlaying, onStepChange, stepIndex, steps.length])
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{title}</div>
+        <div className="text-sm text-gray-500 mt-1">DB 연결, SQL 준비, 실행, 결과 반환 흐름을 단계별로 봅니다.</div>
+      </div>
+      <div className="p-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-gray-500">{isPlaying ? '재생 중' : '대기 중'} · {stepIndex + 1}/{steps.length}</span>
+            <span className="text-xs font-mono text-gray-400">{Math.round(progress)}%</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-full bg-gray-900 transition-all duration-500" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => {
+              if (stepIndex >= steps.length - 1) onStepChange(0)
+              setIsPlaying(prev => !prev)
+            }}
+            className="px-3 py-1.5 rounded text-xs font-semibold border border-gray-900 bg-gray-900 text-white hover:bg-white hover:text-gray-900 transition-colors shadow-sm"
+          >
+            {isPlaying ? '일시정지' : '재생'}
+          </button>
+          <button
+            onClick={() => {
+              setIsPlaying(false)
+              onStepChange(0)
+            }}
+            className="px-3 py-1.5 rounded text-xs border border-gray-300 bg-white hover:border-gray-900 transition-colors"
+          >
+            처음부터
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {steps.map((item, index) => {
+            const active = index === stepIndex
+            return (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setIsPlaying(false)
+                  onStepChange(index)
+                }}
+                className="px-3 py-1.5 rounded-full text-xs border transition-colors"
+                style={{
+                  borderColor: active ? '#111827' : '#d1d5db',
+                  background: active ? '#111827' : '#fff',
+                  color: active ? '#fff' : '#4b5563',
+                }}
+              >
+                {index + 1}
+              </button>
+            )
+          })}
+        </div>
+        <div className="rounded-lg border border-gray-200 p-4 mb-4">
+          <div className="text-sm font-semibold text-gray-900 mb-1">{step.title}</div>
+          <div className="text-sm text-gray-600 mb-3">{step.summary}</div>
+          <CodeEditor
+            value={step.code}
+            language="java"
+            readOnly={true}
+            showToolbar={false}
+            minHeight="28px"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'driver' ? '#2563eb' : '#e5e7eb', background: step.active === 'driver' ? '#eff6ff' : '#f3f4f6', opacity: step.active === 'driver' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">Driver</div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">OracleDriver</div>
+          </div>
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'conn' ? '#16a34a' : '#e5e7eb', background: step.active === 'conn' ? '#f0fdf4' : '#f3f4f6', opacity: step.active === 'conn' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">Connection</div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">jdbc:oracle:thin:@127.0.0.1:1521:xe</div>
+          </div>
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'pstmt' ? '#d97706' : '#e5e7eb', background: step.active === 'pstmt' ? '#fff7ed' : '#f3f4f6', opacity: step.active === 'pstmt' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">PreparedStatement</div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">{step.sql ?? 'SQL 준비 전'}</div>
+          </div>
+          <div className="rounded-lg border p-3 transition-all" style={{ borderColor: step.active === 'rs' || step.active === 'result' || step.active === 'execute' || step.active === 'return' ? '#7c3aed' : '#e5e7eb', background: step.active === 'rs' || step.active === 'result' || step.active === 'execute' || step.active === 'return' ? '#f5f3ff' : '#f3f4f6', opacity: step.active === 'rs' || step.active === 'result' || step.active === 'execute' || step.active === 'return' ? 1 : 0.55 }}>
+            <div className="text-xs text-gray-500 mb-2">
+              {steps === DAO_CONNECTION_STEPS ? 'ResultSet / return' : steps === DAO_INSERT_STEPS ? 'executeUpdate / return' : 'ResultSet / List'}
+            </div>
+            <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">
+              {step.active === 'result' ? 'no = rs.getInt(1)'
+                : step.active === 'execute' ? 'result = 1'
+                : step.active === 'return' ? 'return result'
+                : step.active === 'list' ? 'list.add(dto)'
+                : '실행 대기'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function ActionFlowPanel({ stepIndex, onStepChange }) {
@@ -232,28 +680,28 @@ function ActionFlowPanel({ stepIndex, onStepChange }) {
             <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'encoding' || activeStage === 'params' ? '#2563eb' : '#e5e7eb', background: activeStage === 'encoding' || activeStage === 'params' ? '#eff6ff' : '#f3f4f6', opacity: activeStage === 'encoding' || activeStage === 'params' ? 1 : 0.55 }}>
               <div className="text-xs text-gray-500 mb-2">request</div>
               <div className="space-y-1">
-                <div className="text-sm font-mono text-gray-800">custno=1001</div>
-                <div className="text-sm font-mono text-gray-800">custname=홍길동</div>
-                <div className="text-sm font-mono text-gray-800">grade=A</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">custno=1001</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">custname=홍길동</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">grade=A</div>
               </div>
             </div>
             <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'dto' ? '#16a34a' : '#e5e7eb', background: activeStage === 'dto' ? '#f0fdf4' : '#f3f4f6', opacity: activeStage === 'dto' ? 1 : 0.55 }}>
               <div className="text-xs text-gray-500 mb-2">MemberDTO</div>
               <div className="space-y-1">
-                <div className="text-sm font-mono text-gray-800">dto.custno = 1001</div>
-                <div className="text-sm font-mono text-gray-800">dto.custname = 홍길동</div>
-                <div className="text-sm font-mono text-gray-800">dto.city = 01</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">dto.custno = 1001</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">dto.custname = 홍길동</div>
+                <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">dto.city = 01</div>
               </div>
             </div>
             <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'dao' ? '#d97706' : '#e5e7eb', background: activeStage === 'dao' ? '#fff7ed' : '#f3f4f6', opacity: activeStage === 'dao' ? 1 : 0.55 }}>
               <div className="text-xs text-gray-500 mb-2">DAO</div>
-              <div className="text-sm font-mono text-gray-800">insertMember(dto)</div>
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">insertMember(dto)</div>
               <div className="text-xs text-gray-500 mt-2">DB INSERT 실행</div>
             </div>
             <div className="rounded-lg border p-3 transition-all" style={{ borderColor: activeStage === 'redirect' ? '#7c3aed' : '#e5e7eb', background: activeStage === 'redirect' ? '#f5f3ff' : '#f3f4f6', opacity: activeStage === 'redirect' ? 1 : 0.55 }}>
               <div className="text-xs text-gray-500 mb-2">response</div>
-              <div className="text-sm font-mono text-gray-800">302 Redirect</div>
-              <div className="text-sm font-mono text-gray-800">/sub1.jsp</div>
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">302 Redirect</div>
+              <div className="text-sm font-mono text-gray-800 break-all whitespace-pre-wrap">/sub1.jsp</div>
             </div>
           </div>
           <div className="space-y-2">
@@ -1070,6 +1518,8 @@ export default function PracticalLesson() {
   const [descOpen, setDescOpen] = useState(true)
   const [actionFlowStep, setActionFlowStep] = useState(0)
   const [validationCase, setValidationCase] = useState(0)
+  const [daoFlowStep, setDaoFlowStep] = useState(0)
+  const [dtoFlowStep, setDtoFlowStep] = useState(0)
 
   // live-html 전용: 디바운스된 미리보기 HTML
   const [liveHtml, setLiveHtml] = useState('')
@@ -1129,13 +1579,23 @@ export default function PracticalLesson() {
   const isCode = !isLiveHtml && !isLiveJsp
   const showActionFlow = lesson.id === 'form_02' || lesson.id === 'hrd01_02'
   const showValidationFlow = lesson.id === 'form_03'
+  const showDaoConnectionFlow = lesson.id === 'dao_01'
+  const showDaoInsertFlow = lesson.id === 'dao_02'
+  const showDaoSelectFlow = lesson.id === 'dao_03'
+  const showDaoSummaryFlow = lesson.id === 'dao_04'
+  const showDtoFlow = lesson.id === 'dto_01'
   const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
   const lessonAnnotations = getLessonAnnotations(lesson)
-  const codeHighlightRange = getCodeHighlightRange(lesson.id, currentCode, actionFlowStep, validationCase)
+  const flowStepForHighlight = showDtoFlow
+    ? dtoFlowStep
+    : (showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow ? daoFlowStep : actionFlowStep)
+  const codeHighlightRange = getCodeHighlightRange(lesson.id, currentCode, flowStepForHighlight, validationCase)
 
   useEffect(() => {
     setActionFlowStep(0)
     setValidationCase(0)
+    setDaoFlowStep(0)
+    setDtoFlowStep(0)
   }, [lesson.id])
 
   // live-html / live-jsp: 에디터 태그 호버 툴팁
@@ -1472,7 +1932,7 @@ export default function PracticalLesson() {
       {/* ── code / fill-in-blank 타입 ── */}
       {isCode && (
         <>
-          <div className={`mb-3 ${showActionFlow || showValidationFlow ? 'grid grid-cols-2 gap-3' : ''}`}>
+          <div className={`mb-3 ${showActionFlow || showValidationFlow || showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow || showDtoFlow ? 'grid grid-cols-2 gap-3' : ''}`}>
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
@@ -1506,6 +1966,49 @@ export default function PracticalLesson() {
               <ValidationFlowPanel
                 caseIndex={validationCase}
                 onCaseChange={setValidationCase}
+              />
+            )}
+
+            {showDaoConnectionFlow && (
+              <DaoFlowPanel
+                title="DB 연결 및 조회 흐름"
+                steps={DAO_CONNECTION_STEPS}
+                stepIndex={daoFlowStep}
+                onStepChange={setDaoFlowStep}
+              />
+            )}
+
+            {showDaoInsertFlow && (
+              <DaoFlowPanel
+                title="INSERT 실행 흐름"
+                steps={DAO_INSERT_STEPS}
+                stepIndex={daoFlowStep}
+                onStepChange={setDaoFlowStep}
+              />
+            )}
+
+            {showDaoSelectFlow && (
+              <DaoFlowPanel
+                title="SELECT → DTO → List 흐름"
+                steps={DAO_SELECT_STEPS}
+                stepIndex={daoFlowStep}
+                onStepChange={setDaoFlowStep}
+              />
+            )}
+
+            {showDaoSummaryFlow && (
+              <DaoFlowPanel
+                title="JOIN 집계 결과 흐름"
+                steps={DAO_SUMMARY_STEPS}
+                stepIndex={daoFlowStep}
+                onStepChange={setDaoFlowStep}
+              />
+            )}
+
+            {showDtoFlow && (
+              <DtoFlowPanel
+                stepIndex={dtoFlowStep}
+                onStepChange={setDtoFlowStep}
               />
             )}
           </div>
