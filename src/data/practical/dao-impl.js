@@ -19,7 +19,7 @@ Oracle DB에 연결하는 getConn() 메서드와
 SELECT MAX(custno)+1 FROM member_tbl
 → rs.next() 후 rs.getInt(1)로 값 읽기
 
-( A ) ~ ( E ) 빈칸을 채우세요.`,
+드라이버 로드, DB 연결, SQL 실행, 결과 반환 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `package test;
@@ -33,10 +33,10 @@ public class MemberDAO {
 
   public Connection getConn() {
     try {
-      Class.forName("oracle.jdbc.driver.( A )");
+      Class.forName("oracle.jdbc.driver.OracleDriver");
       conn = DriverManager.getConnection(
         "jdbc:oracle:thin:@127.0.0.1:1521:xe",
-        "( B )", "1234"
+        "system", "1234"
       );
     } catch(Exception e) { e.printStackTrace(); }
     return conn;
@@ -44,13 +44,13 @@ public class MemberDAO {
 
   public int getNextNo() {
     int no = 1;
-    String sql = "SELECT MAX(custno)+1 FROM ( C )";
+    String sql = "SELECT MAX(custno)+1 FROM member_tbl";
     try {
       conn = getConn();
-      pstmt = conn.prepareStatement(( D ));
+      pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();
       if(rs.next()) {
-        no = rs.getInt(( E ));
+        no = rs.getInt(1);
       }
       conn.close();
     } catch(Exception e) { e.printStackTrace(); }
@@ -108,7 +108,7 @@ INSERT INTO member_tbl VALUES (?,?,?,?,?,?,?)
 - pstmt.setString(인덱스, 값) — String 타입
 - pstmt.executeUpdate() — INSERT/UPDATE/DELETE 실행
 
-( A ) ~ ( E ) 빈칸을 채우세요.`,
+DTO 값이 SQL 파라미터로 어떻게 바인딩되는지 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public int insertMember(MemberDTO dto) {
@@ -118,16 +118,16 @@ INSERT INTO member_tbl VALUES (?,?,?,?,?,?,?)
     conn = getConn();
     pstmt = conn.prepareStatement(sql);
     pstmt.setInt   (1, dto.getCustno());
-    pstmt.setString(2, dto.( A )());
+    pstmt.setString(2, dto.getCustname());
     pstmt.setString(3, dto.getPhone());
-    pstmt.setString(4, dto.( B )());
+    pstmt.setString(4, dto.getAddress());
     pstmt.setString(5, dto.getJoindate());
     pstmt.setString(6, dto.getGrade());
-    pstmt.setString(7, dto.( C )());
-    result = pstmt.( D )();
+    pstmt.setString(7, dto.getCity());
+    result = pstmt.executeUpdate();
     conn.close();
   } catch(Exception e) { e.printStackTrace(); }
-  return ( E );
+  return result;
 }`,
       solution: `public int insertMember(MemberDTO dto) {
   int result = 0;
@@ -162,7 +162,7 @@ FROM member_tbl ORDER BY custno
 - executeQuery() → ResultSet 반환
 - while(rs.next()) 반복으로 DTO 생성 후 list.add()
 
-( A ) ~ ( F ) 빈칸을 채우세요.`,
+ResultSet에서 DTO 리스트로 바뀌는 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public List<MemberDTO> selectMemberList() {
@@ -172,17 +172,17 @@ FROM member_tbl ORDER BY custno
   try {
     conn = getConn();
     pstmt = conn.prepareStatement(sql);
-    rs = pstmt.( A )();
-    while(rs.( B )()) {
+    rs = pstmt.executeQuery();
+    while(rs.next()) {
       MemberDTO dto = new MemberDTO();
-      dto.setCustno  (rs.getInt("( C )"));
+      dto.setCustno  (rs.getInt("custno"));
       dto.setCustname(rs.getString("custname"));
       dto.setPhone   (rs.getString("phone"));
-      dto.setAddress (rs.( D )("address"));
+      dto.setAddress (rs.getString("address"));
       dto.setJoindate(rs.getString("joindate"));
-      dto.setGrade   (rs.getString("( E )"));
+      dto.setGrade   (rs.getString("grade"));
       dto.setCity    (rs.getString("city"));
-      list.( F )(dto);
+      list.add(dto);
     }
     conn.close();
   } catch(Exception e) { e.printStackTrace(); }
@@ -225,16 +225,16 @@ WHERE m.custno = s.custno
 GROUP BY m.custno, m.custname, m.grade
 ORDER BY total DESC
 
-( A ) ~ ( E ) 빈칸을 채우세요.`,
+JOIN 결과가 TotalDTO 리스트로 변환되는 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public List<TotalDTO> selectSalesSummary() {
   List<TotalDTO> list = new ArrayList<>();
   String sql = "SELECT m.custno, m.custname, m.grade, SUM(s.price) AS total "
              + "FROM member_tbl m, sales_tbl s "
-             + "WHERE ( A ) "
+             + "WHERE m.custno = s.custno "
              + "GROUP BY m.custno, m.custname, m.grade "
-             + "ORDER BY ( B ) DESC";
+             + "ORDER BY total DESC";
   try {
     conn = getConn();
     pstmt = conn.prepareStatement(sql);
@@ -242,10 +242,10 @@ ORDER BY total DESC
     while(rs.next()) {
       TotalDTO dto = new TotalDTO();
       dto.setCustno  (rs.getInt("custno"));
-      dto.setCustname(rs.getString("( C )"));
+      dto.setCustname(rs.getString("custname"));
       dto.setGrade   (rs.getString("grade"));
-      dto.setTotal   (rs.getInt("( D )"));
-      list.( E )(dto);
+      dto.setTotal   (rs.getInt("total"));
+      list.add(dto);
     }
     conn.close();
   } catch(Exception e) { e.printStackTrace(); }
