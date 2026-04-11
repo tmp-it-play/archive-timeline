@@ -1,7 +1,7 @@
 export default {
   id: 'screen-form',
   title: '화면 구현 — 등록 폼',
-  description: '신규 데이터를 입력받는 등록 폼 화면(sub1.jsp)과 처리 페이지(sub1Action.jsp)를 구현합니다. 폼 전송, 파라미터 수신, DTO 구성, DB 저장, 리다이렉트 흐름을 익힙니다.',
+  description: '등록 폼 화면과 처리 페이지를 함께 보면서 입력, 검증, 전송, 저장, 리다이렉트가 하나의 흐름으로 이어지는 구조를 정리합니다.',
   lessons: [
     {
       id: 'form_01',
@@ -20,7 +20,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 - [등록] 클릭 시 fnCheck() 유효성 검사 후 submit
 - [조회] 클릭 시 sub2.jsp로 이동
 
-폼 구조와 각 입력 항목의 연결 방식을 확인해보세요.`,
+폼 태그, 입력 항목, 자동값 설정, 버튼 동작이 어떻게 연결되는지 화면 기준으로 확인해보세요.`,
       type: 'live-jsp',
       language: 'html',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -143,7 +143,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 4. dao.insertMember(dto) 호출
 5. sub1.jsp로 리다이렉트
 
-파라미터 수신부터 DTO 저장, 리다이렉트까지의 흐름을 확인해보세요.`,
+폼 데이터가 request에서 DTO를 거쳐 DAO로 넘어가고, 처리 후 다시 화면으로 돌아오는 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -210,7 +210,7 @@ address(주소), joindate(가입일), grade(등급), city(지역)
 
 검사 순서: custname → phone → address → grade → city
 
-각 필드 검사와 폼 제출 흐름을 확인해보세요.`,
+입력 누락을 어떤 순서로 검사하고, 실패 시 어떤 필드에서 멈추는지 흐름 기준으로 확인해보세요.`,
       type: 'code',
       language: 'html',
       starterCode: `<script>

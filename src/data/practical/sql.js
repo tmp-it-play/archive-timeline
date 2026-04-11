@@ -1,7 +1,7 @@
 export default {
   id: 'sql',
   title: 'SQL 핵심',
-  description: '정보처리산업기사 실기의 핵심 영역인 SQL을 학습합니다. SELECT부터 JOIN, 집계함수까지 직접 작성하며 익혀보세요.',
+  description: 'SELECT, 정렬, JOIN, 집계, DML이 결과 테이블을 어떻게 바꾸는지 예제 중심으로 정리합니다.',
   lessons: [
     {
       id: 'sql_01',
@@ -17,7 +17,7 @@ SELECT 컬럼명 FROM 테이블명 WHERE 조건;
 - grade (학년)
 - dept (학과)
 
-아래 SQL이 어떤 행을 남기고 어떤 컬럼만 보여주는지 결과 테이블과 함께 확인해보세요.`,
+어떤 행이 남고 어떤 컬럼만 최종 결과에 나타나는지 결과 테이블과 함께 확인해보세요.`,
       type: 'code',
       language: 'sql',
       starterCode: `-- 컴퓨터공학과(CS) 학생의 학번과 이름을 조회하시오
@@ -37,8 +37,8 @@ WHERE dept = 'CS';`
 
 LIMIT n: 결과에서 n개만 가져옴
 
-실습 요구사항:
-TBL_SCORE 테이블에서 정렬 후 상위 3개 행만 남는 과정을 확인해보세요.`,
+실습 포인트:
+정렬 후 상위 3개 행만 남는 과정이 결과 테이블에서 어떻게 보이는지 확인해보세요.`,
       type: 'code',
       language: 'sql',
       starterCode: `-- 점수가 높은 상위 3명의 이름과 점수를 조회하시오
@@ -66,8 +66,8 @@ INNER JOIN 테이블B ON 테이블A.키 = 테이블B.키
 - TBL_MEMBER: custno, custname, phone, grade
 - TBL_ORDER: ordno, custno, prodname, amount, orderdate
 
-요구사항:
-조인 전후에 어떤 컬럼이 합쳐지고 어떤 행이 매칭되는지 확인해보세요.`,
+실습 포인트:
+조인 전후에 어떤 컬럼이 합쳐지고 어떤 행이 서로 매칭되는지 확인해보세요.`,
       type: 'code',
       language: 'sql',
       starterCode: `-- 회원 이름과 주문 상품명, 수량을 조회하시오
@@ -90,8 +90,8 @@ HAVING: 그룹화된 결과에 조건 적용
 - AVG(컬럼): 평균
 - MAX/MIN(컬럼): 최댓값/최솟값
 
-요구사항:
-GROUP BY로 묶인 뒤 SUM과 HAVING이 어떻게 적용되는지 결과 변화와 함께 확인해보세요.`,
+실습 포인트:
+GROUP BY, SUM, HAVING이 순서대로 적용되면서 결과가 어떻게 줄어드는지 확인해보세요.`,
       type: 'code',
       language: 'sql',
       starterCode: `-- 고객번호별 총 주문 금액 (10000 이상인 고객만)
@@ -118,8 +118,8 @@ INSERT INTO 테이블 (컬럼1, 컬럼2) VALUES (값1, 값2);
 UPDATE 구조:
 UPDATE 테이블 SET 컬럼1=값1 WHERE 조건;
 
-요구사항:
-INSERT로 행이 추가되고, UPDATE로 같은 행의 값이 바뀌는 전후 상태를 확인해보세요.`,
+실습 포인트:
+INSERT와 UPDATE가 테이블 상태를 전후 비교에서 어떻게 바꾸는지 확인해보세요.`,
       type: 'code',
       language: 'sql',
       starterCode: `-- ① 새 회원 추가

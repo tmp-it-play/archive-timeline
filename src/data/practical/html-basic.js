@@ -1,7 +1,7 @@
 export default {
   id: 'html-basic',
   title: 'HTML 핵심 태그',
-  description: 'table, form, input 등 화면 구현에 필수적인 HTML 태그를 직접 입력하며 실시간으로 결과를 확인합니다. 각 태그가 화면에서 어떤 역할을 하는지 색상으로 구분해 보여줍니다.',
+  description: 'table, form, input 같은 화면 구현 핵심 태그를 예제로 정리합니다. 태그 구조와 화면에서의 역할을 미리보기와 함께 바로 확인할 수 있습니다.',
   lessons: [
     {
       id: 'html_01',
