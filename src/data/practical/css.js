@@ -1,7 +1,7 @@
 export default {
   id: 'css',
   title: 'CSS 스타일링',
-  description: '화면 구현에서 사용하는 CSS 핵심 속성을 직접 입력하며 실시간으로 결과를 확인합니다. 빈칸(___) 을 채워가며 각 속성이 화면에 미치는 영향을 눈으로 확인하세요.',
+  description: '화면 구현에서 자주 쓰는 CSS 선택자와 스타일 속성을 예제로 정리합니다. 색상, 여백, 버튼 상태가 화면에 어떻게 반영되는지 실시간으로 확인합니다.',
   lessons: [
     {
       id: 'css_01',
@@ -20,7 +20,7 @@ export default {
 • font-weight         — 굵기 (bold / normal)
 • text-align          — 정렬 (left / center / right)
 
-___ 부분을 채워가며 테이블 스타일 변화를 확인해보세요.`,
+어떤 선택자가 어떤 요소에 적용되는지, 속성값이 바뀌면 표 스타일이 어떻게 달라지는지 확인해보세요.`,
       annotations: [
         { tag: 'table', color: '#2563eb', label: 'table',   description: 'CSS table { ... } 로 스타일 적용.' },
         { tag: 'th',    color: '#d97706', label: 'th',      description: 'CSS table th { ... } 로 헤더 스타일.' },
@@ -130,7 +130,7 @@ ___ 부분을 채워가며 테이블 스타일 변화를 확인해보세요.`,
 
 단위: px(픽셀), %(부모 기준 비율), em(부모 폰트 크기 기준)
 
-___ 를 수치로 채우면서 각 여백이 어떻게 변하는지 확인하세요.`,
+padding, margin, border 값이 바뀔 때 요소 간격이 어떻게 달라지는지 확인해보세요.`,
       annotations: [
         { tag: 'nav', color: '#7c3aed', label: 'nav',       description: 'CSS nav { ... } 로 배경·패딩 적용.' },
         { tag: 'a',   color: '#db2777', label: 'a',         description: 'CSS nav a { ... } 로 링크 스타일.' },
@@ -203,7 +203,7 @@ ___ 를 수치로 채우면서 각 여백이 어떻게 변하는지 확인하세
 • border-radius: 4px  — 모서리 둥글게
 • :hover 선택자       — 마우스 올렸을 때 스타일
 
-___ 를 채워서 두 버튼을 완성하세요.`,
+버튼의 기본 상태와 hover 상태가 어떤 속성 조합으로 만들어지는지 확인해보세요.`,
       annotations: [
         { tag: 'button', color: '#2563eb', label: 'button', description: 'CSS .btn { ... } 클래스로 스타일 적용.' },
       ],

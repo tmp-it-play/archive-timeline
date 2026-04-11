@@ -1,7 +1,7 @@
 export default {
   id: 'dao-impl',
   title: 'DAO 구현',
-  description: 'DB 연결, INSERT, SELECT, JOIN+GROUP BY 쿼리를 처리하는 DAO 클래스를 구현합니다. Oracle JDBC의 Connection → PreparedStatement → executeQuery/executeUpdate → ResultSet 흐름을 익힙니다.',
+  description: 'DAO가 DB 연결을 만들고 SQL을 준비한 뒤 결과를 DTO나 리스트로 바꾸는 과정을 단계별로 정리합니다. JDBC 객체 흐름을 중심으로 봅니다.',
   lessons: [
     {
       id: 'dao_01',
@@ -19,7 +19,7 @@ Oracle DB에 연결하는 getConn() 메서드와
 SELECT MAX(custno)+1 FROM member_tbl
 → rs.next() 후 rs.getInt(1)로 값 읽기
 
-드라이버 로드, DB 연결, SQL 실행, 결과 반환 흐름을 확인해보세요.`,
+드라이버 로드부터 DB 연결, SQL 실행, 결과 반환까지의 JDBC 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `package test;
@@ -108,7 +108,7 @@ INSERT INTO member_tbl VALUES (?,?,?,?,?,?,?)
 - pstmt.setString(인덱스, 값) — String 타입
 - pstmt.executeUpdate() — INSERT/UPDATE/DELETE 실행
 
-DTO 값이 SQL 파라미터로 어떻게 바인딩되는지 확인해보세요.`,
+DTO 필드가 SQL 파라미터로 어떻게 바인딩되고 결과 건수가 어떻게 반환되는지 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public int insertMember(MemberDTO dto) {
@@ -162,7 +162,7 @@ FROM member_tbl ORDER BY custno
 - executeQuery() → ResultSet 반환
 - while(rs.next()) 반복으로 DTO 생성 후 list.add()
 
-ResultSet에서 DTO 리스트로 바뀌는 흐름을 확인해보세요.`,
+ResultSet 한 행이 DTO 하나로 바뀌고, 그 DTO가 리스트에 쌓이는 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public List<MemberDTO> selectMemberList() {
@@ -225,7 +225,7 @@ WHERE m.custno = s.custno
 GROUP BY m.custno, m.custname, m.grade
 ORDER BY total DESC
 
-JOIN 결과가 TotalDTO 리스트로 변환되는 흐름을 확인해보세요.`,
+JOIN과 GROUP BY 결과가 TotalDTO 리스트로 정리되는 흐름을 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `public List<TotalDTO> selectSalesSummary() {

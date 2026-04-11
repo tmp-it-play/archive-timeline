@@ -1,7 +1,7 @@
 export default {
   id: 'dto-class',
   title: 'DTO 클래스 설계',
-  description: 'DB 테이블 구조에 맞는 DTO(Data Transfer Object) 클래스를 작성합니다. 멤버 변수 선언, getter/setter, 데이터 가공(주민번호 성별 판별, 성적 등급 계산)을 익힙니다.',
+  description: 'DTO가 어떤 필드를 가지고, getter/setter를 통해 데이터를 어떻게 전달받고 돌려주는지 구조 중심으로 정리합니다.',
   lessons: [
     {
       id: 'dto_01',
@@ -13,7 +13,7 @@ member_tbl 컬럼 구조에 맞는 DTO 클래스를 완성합니다.
 custno(NUMBER) → int
 custname, phone, address, joindate, grade, city → String
 
-필드 선언과 getter/setter 구조가 어떻게 DTO를 구성하는지 확인해보세요.`,
+DTO가 필드와 getter/setter 조합으로 어떻게 구성되는지 구조 기준으로 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `package test;
@@ -94,7 +94,7 @@ DAO에서 주민번호(jumin) 7번째 자리로 성별을 판별하여 설정합
 '2' 또는 '4' → "여자"
 
 String의 substring(6, 7)로 7번째 자리를 꺼내고,
-그 값을 gender 필드에 어떤 기준으로 매핑하는지 흐름을 확인해보세요.`,
+주민번호에서 꺼낸 값을 gender 필드에 어떤 기준으로 저장하는지 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `// DAO selectList() 메서드 안에서 성별 처리
@@ -159,7 +159,7 @@ total = 중간×0.3 + 기말×0.3 + 출결×0.2 + 레포트×0.1 + 기타×0.1
 95이상=A+, 90이상=A, 85이상=B+, 80이상=B
 75이상=C+, 70이상=C, 65이상=D+, 60이상=D, 미만=F
 
-평균(avg), 가중치 총점(total), 등급(grade)이 어떤 기준으로 계산되는지 확인해보세요.`,
+avg, total, grade가 어떤 수식과 기준으로 계산되어 DTO에 저장되는지 확인해보세요.`,
       type: 'code',
       language: 'java',
       starterCode: `// DAO에서 성적 DTO 가공
