@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import ProgressBar from '../components/ProgressBar.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { useWrongNotes } from '../hooks/useWrongNotes.js'
+import { getWrittenSubject } from '../data/written/index.js'
 
 function shuffle(arr) {
   const a = [...arr]
@@ -29,15 +30,13 @@ export default function WrittenQuiz() {
   const { addWrongNote } = useWrongNotes()
 
   useEffect(() => {
-    async function loadQuestions() {
-      try {
-        const data = await import(`../data/written/${subject}.json`)
-        setQuestions(shuffle(data.default.questions))
-      } catch {
-        setError('문제를 불러올 수 없습니다.')
-      }
+    const data = getWrittenSubject(subject)
+    if (!data) {
+      setError('문제를 불러올 수 없습니다.')
+      return
     }
-    loadQuestions()
+    setQuestions(shuffle(data.questions))
+    setError(null)
   }, [subject])
 
   const currentQuestion = questions[currentIndex]

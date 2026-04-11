@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useWrongNotes } from '../hooks/useWrongNotes.js'
-
-const SUBJECT_LABELS = {
-  subject1: '정보시스템 기반 기술',
-  subject2: '프로그래밍 언어 활용',
-  subject3: '데이터베이스 활용',
-}
+import { writtenSubjectLabels } from '../data/written/index.js'
 
 export default function WrongNotes() {
   const { notes, removeWrongNote, clearAll } = useWrongNotes()
@@ -45,7 +40,7 @@ export default function WrongNotes() {
           <div key={note.id} className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="flex items-start gap-3 p-4">
               <div className="flex-1">
-                <div className="text-xs text-gray-400 mb-1">{SUBJECT_LABELS[note.subjectId] || note.subjectId}</div>
+                <div className="text-xs text-gray-400 mb-1">{writtenSubjectLabels[note.subjectId] || note.subjectId}</div>
                 <p className="text-sm text-gray-900 whitespace-pre-line leading-relaxed">{note.question}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0 mt-0.5">

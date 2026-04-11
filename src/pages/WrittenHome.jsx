@@ -1,22 +1,41 @@
 import { Link } from 'react-router-dom'
 import { getProgressSummary } from '../hooks/useProgress.js'
-
-const SUBJECTS = [
-  { id: 'subject1', label: '정보시스템 기반 기술', total: 25, desc: '운영체제, 네트워크, 보안, 클라우드' },
-  { id: 'subject2', label: '프로그래밍 언어 활용', total: 25, desc: 'Java, C언어, 자료구조, 알고리즘' },
-  { id: 'subject3', label: '데이터베이스 활용', total: 25, desc: 'SQL, 정규화, 트랜잭션, NoSQL' },
-]
+import { writtenSubjects } from '../data/written/index.js'
 
 export default function WrittenHome() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">필기 준비</h1>
-        <p className="text-gray-500 text-sm">과목을 선택하여 4지선다 문제를 풀어보세요. 풀이 후 즉시 해설을 확인할 수 있습니다.</p>
+        <p className="text-gray-500 text-sm">과정평가형 정보처리산업기사의 필수 능력단위 기준으로 문제를 풀어보세요. 풀이 후 즉시 해설을 확인할 수 있습니다.</p>
+      </div>
+
+      <div className="mb-8 rounded-2xl border border-gray-200 bg-white overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-200 bg-gray-50">
+          <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">출제 구조</div>
+          <div className="text-sm text-gray-500 mt-1">과정평가형 정보처리산업기사 외부평가 기준으로 어떤 방식으로 출제되는지 먼저 보고 들어가면 범위를 잡기 쉽습니다.</div>
+        </div>
+        <div className="p-5 grid gap-4 md:grid-cols-3">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">평가 형식</div>
+            <div className="text-lg font-bold text-gray-900">객관식 30 + 주관식 10</div>
+            <div className="text-xs text-gray-500 mt-2">현재 서비스는 객관식 대비 중심으로 구성했습니다.</div>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">시험 시간</div>
+            <div className="text-lg font-bold text-gray-900">90분</div>
+            <div className="text-xs text-gray-500 mt-2">짧은 암기보다 능력단위별 핵심 개념 정리가 중요합니다.</div>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-4">
+            <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">출제 기준</div>
+            <div className="text-lg font-bold text-gray-900">필수 능력단위 중심</div>
+            <div className="text-xs text-gray-500 mt-2">응용SW 기초, 개발환경, 화면구현, SQL, 테스트, 배포까지 골고루 출제됩니다.</div>
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 mb-8">
-        {SUBJECTS.map((subject) => {
+        {writtenSubjects.map((subject) => {
           const prog = getProgressSummary(subject.id)
           const percent = subject.total > 0 ? Math.round((prog.total / subject.total) * 100) : 0
           const accuracy = prog.total > 0 ? Math.round((prog.correct / prog.total) * 100) : null

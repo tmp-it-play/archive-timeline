@@ -13,6 +13,16 @@ export default function Navbar() {
         </Link>
         <div className="flex items-center gap-1">
           <Link
+            to="/"
+            className={`px-3 py-1.5 text-sm rounded transition-colors ${
+              location.pathname === '/'
+                ? 'bg-gray-900 text-white'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            홈
+          </Link>
+          <Link
             to="/written"
             className={`px-3 py-1.5 text-sm rounded transition-colors ${
               isActive('/written')
