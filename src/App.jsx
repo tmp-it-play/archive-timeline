@@ -6,6 +6,7 @@ import WrittenQuiz from './pages/WrittenQuiz.jsx'
 import WrongNotes from './pages/WrongNotes.jsx'
 import PracticalHome from './pages/PracticalHome.jsx'
 import PracticalLesson from './pages/PracticalLesson.jsx'
+import PracticalPdfViewer from './pages/PracticalPdfViewer.jsx'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/written/wrong" element={<WrongNotes />} />
             <Route path="/written/:subject" element={<WrittenQuiz />} />
             <Route path="/practical" element={<PracticalHome />} />
+            <Route path="/practical/pdf/:pdfId" element={<PracticalPdfViewer />} />
             <Route path="/practical/:topic" element={<PracticalLesson />} />
           </Routes>
         </main>
