@@ -350,14 +350,27 @@ const jspColorTheme = EditorView.baseTheme({
 // 스크롤바·폰트·크기 커스텀
 const baseTheme = EditorView.theme({
   '&': { fontSize: '13.5px' },
+  '.cm-editor': {
+    height: '100%',
+    backgroundColor: '#282c34',
+  },
   '.cm-scroller': {
     fontFamily: "'JetBrains Mono','Fira Code','Cascadia Code','Consolas','Courier New',monospace",
     lineHeight: '1.7',
     overflow: 'auto',
     overscrollBehavior: 'contain',
+    backgroundColor: '#282c34',
   },
   '.cm-focused': { outline: 'none !important' },
-  '.cm-editor': { height: '100%' },
+  '.cm-content': {
+    minHeight: '100%',
+    backgroundColor: '#282c34',
+  },
+  '.cm-gutters': {
+    minHeight: '100%',
+    backgroundColor: '#21252b',
+    borderRight: '1px solid rgba(255,255,255,0.06)',
+  },
   '.cm-scroller::-webkit-scrollbar': { width: '5px', height: '5px' },
   '.cm-scroller::-webkit-scrollbar-track': { background: '#21252b' },
   '.cm-scroller::-webkit-scrollbar-thumb': { background: '#4a4f5a', borderRadius: '999px' },
@@ -622,7 +635,7 @@ export default function CodeEditor({
       )}
 
       {/* 에디터 영역 — height 지정 시 flex-1로 남은 공간 채움, 내부 스크롤은 CM이 처리 */}
-      <div ref={containerRef} className="flex-1 overflow-hidden" style={height ? {} : { minHeight }} />
+      <div ref={containerRef} className="flex-1 overflow-hidden bg-[#282c34]" style={height ? {} : { minHeight }} />
     </div>
   )
 }

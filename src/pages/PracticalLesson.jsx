@@ -504,11 +504,361 @@ const DTO_VISUALS = {
   },
 }
 
+const SQL_VISUALS = {
+  sql_01: {
+    title: 'WHERE 필터링 결과',
+    steps: [
+      {
+        key: 'from',
+        title: '1. FROM TBL_STUDENT',
+        summary: '먼저 학생 테이블 전체 행을 읽습니다.',
+        highlight: 'FROM TBL_STUDENT',
+        tone: 'slate',
+        concepts: ['FROM', '원본 테이블', '전체 행 스캔'],
+        insight: '아직 조건을 적용하지 않았기 때문에 모든 학생 행이 그대로 보입니다.',
+        sources: [
+          {
+            label: '원본 학생 테이블',
+            columns: ['student_id', 'name', 'grade', 'dept'],
+            highlightColumns: ['dept'],
+            rows: [
+              ['2024001', '김민수', '1', 'CS'],
+              ['2024002', '박서연', '2', 'EE'],
+              ['2024003', '이도윤', '1', 'CS'],
+              ['2024004', '최하은', '3', 'ME'],
+            ],
+          },
+        ],
+      },
+      {
+        key: 'where',
+        title: '2. WHERE dept = \'CS\'',
+        summary: 'CS 학과인 행만 남깁니다.',
+        highlight: 'WHERE dept = \'CS\';',
+        tone: 'blue',
+        concepts: ['WHERE', '필터링', '조건 일치'],
+        insight: '`dept` 값이 `CS`인 행만 통과하고, 나머지 행은 결과에서 제거됩니다.',
+        result: {
+          label: '필터 후 행',
+          columns: ['student_id', 'name', 'grade', 'dept'],
+          highlightColumns: ['dept'],
+          highlightRows: [0, 1],
+          rows: [
+            ['2024001', '김민수', '1', 'CS'],
+            ['2024003', '이도윤', '1', 'CS'],
+          ],
+        },
+      },
+      {
+        key: 'select',
+        title: '3. SELECT student_id, name',
+        summary: '필요한 컬럼만 남겨 최종 결과를 만듭니다.',
+        highlight: 'SELECT student_id, name',
+        tone: 'emerald',
+        concepts: ['SELECT', '컬럼 선택', '최종 결과'],
+        insight: '행 수는 그대로 두고, 보여줄 컬럼만 `student_id`, `name`으로 줄입니다.',
+        result: {
+          label: '최종 결과',
+          columns: ['student_id', 'name'],
+          highlightColumns: ['student_id', 'name'],
+          rows: [
+            ['2024001', '김민수'],
+            ['2024003', '이도윤'],
+          ],
+        },
+      },
+    ],
+  },
+  sql_02: {
+    title: '정렬 후 상위 3개 추출',
+    steps: [
+      {
+        key: 'from',
+        title: '1. FROM TBL_SCORE',
+        summary: '점수 테이블 전체를 읽습니다.',
+        highlight: 'FROM TBL_SCORE',
+        tone: 'slate',
+        concepts: ['FROM', '원본 데이터', '정렬 전'],
+        insight: '이 단계에서는 아직 순서가 원본 입력 순서 그대로입니다.',
+        sources: [
+          {
+            label: '원본 점수 테이블',
+            columns: ['student_id', 'name', 'score'],
+            highlightColumns: ['score'],
+            rows: [
+              ['2024001', '김민수', '88'],
+              ['2024002', '박서연', '97'],
+              ['2024003', '이도윤', '91'],
+              ['2024004', '최하은', '85'],
+              ['2024005', '정예린', '93'],
+            ],
+          },
+        ],
+      },
+      {
+        key: 'order',
+        title: '2. ORDER BY score DESC',
+        summary: 'score 기준 내림차순으로 다시 정렬합니다.',
+        highlight: 'ORDER BY score DESC',
+        tone: 'amber',
+        concepts: ['ORDER BY', 'DESC', '정렬'],
+        insight: '큰 점수가 위로 올라오도록 행 순서만 재배치합니다. 값 자체는 바뀌지 않습니다.',
+        result: {
+          label: '정렬 후 결과',
+          columns: ['student_id', 'name', 'score'],
+          highlightColumns: ['score'],
+          highlightRows: [0, 1, 2],
+          rows: [
+            ['2024002', '박서연', '97'],
+            ['2024005', '정예린', '93'],
+            ['2024003', '이도윤', '91'],
+            ['2024001', '김민수', '88'],
+            ['2024004', '최하은', '85'],
+          ],
+        },
+      },
+      {
+        key: 'limit',
+        title: '3. LIMIT 3',
+        summary: '정렬된 결과에서 상위 3행만 남깁니다.',
+        highlight: 'LIMIT 3;',
+        tone: 'emerald',
+        concepts: ['LIMIT', '상위 N개', '절단'],
+        insight: '정렬이 끝난 뒤 앞에서 3행만 잘라내므로, 정렬 없이 LIMIT만 쓰면 의미가 달라집니다.',
+        result: {
+          label: '최종 결과',
+          columns: ['name', 'score'],
+          highlightColumns: ['score'],
+          highlightRows: [0, 1, 2],
+          rows: [
+            ['박서연', '97'],
+            ['정예린', '93'],
+            ['이도윤', '91'],
+          ],
+        },
+      },
+    ],
+  },
+  sql_03: {
+    title: 'INNER JOIN 매칭 결과',
+    steps: [
+      {
+        key: 'tables',
+        title: '1. 조인 대상 테이블 확인',
+        summary: '회원 테이블과 주문 테이블을 각각 준비합니다.',
+        highlight: 'FROM TBL_MEMBER m',
+        tone: 'slate',
+        concepts: ['JOIN 준비', '기준 키', 'custno'],
+        insight: '두 테이블 모두 `custno`를 갖고 있으므로 이 컬럼을 기준으로 행을 연결할 수 있습니다.',
+        sources: [
+          {
+            label: 'TBL_MEMBER',
+            columns: ['custno', 'custname', 'grade'],
+            highlightColumns: ['custno'],
+            rows: [
+              ['1001', '김철수', 'VIP'],
+              ['1002', '이영희', 'GOLD'],
+              ['1003', '박민호', 'SILVER'],
+            ],
+          },
+          {
+            label: 'TBL_ORDER',
+            columns: ['ordno', 'custno', 'prodname', 'amount'],
+            highlightColumns: ['custno'],
+            rows: [
+              ['1', '1001', '키보드', '2'],
+              ['2', '1002', '마우스', '1'],
+              ['3', '1001', '모니터', '1'],
+            ],
+          },
+        ],
+      },
+      {
+        key: 'join',
+        title: '2. INNER JOIN ... ON m.custno = o.custno',
+        summary: 'custno가 같은 행끼리만 연결합니다.',
+        highlight: 'INNER JOIN TBL_ORDER o ON m.custno = o.custno;',
+        tone: 'violet',
+        concepts: ['INNER JOIN', 'ON', '매칭된 행만'],
+        insight: '회원 1001은 주문이 2건이라 조인 결과에서도 2행으로 늘어납니다.',
+        result: {
+          label: '조인 후 결과',
+          columns: ['m.custno', 'custname', 'prodname', 'amount'],
+          highlightColumns: ['m.custno', 'custname', 'prodname'],
+          highlightRows: [0, 1, 2],
+          rows: [
+            ['1001', '김철수', '키보드', '2'],
+            ['1002', '이영희', '마우스', '1'],
+            ['1001', '김철수', '모니터', '1'],
+          ],
+        },
+      },
+      {
+        key: 'select',
+        title: '3. 필요한 컬럼만 SELECT',
+        summary: '회원 이름, 주문 상품명, 수량만 최종 결과로 남깁니다.',
+        highlight: 'SELECT m.custname, o.prodname, o.amount',
+        tone: 'emerald',
+        concepts: ['SELECT', '별칭', '출력 컬럼 정리'],
+        insight: 'JOIN은 컬럼을 합쳐주고, 최종 SELECT는 그중 실제로 보여줄 컬럼만 정리합니다.',
+        result: {
+          label: '최종 결과',
+          columns: ['custname', 'prodname', 'amount'],
+          highlightColumns: ['custname', 'prodname', 'amount'],
+          rows: [
+            ['김철수', '키보드', '2'],
+            ['이영희', '마우스', '1'],
+            ['김철수', '모니터', '1'],
+          ],
+        },
+      },
+    ],
+  },
+  sql_04: {
+    title: 'GROUP BY와 HAVING 집계',
+    steps: [
+      {
+        key: 'from',
+        title: '1. 원본 주문 테이블',
+        summary: '주문 행을 custno별로 묶기 전 전체 상태입니다.',
+        highlight: 'FROM TBL_ORDER',
+        tone: 'slate',
+        concepts: ['원본 행', 'GROUP BY 전', '중복 custno'],
+        insight: '같은 custno가 여러 번 등장하기 때문에 아직은 고객별 합계를 바로 알 수 없습니다.',
+        sources: [
+          {
+            label: 'TBL_ORDER',
+            columns: ['ordno', 'custno', 'amount'],
+            highlightColumns: ['custno', 'amount'],
+            rows: [
+              ['1', '1001', '5000'],
+              ['2', '1002', '3000'],
+              ['3', '1001', '7000'],
+              ['4', '1003', '2000'],
+              ['5', '1002', '9000'],
+            ],
+          },
+        ],
+      },
+      {
+        key: 'group',
+        title: '2. GROUP BY custno + SUM(amount)',
+        summary: 'custno별로 행을 묶고 amount 합계를 계산합니다.',
+        highlight: 'GROUP BY custno',
+        tone: 'orange',
+        concepts: ['GROUP BY', 'SUM', '그룹 집계'],
+        insight: '여러 주문 행이 고객별 한 행으로 압축되고, amount는 합계 값으로 바뀝니다.',
+        result: {
+          label: '집계 결과',
+          columns: ['custno', 'SUM(amount)'],
+          highlightColumns: ['SUM(amount)'],
+          rows: [
+            ['1001', '12000'],
+            ['1002', '12000'],
+            ['1003', '2000'],
+          ],
+        },
+      },
+      {
+        key: 'having',
+        title: '3. HAVING SUM(amount) >= 10000',
+        summary: '집계 결과 중 합계가 10000 이상인 그룹만 남깁니다.',
+        highlight: 'HAVING SUM(amount) >= 10000;',
+        tone: 'rose',
+        concepts: ['HAVING', '집계 후 필터', '조건 통과 그룹'],
+        insight: 'WHERE는 그룹화 전 행을 거르고, HAVING은 그룹화 후 결과를 거른다는 점이 핵심입니다.',
+        result: {
+          label: '최종 결과',
+          columns: ['custno', 'total_amount'],
+          highlightColumns: ['total_amount'],
+          highlightRows: [0, 1],
+          rows: [
+            ['1001', '12000'],
+            ['1002', '12000'],
+          ],
+        },
+      },
+    ],
+  },
+  sql_05: {
+    title: 'INSERT와 UPDATE 전후 비교',
+    steps: [
+      {
+        key: 'before',
+        title: '1. 작업 전 TBL_MEMBER',
+        summary: '아직 1001 회원이 없는 초기 상태입니다.',
+        highlight: 'INSERT INTO TBL_MEMBER (custno, custname, grade)',
+        tone: 'slate',
+        concepts: ['DML', '변경 전', '대상 테이블'],
+        insight: '이 상태를 기준으로 INSERT가 새 행을 추가하고, 그 다음 UPDATE가 같은 행을 수정합니다.',
+        result: {
+          label: '작업 전',
+          columns: ['custno', 'custname', 'grade'],
+          rows: [
+            ['1002', '김유진', 'SILVER'],
+            ['1003', '박준호', 'VIP'],
+          ],
+        },
+      },
+      {
+        key: 'insert',
+        title: '2. INSERT 실행',
+        summary: '새 회원 행이 테이블에 추가됩니다.',
+        highlight: 'VALUES (1001, \'이순신\', \'VIP\');',
+        tone: 'emerald',
+        concepts: ['INSERT', '새 행 추가', 'VALUES'],
+        insight: 'INSERT는 기존 행을 건드리지 않고, 새로운 한 행을 테이블 끝에 추가합니다.',
+        result: {
+          label: 'INSERT 후',
+          columns: ['custno', 'custname', 'grade'],
+          highlightRows: [0],
+          rows: [
+            ['1001', '이순신', 'VIP'],
+            ['1002', '김유진', 'SILVER'],
+            ['1003', '박준호', 'VIP'],
+          ],
+        },
+      },
+      {
+        key: 'update',
+        title: '3. UPDATE 실행',
+        summary: '같은 회원의 grade 값만 GOLD로 바뀝니다.',
+        highlight: 'SET grade = \'GOLD\'',
+        tone: 'blue',
+        concepts: ['UPDATE', 'SET', 'WHERE'],
+        insight: 'UPDATE는 행을 새로 만들지 않고, WHERE 조건에 맞는 기존 행의 특정 컬럼만 변경합니다.',
+        result: {
+          label: '최종 결과',
+          columns: ['custno', 'custname', 'grade'],
+          highlightColumns: ['grade'],
+          highlightRows: [0],
+          rows: [
+            ['1001', '이순신', 'GOLD'],
+            ['1002', '김유진', 'SILVER'],
+            ['1003', '박준호', 'VIP'],
+          ],
+        },
+      },
+    ],
+  },
+}
+
 function findSnippetRange(text, snippet) {
   if (!text || !snippet) return null
   const from = text.indexOf(snippet)
   if (from === -1) return null
   return { from, to: from + snippet.length }
+}
+
+function getAdaptiveEditorMinHeight(code, { compact = false } = {}) {
+  const lineCount = Math.max(1, (code ?? '').split('\n').length)
+  const lineHeight = 24
+  const chromeHeight = 52
+  const paddingHeight = compact ? 28 : 44
+  const min = compact ? 180 : 240
+  const max = compact ? 420 : 560
+  const calculated = lineCount * lineHeight + chromeHeight + paddingHeight
+  return `${Math.max(min, Math.min(max, calculated))}px`
 }
 
 function getCodeHighlightRange(lessonId, code, actionFlowStep, validationCase, dtoHighlightKey) {
@@ -549,6 +899,10 @@ function getCodeHighlightRange(lessonId, code, actionFlowStep, validationCase, d
 
   if (lessonId === 'dao_04') {
     return findSnippetRange(code, DAO_SUMMARY_STEPS[actionFlowStep]?.highlight)
+  }
+
+  if (lessonId.startsWith('sql_')) {
+    return findSnippetRange(code, SQL_VISUALS[lessonId]?.steps?.[actionFlowStep]?.highlight)
   }
 
   if (lessonId === 'dto_01') {
@@ -688,6 +1042,242 @@ function DtoStructurePanel({ visual, selectedKey, onSelect }) {
               avg, total, grade는 계산 로직에서 만들어지지만, 최종적으로는 DTO 안에 모여 JSP나 다른 계층에서 재사용됩니다. DTO는 계산식을 담는 곳이 아니라 계산된 결과를 구조화해 전달하는 곳입니다.
             </div>
           </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function getSqlToneClasses(tone) {
+  const toneMap = {
+    slate: {
+      badge: 'bg-slate-100 text-slate-700 border-slate-200',
+      card: 'border-slate-200 bg-slate-50',
+      progress: 'bg-slate-900',
+      active: 'border-slate-900 bg-slate-900 text-white',
+      soft: 'bg-slate-100 text-slate-600',
+      callout: 'border-slate-200 bg-slate-50 text-slate-700',
+      header: 'bg-slate-50 text-slate-700',
+      column: 'bg-slate-100 text-slate-900',
+      row: 'bg-slate-50/80',
+    },
+    blue: {
+      badge: 'bg-blue-100 text-blue-700 border-blue-200',
+      card: 'border-blue-200 bg-blue-50',
+      progress: 'bg-blue-600',
+      active: 'border-blue-600 bg-blue-600 text-white',
+      soft: 'bg-blue-100 text-blue-700',
+      callout: 'border-blue-200 bg-blue-50 text-blue-800',
+      header: 'bg-blue-50 text-blue-700',
+      column: 'bg-blue-100 text-blue-900',
+      row: 'bg-blue-50/80',
+    },
+    emerald: {
+      badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      card: 'border-emerald-200 bg-emerald-50',
+      progress: 'bg-emerald-600',
+      active: 'border-emerald-600 bg-emerald-600 text-white',
+      soft: 'bg-emerald-100 text-emerald-700',
+      callout: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+      header: 'bg-emerald-50 text-emerald-700',
+      column: 'bg-emerald-100 text-emerald-900',
+      row: 'bg-emerald-50/80',
+    },
+    amber: {
+      badge: 'bg-amber-100 text-amber-700 border-amber-200',
+      card: 'border-amber-200 bg-amber-50',
+      progress: 'bg-amber-500',
+      active: 'border-amber-500 bg-amber-500 text-white',
+      soft: 'bg-amber-100 text-amber-700',
+      callout: 'border-amber-200 bg-amber-50 text-amber-800',
+      header: 'bg-amber-50 text-amber-700',
+      column: 'bg-amber-100 text-amber-900',
+      row: 'bg-amber-50/80',
+    },
+    violet: {
+      badge: 'bg-violet-100 text-violet-700 border-violet-200',
+      card: 'border-violet-200 bg-violet-50',
+      progress: 'bg-violet-600',
+      active: 'border-violet-600 bg-violet-600 text-white',
+      soft: 'bg-violet-100 text-violet-700',
+      callout: 'border-violet-200 bg-violet-50 text-violet-800',
+      header: 'bg-violet-50 text-violet-700',
+      column: 'bg-violet-100 text-violet-900',
+      row: 'bg-violet-50/80',
+    },
+    orange: {
+      badge: 'bg-orange-100 text-orange-700 border-orange-200',
+      card: 'border-orange-200 bg-orange-50',
+      progress: 'bg-orange-500',
+      active: 'border-orange-500 bg-orange-500 text-white',
+      soft: 'bg-orange-100 text-orange-700',
+      callout: 'border-orange-200 bg-orange-50 text-orange-800',
+      header: 'bg-orange-50 text-orange-700',
+      column: 'bg-orange-100 text-orange-900',
+      row: 'bg-orange-50/80',
+    },
+    rose: {
+      badge: 'bg-rose-100 text-rose-700 border-rose-200',
+      card: 'border-rose-200 bg-rose-50',
+      progress: 'bg-rose-500',
+      active: 'border-rose-500 bg-rose-500 text-white',
+      soft: 'bg-rose-100 text-rose-700',
+      callout: 'border-rose-200 bg-rose-50 text-rose-800',
+      header: 'bg-rose-50 text-rose-700',
+      column: 'bg-rose-100 text-rose-900',
+      row: 'bg-rose-50/80',
+    },
+  }
+  return toneMap[tone] ?? toneMap.slate
+}
+
+function SqlTable({ label, columns, rows, highlightColumns = [], highlightRows = [], tone = 'slate' }) {
+  const toneClasses = getSqlToneClasses(tone)
+  return (
+    <div className={`rounded-lg border overflow-hidden bg-white ${toneClasses.card}`}>
+      <div className={`px-3 py-2 border-b text-xs font-semibold uppercase tracking-wide ${toneClasses.header}`}>
+        {label}
+      </div>
+      <div className="overflow-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-white/80">
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column}
+                  className={`px-3 py-2 text-left text-xs font-semibold border-b whitespace-nowrap ${
+                    highlightColumns.includes(column) ? toneClasses.column : 'text-gray-600 border-gray-200'
+                  }`}
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr
+                key={`${label}-${rowIndex}`}
+                className={`border-b border-gray-100 last:border-b-0 ${
+                  highlightRows.includes(rowIndex) ? toneClasses.row : ''
+                }`}
+              >
+                {row.map((cell, cellIndex) => (
+                  <td key={`${label}-${rowIndex}-${cellIndex}`} className="px-3 py-2 font-mono text-gray-800 whitespace-nowrap">
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function SqlFlowPanel({ visual, stepIndex, onStepChange }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const steps = visual.steps
+  const step = steps[stepIndex]
+  const toneClasses = getSqlToneClasses(step.tone)
+
+  useEffect(() => {
+    if (!isPlaying) return
+    if (stepIndex >= steps.length - 1) {
+      setIsPlaying(false)
+      return
+    }
+    const timer = window.setTimeout(() => {
+      onStepChange(stepIndex + 1)
+    }, 2200)
+    return () => window.clearTimeout(timer)
+  }, [isPlaying, stepIndex, steps.length, onStepChange])
+
+  const progress = ((stepIndex + 1) / steps.length) * 100
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div>
+            <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{visual.title}</div>
+            <div className="text-sm text-gray-500 mt-1">{step.title}</div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsPlaying((prev) => !prev)}
+              className="px-3 py-1.5 rounded bg-gray-900 text-white text-xs font-semibold hover:bg-gray-700 transition-colors"
+            >
+              {isPlaying ? '일시정지' : '재생'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsPlaying(false)
+                onStepChange(0)
+              }}
+              className="px-3 py-1.5 rounded border border-gray-300 text-xs text-gray-600 hover:border-gray-400 transition-colors"
+            >
+              처음부터
+            </button>
+          </div>
+        </div>
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+          <span>{isPlaying ? '재생 중' : '대기 중'}</span>
+          <span>{stepIndex + 1} / {steps.length}</span>
+        </div>
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className={`h-full transition-all duration-300 ${toneClasses.progress}`} style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+      <div className="p-4">
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          {steps.map((item, index) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => {
+                setIsPlaying(false)
+                onStepChange(index)
+              }}
+              className={`text-left rounded-lg border px-3 py-2 transition-colors ${
+                index === stepIndex
+                  ? toneClasses.active
+                  : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-gray-300'
+              }`}
+            >
+              <div className="text-xs font-semibold">{index + 1}단계</div>
+              <div className="text-xs mt-1 break-all whitespace-pre-wrap">{item.title}</div>
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {step.concepts?.map((concept) => (
+            <span key={concept} className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${toneClasses.badge}`}>
+              {concept}
+            </span>
+          ))}
+        </div>
+        <div className="rounded-lg border border-gray-200 bg-slate-950 px-4 py-3 mb-4">
+          <div className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">현재 SQL 포인트</div>
+          <div className="text-sm font-mono text-slate-100 break-all whitespace-pre-wrap">{step.highlight}</div>
+          <div className="text-xs text-slate-400 mt-2">{step.summary}</div>
+        </div>
+        <div className={`rounded-lg border px-4 py-3 mb-4 ${toneClasses.callout}`}>
+          <div className="text-xs font-semibold uppercase tracking-wide mb-1">왜 이렇게 바뀌는가</div>
+          <div className="text-sm">{step.insight}</div>
+        </div>
+        {step.sources?.length > 0 && (
+          <div className={`grid gap-3 mb-4 ${step.sources.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+            {step.sources.map((table) => (
+              <SqlTable key={table.label} {...table} tone={step.tone} />
+            ))}
+          </div>
+        )}
+        {step.result && (
+          <SqlTable {...step.result} tone={step.tone} />
         )}
       </div>
     </div>
@@ -1749,6 +2339,7 @@ export default function PracticalLesson() {
   const [validationCase, setValidationCase] = useState(0)
   const [daoFlowStep, setDaoFlowStep] = useState(0)
   const [dtoHighlightKey, setDtoHighlightKey] = useState(DTO_MEMBER_PARTS[0].key)
+  const [sqlFlowStep, setSqlFlowStep] = useState(0)
 
   // live-html 전용: 디바운스된 미리보기 HTML
   const [liveHtml, setLiveHtml] = useState('')
@@ -1814,15 +2405,23 @@ export default function PracticalLesson() {
   const showDaoSummaryFlow = lesson.id === 'dao_04'
   const showDtoFlow = lesson.id.startsWith('dto_')
   const dtoVisual = DTO_VISUALS[lesson.id] ?? null
+  const showSqlFlow = lesson.id.startsWith('sql_')
+  const sqlVisual = SQL_VISUALS[lesson.id] ?? null
   const lang = lesson.language ?? (isLiveHtml || isLiveJsp ? 'html' : 'java')
   const lessonAnnotations = getLessonAnnotations(lesson)
-  const flowStepForHighlight = showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow ? daoFlowStep : actionFlowStep
+  const flowStepForHighlight = showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow
+    ? daoFlowStep
+    : showSqlFlow
+      ? sqlFlowStep
+      : actionFlowStep
   const codeHighlightRange = getCodeHighlightRange(lesson.id, currentCode, flowStepForHighlight, validationCase, dtoHighlightKey)
+  const codeEditorMinHeight = getAdaptiveEditorMinHeight(currentCode, { compact: showDtoFlow || showSqlFlow })
 
   useEffect(() => {
     setActionFlowStep(0)
     setValidationCase(0)
     setDaoFlowStep(0)
+    setSqlFlowStep(0)
     const nextVisual = DTO_VISUALS[lesson.id]
     setDtoHighlightKey(nextVisual?.parts?.[0]?.key ?? DTO_MEMBER_PARTS[0].key)
   }, [lesson.id])
@@ -2161,7 +2760,7 @@ export default function PracticalLesson() {
       {/* ── code / fill-in-blank 타입 ── */}
       {isCode && (
         <>
-          <div className={`mb-3 ${showDtoFlow ? 'space-y-3' : showActionFlow || showValidationFlow || showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow ? 'grid grid-cols-2 gap-3' : ''}`}>
+          <div className={`mb-3 ${showDtoFlow ? 'space-y-3' : showActionFlow || showValidationFlow || showDaoConnectionFlow || showDaoInsertFlow || showDaoSelectFlow || showDaoSummaryFlow || showSqlFlow ? 'grid grid-cols-2 gap-3' : ''}`}>
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
@@ -2181,7 +2780,7 @@ export default function PracticalLesson() {
                 value={currentCode}
                 onChange={showDtoFlow ? undefined : handleCodeChange}
                 language={lang}
-                minHeight={showDtoFlow ? '440px' : '380px'}
+                minHeight={codeEditorMinHeight}
                 readOnly={showDtoFlow}
                 highlightRange={codeHighlightRange}
               />
@@ -2242,6 +2841,14 @@ export default function PracticalLesson() {
                 visual={dtoVisual}
                 selectedKey={dtoHighlightKey}
                 onSelect={setDtoHighlightKey}
+              />
+            )}
+
+            {showSqlFlow && sqlVisual && (
+              <SqlFlowPanel
+                visual={sqlVisual}
+                stepIndex={sqlFlowStep}
+                onStepChange={setSqlFlowStep}
               />
             )}
           </div>
