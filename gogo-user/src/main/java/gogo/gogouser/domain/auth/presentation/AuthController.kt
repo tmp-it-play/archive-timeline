@@ -4,6 +4,7 @@ import gogo.gogouser.domain.auth.application.AuthService
 import gogo.gogouser.domain.auth.application.dto.AuthLoginDto
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
+import gogo.gogouser.domain.auth.application.dto.AuthTeacherSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
 import gogo.gogouser.domain.user.persistence.Authority
 import gogo.gogouser.global.jwt.JwtGenerator
@@ -39,6 +40,14 @@ class AuthController(
         @RequestBody @Valid dto: AuthSignUpReqDto
     ): ResponseEntity<AuthTokenDto> {
         val response = authService.signup(dto)
+        return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/signup/teacher")
+    fun teacherSignUp(
+        @RequestBody @Valid dto: AuthTeacherSignUpReqDto
+    ): ResponseEntity<AuthTokenDto> {
+        val response = authService.teacherSignUp(dto)
         return ResponseEntity.ok(response)
     }
 

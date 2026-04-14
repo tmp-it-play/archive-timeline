@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.user.persistence
 
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
+import gogo.gogouser.domain.auth.application.dto.AuthTeacherSignUpReqDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -37,6 +38,12 @@ class User(
         name = dto.name
         sex = dto.sex
         authority = Authority.USER
+    }
+
+    fun teacherSignUp(dto: AuthTeacherSignUpReqDto) {
+        name = dto.name
+        sex = dto.sex
+        authority = Authority.STAFF
     }
 
     fun update(name: String, sex: Sex) {

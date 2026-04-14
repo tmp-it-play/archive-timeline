@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.school.root.application
 
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
+import gogo.gogouser.domain.auth.application.dto.SchoolInfoDto
 import gogo.gogouser.domain.school.detail.persistence.SchoolDetail
 import gogo.gogouser.domain.school.detail.persistence.SchoolDetailRepository
 import gogo.gogouser.domain.school.root.persistence.School
@@ -15,11 +16,14 @@ class SchoolProcessor(
 ) {
 
     fun getSchoolOrCreate(dto: AuthSignUpReqDto): School =
-        schoolReader.readBySdCodeOrNull(dto.school.sdCode)
+        getSchoolOrCreate(dto.school)
+
+    fun getSchoolOrCreate(schoolInfo: SchoolInfoDto): School =
+        schoolReader.readBySdCodeOrNull(schoolInfo.sdCode)
             ?: run {
-                val createSchool = School.of(dto.school)
+                val createSchool = School.of(schoolInfo)
                 val savedSchool = schoolRepository.save(createSchool)
-                val schoolDetail = SchoolDetail.of(createSchool, dto.school)
+                val schoolDetail = SchoolDetail.of(createSchool, schoolInfo)
                 schoolDetailRepository.save(schoolDetail)
                 savedSchool
             }

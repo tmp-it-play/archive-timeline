@@ -43,6 +43,16 @@ data class SchoolInfoDto(
     val phoneNumber: String,
 )
 
+data class AuthTeacherSignUpReqDto(
+    val deviceToken: String?,
+    @NotBlank
+    val name: String,
+    @NotNull
+    val sex: Sex,
+    @NotNull
+    val school: SchoolInfoDto,
+)
+
 data class AuthLoginDto(
     val accessToken: String,
     val refreshToken: String,

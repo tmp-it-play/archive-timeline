@@ -61,6 +61,7 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.POST, "/user/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/auth/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/auth/signup").hasRole(Authority.UNAUTHENTICATED.name)
+                .requestMatchers(HttpMethod.POST, "/user/auth/signup/teacher").hasRole(Authority.UNAUTHENTICATED.name)
 
                 // student
                 .requestMatchers(HttpMethod.GET, "/user/student/search").hasAnyRole(Authority.USER.name, Authority.STAFF.name)

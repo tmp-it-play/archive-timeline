@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.user.application
 
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
+import gogo.gogouser.domain.auth.application.dto.AuthTeacherSignUpReqDto
 import gogo.gogouser.domain.user.persistence.User
 import gogo.gogouser.domain.user.persistence.UserRepository
 import org.springframework.stereotype.Component
@@ -17,6 +18,11 @@ class UserProcessor(
 
     fun signUp(user: User, dto: AuthSignUpReqDto): User {
         user.signUp(dto)
+        return userRepository.save(user)
+    }
+
+    fun teacherSignUp(user: User, dto: AuthTeacherSignUpReqDto): User {
+        user.teacherSignUp(dto)
         return userRepository.save(user)
     }
 
