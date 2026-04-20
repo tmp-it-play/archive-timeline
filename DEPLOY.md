@@ -211,10 +211,10 @@ gogo-user/ 코드 수정 → develop push
 
 ## 문제 해결
 
-| 증상 | 확인 방법 |
-|------|----------|
-| Eureka 미등록 | `docker logs gogo-user-stage` |
-| Config 연결 실패 | `curl http://인프라도메인:8888/user-service/stage` |
-| Nginx 502 | `docker ps` 로 컨테이너 상태 확인 |
-| Kafka 연결 실패 | `infra/.env`의 `INFRA_DOMAIN` 값 확인 |
-| 서버 A에서 동시 배포 충돌 | Actions에서 user/shop CD가 동시 실행 중인지 확인 |
+| 증상              | 확인 방법                                        |
+|-----------------|----------------------------------------------|
+| Eureka 미등록      | `docker logs gogo-user-stage`                |
+| Config 연결 실패    | `curl http://인프라도메인:8888/user-service/stage` |
+| Nginx 502       | `docker ps` 로 컨테이너 상태 확인                     |
+| Kafka 연결 실패     | `infra/.env`의 `INFRA_DOMAIN` 값 확인            |
+| 서버 A에서 동시 배포 충돌 | Actions에서 user/shop CD가 동시 실행 중인지 확인         |
