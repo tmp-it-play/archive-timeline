@@ -88,10 +88,10 @@ class ParticipateProcessor(
         predictedWinTeamId: Long,
         point: Long
     ) {
-        if (match.aTeam!!.id == predictedWinTeamId) {
-            match.addATeamBettingPoint(point)
-        } else {
-            match.addBTeamBettingPoint(point)
+        when (predictedWinTeamId) {
+            match.aTeam!!.id -> match.addATeamBettingPoint(point)
+            match.bTeam!!.id -> match.addBTeamBettingPoint(point)
+            else -> throw StageException("Invalid predicted team id = $predictedWinTeamId", HttpStatus.BAD_REQUEST.value())
         }
     }
 

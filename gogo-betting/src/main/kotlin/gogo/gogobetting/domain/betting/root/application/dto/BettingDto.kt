@@ -1,11 +1,13 @@
 package gogo.gogobetting.domain.betting.root.application.dto
 
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Positive
 
 data class BettingDto(
-    @NotNull
+    @field:NotNull
     val predictedWinTeamId: Long,
-    @NotNull
+    @field:Positive
+    @field:NotNull
     val bettingPoint: Long
 )
 

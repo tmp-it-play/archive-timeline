@@ -39,6 +39,9 @@ class StageParticipant(
     }
 
     fun minusPoint(point: Long) {
+        if (point <= 0) {
+            throw StageException("배팅 포인트는 양수여야 합니다.", HttpStatus.BAD_REQUEST.value())
+        }
         if (this.point - point < 0) {
             throw StageException("보유 포인트 보다 더 적게 배팅할 수 없습니다.", HttpStatus.BAD_REQUEST.value())
         }
