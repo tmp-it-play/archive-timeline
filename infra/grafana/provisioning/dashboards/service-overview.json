@@ -154,6 +154,91 @@
           "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
         }
       ]
+    },
+    {
+      "id": 8,
+      "title": "Top 15 엔드포인트 (누적 요청 수)",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 28, "w": 24, "h": 10 },
+      "options": {
+        "sortBy": [{ "displayName": "요청 수", "desc": true }],
+        "footer": { "show": false }
+      },
+      "fieldConfig": {
+        "defaults": { "custom": { "align": "left" } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "요청 수" }, "properties": [{ "id": "unit", "value": "short" }, { "id": "custom.width", "value": 120 }] },
+          { "matcher": { "id": "byName", "options": "method" }, "properties": [{ "id": "custom.width", "value": 80 }] },
+          { "matcher": { "id": "byName", "options": "job" }, "properties": [{ "id": "custom.width", "value": 150 }] }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "topk(15, sum(increase(http_server_requests_seconds_count{job=~\"$service\"}[$__range])) by (job, method, uri))",
+          "legendFormat": "",
+          "instant": true,
+          "format": "table",
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
+        }
+      ],
+      "transformations": [
+        { "id": "organize", "options": { "renameByName": { "Value": "요청 수" }, "excludeByName": { "Time": true, "__name__": true } } }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "엔드포인트별 요청률 (req/s)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 38, "w": 12, "h": 10 },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 1 } },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "topk(10, sum(rate(http_server_requests_seconds_count{job=~\"$service\"}[1m])) by (method, uri))",
+          "legendFormat": "{{method}} {{uri}}",
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "엔드포인트별 클라이언트 에러율 (4xx)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 38, "w": 12, "h": 10 },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 1 },
+          "color": { "fixedColor": "orange", "mode": "fixed" }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "topk(10, sum(rate(http_server_requests_seconds_count{job=~\"$service\", status=~\"4..\"}[1m])) by (method, uri, status))",
+          "legendFormat": "{{status}} {{method}} {{uri}}",
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "엔드포인트별 서버 에러율 (5xx)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 48, "w": 12, "h": 10 },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 1 },
+          "color": { "fixedColor": "red", "mode": "fixed" }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "topk(10, sum(rate(http_server_requests_seconds_count{job=~\"$service\", status=~\"5..\"}[1m])) by (method, uri, status))",
+          "legendFormat": "{{status}} {{method}} {{uri}}",
+          "datasource": { "type": "prometheus", "uid": "gogo-prometheus" }
+        }
+      ]
     }
   ]
 }
