@@ -2,20 +2,20 @@
 
 ## SSH Access (using sshpass)
 
-All servers are accessible via port forwarding through `gsmsv-1.yujun.kr`.
+All servers are accessible via port forwarding through `ssh.gsmsv.site`.
 
 ```bash
 # Infra Server (port 27108)
-sshpass -p 'A5CPpFW%' ssh -o StrictHostKeyChecking=no -p 27108 ubuntu@gsmsv-1.yujun.kr
+sshpass -p 'A5CPpFW%' ssh -o StrictHostKeyChecking=no -p 27108 ubuntu@ssh.gsmsv.site
 
 # Server A (port 27107)
-sshpass -p '!V%B$et2' ssh -o StrictHostKeyChecking=no -p 27107 ubuntu@gsmsv-1.yujun.kr
+sshpass -p '!V%B$et2' ssh -o StrictHostKeyChecking=no -p 27107 ubuntu@ssh.gsmsv.site
 
 # Server B (port 27109)
-sshpass -p 'Fj&6%4@$' ssh -o StrictHostKeyChecking=no -p 27109 ubuntu@gsmsv-1.yujun.kr
+sshpass -p 'Fj&6%4@$' ssh -o StrictHostKeyChecking=no -p 27109 ubuntu@ssh.gsmsv.site
 
 # Server C (port 27110)
-sshpass -p '88J@V%Wj' ssh -o StrictHostKeyChecking=no -p 27110 ubuntu@gsmsv-1.yujun.kr
+sshpass -p '88J@V%Wj' ssh -o StrictHostKeyChecking=no -p 27110 ubuntu@ssh.gsmsv.site
 ```
 
 ### Port Convention
@@ -96,10 +96,10 @@ docker exec gogo-mysql mysql -uroot -p<DB_PASSWORD> <database>
 
 ```bash
 # Upload a file to the infra server
-sshpass -p 'A5CPpFW%' scp -o StrictHostKeyChecking=no -P 27108 <local-file> ubuntu@gsmsv-1.yujun.kr:<remote-path>
+sshpass -p 'A5CPpFW%' scp -o StrictHostKeyChecking=no -P 27108 <local-file> ubuntu@ssh.gsmsv.site:<remote-path>
 
 # Example: upload a config file
-sshpass -p 'A5CPpFW%' scp -o StrictHostKeyChecking=no -P 27108 infra/configs/<file>.yml ubuntu@gsmsv-1.yujun.kr:/home/ubuntu/gogo/infra/configs/
+sshpass -p 'A5CPpFW%' scp -o StrictHostKeyChecking=no -P 27108 infra/configs/<file>.yml ubuntu@ssh.gsmsv.site:/home/ubuntu/gogo/infra/configs/
 ```
 
 ---
@@ -108,8 +108,8 @@ sshpass -p 'A5CPpFW%' scp -o StrictHostKeyChecking=no -P 27108 infra/configs/<fi
 
 | Service     | URL                                                              |
 |-------------|------------------------------------------------------------------|
-| API Gateway | `http://gsmsv-1.yujun.kr:28108`                                  |
-| Grafana     | `http://gsmsv-1.yujun.kr:28108/grafana/` (admin / GogoGraf2025!) |
+| API Gateway | `http://ssh.gsmsv.site:28108`                                  |
+| Grafana     | `http://ssh.gsmsv.site:28108/grafana/` (admin / GogoGraf2025!) |
 | Prometheus  | Inside infra server — `http://localhost:9090`                    |
 | Loki        | Inside infra server — `http://localhost:3100`                    |
 | Eureka      | Internal — `http://10.0.0.131:8761`                              |
