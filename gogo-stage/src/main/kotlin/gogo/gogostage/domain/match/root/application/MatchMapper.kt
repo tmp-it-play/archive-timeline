@@ -26,6 +26,7 @@ class MatchMapper(
             startDate = match.startDate,
             endDate = match.endDate,
             stage = StageApiInfoDto(
+                stageId = stage.id,
                 maintainers = maintainers.map { it.studentId }
             )
         )

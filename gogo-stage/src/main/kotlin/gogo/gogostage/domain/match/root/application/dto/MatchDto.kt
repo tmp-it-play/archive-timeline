@@ -14,6 +14,7 @@ data class MatchApiInfoDto(
 )
 
 data class StageApiInfoDto(
+    val stageId: Long,
     val maintainers: List<Long>
 )
 

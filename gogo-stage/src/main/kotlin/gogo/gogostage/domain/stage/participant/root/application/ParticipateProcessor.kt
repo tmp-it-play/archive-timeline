@@ -32,7 +32,7 @@ class ParticipateProcessor(
         validMatchBetting(match, studentId)
 
         val stage = match.game.stage
-        val stageParticipant = stageParticipantRepository.queryStageParticipantByStageIdAndStudentId(stage.id, studentId)
+        val stageParticipant = stageParticipantRepository.queryStageParticipantByStageIdAndStudentIdForUpdate(stage.id, studentId)
                 ?: throw StageException("Stage Participant Not Found, Stage id = ${stage.id}, Student id = $studentId", HttpStatus.NOT_FOUND.value())
 
         stageParticipant.minusPoint(point)

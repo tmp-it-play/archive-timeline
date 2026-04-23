@@ -74,4 +74,17 @@ class BettingCustomRepositoryImpl(
             )
             .fetch()
 
+    // Kafka 처리 전(BettingResult 미생성) CONFIRMED 베팅 합계 = 아직 stage service에서 차감되지 않은 잠금 포인트
+    override fun sumConfirmedBettingPoint(studentId: Long): Long =
+        queryFactory
+            .select(betting.point.sum())
+            .from(betting)
+            .leftJoin(bettingResult).on(bettingResult.bettingId.eq(betting.id))
+            .where(
+                betting.studentId.eq(studentId)
+                    .and(betting.status.eq(CONFIRMED))
+                    .and(bettingResult.isNull)
+            )
+            .fetchOne() ?: 0L
+
 }

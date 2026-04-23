@@ -6,4 +6,5 @@ interface BettingCustomRepository {
     fun calcOdds(matchId: Long, winTeamId: Long): MatchOddsDto
     fun findBettingBundleInfo(matchIds: List<Long>, studentId: Long): List<Betting>
     fun findBettingActiveBundleInfo(matchIds: List<Long>, studentId: Long): List<Betting>
+    fun sumConfirmedBettingPoint(studentId: Long): Long
 }

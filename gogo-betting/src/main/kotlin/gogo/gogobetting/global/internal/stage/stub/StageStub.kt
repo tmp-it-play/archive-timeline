@@ -9,5 +9,10 @@ data class MatchApiInfo(
 )
 
 data class StageApiInfoDto(
+    val stageId: Long,
     val maintainers: List<Long>
+)
+
+data class StudentPointStub(
+    val point: Long
 )

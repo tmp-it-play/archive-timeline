@@ -4,6 +4,7 @@ import gogo.gogobetting.domain.betting.root.application.dto.BettingBundleDto
 import gogo.gogobetting.domain.betting.root.application.dto.BettingDto
 import gogo.gogobetting.domain.betting.root.application.dto.TotalBettingPointDto
 import gogo.gogobetting.domain.betting.root.event.MatchBettingEvent
+import gogo.gogobetting.global.internal.stage.api.StageApi
 import gogo.gogobetting.global.util.UserContextUtil
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
@@ -18,12 +19,14 @@ class BettingServiceImpl(
     private val applicationEventPublisher: ApplicationEventPublisher,
     private val bettingReader: BettingReader,
     private val bettingMapper: BettingMapper,
+    private val stageApi: StageApi,
 ) : BettingService {
 
     @Transactional
     override fun bet (matchId: Long, dto: BettingDto) {
         val student = userUtil.getCurrentStudent()
-        bettingValidator.valid(matchId, student.studentId)
+        val matchInfo = stageApi.matchApiInfo(matchId)
+        bettingValidator.valid(matchId, student.studentId, matchInfo.stage.stageId, dto.bettingPoint)
         val betting = bettingProcessor.save(matchId, student.studentId, dto)
 
         applicationEventPublisher.publishEvent(
