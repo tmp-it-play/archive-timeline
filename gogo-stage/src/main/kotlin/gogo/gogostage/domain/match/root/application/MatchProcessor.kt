@@ -79,7 +79,7 @@ class MatchProcessor(
 
             GameSystem.TOURNAMENT -> {
 
-                when (match.round!!) {
+                when (match.round ?: throw StageException("토너먼트 경기의 라운드 정보가 없습니다. Match Id = ${match.id}", HttpStatus.INTERNAL_SERVER_ERROR.value())) {
                     Round.ROUND_OF_32 -> {
                         updateNextMatch(match, victoryTeam, Round.ROUND_OF_16)
                     }
@@ -99,6 +99,8 @@ class MatchProcessor(
                     Round.FINALS -> {
                         gameEnd(match, victoryTeam)
                     }
+
+                    Round.THIRD_PLACE, Round.FIFTH_PLACE -> { }
                 }
 
             }
@@ -142,9 +144,13 @@ class MatchProcessor(
         matchRepository.save(match)
 
         val game = match.game
-        if (game.system == GameSystem.TOURNAMENT && match.round!! != Round.FINALS) {
+        val isMainBracketRound = match.round != null
+            && match.round != Round.FINALS
+            && match.round != Round.THIRD_PLACE
+            && match.round != Round.FIFTH_PLACE
+        if (game.system == GameSystem.TOURNAMENT && isMainBracketRound) {
 
-            when (match.round!!) {
+            when (match.round) {
                 Round.ROUND_OF_32 -> {
                     updateNextMatch(match, null, Round.ROUND_OF_16)
                 }
