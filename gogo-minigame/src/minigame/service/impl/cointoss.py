@@ -7,7 +7,6 @@ from py_eureka_client.eureka_client import do_service_async
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.cointoss.domain.model.coin_toss_result import CoinTossResult
-from db import get_session
 from event.publisher import EventPublisher
 from src.minigame.domain.model.minigame import MinigameBetStatus
 from src.minigame.presentation.schema.event import GameType
@@ -16,9 +15,9 @@ from src.cointoss.presentation.schema.cointoss import CoinTossBetReq
 from src.minigame.service.bet import MinigameBetService
 from src.cointoss.domain.repository.coin_toss import CoinTossResultRepository
 from src.minigame.domain.repository.minigame import MinigameRepository
+from src.ticket.domain.model.ticket import Ticket
 from src.ticket.domain.repository.ticket import TicketRepository
 from src.cointoss.presentation.schema.cointoss import CoinTossBetRes
-from src.ticket.service.ticket import TicketService
 
 
 class CoinTossMinigameBetServiceImpl(MinigameBetService):
@@ -27,7 +26,6 @@ class CoinTossMinigameBetServiceImpl(MinigameBetService):
         self.minigame_repository = MinigameRepository(session)
         self.coin_toss_result_repository = CoinTossResultRepository(session)
         self.ticket_repository = TicketRepository(session)
-        self.ticket_service = TicketService
 
     async def bet(self, stage_id, user_id, data: CoinTossBetReq):
         async with self.session.begin():
@@ -62,11 +60,22 @@ class CoinTossMinigameBetServiceImpl(MinigameBetService):
             if bet_amount > before_point:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='bet amount too high')
 
-            # 티켓 검사
-            ticket_amount = await self.ticket_service(await get_session()).get_ticket_amount(user_id=user_id, stage_id=stage_id)
-            if ticket_amount is None or ticket_amount.coinToss <= 0:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
+            # 티켓 검사 및 감소 (메인 트랜잭션 내에서 FOR UPDATE로 원자적 처리)
             ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket is None:
+                await self.ticket_repository.save(
+                    Ticket(
+                        minigame_id=minigame.minigame_id,
+                        student_id=student_id,
+                        coin_toss_ticket_amount=minigame.coin_toss_default_ticket_amount,
+                        yavarwee_ticket_amount=minigame.yavarwee_default_ticket_amount,
+                        plinko_ticket_amount=minigame.plinko_default_ticket_amount,
+                    )
+                )
+                await self.session.flush()
+                ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket.coin_toss_ticket_amount <= 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
 
             # 티켓 감소
             ticket.coin_toss_ticket_amount -= 1

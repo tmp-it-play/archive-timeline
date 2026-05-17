@@ -6,7 +6,6 @@ from fastapi import status, HTTPException
 from py_eureka_client.eureka_client import do_service_async
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db import get_session
 from event.publisher import EventPublisher
 from src.minigame.presentation.schema.event import GameType
 from src.minigame.domain.model.minigame import MinigameBetStatus
@@ -17,8 +16,8 @@ from src.plinko.domain.repository.plinko import PlinkoResultRepository
 from src.plinko.domain.model.plinko_result import PlinkoResult
 from src.plinko.presentation.schema.plinko import PlinkoBetRes
 from src.minigame.service.bet import MinigameBetService
+from src.ticket.domain.model.ticket import Ticket
 from src.ticket.domain.repository.ticket import TicketRepository
-from src.ticket.service.ticket import TicketService
 
 PLINKO_RISK_VALUE = {
     'LOW': [15, 8, 3, 2, 1.5, 1.1, 1, 0.7, 0.7, 1, 1.1, 1.5, 2, 3, 8, 15],
@@ -33,7 +32,6 @@ class PlinkoMinigameBetServiceImpl(MinigameBetService):
         self.minigame_repository = MinigameRepository(session)
         self.plinko_result_repository = PlinkoResultRepository(session)
         self.ticket_repository = TicketRepository(session)
-        self.ticket_service = TicketService
 
     async def bet(self, stage_id: int, user_id: int, data: PlinkoBetReq):
         async with self.session.begin():
@@ -68,11 +66,22 @@ class PlinkoMinigameBetServiceImpl(MinigameBetService):
             if bet_amount > before_point:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='bet amount too high')
 
-            # 티켓 검사
-            ticket_amount = await self.ticket_service(await get_session()).get_ticket_amount(user_id=user_id, stage_id=stage_id)
-            if ticket_amount is None or ticket_amount.plinko <= 0:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
+            # 티켓 검사 및 감소 (메인 트랜잭션 내에서 FOR UPDATE로 원자적 처리)
             ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket is None:
+                await self.ticket_repository.save(
+                    Ticket(
+                        minigame_id=minigame.minigame_id,
+                        student_id=student_id,
+                        coin_toss_ticket_amount=minigame.coin_toss_default_ticket_amount,
+                        yavarwee_ticket_amount=minigame.yavarwee_default_ticket_amount,
+                        plinko_ticket_amount=minigame.plinko_default_ticket_amount,
+                    )
+                )
+                await self.session.flush()
+                ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket.plinko_ticket_amount <= 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
 
             # 티켓 감소
             ticket.plinko_ticket_amount -= 1

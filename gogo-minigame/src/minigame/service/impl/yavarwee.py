@@ -8,7 +8,6 @@ from py_eureka_client.eureka_client import do_service_async
 from sqlmodel.ext.asyncio.session import AsyncSession
 from Crypto.Cipher import PKCS1_OAEP
 
-from db import get_session
 from event.publisher import EventPublisher
 from src.minigame.presentation.schema.event import GameType
 from src.minigame.domain.model.minigame import MinigameBetStatus
@@ -17,9 +16,9 @@ from src.minigame.service.bet import MinigameBetService
 from src.yavarwee.domain.model.yavarwee_result import YavarweeResult
 from src.yavarwee.domain.repository.yavarwee import YavarweeResultRepository
 from src.minigame.domain.repository.minigame import MinigameRepository
+from src.ticket.domain.model.ticket import Ticket
 from src.ticket.domain.repository.ticket import TicketRepository
 from src.yavarwee.presentation.schema.yavarwee import YavarweeBetReq, YavarweeBetRes, YavarweeBetConfirmDetail
-from src.ticket.service.ticket import TicketService
 from src.yavarwee.presentation.schema.yavarwee import YavarweeBetConfirmReq
 from config import YAVARWEE_PRIVATE_KEY
 
@@ -32,7 +31,6 @@ class YavarweeMinigameBetServiceImpl(MinigameBetService):
         self.minigame_repository = MinigameRepository(session)
         self.yavarwee_repository = YavarweeResultRepository(session)
         self.ticket_repository = TicketRepository(session)
-        self.ticket_service = TicketService
 
     async def bet(self, stage_id, user_id, data: YavarweeBetReq):
         async with self.session.begin():
@@ -67,11 +65,22 @@ class YavarweeMinigameBetServiceImpl(MinigameBetService):
             if bet_amount > before_point:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='bet amount too high')
 
-            # 티켓 검사
-            ticket_amount = await self.ticket_service(await get_session()).get_ticket_amount(user_id=user_id, stage_id=stage_id)
-            if ticket_amount is None or ticket_amount.yavarwee <= 0:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
+            # 티켓 검사 및 감소 (메인 트랜잭션 내에서 FOR UPDATE로 원자적 처리)
             ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket is None:
+                await self.ticket_repository.save(
+                    Ticket(
+                        minigame_id=minigame.minigame_id,
+                        student_id=student_id,
+                        coin_toss_ticket_amount=minigame.coin_toss_default_ticket_amount,
+                        yavarwee_ticket_amount=minigame.yavarwee_default_ticket_amount,
+                        plinko_ticket_amount=minigame.plinko_default_ticket_amount,
+                    )
+                )
+                await self.session.flush()
+                ticket = await self.ticket_repository.find_ticket_amount_by_stage_id_and_student_id(stage_id=stage_id, student_id=student_id)
+            if ticket.yavarwee_ticket_amount <= 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough ticket')
 
             # 티켓 감소
             ticket.yavarwee_ticket_amount -= 1
@@ -119,14 +128,18 @@ class YavarweeMinigameBetServiceImpl(MinigameBetService):
             if minigame is None:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid bet')
 
-            if minigame.bet_confirmed:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='bet already confirmed')
-
             # Student id 조회
             user_response = await do_service_async('gogo-user', f'/user/student?userId={user_id}')
             if not user_response:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='gogo-stage no response')
             student_id = json.loads(user_response)['studentId']
+
+            # 소유권 검증: 베팅한 본인만 confirm 가능
+            if int(minigame.student_id) != int(student_id):
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Not your bet')
+
+            if minigame.bet_confirmed:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='bet already confirmed')
 
             bet_amount = minigame.bet_point
 
