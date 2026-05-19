@@ -41,7 +41,7 @@ export function registerNeisTools(server: McpServer, config: Config): void {
           authMode: 'api-key',
         })) as CommonApiResponse<MealListResponse>;
 
-        const meals = response.data.data;
+        const meals = response.data.meals;
         if (meals.length === 0) {
           return {
             content: [{ type: 'text' as const, text: '조회된 급식 정보가 없습니다.' }],
@@ -87,7 +87,7 @@ export function registerNeisTools(server: McpServer, config: Config): void {
           authMode: 'api-key',
         })) as CommonApiResponse<ScheduleListResponse>;
 
-        const schedules = response.data.data;
+        const schedules = response.data.schedules;
         if (schedules.length === 0) {
           return {
             content: [{ type: 'text' as const, text: '조회된 학사일정이 없습니다.' }],
@@ -137,7 +137,7 @@ export function registerNeisTools(server: McpServer, config: Config): void {
           authMode: 'api-key',
         })) as CommonApiResponse<TimetableListResponse>;
 
-        const timetables = response.data.data;
+        const timetables = response.data.timetables;
         if (timetables.length === 0) {
           return {
             content: [{ type: 'text' as const, text: '조회된 시간표가 없습니다.' }],
@@ -148,7 +148,7 @@ export function registerNeisTools(server: McpServer, config: Config): void {
           content: [
             {
               type: 'text' as const,
-              text: `${grade}학년 ${classNum}반 시간표 (${timetables.length}일)\n\n${JSON.stringify(timetables, null, 2)}`,
+              text: `${grade}학년 ${classNum}반 시간표 (${timetables.length}건)\n\n${JSON.stringify(timetables, null, 2)}`,
             },
           ],
         };

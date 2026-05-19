@@ -101,14 +101,14 @@ export function registerStudentTools(server: McpServer, config: Config): void {
 
         const data = response.data;
         const summary =
-          `총 ${data.pageInfo.totalElements}명 중 ${data.data.length}명 표시 ` +
-          `(${data.pageInfo.currentPage + 1}/${data.pageInfo.totalPages} 페이지)`;
+          `총 ${data.totalElements}명 중 ${data.students.length}명 표시 ` +
+          `(전체 ${data.totalPages} 페이지)`;
 
         return {
           content: [
             {
               type: 'text' as const,
-              text: `${summary}\n\n${JSON.stringify(data.data, null, 2)}`,
+              text: `${summary}\n\n${JSON.stringify(data.students, null, 2)}`,
             },
           ],
         };

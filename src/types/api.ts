@@ -9,16 +9,10 @@ import type {
 } from './enums.js';
 
 export interface CommonApiResponse<T> {
-  code: string;
+  status: string;
+  code: number;
   message: string;
   data: T;
-}
-
-export interface PageInfo {
-  totalPages: number;
-  totalElements: number;
-  currentPage: number;
-  pageSize: number;
 }
 
 export interface ClubRef {
@@ -31,11 +25,11 @@ export interface Student {
   name: string;
   sex: Sex;
   email: string;
-  grade: number;
-  classNum: number;
-  number: number;
-  studentNumber: number;
-  major: Major;
+  grade: number | null;
+  classNum: number | null;
+  number: number | null;
+  studentNumber: number | null;
+  major: Major | null;
   specialty: string | null;
   role: StudentRole;
   dormitoryFloor: number | null;
@@ -47,8 +41,9 @@ export interface Student {
 }
 
 export interface StudentListResponse {
-  data: Student[];
-  pageInfo: PageInfo;
+  totalPages: number;
+  totalElements: number;
+  students: Student[];
 }
 
 export interface ParticipantInfo {
@@ -62,75 +57,84 @@ export interface ParticipantInfo {
 
 export interface ClubDetail {
   id: number;
-  clubName: string;
-  clubType: ClubType;
-  clubStatus: ClubStatus | null;
-  foundedYear: number | null;
+  name: string;
+  type: ClubType;
+  status: ClubStatus;
+  foundedYear: number;
   abolishedYear: number | null;
   leader: ParticipantInfo | null;
   participants: ParticipantInfo[];
 }
 
 export interface ClubListResponse {
-  data: ClubDetail[];
-  pageInfo: PageInfo;
+  totalPages: number;
+  totalElements: number;
+  clubs: ClubDetail[];
 }
 
 export interface Project {
   id: number;
-  projectName: string;
-  description: string | null;
+  name: string;
+  description: string;
+  startYear: number;
+  endYear: number | null;
   status: ProjectStatus;
   club: ClubRef | null;
   participants: ParticipantInfo[];
 }
 
 export interface ProjectListResponse {
-  data: Project[];
-  pageInfo: PageInfo;
-}
-
-export interface MealMenu {
-  name: string;
-  calorieInfo: string;
+  totalPages: number;
+  totalElements: number;
+  projects: Project[];
 }
 
 export interface Meal {
-  date: string;
-  mealName: string;
-  menus: MealMenu[];
-  allergyInfo: string;
-  mealType: MealType | null;
+  mealId: string;
+  schoolCode: string;
+  schoolName: string;
+  officeCode: string;
+  officeName: string;
+  mealDate: string;
+  mealType: MealType;
+  mealMenu: string[];
+  mealAllergyInfo: string[];
+  mealCalories: string | null;
+  originInfo: string | null;
+  nutritionInfo: string | null;
+  mealServeCount: number | null;
 }
 
 export interface MealListResponse {
-  data: Meal[];
+  meals: Meal[];
 }
 
 export interface Schedule {
-  date: string;
-  eventName: string;
-  eventType: string;
-  year: number;
+  scheduleId: string;
+  schoolCode: string;
+  schoolName: string;
+  scheduleDate: string;
+  academicYear: string | null;
+  eventName: string | null;
+  eventContent: string | null;
+  targetGrades: number[];
 }
 
 export interface ScheduleListResponse {
-  data: Schedule[];
-}
-
-export interface TimetablePeriod {
-  period: number;
-  subject: string;
-  teacher: string | null;
+  schedules: Schedule[];
 }
 
 export interface Timetable {
-  date: string;
+  timetableId: string;
+  timetableDate: string;
+  academicYear: string;
+  semester: string | null;
   grade: number;
   classNum: number;
-  periods: TimetablePeriod[];
+  period: number;
+  subject: string | null;
 }
 
 export interface TimetableListResponse {
-  data: Timetable[];
+  timetables: Timetable[];
 }

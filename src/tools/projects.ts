@@ -56,14 +56,14 @@ export function registerProjectTools(server: McpServer, config: Config): void {
 
         const data = response.data;
         const summary =
-          `총 ${data.pageInfo.totalElements}개 중 ${data.data.length}개 표시 ` +
-          `(${data.pageInfo.currentPage + 1}/${data.pageInfo.totalPages} 페이지)`;
+          `총 ${data.totalElements}개 중 ${data.projects.length}개 표시 ` +
+          `(전체 ${data.totalPages} 페이지)`;
 
         return {
           content: [
             {
               type: 'text' as const,
-              text: `${summary}\n\n${JSON.stringify(data.data, null, 2)}`,
+              text: `${summary}\n\n${JSON.stringify(data.projects, null, 2)}`,
             },
           ],
         };
