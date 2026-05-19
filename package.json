@@ -1,0 +1,39 @@
+{
+  "name": "datagsm-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for DataGSM — GSM student, club, meal, and schedule data",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "datagsm-mcp": "./build/index.js"
+  },
+  "files": [
+    "build",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "start": "node build/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "datagsm",
+    "gsm",
+    "claude",
+    "model-context-protocol"
+  ]
+}
