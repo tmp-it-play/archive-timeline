@@ -1,6 +1,6 @@
 {
   "name": "datagsm-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for DataGSM — GSM student, club, meal, and schedule data",
   "license": "MIT",
   "type": "module",
