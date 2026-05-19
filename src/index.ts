@@ -5,6 +5,11 @@ import { loadConfig } from './config.js';
 import { registerAllTools } from './tools/index.js';
 
 async function main(): Promise<void> {
+  process.stdout.on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EPIPE') process.exit(0);
+  });
+  process.on('SIGPIPE', () => process.exit(0));
+
   const config = loadConfig();
 
   const server = new McpServer(
