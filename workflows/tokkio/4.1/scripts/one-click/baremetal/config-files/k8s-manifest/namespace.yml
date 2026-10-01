@@ -1,6 +1,0 @@
-kubeconfig: "{{ task_vars.kubeconfig | default(omit) }}"
-definition:
-  apiVersion: v1
-  kind: Namespace
-  metadata:
-    name: "{{ task_vars.name }}"

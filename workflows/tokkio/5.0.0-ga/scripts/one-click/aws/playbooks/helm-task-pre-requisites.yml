@@ -1,6 +1,0 @@
----
-- hosts: all
-  gather_facts: no
-  tasks:
-  - name: setup helm pre requisites
-    include_tasks: tasks/helm-task-pre-requisites.yml
