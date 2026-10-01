@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: hello-app
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
-server:
-  port: ${PORT:8080}
