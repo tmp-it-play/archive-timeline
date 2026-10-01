@@ -1,1 +1,0 @@
-print(",".join(["apple","grape","banana"]))
