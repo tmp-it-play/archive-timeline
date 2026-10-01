@@ -1,7 +1,0 @@
-- [ ] USAGE.md
-- [ ] RELEASE_NOTES.md
-- [ ] README.md
-- [ ] CONTRIBUTING.md
-- [ ] SECURITY.md
-- [ ] Test Code
-- [ ] Translated Docs(ko)
